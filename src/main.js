@@ -1,3 +1,4 @@
+/* eslint-disable */
 // Main JavaScript file for the Netdata GUI.
 
 // Codacy declarations
@@ -284,6 +285,7 @@ var urlOptions = {
     },
 
     clearHighlight: function () {
+        return // todo
         NETDATA.globalChartUnderlay.clear();
 
         if (NETDATA.globalPanAndZoom.isActive() === true) {
@@ -742,7 +744,8 @@ function renderMyNetdataMenu(machinesArray) {
     let html = '';
 
     if (!isSignedIn()) {
-        if (!NETDATA.registry.isRegistryEnabled()) {
+        // if (!NETDATA.registry.isRegistryEnabled()) { // todo
+        if (true) {
             html += (
                 `<div class="info-item" style="white-space: nowrap">
                     <span>Please <a href="#" onclick="signInDidClick(event); return false">sign in to netdata.cloud</a> to view your nodes!</span>
@@ -784,7 +787,8 @@ function renderMyNetdataMenu(machinesArray) {
         html += `<div id="my-netdata-menu-streamed">${renderStreamedHosts(options)}</div><hr />`;
     }
 
-    if (isSignedIn() || NETDATA.registry.isRegistryEnabled()) {
+    // if (isSignedIn() || NETDATA.registry.isRegistryEnabled()) { // todo
+    if (isSignedIn()) {
         html += `<div id="my-netdata-menu-machines">${renderMachines(machinesArray)}</div><hr />`;
     }
 
@@ -1345,6 +1349,8 @@ var netdataDashboard = {
         }
     }
 };
+// todo
+window.netdataDashboard = netdataDashboard
 
 // ----------------------------------------------------------------------------
 
@@ -2881,10 +2887,9 @@ function xssModalKeepXss() {
     return false;
 }
 
-function initializeDynamicDashboard(netdata_url) {
-    if (typeof netdata_url === 'undefined' || netdata_url === null) {
-        netdata_url = NETDATA.serverDefault;
-    }
+function initializeDynamicDashboard() {
+    // const netdata_url = NETDATA.serverDefault;
+    const netdata_url = "http://localhost:19999"; // todo
 
     initializeConfig.url = netdata_url;
 
@@ -4604,7 +4609,7 @@ var selected_server_timezone = function (timezone, status) {
 // our entry point
 // var netdataStarted = performance.now();
 
-var netdataCallback = initializeDynamicDashboard;
+export var netdataCallback = initializeDynamicDashboard;
 
 // =================================================================================================
 // netdata.cloud

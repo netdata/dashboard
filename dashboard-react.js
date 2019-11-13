@@ -18,7 +18,7 @@
 var NETDATA = window.NETDATA || {};
 
 /// A heuristic for detecting slow devices.
-let isSlowDeviceResult = undefined;
+let isSlowDeviceResult;
 const isSlowDevice = function () {
   if (!isSlowDeviceResult) {
     return isSlowDeviceResult;
@@ -348,3 +348,228 @@ NETDATA.localStorage = {
   current: {},
   callback: {} // only used for resetting back to defaults
 };
+
+
+// todo temporary stuff which was originally in dashboard.js
+// but needs to be refractored
+NETDATA.name2id = function (s) {
+  return s
+  .replace(/ /g, '_')
+  .replace(/:/g, '_')
+  .replace(/\(/g, '_')
+  .replace(/\)/g, '_')
+  .replace(/\./g, '_')
+  .replace(/\//g, '_');
+};
+
+NETDATA.globalChartUnderlay = {
+  clear: () => {},
+  init: () => {},
+}
+
+NETDATA.globalPanAndZoom = {
+  callback: () => {},
+}
+NETDATA.unpause = () => {}
+
+NETDATA.setOption = function (key, value) {
+  if (key.toString() === 'setOptionCallback') {
+    if (typeof NETDATA.options.current.setOptionCallback === 'function') {
+      NETDATA.options.current[key.toString()] = value;
+      NETDATA.options.current.setOptionCallback();
+    }
+  } else if (NETDATA.options.current[key.toString()] !== value) {
+    let name = 'options.' + key.toString();
+
+    if (typeof NETDATA.localStorage.default[name.toString()] === 'undefined') {
+      console.log('localStorage: setOption() on unsaved option: "' + name.toString() + '", value: ' + value);
+    }
+
+    NETDATA.options.current[key.toString()] = NETDATA.localStorageSet(name.toString(), value, null);
+
+    if (typeof NETDATA.options.current.setOptionCallback === 'function') {
+      NETDATA.options.current.setOptionCallback();
+    }
+  }
+
+  return true;
+};
+
+NETDATA.getOption = function (key) {
+  return NETDATA.options.current[key.toString()];
+};
+
+
+// ----------------------------------------------------------------------------------------------------------------
+// XSS checks
+
+NETDATA.xss = {
+  enabled: (typeof netdataCheckXSS === 'undefined') ? false : netdataCheckXSS,
+  enabled_for_data: (typeof netdataCheckXSS === 'undefined') ? false : netdataCheckXSS,
+
+  string: function (s) {
+    return s.toString()
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+  },
+
+  object: function (name, obj, ignore_regex) {
+    if (typeof ignore_regex !== 'undefined' && ignore_regex.test(name)) {
+      // console.log('XSS: ignoring "' + name + '"');
+      return obj;
+    }
+
+    switch (typeof(obj)) {
+      case 'string':
+        const ret = this.string(obj);
+        if (ret !== obj) {
+          console.log('XSS protection changed string ' + name + ' from "' + obj + '" to "' + ret + '"');
+        }
+        return ret;
+
+      case 'object':
+        if (obj === null) {
+          return obj;
+        }
+
+        if (Array.isArray(obj)) {
+          // console.log('checking array "' + name + '"');
+
+          let len = obj.length;
+          while (len--) {
+            obj[len] = this.object(name + '[' + len + ']', obj[len], ignore_regex);
+          }
+        } else {
+          // console.log('checking object "' + name + '"');
+
+          for (var i in obj) {
+            if (obj.hasOwnProperty(i) === false) {
+              continue;
+            }
+            if (this.string(i) !== i) {
+              console.log('XSS protection removed invalid object member "' + name + '.' + i + '"');
+              delete obj[i];
+            } else {
+              obj[i] = this.object(name + '.' + i, obj[i], ignore_regex);
+            }
+          }
+        }
+        return obj;
+
+      default:
+        return obj;
+    }
+  },
+
+  checkOptional: function (name, obj, ignore_regex) {
+    if (this.enabled) {
+      //console.log('XSS: checking optional "' + name + '"...');
+      return this.object(name, obj, ignore_regex);
+    }
+    return obj;
+  },
+
+  checkAlways: function (name, obj, ignore_regex) {
+    //console.log('XSS: checking always "' + name + '"...');
+    return this.object(name, obj, ignore_regex);
+  },
+
+  checkData: function (name, obj, ignore_regex) {
+    if (this.enabled_for_data) {
+      //console.log('XSS: checking data "' + name + '"...');
+      return this.object(name, obj, ignore_regex);
+    }
+    return obj;
+  }
+};
+
+
+
+const fixHost = (host) => {
+  while (host.slice(-1) === '/') {
+    host = host.substring(0, host.length - 1);
+  }
+
+  return host;
+}
+
+NETDATA.chartRegistry = {
+  charts: {},
+
+  globalReset: function () {
+    this.charts = {};
+  },
+
+  add: function (host, id, data) {
+    if (typeof this.charts[host] === 'undefined') {
+      this.charts[host] = {};
+    }
+
+    //console.log('added ' + host + '/' + id);
+    this.charts[host][id] = data;
+  },
+
+  get: function (host, id) {
+    if (typeof this.charts[host] === 'undefined') {
+      return null;
+    }
+
+    if (typeof this.charts[host][id] === 'undefined') {
+      return null;
+    }
+
+    //console.log('cached ' + host + '/' + id);
+    return this.charts[host][id];
+  },
+
+  downloadAll: function (host, callback) {
+    host = fixHost(host);
+
+    let self = this;
+
+    function got_data(h, data, callback) {
+      if (data !== null) {
+        self.charts[h] = data.charts;
+        window.charts = data.charts
+
+        // update the server timezone in our options
+        if (typeof data.timezone === 'string') {
+          NETDATA.options.server_timezone = data.timezone;
+        }
+      } else {
+        NETDATA.error(406, h + '/api/v1/charts');
+      }
+
+      if (typeof callback === 'function') {
+        callback(data);
+      }
+    }
+
+    if (netdataSnapshotData !== null) {
+      got_data(host, netdataSnapshotData.charts, callback);
+    } else {
+      $.ajax({
+        url: host + '/api/v1/charts',
+        async: true,
+        cache: false,
+        xhrFields: {withCredentials: true} // required for the cookie
+      })
+      .done(function (data) {
+        data = NETDATA.xss.checkOptional('/api/v1/charts', data);
+        got_data(host, data, callback);
+      })
+      .fail(function () {
+        NETDATA.error(405, host + '/api/v1/charts');
+
+        if (typeof callback === 'function') {
+          callback(null);
+        }
+      });
+    }
+  }
+};
+
+
+// NETDATA.currentScript = document.currentScript

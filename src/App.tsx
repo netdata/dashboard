@@ -1,15 +1,20 @@
-import React from "react"
+import React, { useEffect, useRef, useState } from "react"
 import Ps from "perfect-scrollbar"
 
-import { loadCss } from "utils/css-loader"
 import "domains/chart/utils/jquery-loader"
+import "bootstrap"
+import "bootstrap-toggle"
+import "bootstrap-toggle/css/bootstrap-toggle.min.css"
+
+import { loadCss } from "utils/css-loader"
 import { Portals } from "domains/chart/components/portals"
 import "./types/global"
 
-if (!window.netdataNoBootstrap) {
-  // it needs to be imported indirectly, there's probably a bug in webpack
-  import("dynamic-imports/bootstrap")
-}
+import {
+  netdataCallback,
+} from "./main"
+// @ts-ignore
+import "./dashboard_info"
 
 if (!window.netdataNoFontAwesome) {
   // @ts-ignore
@@ -23,9 +28,29 @@ loadCss(window.NETDATA.themes.current.bootstrap_css)
 loadCss(window.NETDATA.themes.current.dashboard_css)
 
 const App: React.FC = () => { // eslint-disable-line arrow-body-style
+  useEffect(() => {
+    // todo
+    // @ts-ignore
+    window.NETDATA.alarms = {}
+    // @ts-ignore
+    window.NETDATA.pause = (callback) => {
+      callback()
+    }
+    setTimeout(() => {
+      // delay after loading bootstrap
+      netdataCallback()
+    }, 1000)
+  }, [])
+  const [refreshHelper, setRefreshHelper] = useState()
+  const parseDom = useRef(() => {
+    console.log("foo") // eslint-disable-line
+    setRefreshHelper(Math.random())
+  })
+  // @ts-ignore
+  window.NETDATA.parseDom = parseDom.current
   return (
     <div className="App">
-      <Portals />
+      <Portals key={refreshHelper} />
     </div>
   )
 }
