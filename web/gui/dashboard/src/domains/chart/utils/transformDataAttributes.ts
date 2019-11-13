@@ -290,7 +290,7 @@ type AttributesMap = {
 const getAttributesMap = (): AttributesMap => ({
   // all properties that don't have `defaultValue` should be "| undefined" in Attributes interface
   // todo try to write above rule in TS
-  id: { key: "netdata-react" },
+  id: { key: "netdata" },
   host: { key: "host", defaultValue: window.NETDATA.serverDefault },
   title: { key: "title" },
   chartLibrary: { key: "chart-library", defaultValue: window.NETDATA.chartDefaults.library },
