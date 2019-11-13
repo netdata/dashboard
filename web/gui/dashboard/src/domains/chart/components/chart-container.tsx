@@ -10,6 +10,7 @@ import { useIntersection, useThrottle } from "react-use"
 import { AppStateT } from "store/app-state"
 
 import { selectGlobalPanAndZoom, selectGlobalSelection } from "domains/global/selectors"
+import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"
 import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
 
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
@@ -117,17 +118,14 @@ export const ChartContainer = ({
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
     [always(!!chartDetails), () => (chartDetails as ChartDetails).update_every * 1000],
-    [T, always(2000)],
+    [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
     areCriteriaMet: !globalPanAndZoom && !hoveredX,
     preferedIntervalTime: viewUpdateEvery,
   })
 
-  // corresponds to force_update_at in old dashboard
-  // + 50 is because normal loop only happened there once per 100ms anyway..
-  const globalPanAndZoomThrottled = useThrottle(globalPanAndZoom,
-    window.NETDATA.options.current.pan_and_zoom_delay + 50)
+  const globalPanAndZoomThrottled = useThrottle(globalPanAndZoom, panAndZoomDelay)
   useEffect(() => {
     setShouldFetch(true)
   }, [globalPanAndZoomThrottled, setShouldFetch])
