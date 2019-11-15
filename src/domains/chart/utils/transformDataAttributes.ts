@@ -75,7 +75,7 @@ type AttributeConfig = BaseAttributeConfig | BooleanAttributeConfig
 
 export interface Attributes {
   id: string
-  host: string
+  host: string | undefined
   title: string
   chartLibrary: ChartLibraryName
   width: number | string | null
@@ -291,7 +291,7 @@ const getAttributesMap = (): AttributesMap => ({
   // all properties that don't have `defaultValue` should be "| undefined" in Attributes interface
   // todo try to write above rule in TS
   id: { key: "netdata" },
-  host: { key: "host", defaultValue: window.NETDATA.serverDefault },
+  host: { key: "host" },
   title: { key: "title" },
   chartLibrary: { key: "chart-library", defaultValue: window.NETDATA.chartDefaults.library },
   width: { key: "width", defaultValue: window.NETDATA.chartDefaults.width },

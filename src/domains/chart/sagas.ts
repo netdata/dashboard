@@ -11,13 +11,14 @@ type FetchDataSaga = { payload: FetchDataPayload }
 function* fetchDataSaga({ payload }: FetchDataSaga) {
   const {
     // props for api
-    chart, format, points, group, gtime, options, after, before, dimensions,
+    host, chart, format, points, group, gtime, options, after, before, dimensions,
     // props for the store
     fetchDataParams, id,
   } = payload
   let response
+  const url = `${host}api/v1/data`
   try {
-    response = yield call(axiosInstance.get, "data", {
+    response = yield call(axiosInstance.get, url, {
       params: {
         chart,
         _: new Date().valueOf(),
@@ -47,10 +48,11 @@ function* fetchDataSaga({ payload }: FetchDataSaga) {
 
 type FetchChartSaga = { payload: FetchChartPayload }
 function* fetchChartSaga({ payload }: FetchChartSaga) {
-  const { chart, id } = payload
+  const { chart, id, host } = payload
   let response
+  const url = `${host}api/v1/chart`
   try {
-    response = yield call(axiosInstance.get, "chart", {
+    response = yield call(axiosInstance.get, url, {
       params: {
         chart,
       },
