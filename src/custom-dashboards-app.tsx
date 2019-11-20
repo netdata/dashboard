@@ -4,6 +4,8 @@ import Ps from "perfect-scrollbar"
 import { loadCss } from "utils/css-loader"
 import "domains/chart/utils/jquery-loader"
 import { Portals } from "domains/chart/components/portals"
+import { useRegistry } from "hooks/use-registry"
+
 import "./types/global"
 
 if (!window.netdataNoBootstrap) {
@@ -23,6 +25,8 @@ loadCss(window.NETDATA.themes.current.bootstrap_css)
 loadCss(window.NETDATA.themes.current.dashboard_css)
 
 const CustomDashboardsApp: React.FC = () => { // eslint-disable-line arrow-body-style
+  const shouldUseRegistry = window.netdataRegistry === true
+  useRegistry(shouldUseRegistry)
   return (
     <div className="App">
       <Portals />
