@@ -8,6 +8,8 @@ import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { loadCss } from "utils/css-loader"
 import { Portals } from "domains/chart/components/portals"
+import { useRegistry } from "hooks/use-registry"
+
 import "./types/global"
 
 import {
@@ -26,6 +28,7 @@ window.Ps = Ps
 
 loadCss(window.NETDATA.themes.current.bootstrap_css)
 loadCss(window.NETDATA.themes.current.dashboard_css)
+
 
 const App: React.FC = () => { // eslint-disable-line arrow-body-style
   useEffect(() => {
@@ -46,6 +49,9 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     console.log("foo") // eslint-disable-line
     setRefreshHelper(Math.random())
   })
+
+  useRegistry(true)
+
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
   return (
