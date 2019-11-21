@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react"
 import Ps from "perfect-scrollbar"
 
+// intentionally loading before bootstrap styles
+import "./styles/main.css"
+
+// needs to be included before bootstrap
 import "domains/chart/utils/jquery-loader"
 import "bootstrap"
 import "bootstrap-toggle"
