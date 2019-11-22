@@ -73,3 +73,8 @@ interface UpdatePersonUrlsAction {
 export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
   `${storeKey}/updatePersonUrlsAction`,
 )
+
+export interface StartAlarmsPayload { serverDefault: string }
+export const startAlarmsAction = createAction<StartAlarmsPayload>(
+  `${storeKey}/startAlarmsAction`,
+)

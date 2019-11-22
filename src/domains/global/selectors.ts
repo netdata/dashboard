@@ -1,4 +1,4 @@
-import { prop } from "ramda"
+import { prop, path } from "ramda"
 import { createSelector } from "reselect"
 
 import { AppStateT } from "store/app-state"
@@ -47,4 +47,9 @@ export const selectHasWindowFocus = createSelector(
 export const selectIsFetchingHello = createSelector(
   selectGlobal,
   prop("isFetchingHello"),
+)
+
+export const selectHasStartedAlarms = createSelector(
+  selectGlobal,
+  path(["alarms", "hasStartedAlarms"]),
 )
