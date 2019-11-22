@@ -1,4 +1,4 @@
-import {alwaysEndWithSlash, getPathFromScriptSource} from "utils/server-detection"
+import { alwaysEndWithSlash, getPathFromScriptSource } from "utils/server-detection"
 
 describe("server detection", () => {
   describe(" * endWithSlash function", () => {
