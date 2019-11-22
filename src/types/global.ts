@@ -123,7 +123,10 @@ interface Window {
   netdataNoBootstrap: boolean | undefined
   netdataNoFontAwesome: boolean | undefined
   netdataRegistry: boolean | undefined
+  netdataAlarmsRemember: boolean | undefined
+  netdataShowAlarms: boolean | undefined
   netdataServer: string | undefined
+  netdataAlarmsNotifCallback: ((x: any) => boolean) | undefined
 
   __REDUX_DEVTOOLS_EXTENSION__: (() => void | undefined)
 
