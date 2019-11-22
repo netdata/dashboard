@@ -5,6 +5,7 @@ import { loadCss } from "utils/css-loader"
 import "domains/chart/utils/jquery-loader"
 import { Portals } from "domains/chart/components/portals"
 import { useRegistry } from "hooks/use-registry"
+import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
 
@@ -27,6 +28,12 @@ loadCss(window.NETDATA.themes.current.dashboard_css)
 const CustomDashboardsApp: React.FC = () => { // eslint-disable-line arrow-body-style
   const shouldUseRegistry = window.netdataRegistry === true
   useRegistry(shouldUseRegistry)
+
+  // backwards-compatibility: in old dashboard any truthy window.netdataShowAlarms was enough
+  // but window.netdataRegistry needed to be explicitly `true`
+  const shouldUseAlarms = !!window.netdataShowAlarms
+  useAlarms(shouldUseAlarms)
+
   return (
     <div className="App">
       <Portals />

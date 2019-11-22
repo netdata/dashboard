@@ -13,6 +13,7 @@ import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 import { loadCss } from "utils/css-loader"
 import { Portals } from "domains/chart/components/portals"
 import { useRegistry } from "hooks/use-registry"
+import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
 
@@ -55,6 +56,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
   })
 
   useRegistry(true)
+  useAlarms(true)
 
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current

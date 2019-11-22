@@ -6,9 +6,11 @@ import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
 
 import { axiosInstance } from "utils/api"
+
 import {
   fetchHelloAction, FetchHelloPayload, windowFocusChangeAction, updatePersonUrlsAction,
-} from "domains/global/actions"
+} from "./actions"
+import { alarmsSagas } from "./alarms-sagas"
 
 const windowFocusChannel = channel()
 
@@ -234,4 +236,5 @@ export function* globalSagas() {
   yield spawn(listenToWindowFocus)
   yield spawn(watchWindowFocusChannel)
   yield takeEvery(fetchHelloAction.request, fetchHelloSaga)
+  yield spawn(alarmsSagas)
 }

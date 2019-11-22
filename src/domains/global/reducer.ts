@@ -12,6 +12,7 @@ import {
   windowFocusChangeAction,
   fetchHelloAction,
   updatePersonUrlsAction,
+  startAlarmsAction,
 } from "./actions"
 
 export type StateT = {
@@ -49,6 +50,10 @@ export type StateT = {
     registryMachinesArray: RegistryMachine[] | null
   }
 
+  alarms: {
+    hasStarted: boolean,
+  }
+
   isFetchingHello: boolean
 }
 
@@ -66,6 +71,10 @@ export const initialState = {
     personGuid: null,
     registryMachines: null,
     registryMachinesArray: null,
+  },
+
+  alarms: {
+    hasStarted: false,
   },
 
   isFetchingHello: false,
@@ -234,5 +243,13 @@ globalReducer.on(updatePersonUrlsAction, (state, {
     personGuid,
     registryMachines,
     registryMachinesArray,
+  },
+}))
+
+globalReducer.on(startAlarmsAction, (state) => ({
+  ...state,
+  alarms: {
+    ...state.alarms,
+    hasStarted: true,
   },
 }))
