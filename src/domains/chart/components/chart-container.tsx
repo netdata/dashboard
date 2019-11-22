@@ -92,7 +92,7 @@ export const ChartContainer = ({
         host,
       }))
     }
-  }, [attributes.id, chartDetails, chartUuid, dispatch, isFetchingDetails, shouldHide])
+  }, [attributes.id, chartDetails, chartUuid, dispatch, host, isFetchingDetails, shouldHide])
 
 
   // todo local state option
@@ -219,7 +219,7 @@ export const ChartContainer = ({
       }))
     }
   }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
-    hasLegend, hasPortalNodeBeenStyled, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
+    hasLegend, hasPortalNodeBeenStyled, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
     isRemotelyControlled, portalNode, setShouldFetch, shouldFetch, shouldHide])
 
   // todo omit this for Cloud/Main Agent app

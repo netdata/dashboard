@@ -11,7 +11,7 @@ module.exports = {
     "airbnb",
   ],
   "rules" : {
-    "indent": ["error", 2],
+    "indent": ["error", 2, { "SwitchCase": 1 }],
     "semi": ["error", "never"],
     "@typescript-eslint/semi": ["error", "never"],
     "quotes": ["error", "double"],

@@ -1,4 +1,4 @@
-/* eslint-disable spaced-comment, max-len */
+/* eslint-disable */
 
 /**
  * this file is created only for refractor purposes - during the refractor process it should shrink in size,

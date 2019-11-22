@@ -1,4 +1,6 @@
-import { concat, cond, equals, identity, last, pipe, T } from "ramda"
+import {
+  concat, cond, equals, identity, last, pipe, T,
+} from "ramda"
 
 const isTestingEnv = process.env.NODE_ENV === "test"
 const isDevelopmentEnv = process.env.NODE_ENV === "development"
@@ -18,7 +20,7 @@ const getScriptSource = () => {
     [Boolean, identity],
     // "last" typings don't work well with HTMLScriptElement
     // if document.currentScript is not available
-    [T, () => last(document.getElementsByTagName("script") as unknown as [HTMLScriptElement])]
+    [T, () => last(document.getElementsByTagName("script") as unknown as [HTMLScriptElement])],
   ])(currentScript)
 
   return script.src
@@ -45,5 +47,7 @@ export const alwaysEndWithSlash = cond([
 ])
 
 export const serverDefault: string = alwaysEndWithSlash(
-  window.netdataServer || getDefaultServer()
+  window.netdataServer || getDefaultServer(),
 )
+
+export const serverStatic: string = alwaysEndWithSlash(getDefaultServer())

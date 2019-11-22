@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  *  after react-dashboard refractor, this file can be renamed to 'dashboard.js'
  *  and it will:
@@ -12,7 +14,6 @@
 
 // ----------------------------------------------------------------------------
 // global namespace
-/* eslint-disable no-undef */
 
 // Should stay var!
 var NETDATA = window.NETDATA || {};
