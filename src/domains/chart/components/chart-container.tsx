@@ -1,11 +1,9 @@
 import {
-  forEachObjIndexed, propOr, pathOr, cond, always, T,
+  propOr, cond, always, T,
 } from "ramda"
-import React, {
-  useEffect, useState, useLayoutEffect, useRef,
-} from "react"
+import React, { useEffect, useState } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { useIntersection, useThrottle } from "react-use"
+import { useThrottle } from "react-use"
 
 import { AppStateT } from "store/app-state"
 
@@ -17,7 +15,6 @@ import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { Attributes } from "../utils/transformDataAttributes"
 import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
-import { getPortalNodeStyles } from "../utils/get-portal-node-styles"
 
 import { fetchChartAction, fetchDataAction } from "../actions"
 import {
@@ -56,6 +53,7 @@ const getChartURLOptions = (attributes: Attributes) => {
   return ret
 }
 
+
 export type Props = {
   attributes: Attributes
   chartUuid: string
@@ -67,15 +65,6 @@ export const ChartContainer = ({
   chartUuid,
   portalNode,
 }: Props) => {
-  const portalNodeRef = useRef(portalNode)
-  const intersection = useIntersection(portalNodeRef, {
-    root: null,
-    rootMargin: "0px",
-    threshold: undefined,
-  })
-  // should be throttled when NETDATA.options.current.async_on_scroll is on
-  const shouldHide = pathOr(0, ["intersectionRatio"], intersection) === 0
-
   /**
    * fetch chart details
    */
@@ -85,14 +74,14 @@ export const ChartContainer = ({
     selectChartDetailsRequest(state, { id: chartUuid })
   ))
   useEffect(() => {
-    if (!chartDetails && !isFetchingDetails && !shouldHide) {
+    if (!chartDetails && !isFetchingDetails) {
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
         host,
       }))
     }
-  }, [attributes.id, chartDetails, chartUuid, dispatch, host, isFetchingDetails, shouldHide])
+  }, [attributes.id, chartDetails, chartUuid, dispatch, host, isFetchingDetails])
 
 
   // todo local state option
@@ -141,7 +130,6 @@ export const ChartContainer = ({
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const { hasLegend } = chartSettings
 
-  const [hasPortalNodeBeenStyled, setHasPortalNodeBeenStyled] = useState<boolean>(false)
   // todo optimize by using resizeObserver (optionally)
   const boundingClientRect = portalNode.getBoundingClientRect()
   const chartWidth = boundingClientRect.width
@@ -152,7 +140,7 @@ export const ChartContainer = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && chartDetails && hasPortalNodeBeenStyled && !shouldHide) {
+    if (shouldFetch && chartDetails) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -219,31 +207,15 @@ export const ChartContainer = ({
       }))
     }
   }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
-    hasLegend, hasPortalNodeBeenStyled, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
-    isRemotelyControlled, portalNode, setShouldFetch, shouldFetch, shouldHide])
-
-  // todo omit this for Cloud/Main Agent app
-  useLayoutEffect(() => {
-    const styles = getPortalNodeStyles(attributes, chartSettings)
-    forEachObjIndexed((value, styleName) => {
-      if (value) {
-        portalNode.style.setProperty(styleName, value)
-      }
-    }, styles)
-    // eslint-disable-next-line no-param-reassign
-    portalNode.className = chartSettings.containerClass(attributes)
-    setHasPortalNodeBeenStyled(true)
-  }, [attributes, chartSettings, hasLegend, portalNode, setHasPortalNodeBeenStyled])
+    hasLegend, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
+    isRemotelyControlled, portalNode, setShouldFetch, shouldFetch])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
   if (!chartData || !chartDetails) {
     return <div className="chart-container__loader">loading...</div>
   }
-  if (shouldHide) {
-    // no need to measure anything - old dashboard was adding display: none to all
-    return null
-  }
+
   return (
     <Chart
       attributes={attributes}

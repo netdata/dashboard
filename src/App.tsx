@@ -46,6 +46,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     }
     setTimeout(() => {
       // delay after loading bootstrap
+      // todo quick hack for main.js - of course that cannot make production
       netdataCallback()
     }, 1000)
   }, [])
