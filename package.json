@@ -18,16 +18,16 @@
     "peity": "3.2.1",
     "perfect-scrollbar": "0.6.15",
     "ramda": "^0.26.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-redux": "^7.1.1",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^3.3.0",
     "react-use": "^12.5.0",
     "redux": "^4.0.4",
     "redux-act": "^1.7.7",
     "redux-saga": "^1.0.5",
     "reselect": "^4.0.0",
-    "typescript": "3.6.3"
+    "typescript": "^3.7.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.1.0",
