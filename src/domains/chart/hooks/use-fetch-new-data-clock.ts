@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { useSelector } from "react-redux"
 import { useInterval } from "react-use"
 
+import { useSelector } from "store/redux-separate-context"
 import { selectHasWindowFocus } from "domains/global/selectors"
 import { BIGGEST_INTERVAL_NUMBER } from "utils/biggest-interval-number"
 

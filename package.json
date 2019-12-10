@@ -54,7 +54,7 @@
     "jest-environment-jsdom-fourteen": "^0.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts start",
     "start:console": "cp ./console.html public/index.html && npm run start",
     "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && npm run start",
     "start:index": "cd public && rm ./index.html && ln -s ../index.html index.html && cd .. && REACT_APP_IS_MAIN_DASHBOARD=true npm run start",

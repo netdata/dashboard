@@ -2,10 +2,10 @@ import { sortBy } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback,
 } from "react"
-import { useSelector } from "react-redux"
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
 
+import { useSelector } from "store/redux-separate-context"
 import { AppStateT } from "store/app-state"
 import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { useDateTime } from "utils/date-time"

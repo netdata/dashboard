@@ -2,10 +2,10 @@ import {
   propOr, cond, always, T,
 } from "ramda"
 import React, { useEffect, useState } from "react"
-import { useSelector, useDispatch } from "react-redux"
 import { useThrottle } from "react-use"
 
 import { AppStateT } from "store/app-state"
+import { useSelector, useDispatch } from "store/redux-separate-context"
 
 import { selectGlobalPanAndZoom, selectGlobalSelection } from "domains/global/selectors"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"

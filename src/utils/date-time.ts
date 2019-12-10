@@ -1,6 +1,6 @@
 import { useMemo } from "react"
-import { useSelector } from "react-redux"
 
+import { useSelector } from "store/redux-separate-context"
 import { selectTimezone } from "domains/global/selectors"
 
 const zeropad = (x: number) => {

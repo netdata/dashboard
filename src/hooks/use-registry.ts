@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { serverDefault } from "utils/server-detection"
 import { fetchHelloAction } from "domains/global/actions"
 import { selectIsFetchingHello } from "domains/global/selectors"

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { startAlarmsAction } from "domains/global/actions"
 import { selectHasStartedAlarms } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
