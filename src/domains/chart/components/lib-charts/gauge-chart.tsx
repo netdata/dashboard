@@ -1,6 +1,7 @@
 import React, {
   useRef, useEffect, useState, useMemo,
 } from "react"
+// @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import { Gauge } from "gaugeJS"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"

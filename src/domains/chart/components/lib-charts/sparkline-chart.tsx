@@ -38,7 +38,7 @@ export const SparklineChart = ({
   // create chart
   useEffect(() => {
     if (chartElement.current && !$chartElement) {
-      const $element = $(chartElement.current)
+      const $element = window.$(chartElement.current)
       const { width, height } = chartContainerElement.getBoundingClientRect()
       const {
         sparklineLineColor = orderedColors[0],

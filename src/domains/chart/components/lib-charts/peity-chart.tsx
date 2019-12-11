@@ -1,3 +1,4 @@
+// @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import "peity"
 import React, {
   useRef, useState, useLayoutEffect,
@@ -41,7 +42,7 @@ export const PeityChart = ({
   // create chart
   useLayoutEffect(() => {
     if (chartElement.current && !$chartElement) {
-      const $element = $(chartElement.current)
+      const $element = window.$(chartElement.current)
 
       const { width, height } = chartContainerElement.getBoundingClientRect()
 

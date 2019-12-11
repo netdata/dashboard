@@ -1,9 +1,11 @@
+// @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import "jquery-sparkline"
 import React, {
   useRef, useEffect, useState,
 } from "react"
 
 import "../../utils/d3-loader"
+// @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import d3pie from "vendor/d3pie-0.2.1-netdata-3"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
