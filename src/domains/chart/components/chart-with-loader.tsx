@@ -1,7 +1,7 @@
 import {
   propOr, cond, always, T,
 } from "ramda"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { useThrottle } from "react-use"
 
 import { AppStateT } from "store/app-state"
@@ -18,7 +18,9 @@ import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
 
 import { fetchChartAction, fetchDataAction } from "../actions"
 import {
-  selectChartData, selectChartFetchDataParams, selectChartDetailsRequest,
+  selectChartData,
+  selectChartFetchDataParams,
+  makeSelectChartDetailsRequest,
 } from "../selectors"
 import { ChartData, ChartDetails } from "../chart-types"
 
@@ -70,6 +72,7 @@ export const ChartWithLoader = ({
    */
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
+  const selectChartDetailsRequest = useMemo(makeSelectChartDetailsRequest, [])
   const { chartDetails, isFetchingDetails } = useSelector((state: AppStateT) => (
     selectChartDetailsRequest(state, { id: chartUuid })
   ))

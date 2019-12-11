@@ -20,7 +20,7 @@ export const selectChartData = createSelector(
 const selectChartDetails = createSelector(selectSingleChartState, prop("chartDetails"))
 const selectIsFetchingDetails = createSelector(selectSingleChartState, prop("isFetchingDetails"))
 
-export const selectChartDetailsRequest = createSelector(
+export const makeSelectChartDetailsRequest = () => createSelector(
   selectChartDetails,
   selectIsFetchingDetails,
   (chartDetails, isFetchingDetails) => ({ chartDetails, isFetchingDetails }),
