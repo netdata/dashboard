@@ -23,7 +23,7 @@ import {
 import { ChartData, ChartDetails } from "../chart-types"
 
 import { Chart } from "./chart"
-import "./chart-container.css"
+import "./chart-with-loader.css"
 
 const getChartURLOptions = (attributes: Attributes) => {
   const {
@@ -60,7 +60,7 @@ export type Props = {
   portalNode: HTMLElement
 }
 
-export const ChartContainer = ({
+export const ChartWithLoader = ({
   attributes,
   chartUuid,
   portalNode,
