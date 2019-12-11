@@ -17,6 +17,7 @@
 
 // Should stay var!
 var NETDATA = window.NETDATA || {};
+window.NETDATA = NETDATA // when imported as npm module
 
 /// A heuristic for detecting slow devices.
 let isSlowDeviceResult;

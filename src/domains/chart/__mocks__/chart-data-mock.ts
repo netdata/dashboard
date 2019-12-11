@@ -1,6 +1,6 @@
-import { ChartData } from "../chart-types"
+import { DygraphData } from "../chart-types"
 
-export const chartDataMock: ChartData = {
+export const chartDataMock: DygraphData = {
   api: 1,
   id: "system.cpu",
   name: "system.cpu",

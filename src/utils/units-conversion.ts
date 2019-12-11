@@ -408,7 +408,7 @@ export const unitsConversionCreator = {
     } if (typeof convertibleUnits[units] !== "undefined") {
       // units that can be converted
       if (desiredUnits === "auto") {
-        let newConvertFunction: (number: number) => number | string
+        let newConvertFunction: ((number: number) => number | string) | undefined
         Object.keys(convertibleUnits[units]).forEach((x) => {
           if (newConvertFunction) { return }
           if (convertibleUnits[(units as string)][x].check(max)) {
