@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react"
+import classNames from "classnames"
 
 import { Icon, IconType } from "components/icon"
 import { Button } from "components/button"
-import classNames from "classnames"
 
 type ClickCallback = (event: React.MouseEvent) => void
 interface ToolboxButtonProps {
@@ -27,7 +27,7 @@ export const ToolboxButton = ({
 }: ToolboxButtonProps) => {
   const buttonRef = useRef(null)
   useEffect(() => {
-    if (buttonRef.current) {
+    if (buttonRef.current && window.NETDATA.options.current.show_help) {
       window.$(buttonRef.current).popover({
         container: "body",
         animation: false,

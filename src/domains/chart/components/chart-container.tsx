@@ -8,11 +8,15 @@ import { DisableOutOfView } from "./disable-out-of-view"
 
 export type Props = {
   attributes: Attributes
+  // warning! this is not the same as chartId in old dashboard
+  // here, the chartId must be unique across all agents
+  chartId: string
   portalNode: HTMLElement
 }
 
 export const ChartContainer = ({
   attributes,
+  chartId,
   portalNode,
 }: Props) => (
   <DisableOutOfView
@@ -21,8 +25,7 @@ export const ChartContainer = ({
   >
     <ChartWithLoader
       attributes={attributes}
-      // todo change to uuid generator (when we disconnect dashboard.js)
-      chartUuid={`${attributes.id}`}
+      chartUuid={chartId}
       portalNode={portalNode}
     />
   </DisableOutOfView>
