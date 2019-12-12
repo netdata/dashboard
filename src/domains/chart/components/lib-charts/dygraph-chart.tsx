@@ -148,7 +148,7 @@ const getInitialDygraphOptions = ({
     xRangePad: dygraphXRangePad,
     yRangePad: dygraphYRangePad,
     valueRange: dygraphValueRange,
-    ylabel: unitsCurrent,
+    ylabel: isSparkline ? undefined : unitsCurrent,
     yLabelWidth: dygraphYLabelWidth,
 
     // the function to plot the chart
@@ -707,7 +707,7 @@ export const DygraphChart = ({
           },
         },
         visibility: dimensionsVisibility,
-        ylabel: isSparkline ? unitsCurrent : undefined,
+        ylabel: isSparkline ? undefined : unitsCurrent,
       })
     }
   }, [attributes.dygraphTheme, dimensionsVisibility, dygraphInstance, legendFormatValue,
