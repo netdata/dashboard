@@ -80,9 +80,9 @@ export interface Attributes {
   chartLibrary: ChartLibraryName
   width: number | string | null
   height: number | string | null
-  after: number
-  before: number
-  legend: boolean
+  after?: number
+  before?: number
+  legend?: boolean
   units?: string
   unitsCommon?: string
   unitsDesired?: string

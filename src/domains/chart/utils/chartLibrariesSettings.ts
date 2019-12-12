@@ -52,7 +52,8 @@ export const chartLibrariesSettings: ChartLibrariesSettings = {
     hasLegend(attributes: Attributes) {
       // not using __hasLegendCache__ as in old-dashboard, because performance tweaks like this
       // probably won't be needed in react app
-      return !isDygraphSparkline(attributes) && attributes.legend
+      const { legend = true } = attributes
+      return !isDygraphSparkline(attributes) && Boolean(legend)
     },
     // autoresize(state) {
     //   void (state)

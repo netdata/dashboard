@@ -8,7 +8,7 @@ import {
 const shouldUseDefaultContext = process.env.REACT_APP_SHOULD_USE_DEFAULT_CONTEXT
 
 export const dashboardReduxContext = shouldUseDefaultContext
-  ? null
+  ? undefined
   : createContext<ReactReduxContextValue>(undefined as any)
 
 export const useSelector = dashboardReduxContext

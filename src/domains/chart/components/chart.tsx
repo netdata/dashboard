@@ -284,7 +284,7 @@ export const Chart = memo(({
   }), [attributes.colors, attributes.commonColors, chartDetails, chartUuid])
   const colors = useSelector(selectAssignedColors)
   if (!colors) {
-    return null // wait for createSelectAssignedColors reducer result to come back
+    return <span /> // wait for createSelectAssignedColors reducer result to come back
   }
   const orderedColors = chartData.dimension_names.map(prop(__, colors))
 

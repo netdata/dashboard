@@ -105,7 +105,7 @@ export const GoogleChart = ({
             style: "line",
           },
         },
-        pointsVisible: 0,
+        pointsVisible: false,
         titlePosition: "out",
         titleTextStyle: {
           fontSize: 11,
@@ -117,7 +117,7 @@ export const GoogleChart = ({
             fontSize: 9,
           },
         },
-        curveType: "function",
+        curveType: "function" as "function",
         areaOpacity,
         isStacked: chartType === "stacked",
       }
