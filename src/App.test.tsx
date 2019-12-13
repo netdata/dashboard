@@ -1,10 +1,17 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import App from "./App"
 
-jest.mock("react-redux", () => ({ useStore: () => {} }))
+import "../dashboard-react"
 
-jest.mock("./domains/chart/components/portals", () => {})
+import App from "./custom-dashboards-app"
+
+jest.mock("react-redux", () => ({
+  useDispatch: () => {},
+  useSelector: () => {},
+  useStore: () => {},
+}))
+
+jest.mock("domains/chart/components/portals")
 
 it("renders without crashing", () => {
   const div = document.createElement("div")

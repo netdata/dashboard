@@ -11,6 +11,7 @@ import { AppStateT } from "store/app-state"
 
 import { selectGlobalPanAndZoom, selectGlobalSelection } from "domains/global/selectors"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"
+import { serverDefault } from "utils/server-detection"
 import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
 
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
@@ -78,6 +79,7 @@ export const ChartContainer = ({
   /**
    * fetch chart details
    */
+  const host = attributes.host || serverDefault
   const dispatch = useDispatch()
   const { chartDetails, isFetchingDetails } = useSelector((state: AppStateT) => (
     selectChartDetailsRequest(state, { id: chartUuid })
@@ -87,6 +89,7 @@ export const ChartContainer = ({
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
+        host,
       }))
     }
   }, [attributes.id, chartDetails, chartUuid, dispatch, isFetchingDetails, shouldHide])
@@ -194,6 +197,7 @@ export const ChartContainer = ({
       setShouldFetch(false)
       dispatch(fetchDataAction.request({
         // properties to be passed to API
+        host,
         chart: chartDetails.id,
         format: chartSettings.format,
         points,

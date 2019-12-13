@@ -43,3 +43,8 @@ export const selectHasWindowFocus = createSelector(
   selectGlobal,
   prop("hasWindowFocus"),
 )
+
+export const selectIsFetchingHello = createSelector(
+  selectGlobal,
+  prop("isFetchingHello"),
+)

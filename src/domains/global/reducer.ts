@@ -1,6 +1,7 @@
 import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
+import { RegistryMachine } from "domains/global/sagas"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -9,6 +10,8 @@ import {
   setTimezoneAction,
   resetGlobalPanAndZoomAction,
   windowFocusChangeAction,
+  fetchHelloAction,
+  updatePersonUrlsAction,
 } from "./actions"
 
 export type StateT = {
@@ -38,6 +41,15 @@ export type StateT = {
   timezone: string | undefined
   hoveredX: number | null
   hasWindowFocus: boolean
+
+  registry: {
+    isCloudEnabled: boolean
+    personGuid: string | null
+    registryMachines: {[key: string]: RegistryMachine} | null
+    registryMachinesArray: RegistryMachine[] | null
+  }
+
+  isFetchingHello: boolean
 }
 
 export const initialState = {
@@ -48,6 +60,15 @@ export const initialState = {
   timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
   hasWindowFocus: true,
+
+  registry: {
+    isCloudEnabled: false,
+    personGuid: null,
+    registryMachines: null,
+    registryMachinesArray: null,
+  },
+
+  isFetchingHello: false,
 }
 
 export const globalReducer = createReducer<StateT>(
@@ -185,4 +206,33 @@ globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID
 globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
   ...state,
   hasWindowFocus,
+}))
+
+
+globalReducer.on(fetchHelloAction.request, (state) => ({
+  ...state,
+  isFetchingHello: true,
+}))
+
+globalReducer.on(fetchHelloAction.success, (state) => ({
+  ...state,
+  isFetchingHello: false,
+}))
+
+globalReducer.on(fetchHelloAction.failure, (state) => ({
+  ...state,
+  isFetchingHello: true,
+}))
+
+globalReducer.on(updatePersonUrlsAction, (state, {
+  isCloudEnabled, personGuid, registryMachines, registryMachinesArray,
+}) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    isCloudEnabled,
+    personGuid,
+    registryMachines,
+    registryMachinesArray,
+  },
 }))

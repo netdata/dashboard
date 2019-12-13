@@ -122,6 +122,8 @@ interface Window {
   // user configuration options
   netdataNoBootstrap: boolean | undefined
   netdataNoFontAwesome: boolean | undefined
+  netdataRegistry: boolean | undefined
+  netdataServer: string | undefined
 
   __REDUX_DEVTOOLS_EXTENSION__: (() => void | undefined)
 

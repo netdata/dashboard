@@ -1,5 +1,7 @@
 import { createAction } from "redux-act"
 
+import { createRequestAction } from "utils/createRequestAction"
+import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
 
 interface RequestCommonColors {
@@ -50,4 +52,24 @@ interface WindowFocusChangeAction {
 }
 export const windowFocusChangeAction = createAction<WindowFocusChangeAction>(
   `${storeKey}/windowFocusChangeAction`,
+)
+
+export interface FetchHelloPayload {
+  serverDefault: string,
+}
+
+export const fetchHelloAction = createRequestAction<
+  FetchHelloPayload,
+  {}
+  >(`${storeKey}/fetchHelloAction`)
+
+
+interface UpdatePersonUrlsAction {
+  isCloudEnabled: boolean
+  personGuid: string
+  registryMachines: {[key: string]: RegistryMachine}
+  registryMachinesArray: RegistryMachine[]
+}
+export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
+  `${storeKey}/updatePersonUrlsAction`,
 )

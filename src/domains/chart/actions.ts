@@ -26,6 +26,7 @@ export interface FetchDataParams {
   viewRange: [number, number]
 }
 export interface FetchDataPayload {
+  host: string,
   chart: string,
   format: string,
   points: number,
@@ -48,6 +49,7 @@ export const fetchDataAction = createRequestAction<
 export interface FetchChartPayload {
   chart: string
   id: string
+  host: string
 }
 
 export const fetchChartAction = createRequestAction<
