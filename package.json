@@ -1,8 +1,8 @@
 {
   "name": "@netdata/dashboard",
-  "version": "0.1.0",
-  "main": "./src/index-npm.ts",
-  "private": true,
+  "version": "0.1.2",
+  "main": "./lib/src/index-npm.js",
+  "private": false,
   "peerDependencies": {
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
@@ -52,6 +52,7 @@
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "canvas": "^2.6.0",
+    "cpx": "^1.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^2.0.1",
     "install-peers-cli": "^2.1.1",
@@ -66,9 +67,10 @@
     "test": "react-scripts test --env=jest-environment-jsdom-fourteen",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
     "clean": "./node_modules/rimraf/bin.js ./lib",
-    "ts-bundle": "npm run clean && tsc --noEmit false",
+    "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
+    "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts",
     "eject": "react-scripts eject",
-    "prepare": "install-peers"
+    "prepare": "install-peers && npm run ts-bundle"
   },
   "browserslist": {
     "production": [
@@ -81,5 +83,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "Charting library for Netdata Agent",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netdata/dashboard.git"
+  },
+  "keywords": [
+    "netdata",
+    "dashboard",
+    "charts"
+  ],
+  "author": "Netdata",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netdata/dashboard/issues"
+  },
+  "homepage": "https://github.com/netdata/dashboard#readme"
 }
