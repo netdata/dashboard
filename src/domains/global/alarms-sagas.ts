@@ -229,12 +229,6 @@ function* notifyAll(lastNotificationId: number, serverDefault: string, activeAla
     notification.onclick = notificationHandler
 
     yield delay(ALARMS_MS_BETWEEN_NOTIFICATIONS)
-
-    const notification2 = new Notification(
-      "FIU FIU",
-      notificationOptions,
-    )
-    notification2.onclick = notificationHandler
   }
 
   // todo put to redux store
