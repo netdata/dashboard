@@ -12,8 +12,11 @@ import "../dashboard-react"
 import "./styles/dashboard.css"
 import "./styles/bootstrap-3.3.7.css"
 
+import "vendor/fontawesome-all-5.0.1.min"
+
 // Cannot re-export a type when the --isolatedModules flag is provided
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
+
 export type ChartAttributes = Attributes
 
 export {
