@@ -76,7 +76,7 @@ type AttributeConfig = BaseAttributeConfig | BooleanAttributeConfig
 export interface Attributes {
   id: string
   host: string | undefined
-  title: string
+  title?: string
   chartLibrary: ChartLibraryName
   width: number | string | null
   height: number | string | null
