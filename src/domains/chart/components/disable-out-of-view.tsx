@@ -6,6 +6,8 @@ import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { chartLibrariesSettings } from "domains/chart/utils/chartLibrariesSettings"
 
+import { InvisibleSearchableText } from "./invisible-searchable-text"
+
 const cloneWithCanvas = (element: Element) => {
   const cloned = element.cloneNode(true) as Element
   const clonedCanvases = cloned.querySelectorAll("canvas")
@@ -71,7 +73,9 @@ export const DisableOutOfView = ({
 
   if (shouldHide) {
     if (destroyOnHide) {
-      return null
+      return (
+        <InvisibleSearchableText attributes={attributes} />
+      )
     }
 
     if (!clonedChildren) {
@@ -81,16 +85,19 @@ export const DisableOutOfView = ({
     }
 
     return (
-      <div
-        // style={{ background: "yellow", height: "100%" }} // demo styles
-        ref={(nodeElement) => {
-          if (nodeElement && clonedChildren) {
-            clonedChildren.forEach((child: Element) => {
-              nodeElement.appendChild(child)
-            })
-          }
-        }}
-      />
+      <>
+        <InvisibleSearchableText attributes={attributes} />
+        <div
+          // style={{ background: "yellow", height: "100%" }} // demo styles
+          ref={(nodeElement) => {
+            if (nodeElement && clonedChildren) {
+              clonedChildren.forEach((child: Element) => {
+                nodeElement.appendChild(child)
+              })
+            }
+          }}
+        />
+      </>
     )
   }
 
