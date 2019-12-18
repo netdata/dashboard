@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "store/redux-separate-context"
 
 import { selectGlobalPanAndZoom, selectGlobalSelection } from "domains/global/selectors"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"
+import { Loader } from "domains/chart/components/loader"
 import { serverDefault } from "utils/server-detection"
 import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
 
@@ -22,7 +23,13 @@ import {
   selectChartFetchDataParams,
   makeSelectChartDetailsRequest,
 } from "../selectors"
-import { ChartData, ChartDetails } from "../chart-types"
+import {
+  ChartData,
+  ChartDetails,
+  D3pieChartData,
+  DygraphData,
+  EasyPieChartData,
+} from "../chart-types"
 
 import { Chart } from "./chart"
 import "./chart-with-loader.css"
@@ -215,23 +222,39 @@ export const ChartWithLoader = ({
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
+  const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result.data?.length === 0
+    || (chartData as EasyPieChartData | null)?.result.length === 0
+
   if (!chartData || !chartDetails) {
-    return <div className="chart-container__loader">loading...</div>
+    return (
+      <Loader
+        hasEmptyData={false}
+        containerNode={portalNode}
+      />
+    )
   }
 
   return (
-    <Chart
-      attributes={attributes}
-      chartContainerElement={portalNode}
-      chartData={chartData}
-      chartDetails={chartDetails}
-      chartUuid={chartUuid}
-      chartHeight={chartHeight}
-      chartWidth={chartWidth}
-      isRemotelyControlled={fetchDataParams.isRemotelyControlled}
-      selectedDimensions={selectedDimensions}
-      setSelectedDimensions={setSelectedDimensions}
-      showLatestOnBlur={!globalPanAndZoom}
-    />
+    <>
+      {hasEmptyData && (
+        <Loader
+          hasEmptyData
+          containerNode={portalNode}
+        />
+      )}
+      <Chart
+        attributes={attributes}
+        chartContainerElement={portalNode}
+        chartData={chartData}
+        chartDetails={chartDetails}
+        chartUuid={chartUuid}
+        chartHeight={chartHeight}
+        chartWidth={chartWidth}
+        isRemotelyControlled={fetchDataParams.isRemotelyControlled}
+        selectedDimensions={selectedDimensions}
+        setSelectedDimensions={setSelectedDimensions}
+        showLatestOnBlur={!globalPanAndZoom}
+      />
+    </>
   )
 }

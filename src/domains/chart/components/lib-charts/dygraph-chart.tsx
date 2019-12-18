@@ -744,7 +744,9 @@ export const DygraphChart = ({
 
   // update data of the chart
   useLayoutEffect(() => {
-    if (dygraphInstance) {
+    // dont update when there is no data (data.length === 0) - in this case we should still
+    // show old chart
+    if (dygraphInstance && chartData.result.data.length) {
       // todo support state.tmp.dygraph_force_zoom
       const forceDateWindow = [viewAfter, viewBefore]
 
