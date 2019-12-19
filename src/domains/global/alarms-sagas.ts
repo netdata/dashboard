@@ -30,9 +30,9 @@ let firstNotificationId = 0
 let lastNotificationId = 0
 
 
-const scrollToChart = (chartId: unknown): boolean => {
-  if (typeof chartId === "string") {
-    const chartElement = document.querySelector(`#chart_${name2id(chartId)}`)
+const scrollToChart = (chartID: unknown): boolean => {
+  if (typeof chartID === "string") {
+    const chartElement = document.querySelector(`#chart_${name2id(chartID)}`)
     if (chartElement) {
       const offset = (chartElement as HTMLDivElement).offsetTop + CHART_DIV_OFFSET;
       (document.querySelector("html") as HTMLElement).scrollTop = offset
