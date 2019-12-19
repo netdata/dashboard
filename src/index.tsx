@@ -5,7 +5,6 @@ import { Provider } from "react-redux"
 import { configureStore } from "store"
 
 import "./index.css"
-import App from "./App"
 
 const CustomDashboardsApp = lazy(() => import("./custom-dashboards-app"))
 const App = lazy(() => import("./App"))
