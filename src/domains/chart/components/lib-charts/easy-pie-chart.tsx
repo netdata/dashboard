@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react"
+// @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import EasyPie from "easy-pie-chart"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"

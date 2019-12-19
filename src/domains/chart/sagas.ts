@@ -1,6 +1,7 @@
 import { takeEvery, put, call } from "redux-saga/effects"
 
 import { axiosInstance } from "utils/api"
+import { alwaysEndWithSlash } from "utils/server-detection"
 
 import {
   fetchDataAction, FetchDataPayload,
@@ -16,7 +17,7 @@ function* fetchDataSaga({ payload }: FetchDataSaga) {
     fetchDataParams, id,
   } = payload
   let response
-  const url = `${host}api/v1/data`
+  const url = `${alwaysEndWithSlash(host)}api/v1/data`
   try {
     response = yield call(axiosInstance.get, url, {
       params: {
@@ -50,7 +51,7 @@ type FetchChartSaga = { payload: FetchChartPayload }
 function* fetchChartSaga({ payload }: FetchChartSaga) {
   const { chart, id, host } = payload
   let response
-  const url = `${host}api/v1/chart`
+  const url = `${alwaysEndWithSlash(host)}api/v1/chart`
   try {
     response = yield call(axiosInstance.get, url, {
       params: {

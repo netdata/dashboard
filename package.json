@@ -1,7 +1,15 @@
 {
-  "name": "dashboard",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@netdata/dashboard",
+  "version": "0.1.4",
+  "main": "./lib/src/index-npm.js",
+  "files": [
+    "/lib"
+  ],
+  "private": false,
+  "peerDependencies": {
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
   "dependencies": {
     "axios": "^0.19.0",
     "bootstrap": "3.3.7",
@@ -18,16 +26,14 @@
     "peity": "3.2.1",
     "perfect-scrollbar": "0.6.15",
     "ramda": "^0.26.1",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
     "react-redux": "^7.1.1",
-    "react-scripts": "3.2.0",
+    "react-scripts": "^3.3.0",
     "react-use": "^12.5.0",
     "redux": "^4.0.4",
     "redux-act": "^1.7.7",
     "redux-saga": "^1.0.5",
     "reselect": "^4.0.0",
-    "typescript": "3.6.3"
+    "typescript": "^3.7.3"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.1.0",
@@ -49,19 +55,25 @@
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "canvas": "^2.6.0",
+    "cpx": "^1.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^2.0.1",
+    "install-peers-cli": "^2.1.1",
     "jest-environment-jsdom-fourteen": "^0.1.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts start",
     "start:console": "cp ../console.html public/index.html && npm run start",
     "start:tv": "cd public && rm ./index.html && ln -s ../../tv.html index.html && cd .. && npm run start",
     "start:index": "cd public && rm ./index.html && ln -s ../../index.html index.html && cd .. && REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jest-environment-jsdom-fourteen",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
-    "eject": "react-scripts eject"
+    "clean": "./node_modules/rimraf/bin.js ./lib",
+    "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
+    "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts",
+    "eject": "react-scripts eject",
+    "prepare": "install-peers && npm run ts-bundle"
   },
   "browserslist": {
     "production": [
@@ -74,5 +86,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "Charting library for Netdata Agent",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/netdata/dashboard.git"
+  },
+  "keywords": [
+    "netdata",
+    "dashboard",
+    "charts"
+  ],
+  "author": "Netdata",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/netdata/dashboard/issues"
+  },
+  "homepage": "https://github.com/netdata/dashboard#readme"
 }

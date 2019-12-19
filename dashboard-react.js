@@ -17,6 +17,7 @@
 
 // Should stay var!
 var NETDATA = window.NETDATA || {};
+window.NETDATA = NETDATA // when imported as npm module
 
 /// A heuristic for detecting slow devices.
 let isSlowDeviceResult;
@@ -250,7 +251,7 @@ const serverStatic = '/'
 NETDATA.themes = {
   white: {
     bootstrap_css: serverStatic + 'css/bootstrap-3.3.7.css',
-    dashboard_css: serverStatic + 'dashboard.css?v20180210-1',
+    dashboard_css: serverStatic + 'css/dashboard.css?v20180210-1',
     background: '#FFFFFF',
     foreground: '#000000',
     grid: '#F0F0F0',
@@ -281,7 +282,7 @@ NETDATA.themes = {
   },
   slate: {
     bootstrap_css: serverStatic + 'css/bootstrap-slate-flat-3.3.7.css?v20161229-1',
-    dashboard_css: serverStatic + 'dashboard.slate.css?v20180210-1',
+    dashboard_css: serverStatic + 'css/dashboard.slate.css?v20180210-1',
     background: '#272b30',
     foreground: '#C8C8C8',
     grid: '#283236',

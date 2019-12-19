@@ -2,7 +2,6 @@ import { __, prop } from "ramda"
 import React, {
   useEffect, useState, useCallback, useMemo, memo,
 } from "react"
-import { useDispatch, useSelector } from "react-redux"
 
 import {
   requestCommonColorsAction,
@@ -12,6 +11,7 @@ import {
 } from "domains/global/actions"
 import { createSelectAssignedColors, selectGlobalSelection } from "domains/global/selectors"
 import { AppStateT } from "store/app-state"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
@@ -284,7 +284,7 @@ export const Chart = memo(({
   }), [attributes.colors, attributes.commonColors, chartDetails, chartUuid])
   const colors = useSelector(selectAssignedColors)
   if (!colors) {
-    return null // wait for createSelectAssignedColors reducer result to come back
+    return <span /> // wait for createSelectAssignedColors reducer result to come back
   }
   const orderedColors = chartData.dimension_names.map(prop(__, colors))
 

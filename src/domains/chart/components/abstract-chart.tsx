@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
-import { useDispatch } from "react-redux"
 import classNames from "classnames"
 
+import { useDispatch } from "store/redux-separate-context"
 import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains/global/actions"
 
 import { Attributes } from "../utils/transformDataAttributes"

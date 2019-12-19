@@ -126,6 +126,7 @@ interface Window {
   netdataAlarmsRemember: boolean | undefined
   netdataShowAlarms: boolean | undefined
   netdataServer: string | undefined
+  netdataTheme: "white" | "slate"
   netdataAlarmsNotifCallback: ((x: any) => boolean) | undefined
 
   __REDUX_DEVTOOLS_EXTENSION__: (() => void | undefined)

@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from "react"
 
 import { ToolboxButton } from "domains/chart/components/toolbox-button"
 import { setResizeHeightAction } from "domains/chart/actions"
-import { useDispatch } from "react-redux"
+import { useDispatch } from "store/redux-separate-context"
 
 interface Props {
   chartContainerElement: HTMLElement
