@@ -12,6 +12,7 @@ import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { loadCss } from "utils/css-loader"
 import { Portals } from "domains/chart/components/portals"
+import { TEMPORARY_MAIN_JS_TIMEOUT } from "domains/global/constants"
 import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
 
@@ -48,11 +49,10 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
       // delay after loading bootstrap
       // todo quick hack for main.js - of course that cannot make production
       netdataCallback()
-    }, 1000)
+    }, TEMPORARY_MAIN_JS_TIMEOUT)
   }, [])
   const [refreshHelper, setRefreshHelper] = useState()
   const parseDom = useRef(() => {
-    console.log("foo") // eslint-disable-line
     setRefreshHelper(Math.random())
   })
 
