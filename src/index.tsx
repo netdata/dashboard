@@ -5,7 +5,7 @@ import { Provider } from "react-redux"
 import { configureStore } from "store"
 
 import "./index.css"
-import * as serviceWorker from "./serviceWorker"
+import App from "./App"
 
 const CustomDashboardsApp = lazy(() => import("./custom-dashboards-app"))
 const App = lazy(() => import("./App"))
@@ -34,8 +34,3 @@ if (process.env.REACT_APP_IS_MAIN_DASHBOARD) {
   )
 }
 
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister()
