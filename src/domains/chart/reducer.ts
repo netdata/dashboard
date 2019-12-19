@@ -4,7 +4,7 @@ import { fetchDataAction, fetchChartAction, setResizeHeightAction } from "./acti
 import { ChartState } from "./chart-types"
 
 export type StateT = {
-  [chartId: string]: ChartState
+  [chartID: string]: ChartState
 }
 
 export const initialState = {
