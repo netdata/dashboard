@@ -8,7 +8,12 @@ import { AxiosResponse } from "axios"
 import { axiosInstance } from "utils/api"
 
 import {
-  fetchHelloAction, FetchHelloPayload, windowFocusChangeAction, updatePersonUrlsAction,
+  fetchHelloAction,
+  FetchHelloPayload,
+  windowFocusChangeAction,
+  updatePersonUrlsAction,
+  SetOptionAction,
+  setOptionAction,
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
 
@@ -232,9 +237,17 @@ function* fetchHelloSaga({ payload }: FetchHelloSaga) {
   }
 }
 
+const constructOptionStorageKey = (key: string) => `options.${key}`
+interface SetOptionSaga { payload: SetOptionAction }
+function setOptonSaga({ payload }: SetOptionSaga) {
+  const { key, value } = payload
+  localStorage.setItem(constructOptionStorageKey(key), JSON.stringify(value))
+}
+
 export function* globalSagas() {
   yield spawn(listenToWindowFocus)
   yield spawn(watchWindowFocusChannel)
   yield takeEvery(fetchHelloAction.request, fetchHelloSaga)
   yield spawn(alarmsSagas)
+  yield takeEvery(setOptionAction, setOptonSaga)
 }
