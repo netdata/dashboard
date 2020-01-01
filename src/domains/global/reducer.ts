@@ -13,7 +13,9 @@ import {
   fetchHelloAction,
   updatePersonUrlsAction,
   startAlarmsAction,
+  setOptionAction,
 } from "./actions"
+import { Options, optionsMergedWithLocalStorage} from "./options"
 
 export type StateT = {
   commonColorsKeys: {
@@ -55,6 +57,9 @@ export type StateT = {
   }
 
   isFetchingHello: boolean
+
+  options: Options
+
 }
 
 export const initialState = {
@@ -78,6 +83,8 @@ export const initialState = {
   },
 
   isFetchingHello: false,
+
+  options: optionsMergedWithLocalStorage,
 }
 
 export const globalReducer = createReducer<StateT>(
@@ -251,5 +258,13 @@ globalReducer.on(startAlarmsAction, (state) => ({
   alarms: {
     ...state.alarms,
     hasStarted: true,
+  },
+}))
+
+globalReducer.on(setOptionAction, (state, { key, value }) => ({
+  ...state,
+  options: {
+    ...state.options,
+    [key]: value,
   },
 }))

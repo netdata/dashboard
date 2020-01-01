@@ -78,3 +78,11 @@ export interface StartAlarmsPayload { serverDefault: string }
 export const startAlarmsAction = createAction<StartAlarmsPayload>(
   `${storeKey}/startAlarmsAction`,
 )
+
+export interface SetOptionAction {
+  key: string
+  value: unknown
+}
+export const setOptionAction = createAction<SetOptionAction>(
+  `${storeKey}/setOptionAction`,
+)
