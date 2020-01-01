@@ -5,6 +5,7 @@ import { AppStateT } from "store/app-state"
 
 import { GetKeyArguments, getKeyForCommonColorsState } from "./reducer"
 import { storeKey } from "./constants"
+import { OptionsKey } from "./options"
 
 export const createSelectAssignedColors = (args: GetKeyArguments) => (state: AppStateT) => {
   const keyName = getKeyForCommonColorsState(args)
@@ -53,3 +54,15 @@ export const selectHasStartedAlarms = createSelector(
   selectGlobal,
   path(["alarms", "hasStartedAlarms"]),
 )
+
+export const selectOptions = createSelector(
+  selectGlobal,
+  (global) => global.options,
+)
+
+export const createSelectOption = <T extends OptionsKey>(optionName: T) => createSelector(
+  selectOptions,
+  (options) => options[optionName],
+)
+
+export const selectDestroyOnHide = createSelectOption("destroy_on_hide")
