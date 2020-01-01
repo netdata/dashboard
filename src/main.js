@@ -86,12 +86,12 @@ var urlOptions = {
 
         if (urlOptions.pan_and_zoom === true) {
             hash += ';after=' + urlOptions.after.toString() +
-                ';before=' + urlOptions.before.toString();
+              ';before=' + urlOptions.before.toString();
         }
 
         if (urlOptions.highlight === true) {
             hash += ';highlight_after=' + urlOptions.highlight_after.toString() +
-                ';highlight_before=' + urlOptions.highlight_before.toString();
+              ';highlight_before=' + urlOptions.highlight_before.toString();
         }
 
         if (urlOptions.theme !== null) {
@@ -166,8 +166,8 @@ var urlOptions = {
             const after = alarmTime - timeMarginMs;
             const before = alarmTime + timeMarginMs;
             const newHash = document.location.hash.replace(
-                /;alarm_when=[0-9]*/i,
-                ";after=" + after + ";before=" + before,
+              /;alarm_when=[0-9]*/i,
+              ";after=" + after + ";before=" + before,
             );
             history.replaceState(null, '', newHash);
             location.reload();
@@ -266,13 +266,13 @@ var urlOptions = {
                 d2 = '';
             }
             document.getElementById('navbar-highlight-content').innerHTML =
-                ((show_eye === true) ? '<span class="navbar-highlight-bar highlight-tooltip" onclick="urlOptions.showHighlight();" title="restore the highlighted view" data-toggle="tooltip" data-placement="bottom">' : '<span>').toString()
-                + 'highlighted time-frame'
-                + ' <b>' + d1 + ' <code>' + NETDATA.dateTime.localeTimeString(after) + '</code></b> to '
-                + ' <b>' + d2 + ' <code>' + NETDATA.dateTime.localeTimeString(before) + '</code></b>, '
-                + 'duration <b>' + NETDATA.seconds4human(Math.round((before - after) / 1000)) + '</b>'
-                + '</span>'
-                + '<span class="navbar-highlight-button-right highlight-tooltip" onclick="urlOptions.clearHighlight();" title="clear the highlighted time-frame" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-times"></i></span>';
+              ((show_eye === true) ? '<span class="navbar-highlight-bar highlight-tooltip" onclick="urlOptions.showHighlight();" title="restore the highlighted view" data-toggle="tooltip" data-placement="bottom">' : '<span>').toString()
+              + 'highlighted time-frame'
+              + ' <b>' + d1 + ' <code>' + NETDATA.dateTime.localeTimeString(after) + '</code></b> to '
+              + ' <b>' + d2 + ' <code>' + NETDATA.dateTime.localeTimeString(before) + '</code></b>, '
+              + 'duration <b>' + NETDATA.seconds4human(Math.round((before - after) / 1000)) + '</b>'
+              + '</span>'
+              + '<span class="navbar-highlight-button-right highlight-tooltip" onclick="urlOptions.clearHighlight();" title="clear the highlighted time-frame" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-times"></i></span>';
 
             $('.navbar-highlight').show();
 
@@ -548,7 +548,7 @@ function renderStreamedHosts(options) {
         }
 
         html += (
-            `<div class="agent-item">
+          `<div class="agent-item">
                 <a class="registry_link" href="${url}#" onClick="return gotoHostedModalHandler('${url}');">
                     <i class="fas fa-${icon}" style="color: #999;"></i>
                 </a>
@@ -562,7 +562,7 @@ function renderStreamedHosts(options) {
 
     if (!displayedDatabases) {
         html += (
-            `<div class="info-item">
+          `<div class="info-item">
                 <i class="fas fa-filter"></i>
                 <span style="margin-left: 8px">no databases match the filter criteria.<span>
             </div>`
@@ -607,14 +607,14 @@ function renderMachines(machinesArray) {
             displayedAgents = true;
 
             const alternateUrlItems = (
-                `<div class="agent-alternate-urls agent-${machine.guid} collapsed">
+              `<div class="agent-alternate-urls agent-${machine.guid} collapsed">
                 ${machine.alternate_urls.reduce((str, url) => {
                     if (url === maskedURL) {
                         return str
                     }
 
                     return str + (
-                        `<div class="agent-item agent-item--alternate">
+                      `<div class="agent-item agent-item--alternate">
                                 <div></div>
                                 <a href="${url}" title="${url}">${truncateString(url, 64)}</a>
                                 <a href="#" onclick="deleteRegistryModalHandler('${machine.guid}', '${machine.name}', '${url}'); return false;">
@@ -623,13 +623,13 @@ function renderMachines(machinesArray) {
                             </div>`
                     )
                 },
-                    ''
-                )}
+                ''
+              )}
                 </div>`
             )
 
             html += (
-                `<div class="agent-item agent-${machine.guid}">
+              `<div class="agent-item agent-${machine.guid}">
                     <i class="fas fa-chart-bar" color: #fff"></i>
                     <span class="__title" onClick="return gotoServerModalHandler('${machine.guid}');">
                         <a class="registry_link" href="${machine.url}#">${machine.name}</a>
@@ -644,7 +644,7 @@ function renderMachines(machinesArray) {
 
         if (found && (!displayedAgents)) {
             html += (
-                `<div class="info-item">
+              `<div class="info-item">
                     <i class="fas fa-filter"></i>
                     <span style="margin-left: 8px">zero nodes are matching the filter value.<span>
                 </div>`
@@ -655,13 +655,13 @@ function renderMachines(machinesArray) {
     if (!found) {
         if (machines) {
             html += (
-                `<div class="info-item">
+              `<div class="info-item">
                     <a href="https://github.com/netdata/netdata/tree/master/registry#netdata-registry" target="_blank">Your nodes list is empty</a>
                 </div>`
             )
         } else {
             html += (
-                `<div class="info-item">
+              `<div class="info-item">
                     <a href="https://github.com/netdata/netdata/tree/master/registry#netdata-registry" target="_blank">Failed to contact the registry</a>
                 </div>`
             )
@@ -684,7 +684,7 @@ function renderMachines(machinesArray) {
 
         for (var server of demoServers) {
             html += (
-                `<div class="agent-item">
+              `<div class="agent-item">
                     <i class="fas fa-chart-bar" style="color: #fff"></i>
                     <a href="${server.url}">${server.title}</a>
                     <div></div>
@@ -749,7 +749,7 @@ function renderMyNetdataMenu(machinesArray) {
         // if (!NETDATA.registry.isRegistryEnabled()) { // todo
         if (true) {
             html += (
-                `<div class="info-item" style="white-space: nowrap">
+              `<div class="info-item" style="white-space: nowrap">
                     <span>Please <a href="#" onclick="signInDidClick(event); return false">sign in to netdata.cloud</a> to view your nodes!</span>
                     <div></div>
                 </div>
@@ -760,7 +760,7 @@ function renderMyNetdataMenu(machinesArray) {
 
     if (isSignedIn()) {
         html += (
-            `<div class="filter-control">
+          `<div class="filter-control">
                 <input 
                     id="my-netdata-menu-filter-input"
                     type="text" 
@@ -796,7 +796,7 @@ function renderMyNetdataMenu(machinesArray) {
 
     if (!isSignedIn()) {
         html += (
-            `<div class="agent-item">
+          `<div class="agent-item">
                 <i class="fas fa-tv"></i>
                 <a onClick="openAuthenticatedUrl('console.html');" target="_blank">Nodes<sup class="beta"> beta</sup></a>
                 <div></div>
@@ -814,7 +814,7 @@ function renderMyNetdataMenu(machinesArray) {
         )
     } else {
         html += (
-            `<div class="agent-item">
+          `<div class="agent-item">
                 <i class="fas fa-tv"></i>
                 <a onclick="openAuthenticatedUrl('console.html');" target="_blank">Nodes<sup class="beta"> beta</sup></a>
                 <div></div>
@@ -846,13 +846,13 @@ function isdemo() {
     try {
         if (typeof document.location.hostname === 'string') {
             if (document.location.hostname.endsWith('.my-netdata.io') ||
-                document.location.hostname.endsWith('.mynetdata.io') ||
-                document.location.hostname.endsWith('.netdata.rocks') ||
-                document.location.hostname.endsWith('.netdata.ai') ||
-                document.location.hostname.endsWith('.netdata.live') ||
-                document.location.hostname.endsWith('.firehol.org') ||
-                document.location.hostname.endsWith('.netdata.online') ||
-                document.location.hostname.endsWith('.netdata.cloud')) {
+              document.location.hostname.endsWith('.mynetdata.io') ||
+              document.location.hostname.endsWith('.netdata.rocks') ||
+              document.location.hostname.endsWith('.netdata.ai') ||
+              document.location.hostname.endsWith('.netdata.live') ||
+              document.location.hostname.endsWith('.firehol.org') ||
+              document.location.hostname.endsWith('.netdata.online') ||
+              document.location.hostname.endsWith('.netdata.cloud')) {
                 this_is_demo = true;
             }
         }
@@ -1055,21 +1055,21 @@ function notifyForDeleteRegistry() {
     if (deleteRegistryUrl) {
         if (isSignedIn()) {
             deleteCloudAgentURL(deleteRegistryGuid, deleteRegistryUrl)
-                .then((count) => {
-                    if (!count) {
-                        responseEl.innerHTML = "<b>Sorry, this command was rejected by netdata.cloud!</b>";
-                        return;
+            .then((count) => {
+                if (!count) {
+                    responseEl.innerHTML = "<b>Sorry, this command was rejected by netdata.cloud!</b>";
+                    return;
+                }
+                NETDATA.registry.delete(deleteRegistryUrl, function (result) {
+                    if (result === null) {
+                        console.log("Received error from registry", result);
                     }
-                    NETDATA.registry.delete(deleteRegistryUrl, function (result) {
-                        if (result === null) {
-                            console.log("Received error from registry", result);
-                        }
 
-                        deleteRegistryUrl = null;
-                        $('#deleteRegistryModal').modal('hide');
-                        NETDATA.registry.init();
-                    });
+                    deleteRegistryUrl = null;
+                    $('#deleteRegistryModal').modal('hide');
+                    NETDATA.registry.init();
                 });
+            });
         } else {
             NETDATA.registry.delete(deleteRegistryUrl, function (result) {
                 if (result !== null) {
@@ -1232,16 +1232,16 @@ var netdataDashboard = {
         }
 
         return '<div class="netdata-container" data-netdata="CHART_UNIQUE_ID"'
-            + ' data-dimensions="' + dimensions + '"'
-            + ' data-chart-library="gauge"'
-            + ' data-gauge-adjust="width"'
-            + ' data-title="' + title + '"'
-            + ' data-width="' + width + '"'
-            + ' data-before="0"'
-            + ' data-after="-CHART_DURATION"'
-            + ' data-points="CHART_DURATION"'
-            + ' data-colors="' + colors + '"'
-            + ' role="application"></div>';
+          + ' data-dimensions="' + dimensions + '"'
+          + ' data-chart-library="gauge"'
+          + ' data-gauge-adjust="width"'
+          + ' data-title="' + title + '"'
+          + ' data-width="' + width + '"'
+          + ' data-before="0"'
+          + ' data-after="-CHART_DURATION"'
+          + ' data-points="CHART_DURATION"'
+          + ' data-colors="' + colors + '"'
+          + ' role="application"></div>';
     },
 
     anyAttribute: function (obj, attr, key, def) {
@@ -1265,7 +1265,7 @@ var netdataDashboard = {
     menuTitle: function (chart) {
         if (typeof chart.menu_pattern !== 'undefined') {
             return (this.anyAttribute(this.menu, 'title', chart.menu_pattern, chart.menu_pattern).toString()
-                + '&nbsp;' + chart.type.slice(-(chart.type.length - chart.menu_pattern.length - 1)).toString()).replace(/_/g, ' ');
+              + '&nbsp;' + chart.type.slice(-(chart.type.length - chart.menu_pattern.length - 1)).toString()).replace(/_/g, ' ');
         }
 
         return (this.anyAttribute(this.menu, 'title', chart.menu, chart.menu)).toString().replace(/_/g, ' ');
@@ -1488,188 +1488,188 @@ function headMain(os, charts, duration) {
 
     if (typeof charts['system.swap'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.swap"'
-            + ' data-dimensions="used"'
-            + ' data-append-options="percentage"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Used Swap"'
-            + ' data-units="%"'
-            + ' data-easypiechart-max-value="100"'
-            + ' data-width="9%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-colors="#DD4400"'
-            + ' role="application"></div>';
+          + ' data-dimensions="used"'
+          + ' data-append-options="percentage"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Used Swap"'
+          + ' data-units="%"'
+          + ' data-easypiechart-max-value="100"'
+          + ' data-width="9%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-colors="#DD4400"'
+          + ' role="application"></div>';
     }
 
     if (typeof charts['system.io'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.io"'
-            + ' data-dimensions="in"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Disk Read"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.io.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="in"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Disk Read"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.io.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.io"'
-            + ' data-dimensions="out"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Disk Write"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.io.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="out"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Disk Write"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.io.mainhead"'
+          + ' role="application"></div>';
     }
     else if (typeof charts['system.pgpgio'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.pgpgio"'
-            + ' data-dimensions="in"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Disk Read"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.pgpgio.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="in"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Disk Read"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.pgpgio.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.pgpgio"'
-            + ' data-dimensions="out"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Disk Write"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.pgpgio.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="out"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Disk Write"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.pgpgio.mainhead"'
+          + ' role="application"></div>';
     }
 
     if (typeof charts['system.cpu'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.cpu"'
-            + ' data-chart-library="gauge"'
-            + ' data-title="CPU"'
-            + ' data-units="%"'
-            + ' data-gauge-max-value="100"'
-            + ' data-width="20%"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-colors="' + NETDATA.colors[12] + '"'
-            + ' role="application"></div>';
+          + ' data-chart-library="gauge"'
+          + ' data-title="CPU"'
+          + ' data-units="%"'
+          + ' data-gauge-max-value="100"'
+          + ' data-width="20%"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-colors="' + NETDATA.colors[12] + '"'
+          + ' role="application"></div>';
     }
 
     if (typeof charts['system.net'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.net"'
-            + ' data-dimensions="received"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Net Inbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.net.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="received"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Net Inbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.net.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.net"'
-            + ' data-dimensions="sent"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Net Outbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.net.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="sent"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Net Outbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.net.mainhead"'
+          + ' role="application"></div>';
     }
     else if (typeof charts['system.ip'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ip"'
-            + ' data-dimensions="received"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IP Inbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ip.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="received"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IP Inbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ip.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ip"'
-            + ' data-dimensions="sent"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IP Outbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ip.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="sent"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IP Outbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ip.mainhead"'
+          + ' role="application"></div>';
     }
     else if (typeof charts['system.ipv4'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ipv4"'
-            + ' data-dimensions="received"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IPv4 Inbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ipv4.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="received"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IPv4 Inbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ipv4.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ipv4"'
-            + ' data-dimensions="sent"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IPv4 Outbound"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ipv4.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="sent"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IPv4 Outbound"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ipv4.mainhead"'
+          + ' role="application"></div>';
     }
     else if (typeof charts['system.ipv6'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ipv6"'
-            + ' data-dimensions="received"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IPv6 Inbound"'
-            + ' data-units="kbps"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ipv6.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="received"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IPv6 Inbound"'
+          + ' data-units="kbps"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ipv6.mainhead"'
+          + ' role="application"></div>';
 
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ipv6"'
-            + ' data-dimensions="sent"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="IPv6 Outbound"'
-            + ' data-units="kbps"'
-            + ' data-width="11%"'
-            + ' data-before="0"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-common-units="system.ipv6.mainhead"'
-            + ' role="application"></div>';
+          + ' data-dimensions="sent"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="IPv6 Outbound"'
+          + ' data-units="kbps"'
+          + ' data-width="11%"'
+          + ' data-before="0"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-common-units="system.ipv6.mainhead"'
+          + ' role="application"></div>';
     }
 
     if (typeof charts['system.ram'] !== 'undefined') {
         head += '<div class="netdata-container" style="margin-right: 10px;" data-netdata="system.ram"'
-            + ' data-dimensions="used|buffers|active|wired"' // active and wired are FreeBSD stats
-            + ' data-append-options="percentage"'
-            + ' data-chart-library="easypiechart"'
-            + ' data-title="Used RAM"'
-            + ' data-units="%"'
-            + ' data-easypiechart-max-value="100"'
-            + ' data-width="9%"'
-            + ' data-after="-' + duration.toString() + '"'
-            + ' data-points="' + duration.toString() + '"'
-            + ' data-colors="' + NETDATA.colors[7] + '"'
-            + ' role="application"></div>';
+          + ' data-dimensions="used|buffers|active|wired"' // active and wired are FreeBSD stats
+          + ' data-append-options="percentage"'
+          + ' data-chart-library="easypiechart"'
+          + ' data-title="Used RAM"'
+          + ' data-units="%"'
+          + ' data-easypiechart-max-value="100"'
+          + ' data-width="9%"'
+          + ' data-after="-' + duration.toString() + '"'
+          + ' data-points="' + duration.toString() + '"'
+          + ' data-colors="' + NETDATA.colors[7] + '"'
+          + ' role="application"></div>';
     }
 
     return head;
@@ -1785,17 +1785,17 @@ function renderPage(menus, data) {
                 }
 
                 chtml += '<div class="netdata-chartblock-container" style="width: ' + pcent_width.toString() + '%;">' + netdataDashboard.contextInfo(chart.context) + '<div class="netdata-container" id="chart_' + NETDATA.name2id(chart.id) + '" data-netdata="' + chart.id + '"'
-                    + ' data-width="100%"'
-                    + ' data-height="' + netdataDashboard.contextHeight(chart.context, options.chartsHeight).toString() + 'px"'
-                    + ' data-dygraph-valuerange="' + netdataDashboard.contextValueRange(chart.context) + '"'
-                    + ' data-before="0"'
-                    + ' data-after="-' + duration.toString() + '"'
-                    + ' data-id="' + NETDATA.name2id(options.hostname + '/' + chart.id) + '"'
-                    + ' data-colors="' + netdataDashboard.anyAttribute(netdataDashboard.context, 'colors', chart.context, '') + '"'
-                    + ' data-decimal-digits="' + netdataDashboard.contextDecimalDigits(chart.context, -1) + '"'
-                    + chartCommonMin(chart.family, chart.context, chart.units)
-                    + chartCommonMax(chart.family, chart.context, chart.units)
-                    + ' role="application"></div></div>';
+                  + ' data-width="100%"'
+                  + ' data-height="' + netdataDashboard.contextHeight(chart.context, options.chartsHeight).toString() + 'px"'
+                  + ' data-dygraph-valuerange="' + netdataDashboard.contextValueRange(chart.context) + '"'
+                  + ' data-before="0"'
+                  + ' data-after="-' + duration.toString() + '"'
+                  + ' data-id="' + NETDATA.name2id(options.hostname + '/' + chart.id) + '"'
+                  + ' data-colors="' + netdataDashboard.anyAttribute(netdataDashboard.context, 'colors', chart.context, '') + '"'
+                  + ' data-decimal-digits="' + netdataDashboard.contextDecimalDigits(chart.context, -1) + '"'
+                  + chartCommonMin(chart.family, chart.context, chart.units)
+                  + chartCommonMax(chart.family, chart.context, chart.units)
+                  + ' role="application"></div></div>';
 
                 if (urlOptions.mode === 'print') {
                     chtml += '</div>';
@@ -1837,10 +1837,10 @@ function renderPage(menus, data) {
 
     if (urlOptions.highlight === true) {
         NETDATA.globalChartUnderlay.init(null
-            , urlOptions.highlight_after
-            , urlOptions.highlight_before
-            , (urlOptions.after > 0) ? urlOptions.after : null
-            , (urlOptions.before > 0) ? urlOptions.before : null
+          , urlOptions.highlight_after
+          , urlOptions.highlight_before
+          , (urlOptions.after > 0) ? urlOptions.after : null
+          , (urlOptions.before > 0) ? urlOptions.before : null
         );
     } else {
         NETDATA.globalChartUnderlay.clear();
@@ -1946,14 +1946,14 @@ function loadJs(url, callback) {
         dataType: "script",
         xhrFields: { withCredentials: true } // required for the cookie
     })
-        .fail(function () {
-            alert('Cannot load required JS library: ' + url);
-        })
-        .always(function () {
-            if (typeof callback === 'function') {
-                callback();
-            }
-        })
+    .fail(function () {
+        alert('Cannot load required JS library: ' + url);
+    })
+    .always(function () {
+        if (typeof callback === 'function') {
+            callback();
+        }
+    })
 }
 
 var clipboardLoaded = false;
@@ -2045,9 +2045,9 @@ function alarmsUpdateModal() {
 
         if (data === null) {
             document.getElementById('alarms_active').innerHTML =
-                document.getElementById('alarms_all').innerHTML =
+              document.getElementById('alarms_all').innerHTML =
                 document.getElementById('alarms_log').innerHTML =
-                'failed to load alarm data!';
+                  'failed to load alarm data!';
             return;
         }
 
@@ -2096,10 +2096,10 @@ function alarmsUpdateModal() {
             }
 
             return '<code>' + alarm.lookup_method + '</code> '
-                + dimensions + ', of chart <code>' + alarm.chart + '</code>'
-                + ', starting <code>' + NETDATA.seconds4human(alarm.lookup_after + alarm.lookup_before, { space: '&nbsp;' }) + '</code> and up to <code>' + NETDATA.seconds4human(alarm.lookup_before, { space: '&nbsp;' }) + '</code>'
-                + ((alarm.lookup_options) ? (', with options <code>' + alarm.lookup_options.replace(/ /g, ',&nbsp;') + '</code>') : '')
-                + '.';
+              + dimensions + ', of chart <code>' + alarm.chart + '</code>'
+              + ', starting <code>' + NETDATA.seconds4human(alarm.lookup_after + alarm.lookup_before, { space: '&nbsp;' }) + '</code> and up to <code>' + NETDATA.seconds4human(alarm.lookup_before, { space: '&nbsp;' }) + '</code>'
+              + ((alarm.lookup_options) ? (', with options <code>' + alarm.lookup_options.replace(/ /g, ',&nbsp;') + '</code>') : '')
+              + '.';
         }
 
         function alarm_to_html(alarm, full) {
@@ -2119,14 +2119,14 @@ function alarmsUpdateModal() {
             var badge_url = NETDATA.alarms.server + '/api/v1/badge.svg?chart=' + alarm.chart + '&alarm=' + alarm.name + '&refresh=auto';
 
             var action_buttons = '<br/>&nbsp;<br/>role: <b>' + alarm.recipient + '</b><br/>&nbsp;<br/>'
-                + '<div class="action-button ripple" title="click to scroll the dashboard to the chart of this alarm" data-toggle="tooltip" data-placement="bottom" onClick="scrollToChartAfterHidingModal(\'' + alarm.chart + '\', ' + alarm.last_status_change * 1000 + ', \'' + alarm.status + '\'); $(\'#alarmsModal\').modal(\'hide\'); return false;"><i class="fab fa-periscope"></i></div>'
-                + '<div class="action-button ripple" title="click to copy to the clipboard the URL of this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopy(\'' + badge_url + '\'); return false;"><i class="far fa-copy"></i></div>'
-                + '<div class="action-button ripple" title="click to copy to the clipboard an auto-refreshing <code>embed</code> html element for this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopyBadgeEmbed(\'' + badge_url + '\'); return false;"><i class="fas fa-copy"></i></div>';
+              + '<div class="action-button ripple" title="click to scroll the dashboard to the chart of this alarm" data-toggle="tooltip" data-placement="bottom" onClick="scrollToChartAfterHidingModal(\'' + alarm.chart + '\', ' + alarm.last_status_change * 1000 + ', \'' + alarm.status + '\'); $(\'#alarmsModal\').modal(\'hide\'); return false;"><i class="fab fa-periscope"></i></div>'
+              + '<div class="action-button ripple" title="click to copy to the clipboard the URL of this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopy(\'' + badge_url + '\'); return false;"><i class="far fa-copy"></i></div>'
+              + '<div class="action-button ripple" title="click to copy to the clipboard an auto-refreshing <code>embed</code> html element for this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopyBadgeEmbed(\'' + badge_url + '\'); return false;"><i class="fas fa-copy"></i></div>';
 
             var html = '<tr><td class="text-center" style="vertical-align:middle" width="40%"><b>' + alarm.chart + '</b><br/>&nbsp;<br/><embed src="' + badge_url + '" type="image/svg+xml" height="20"/><br/>&nbsp;<br/><span style="font-size: 18px">' + alarm.info + '</span>' + action_buttons + '</td>'
-                + '<td><table class="table">'
-                + ((typeof alarm.warn !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">warning&nbsp;when</td><td><span style="font-family: monospace; color:#fe7d37; font-weight: bold;">' + alarm.warn + '</span></td></tr>') : '')
-                + ((typeof alarm.crit !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">critical&nbsp;when</td><td><span style="font-family: monospace; color: #e05d44; font-weight: bold;">' + alarm.crit + '</span></td></tr>') : '');
+              + '<td><table class="table">'
+              + ((typeof alarm.warn !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">warning&nbsp;when</td><td><span style="font-family: monospace; color:#fe7d37; font-weight: bold;">' + alarm.warn + '</span></td></tr>') : '')
+              + ((typeof alarm.crit !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">critical&nbsp;when</td><td><span style="font-family: monospace; color: #e05d44; font-weight: bold;">' + alarm.crit + '</span></td></tr>') : '');
 
             if (full === true) {
                 var units = chart.units;
@@ -2135,9 +2135,9 @@ function alarmsUpdateModal() {
                 }
 
                 html += ((typeof alarm.lookup_after !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">db&nbsp;lookup</td><td>' + alarm_lookup_explain(alarm, chart) + '</td></tr>') : '')
-                    + ((typeof alarm.calc !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">calculation</td><td><span style="font-family: monospace;">' + alarm.calc + '</span></td></tr>') : '')
-                    + ((chart.green !== null) ? ('<tr><td width="10%" style="text-align:right">green&nbsp;threshold</td><td><code>' + chart.green + ' ' + units + '</code></td></tr>') : '')
-                    + ((chart.red !== null) ? ('<tr><td width="10%" style="text-align:right">red&nbsp;threshold</td><td><code>' + chart.red + ' ' + units + '</code></td></tr>') : '');
+                  + ((typeof alarm.calc !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">calculation</td><td><span style="font-family: monospace;">' + alarm.calc + '</span></td></tr>') : '')
+                  + ((chart.green !== null) ? ('<tr><td width="10%" style="text-align:right">green&nbsp;threshold</td><td><code>' + chart.green + ' ' + units + '</code></td></tr>') : '')
+                  + ((chart.red !== null) ? ('<tr><td width="10%" style="text-align:right">red&nbsp;threshold</td><td><code>' + chart.red + ' ' + units + '</code></td></tr>') : '');
             }
 
             if (alarm.warn_repeat_every > 0) {
@@ -2181,12 +2181,12 @@ function alarmsUpdateModal() {
             }
 
             html += '<tr><td width="10%" style="text-align:right">check&nbsp;every</td><td>' + NETDATA.seconds4human(alarm.update_every, {
-                space: '&nbsp;',
-                negative_suffix: ''
-            }) + '</td></tr>'
-                + ((has_alarm === true) ? ('<tr><td width="10%" style="text-align:right">execute</td><td><span style="font-family: monospace;">' + alarm.exec + '</span>' + delay + '</td></tr>') : '')
-                + '<tr><td width="10%" style="text-align:right">source</td><td><span style="font-family: monospace;">' + alarm.source + '</span></td></tr>'
-                + '</table></td></tr>';
+                  space: '&nbsp;',
+                  negative_suffix: ''
+              }) + '</td></tr>'
+              + ((has_alarm === true) ? ('<tr><td width="10%" style="text-align:right">execute</td><td><span style="font-family: monospace;">' + alarm.exec + '</span>' + delay + '</td></tr>') : '')
+              + '<tr><td width="10%" style="text-align:right">source</td><td><span style="font-family: monospace;">' + alarm.source + '</span></td></tr>'
+              + '</table></td></tr>';
 
             return html;
         }
@@ -2965,15 +2965,15 @@ function getGithubLatestVersion(callback) {
         async: true,
         cache: false
     })
-        .done(function (data) {
-            data = data.tag_name.replace(/(\r\n|\n|\r| |\t)/gm, "");
-            versionLog('Latest stable version from github is ' + data);
-            callback(data);
-        })
-        .fail(function () {
-            versionLog('Failed to download the latest stable version id from github!');
-            callback(null);
-        });
+    .done(function (data) {
+        data = data.tag_name.replace(/(\r\n|\n|\r| |\t)/gm, "");
+        versionLog('Latest stable version from github is ' + data);
+        callback(data);
+    })
+    .fail(function () {
+        versionLog('Failed to download the latest stable version id from github!');
+        callback(null);
+    });
 }
 
 function getGCSLatestVersion(callback) {
@@ -2983,26 +2983,26 @@ function getGCSLatestVersion(callback) {
         async: true,
         cache: false
     })
-        .done(function (response) {
-            $.ajax({
-                url: response.mediaLink,
-                async: true,
-                cache: false
-            })
-                .done(function (data) {
-                    data = data.replace(/(\r\n|\n|\r| |\t)/gm, "");
-                    versionLog('Latest nightly version from GCS is ' + data);
-                    callback(data);
-                })
-                .fail(function (xhr, textStatus, errorThrown) {
-                    versionLog('Failed to download the latest nightly version id from GCS!');
-                    callback(null);
-                });
+    .done(function (response) {
+        $.ajax({
+            url: response.mediaLink,
+            async: true,
+            cache: false
+        })
+        .done(function (data) {
+            data = data.replace(/(\r\n|\n|\r| |\t)/gm, "");
+            versionLog('Latest nightly version from GCS is ' + data);
+            callback(data);
         })
         .fail(function (xhr, textStatus, errorThrown) {
-            versionLog('Failed to download the latest nightly version from GCS!');
+            versionLog('Failed to download the latest nightly version id from GCS!');
             callback(null);
         });
+    })
+    .fail(function (xhr, textStatus, errorThrown) {
+        versionLog('Failed to download the latest nightly version from GCS!');
+        callback(null);
+    });
 }
 
 
@@ -3352,11 +3352,11 @@ function loadSnapshot() {
             urlOptions.before = tmpSnapshotData.before_ms;
 
             if (typeof tmpSnapshotData.highlight_after_ms !== 'undefined'
-                && tmpSnapshotData.highlight_after_ms !== null
-                && tmpSnapshotData.highlight_after_ms > 0
-                && typeof tmpSnapshotData.highlight_before_ms !== 'undefined'
-                && tmpSnapshotData.highlight_before_ms !== null
-                && tmpSnapshotData.highlight_before_ms > 0
+              && tmpSnapshotData.highlight_after_ms !== null
+              && tmpSnapshotData.highlight_after_ms > 0
+              && typeof tmpSnapshotData.highlight_before_ms !== 'undefined'
+              && tmpSnapshotData.highlight_before_ms !== null
+              && tmpSnapshotData.highlight_before_ms > 0
             ) {
                 urlOptions.highlight_after = tmpSnapshotData.highlight_after_ms;
                 urlOptions.highlight_before = tmpSnapshotData.highlight_before_ms;
@@ -3447,18 +3447,18 @@ function loadSnapshotDragAndDropSetup() {
     if (loadSnapshotDragAndDropInitialized === false) {
         loadSnapshotDragAndDropInitialized = true;
         $('#loadSnapshotDragAndDrop')
-            .on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            })
-            .on('drop', function (e) {
-                if (e.originalEvent.dataTransfer.files.length) {
-                    loadSnapshotPreflightFile(e.originalEvent.dataTransfer.files.item(0));
-                } else {
-                    loadSnapshotPreflightEmpty();
-                    loadSnapshotModalLog('danger', 'No file selected');
-                }
-            });
+        .on('drag dragstart dragend dragover dragenter dragleave drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        })
+        .on('drop', function (e) {
+            if (e.originalEvent.dataTransfer.files.length) {
+                loadSnapshotPreflightFile(e.originalEvent.dataTransfer.files.item(0));
+            } else {
+                loadSnapshotPreflightEmpty();
+                loadSnapshotModalLog('danger', 'No file selected');
+            }
+        });
     }
 };
 
@@ -3490,12 +3490,12 @@ function saveSnapshotModalSetup() {
     if (saveSnapshotModalInitialized === false) {
         saveSnapshotModalInitialized = true;
         $('#saveSnapshotModal')
-            .on('hide.bs.modal', saveSnapshotCancel)
-            .on('show.bs.modal', saveSnapshotModalInit)
-            .on('shown.bs.modal', function () {
-                $('#saveSnapshotResolutionSlider').find(".slider-handle:first").attr("tabindex", 1);
-                document.getElementById('saveSnapshotComments').focus();
-            });
+        .on('hide.bs.modal', saveSnapshotCancel)
+        .on('show.bs.modal', saveSnapshotModalInit)
+        .on('shown.bs.modal', function () {
+            $('#saveSnapshotResolutionSlider').find(".slider-handle:first").attr("tabindex", 1);
+            document.getElementById('saveSnapshotComments').focus();
+        });
     }
 };
 
@@ -3510,14 +3510,14 @@ function saveSnapshotModalShowExpectedSize() {
     var msg = 'A moderate snapshot.';
 
     var sizemb = Math.round(
-        (options.data.charts_count * snapshotOptions.bytes_per_chart
-            + options.data.dimensions_count * points * snapshotOptions.compressions[saveSnapshotCompression].bytes_per_point_disk)
-        * 10 / 1024 / 1024) / 10;
+      (options.data.charts_count * snapshotOptions.bytes_per_chart
+        + options.data.dimensions_count * points * snapshotOptions.compressions[saveSnapshotCompression].bytes_per_point_disk)
+      * 10 / 1024 / 1024) / 10;
 
     var memmb = Math.round(
-        (options.data.charts_count * snapshotOptions.bytes_per_chart
-            + options.data.dimensions_count * points * snapshotOptions.compressions[saveSnapshotCompression].bytes_per_point_memory)
-        * 10 / 1024 / 1024) / 10;
+      (options.data.charts_count * snapshotOptions.bytes_per_chart
+        + options.data.dimensions_count * points * snapshotOptions.compressions[saveSnapshotCompression].bytes_per_point_memory)
+      * 10 / 1024 / 1024) / 10;
 
     if (sizemb < 10) {
         priority = 'success';
@@ -5165,8 +5165,8 @@ function netdataRegistryCallback(machinesArray) {
     }
 };
 
-// If we know the cloudBaseURL and agentID from local storage render (eagerly) 
-// the account ui before receiving the definitive response from the web server. 
+// If we know the cloudBaseURL and agentID from local storage render (eagerly)
+// the account ui before receiving the definitive response from the web server.
 // This improves the perceived performance.
 function tryFastInitCloud() {
     const baseURL = localStorage.getItem("cloud.baseURL");
