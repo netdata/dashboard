@@ -374,33 +374,6 @@ NETDATA.globalPanAndZoom = {
 }
 NETDATA.unpause = () => {}
 
-NETDATA.setOption = function (key, value) {
-  if (key.toString() === 'setOptionCallback') {
-    if (typeof NETDATA.options.current.setOptionCallback === 'function') {
-      NETDATA.options.current[key.toString()] = value;
-      NETDATA.options.current.setOptionCallback();
-    }
-  } else if (NETDATA.options.current[key.toString()] !== value) {
-    let name = 'options.' + key.toString();
-
-    if (typeof NETDATA.localStorage.default[name.toString()] === 'undefined') {
-      console.log('localStorage: setOption() on unsaved option: "' + name.toString() + '", value: ' + value);
-    }
-
-    NETDATA.options.current[key.toString()] = NETDATA.localStorageSet(name.toString(), value, null);
-
-    if (typeof NETDATA.options.current.setOptionCallback === 'function') {
-      NETDATA.options.current.setOptionCallback();
-    }
-  }
-
-  return true;
-};
-
-NETDATA.getOption = function (key) {
-  return NETDATA.options.current[key.toString()];
-};
-
 
 // ----------------------------------------------------------------------------------------------------------------
 // XSS checks
