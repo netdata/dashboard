@@ -125,6 +125,7 @@ interface Window {
   netdataRegistry: boolean | undefined
   netdataAlarmsRemember: boolean | undefined
   netdataShowAlarms: boolean | undefined
+  netdataShowHelp: boolean | undefined
   netdataServer: string | undefined
   netdataTheme: "white" | "slate"
   netdataAlarmsNotifCallback: ((x: any) => boolean) | undefined

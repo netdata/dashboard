@@ -5,6 +5,11 @@
 /* global NETDATA */
 
 // netdata snapshot data
+import {
+    setOptionAction,
+} from './domains/global/actions';
+import { createSelectOption } from './domains/global/selectors';
+
 var netdataSnapshotData = null;
 
 // enable alarms checking and notifications
@@ -34,6 +39,13 @@ function escapeUserInputHTML(s) {
         .replace(/\(/g, '&#40;')
         .replace(/\)/g, '&#41;')
         .replace(/\//g, '&#47;');
+}
+
+const setOption = (key, value) => {
+    reduxStore.dispatch(setOptionAction({
+        key,
+        value,
+    }))
 }
 
 function verifyURL(s) {
@@ -3839,14 +3851,18 @@ function saveSnapshot() {
 
 function dashboardSettingsSetup() {
     var update_options_modal = function () {
-        // console.log('update_options_modal');
+        // replacement of `NETDATA.getOption`
+        const getOption = (option) => {
+            const state = reduxStore.getState()
+            return createSelectOption(option)(state)
+        }
 
         var sync_option = function (option) {
             var self = $('#' + option);
 
-            if (self.prop('checked') !== NETDATA.getOption(option)) {
+            if (self.prop('checked') !== getOption(option)) {
                 // console.log('switching ' + option.toString());
-                self.bootstrapToggle(NETDATA.getOption(option) ? 'on' : 'off');
+                self.bootstrapToggle(getOption(option) ? 'on' : 'off');
             }
         };
 
@@ -3858,8 +3874,8 @@ function dashboardSettingsSetup() {
         var units_sync_option = function (option) {
             var self = $('#' + option);
 
-            if (self.prop('checked') !== (NETDATA.getOption('units') === 'auto')) {
-                self.bootstrapToggle(NETDATA.getOption('units') === 'auto' ? 'on' : 'off');
+            if (self.prop('checked') !== (getOption('units') === 'auto')) {
+                self.bootstrapToggle(getOption('units') === 'auto' ? 'on' : 'off');
             }
 
             if (self.prop('checked') === true) {
@@ -3873,8 +3889,8 @@ function dashboardSettingsSetup() {
         var temp_sync_option = function (option) {
             var self = $('#' + option);
 
-            if (self.prop('checked') !== (NETDATA.getOption('temperature') === 'celsius')) {
-                self.bootstrapToggle(NETDATA.getOption('temperature') === 'celsius' ? 'on' : 'off');
+            if (self.prop('checked') !== (getOption('temperature') === 'celsius')) {
+                self.bootstrapToggle(getOption('temperature') === 'celsius' ? 'on' : 'off');
             }
         };
         var timezone_sync_option = function (option) {
@@ -3884,72 +3900,78 @@ function dashboardSettingsSetup() {
             document.getElementById('server_timezone').innerText = NETDATA.options.server_timezone;
             document.getElementById('current_timezone').innerText = (NETDATA.options.current.timezone === 'default') ? 'unset, using browser default' : NETDATA.options.current.timezone;
 
-            if (self.prop('checked') === NETDATA.dateTime.using_timezone) {
-                self.bootstrapToggle(NETDATA.dateTime.using_timezone ? 'off' : 'on');
-            }
+            // todo
+            // if (self.prop('checked') === NETDATA.dateTime.using_timezone) {
+            //     self.bootstrapToggle(NETDATA.dateTime.using_timezone ? 'off' : 'on');
+            // }
         };
 
+
+        sync_option('stop_updates_when_focus_is_lost');
         sync_option('eliminate_zero_dimensions');
         sync_option('destroy_on_hide');
         sync_option('async_on_scroll');
+
         sync_option('parallel_refresher');
         sync_option('concurrent_refreshes');
         sync_option('sync_selection');
         sync_option('sync_pan_and_zoom');
-        sync_option('stop_updates_when_focus_is_lost');
-        sync_option('smooth_plot');
-        sync_option('pan_and_zoom_data_padding');
-        sync_option('show_help');
-        sync_option('seconds_as_time');
+
         theme_sync_option('netdata_theme_control');
+        sync_option('show_help');
+        sync_option('pan_and_zoom_data_padding');
+        sync_option('smooth_plot');
+
         units_sync_option('units_conversion');
         temp_sync_option('units_temp');
+        sync_option('seconds_as_time');
         timezone_sync_option('local_timezone');
 
-        if (NETDATA.getOption('parallel_refresher') === false) {
+        if (getOption('parallel_refresher') === false) {
             $('#concurrent_refreshes_row').hide();
         } else {
             $('#concurrent_refreshes_row').show();
         }
     };
-    NETDATA.setOption('setOptionCallback', update_options_modal);
+
+    update_options_modal();
 
     // handle options changes
     $('#eliminate_zero_dimensions').change(function () {
-        NETDATA.setOption('eliminate_zero_dimensions', $(this).prop('checked'));
+        setOption('eliminate_zero_dimensions', $(this).prop('checked'));
     });
     $('#destroy_on_hide').change(function () {
-        NETDATA.setOption('destroy_on_hide', $(this).prop('checked'));
+        setOption('destroy_on_hide', $(this).prop('checked'));
     });
     $('#async_on_scroll').change(function () {
-        NETDATA.setOption('async_on_scroll', $(this).prop('checked'));
+        setOption('async_on_scroll', $(this).prop('checked'));
     });
     $('#parallel_refresher').change(function () {
-        NETDATA.setOption('parallel_refresher', $(this).prop('checked'));
+        setOption('parallel_refresher', $(this).prop('checked'));
     });
     $('#concurrent_refreshes').change(function () {
-        NETDATA.setOption('concurrent_refreshes', $(this).prop('checked'));
+        setOption('concurrent_refreshes', $(this).prop('checked'));
     });
     $('#sync_selection').change(function () {
-        NETDATA.setOption('sync_selection', $(this).prop('checked'));
+        setOption('sync_selection', $(this).prop('checked'));
     });
     $('#sync_pan_and_zoom').change(function () {
-        NETDATA.setOption('sync_pan_and_zoom', $(this).prop('checked'));
+        setOption('sync_pan_and_zoom', $(this).prop('checked'));
     });
     $('#stop_updates_when_focus_is_lost').change(function () {
         urlOptions.update_always = !$(this).prop('checked');
         urlOptions.hashUpdate();
 
-        NETDATA.setOption('stop_updates_when_focus_is_lost', !urlOptions.update_always);
+        setOption('stop_updates_when_focus_is_lost', !urlOptions.update_always);
     });
     $('#smooth_plot').change(function () {
-        NETDATA.setOption('smooth_plot', $(this).prop('checked'));
+        setOption('smooth_plot', $(this).prop('checked'));
     });
     $('#pan_and_zoom_data_padding').change(function () {
-        NETDATA.setOption('pan_and_zoom_data_padding', $(this).prop('checked'));
+        setOption('pan_and_zoom_data_padding', $(this).prop('checked'));
     });
     $('#seconds_as_time').change(function () {
-        NETDATA.setOption('seconds_as_time', $(this).prop('checked'));
+        setOption('seconds_as_time', $(this).prop('checked'));
     });
     $('#local_timezone').change(function () {
         if ($(this).prop('checked')) {
@@ -3960,17 +3982,17 @@ function dashboardSettingsSetup() {
     });
 
     $('#units_conversion').change(function () {
-        NETDATA.setOption('units', $(this).prop('checked') ? 'auto' : 'original');
+        setOption('units', $(this).prop('checked') ? 'auto' : 'original');
     });
     $('#units_temp').change(function () {
-        NETDATA.setOption('temperature', $(this).prop('checked') ? 'celsius' : 'fahrenheit');
+        setOption('temperature', $(this).prop('checked') ? 'celsius' : 'fahrenheit');
     });
 
     $('#show_help').change(function () {
         urlOptions.help = $(this).prop('checked');
         urlOptions.hashUpdate();
 
-        NETDATA.setOption('show_help', urlOptions.help);
+        setOption('show_help', urlOptions.help);
         netdataReload();
     });
 
@@ -4525,34 +4547,34 @@ function resetDashboardOptions() {
 
 // callback to add the dashboard info to the
 // parallel javascript downloader in netdata
-var netdataPrepCallback = function () {
-    NETDATA.requiredCSS.push({
-        url: NETDATA.serverStatic + 'css/bootstrap-toggle-2.2.2.min.css',
-        isAlreadyLoaded: function () {
-            return false;
-        }
-    });
-
-    NETDATA.requiredJs.push({
-        url: NETDATA.serverStatic + 'lib/bootstrap-toggle-2.2.2.min.js',
-        isAlreadyLoaded: function () {
-            return false;
-        }
-    });
-
-    NETDATA.requiredJs.push({
-        url: NETDATA.serverStatic + 'dashboard_info.js?v20181019-1',
-        async: false,
-        isAlreadyLoaded: function () {
-            return false;
-        }
-    });
+export const netdataPrepCallback = () => {
+    // NETDATA.requiredCSS.push({
+    //     url: NETDATA.serverStatic + 'css/bootstrap-toggle-2.2.2.min.css',
+    //     isAlreadyLoaded: function () {
+    //         return false;
+    //     }
+    // });
+    //
+    // NETDATA.requiredJs.push({
+    //     url: NETDATA.serverStatic + 'lib/bootstrap-toggle-2.2.2.min.js',
+    //     isAlreadyLoaded: function () {
+    //         return false;
+    //     }
+    // });
+    //
+    // NETDATA.requiredJs.push({
+    //     url: NETDATA.serverStatic + 'dashboard_info.js?v20181019-1',
+    //     async: false,
+    //     isAlreadyLoaded: function () {
+    //         return false;
+    //     }
+    // });
 
     if (isdemo()) {
         document.getElementById('masthead').style.display = 'block';
     } else {
         if (urlOptions.update_always === true) {
-            NETDATA.setOption('stop_updates_when_focus_is_lost', !urlOptions.update_always);
+            setOption('stop_updates_when_focus_is_lost', !urlOptions.update_always);
         }
     }
 };
@@ -4566,7 +4588,7 @@ var selected_server_timezone = function (timezone, status) {
     if (typeof status === 'undefined') {
         // the user selected a timezone from the menu
 
-        NETDATA.setOption('user_set_server_timezone', timezone);
+        setOption('user_set_server_timezone', timezone);
 
         if (NETDATA.dateTime.init(timezone) === false) {
             NETDATA.dateTime.init();
@@ -4576,7 +4598,7 @@ var selected_server_timezone = function (timezone, status) {
             }
 
             document.getElementById('timezone_error_message').innerHTML = 'Ooops! That timezone was not accepted by your browser. Please open a github issue to help us fix it.';
-            NETDATA.setOption('user_set_server_timezone', NETDATA.options.server_timezone);
+            setOption('user_set_server_timezone', NETDATA.options.server_timezone);
         } else {
             if ($('#local_timezone').prop('checked')) {
                 $('#local_timezone').bootstrapToggle('off');
@@ -4604,7 +4626,7 @@ var selected_server_timezone = function (timezone, status) {
             }
 
             document.getElementById('timezone_error_message').innerHTML = 'Sorry. The timezone "' + timezone.toString() + '" is not accepted by your browser. Please select one from the list.';
-            NETDATA.setOption('user_set_server_timezone', NETDATA.options.server_timezone);
+            setOption('user_set_server_timezone', NETDATA.options.server_timezone);
         }
     }
 

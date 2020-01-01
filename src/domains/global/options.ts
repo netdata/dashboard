@@ -107,5 +107,3 @@ const getOptionsMergedWithLocalStorage = (): Options => {
 }
 
 export const optionsMergedWithLocalStorage = getOptionsMergedWithLocalStorage()
-
-// todo old dashboard had "stop_updates_when_focus_is_lost" forced on start
