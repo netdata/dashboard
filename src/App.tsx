@@ -10,9 +10,9 @@ import "bootstrap"
 import "bootstrap-toggle"
 import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
+import { useStore } from "react-redux"
 import { loadCss } from "utils/css-loader"
 import { Portals } from "domains/chart/components/portals"
-import { TEMPORARY_MAIN_JS_TIMEOUT } from "domains/global/constants"
 import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
 
@@ -37,6 +37,7 @@ loadCss(window.NETDATA.themes.current.dashboard_css)
 
 
 const App: React.FC = () => { // eslint-disable-line arrow-body-style
+  const store = useStore()
   useEffect(() => {
     // todo
     // @ts-ignore
@@ -45,11 +46,8 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     window.NETDATA.pause = (callback) => {
       callback()
     }
-    setTimeout(() => {
-      // delay after loading bootstrap
-      // todo quick hack for main.js - of course that cannot make production
-      netdataCallback()
-    }, TEMPORARY_MAIN_JS_TIMEOUT)
+    netdataCallback(store)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const [refreshHelper, setRefreshHelper] = useState()
   const parseDom = useRef(() => {
