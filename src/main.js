@@ -21,6 +21,8 @@ var netdataCheckXSS = undefined;
 // control the welcome modal and analytics
 var this_is_demo = null;
 
+let reduxStore
+
 function escapeUserInputHTML(s) {
     return s.toString()
         .replace(/&/g, '&amp;')
@@ -2887,7 +2889,11 @@ function xssModalKeepXss() {
     return false;
 }
 
-function initializeDynamicDashboard() {
+function initializeDynamicDashboard(newReduxStore) {
+    reduxStore = newReduxStore
+
+    netdataPrepCallback()
+
     // const netdata_url = NETDATA.serverDefault;
     const netdata_url = "http://localhost:19999"; // todo
 
