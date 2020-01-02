@@ -63,8 +63,6 @@ export const Chart = memo(({
     unitsDesired = window.NETDATA.options.current.units,
   } = attributes
 
-  // selecting dimensions
-  const dimensionNamesFlatString = chartData.dimension_names.join("")
   // we need to have empty selectedDimensions work as {all enabled}, in case
   // new dimensions show up (when all are enabled, the new dimensions should also auto-enable)
   const dimensionsVisibility = useMemo(() => chartData.dimension_names.map(

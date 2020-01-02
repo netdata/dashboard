@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 const cpx = require("cpx")
 
 cpx.copy("src/fonts/*", "lib/src/fonts", {})
