@@ -69,3 +69,7 @@ export const selectDestroyOnHide = createSelectOption("destroy_on_hide")
 export const selectStopUpdatesWhenFocusIsLost = createSelectOption(
   "stop_updates_when_focus_is_lost",
 )
+export const selectShouldEliminateZeroDimensions = createSelectOption(
+  "eliminate_zero_dimensions",
+)
+export const selectIsAsyncOnScroll = createSelectOption("async_on_scroll")

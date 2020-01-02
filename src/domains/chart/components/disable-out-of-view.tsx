@@ -1,7 +1,9 @@
 import React, { useLayoutEffect, useRef, useState } from "react"
-import { useIntersection } from "react-use"
+import { useDebounce, useIntersection } from "react-use"
 import { forEachObjIndexed, pathOr } from "ramda"
 
+import { useSelector } from "store/redux-separate-context"
+import { selectDestroyOnHide, selectIsAsyncOnScroll } from "domains/global/selectors"
 import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { chartLibrariesSettings } from "domains/chart/utils/chartLibrariesSettings"
@@ -58,16 +60,41 @@ export const DisableOutOfView = ({
   /* end of "adding custom styles to portalNode" */
 
 
-  const destroyOnHide = window.NETDATA.options.current.destroy_on_hide
+  const destroyOnHide = useSelector(selectDestroyOnHide)
+
   const portalNodeRef = useRef(portalNode)
   const intersection = useIntersection(portalNodeRef, {
     root: null,
-    // rootMargin: "-150px", // for demoing
     rootMargin: "0px",
     threshold: undefined,
   })
-  // should be throttled when NETDATA.options.current.async_on_scroll is on
-  const shouldHide = pathOr(0, ["intersectionRatio"], intersection) === 0
+
+
+  // todo hook to scroll (observe on visible items) instead of changes in intersectionRatio
+  // because intersectinnRatio maxes out on 1.0 when element is fully visible
+  const isAsyncOnScroll = useSelector(selectIsAsyncOnScroll)
+
+  const intersectionRatio = intersection ? intersection.intersectionRatio : 0
+  const shouldUseDebounce = isAsyncOnScroll
+
+  // aka "should hide because of intersection observer"
+  const shouldHideIntersection = pathOr(0, ["intersectionRatio"], intersection) === 0
+
+  // "should hide because of debounced scroll handler"
+  const [shouldHideDebounced, setShouldHideDebounced] = useState(shouldHideIntersection)
+  useDebounce(
+    () => {
+      if (!shouldUseDebounce) {
+        return
+      }
+      // start rendering, when intersectionRatio is not 0 and it hasn't changed for 1500 ms
+      setShouldHideDebounced(intersectionRatio === 0)
+    },
+    1500,
+    [intersectionRatio],
+  )
+  const shouldHide = shouldUseDebounce ? shouldHideDebounced : shouldHideIntersection
+
 
   const [clonedChildren, setClonedChildren] = useState<Element[]>()
 
@@ -88,7 +115,6 @@ export const DisableOutOfView = ({
       <>
         <InvisibleSearchableText attributes={attributes} />
         <div
-          // style={{ background: "yellow", height: "100%" }} // demo styles
           ref={(nodeElement) => {
             if (nodeElement && clonedChildren) {
               clonedChildren.forEach((child: Element) => {
