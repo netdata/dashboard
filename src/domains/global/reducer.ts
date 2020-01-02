@@ -15,7 +15,7 @@ import {
   startAlarmsAction,
   setOptionAction,
 } from "./actions"
-import { Options, optionsMergedWithLocalStorage} from "./options"
+import { Options, optionsMergedWithLocalStorage } from "./options"
 
 export type StateT = {
   commonColorsKeys: {

@@ -32,4 +32,3 @@ if (process.env.REACT_APP_IS_MAIN_DASHBOARD) {
     document.getElementById("root"),
   )
 }
-
