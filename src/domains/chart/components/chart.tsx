@@ -79,18 +79,20 @@ export const Chart = memo(({
     && window.NETDATA.options.current.legend_toolbox
 
   const dispatch = useDispatch()
+  const allDimensionNames = useMemo(
+    () => Object.values(chartDetails.dimensions).map((x) => x.name),
+    [chartDetails.dimensions],
+  )
   useEffect(() => {
     dispatch(requestCommonColorsAction({
       chartContext: chartDetails.context,
       chartUuid,
       colorsAttribute: attributes.colors,
       commonColorsAttribute: attributes.commonColors,
-      dimensionNames: chartData.dimension_names,
+      dimensionNames: allDimensionNames,
     }))
-  }, [ // eslint-disable-line react-hooks/exhaustive-deps
-    dispatch, attributes.commonColors, chartDetails.context, chartUuid, attributes.colors,
-    dimensionNamesFlatString,
-  ])
+  }, [allDimensionNames, attributes.colors, attributes.commonColors, chartDetails.context,
+    chartUuid, dispatch])
 
   const {
     legendFormatValue,

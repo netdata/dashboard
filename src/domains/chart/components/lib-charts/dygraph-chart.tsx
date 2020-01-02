@@ -755,15 +755,18 @@ export const DygraphChart = ({
       // so if the chart needs to change local dateWindow, we'll always use timestamps
       const optionsDateWindow = isRemotelyControlled ? { dateWindow: forceDateWindow } : {}
 
+      const { dygraphColors = orderedColors } = attributes
+
       dygraphInstance.updateOptions({
         ...optionsDateWindow,
+        colors: dygraphColors,
         file: chartData.result.data,
         labels: chartData.result.labels,
         visibility: dimensionsVisibility,
       })
     }
-  }, [chartData.result, chartUuid, dimensionsVisibility, dygraphInstance, isRemotelyControlled,
-    viewAfter, viewBefore])
+  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphInstance,
+    isRemotelyControlled, orderedColors, viewAfter, viewBefore])
 
 
   // set selection
