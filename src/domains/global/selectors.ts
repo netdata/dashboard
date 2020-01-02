@@ -66,3 +66,6 @@ export const createSelectOption = <T extends OptionsKey>(optionName: T) => creat
 )
 
 export const selectDestroyOnHide = createSelectOption("destroy_on_hide")
+export const selectStopUpdatesWhenFocusIsLost = createSelectOption(
+  "stop_updates_when_focus_is_lost",
+)
