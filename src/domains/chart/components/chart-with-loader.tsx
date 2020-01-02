@@ -7,7 +7,11 @@ import { useThrottle } from "react-use"
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
 
-import { selectGlobalPanAndZoom, selectGlobalSelection } from "domains/global/selectors"
+import {
+  selectGlobalPanAndZoom,
+  selectGlobalSelection,
+  selectShouldEliminateZeroDimensions,
+} from "domains/global/selectors"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"
 import { Loader } from "domains/chart/components/loader"
 import { serverDefault } from "utils/server-detection"
@@ -34,7 +38,7 @@ import {
 import { Chart } from "./chart"
 import "./chart-with-loader.css"
 
-const getChartURLOptions = (attributes: Attributes) => {
+const getChartURLOptions = (attributes: Attributes, shouldEliminateZeroDimensions: boolean) => {
   const {
     appendOptions,
     overrideOptions,
@@ -55,7 +59,7 @@ const getChartURLOptions = (attributes: Attributes) => {
   const isForUniqueId = false
   // always add `nonzero` when it's used to create a chartDataUniqueID
   // we cannot just remove `nonzero` because of backwards compatibility with old snapshots
-  if (isForUniqueId || window.NETDATA.options.current.eliminate_zero_dimensions) {
+  if (isForUniqueId || shouldEliminateZeroDimensions) {
     ret += "|nonzero"
   }
 
@@ -146,6 +150,7 @@ export const ChartWithLoader = ({
     - (hasLegend(attributes) ? 140 : 0) // from old dashboard
   const chartHeight = boundingClientRect.height
 
+  const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions)
   /**
    * fetch data
    */
@@ -201,7 +206,7 @@ export const ChartWithLoader = ({
         points,
         group,
         gtime: attributes.gtime || 0,
-        options: getChartURLOptions(attributes),
+        options: getChartURLOptions(attributes, shouldEliminateZeroDimensions),
         after: after || null,
         before: before || null,
         dimensions: attributes.dimensions,
@@ -218,7 +223,7 @@ export const ChartWithLoader = ({
     }
   }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
     hasLegend, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
-    isRemotelyControlled, portalNode, setShouldFetch, shouldFetch])
+    isRemotelyControlled, portalNode, setShouldFetch, shouldEliminateZeroDimensions, shouldFetch])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
