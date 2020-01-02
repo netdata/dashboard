@@ -706,12 +706,10 @@ export const DygraphChart = ({
             axisLabelFormatter: (y: Date | number) => legendFormatValue(y as number),
           },
         },
-        visibility: dimensionsVisibility,
         ylabel: isSparkline ? undefined : unitsCurrent,
       })
     }
-  }, [attributes.dygraphTheme, dimensionsVisibility, dygraphInstance, legendFormatValue,
-    unitsCurrent])
+  }, [attributes.dygraphTheme, dygraphInstance, legendFormatValue, unitsCurrent])
 
   // update chartOverlay
   useLayoutEffect(() => {
@@ -760,10 +758,12 @@ export const DygraphChart = ({
       dygraphInstance.updateOptions({
         ...optionsDateWindow,
         file: chartData.result.data,
+        labels: chartData.result.labels,
+        visibility: dimensionsVisibility,
       })
     }
-  }, [chartData.result.data, chartUuid, dygraphInstance, isRemotelyControlled, viewAfter,
-    viewBefore])
+  }, [chartData.result, chartUuid, dimensionsVisibility, dygraphInstance, isRemotelyControlled,
+    viewAfter, viewBefore])
 
 
   // set selection
