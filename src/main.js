@@ -6,6 +6,8 @@
 
 // netdata snapshot data
 import {
+    resetGlobalPanAndZoomAction,
+    setGlobalPanAndZoomAction,
     setOptionAction,
 } from './domains/global/actions';
 import { createSelectOption } from './domains/global/selectors';
@@ -2910,6 +2912,23 @@ function initializeDynamicDashboard(newReduxStore) {
     const netdata_url = "http://localhost:19999"; // todo
 
     initializeConfig.url = netdata_url;
+
+    // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
+    // refractored)
+    reduxStore.subscribe(() => {
+        const lastAction = reduxStore.getState().lastActionForMainJs
+        if (!lastAction) {
+            return
+        }
+        if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
+            const { after, before } = lastAction.payload
+            if (urlOptions.after !== after || urlOptions.before !== before) {
+                urlOptions.netdataPanAndZoomCallback(true, after, before)
+            }
+        } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
+            urlOptions.netdataPanAndZoomCallback(false, 0, 0)
+        }
+    })
 
     // initialize clickable alarms
     NETDATA.alarms.chart_div_offset = -50;
