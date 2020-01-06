@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import { createPortal } from "react-dom"
 
 import { getAttributes } from "../utils/transformDataAttributes"
@@ -7,7 +7,7 @@ import { DisableOutOfView } from "./disable-out-of-view"
 
 const getNodesArray = () => Array.from(document.querySelectorAll("[data-netdata]"))
 
-export const Portals = () => {
+export const Portals = memo(() => {
   const nodes = getNodesArray()
   return (
     <>
@@ -32,4 +32,4 @@ export const Portals = () => {
       })}
     </>
   )
-}
+})
