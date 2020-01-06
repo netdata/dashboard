@@ -4479,15 +4479,16 @@ function finalizePage() {
 
     // ------------------------------------------------------------------------
 
-    NETDATA.globalPanAndZoom.callback = null;
     NETDATA.globalChartUnderlay.callback = null;
 
-    if (urlOptions.pan_and_zoom === true && NETDATA.options.targets.length > 0) {
-        NETDATA.globalPanAndZoom.setMaster(NETDATA.options.targets[0], urlOptions.after, urlOptions.before);
+    if (urlOptions.pan_and_zoom === true) {
+        reduxStore.dispatch(setGlobalPanAndZoomAction({
+            after: urlOptions.after,
+            before: urlOptions.before,
+        }))
     }
 
     // callback for us to track PanAndZoom operations
-    NETDATA.globalPanAndZoom.callback = urlOptions.netdataPanAndZoomCallback;
     NETDATA.globalChartUnderlay.callback = urlOptions.netdataHighlightCallback;
 
     // ------------------------------------------------------------------------
