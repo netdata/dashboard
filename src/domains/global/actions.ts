@@ -48,6 +48,7 @@ export const setGlobalChartUnderlayAction = createAction<SetGlobalChartUnderlayA
 )
 
 export const centerAroundHighlightAction = createAction(`${storeKey}/centerAroundHighlightAction`)
+export const clearHighlightAction = createAction(`${storeKey}/clearHighlightAction`)
 
 interface WindowFocusChangeAction {
   hasWindowFocus: boolean

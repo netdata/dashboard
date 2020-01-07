@@ -8,6 +8,7 @@ import {
   setGlobalSelectionAction,
   setGlobalPanAndZoomAction,
   centerAroundHighlightAction,
+  clearHighlightAction,
   setTimezoneAction,
   resetGlobalPanAndZoomAction,
   windowFocusChangeAction,
@@ -236,6 +237,12 @@ globalReducer.on(centerAroundHighlightAction, (state) => {
     },
   }
 })
+
+globalReducer.on(clearHighlightAction, (state) => ({
+  ...state,
+  globalChartUnderlay: initialState.globalChartUnderlay,
+  globalPanAndZoom: initialState.globalPanAndZoom,
+}))
 
 globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
   ...state,
