@@ -7,6 +7,7 @@
 // netdata snapshot data
 import {
     resetGlobalPanAndZoomAction,
+    setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
 } from './domains/global/actions';
@@ -78,7 +79,7 @@ function verifyURL(s) {
 // --------------------------------------------------------------------
 // urlOptions
 
-var urlOptions = {
+window.urlOptions = {
     hash: '#',
     theme: null,
     help: null,
@@ -282,8 +283,6 @@ var urlOptions = {
         urlOptions.highlight_before = Math.round(before);
         urlOptions.hashUpdate();
 
-        var show_eye = NETDATA.globalChartUnderlay.hasViewport();
-
         if (status === true && after > 0 && before > 0 && after < before) {
             var d1 = localeDateString(after);
             var d2 = localeDateString(before);
@@ -291,7 +290,7 @@ var urlOptions = {
                 d2 = '';
             }
             document.getElementById('navbar-highlight-content').innerHTML =
-              ((show_eye === true) ? '<span class="navbar-highlight-bar highlight-tooltip" onclick="urlOptions.showHighlight();" title="restore the highlighted view" data-toggle="tooltip" data-placement="bottom">' : '<span>').toString()
+              '<span class="navbar-highlight-bar highlight-tooltip" onclick="urlOptions.showHighlight();" title="restore the highlighted view" data-toggle="tooltip" data-placement="bottom">'
               + 'highlighted time-frame'
               + ' <b>' + d1 + ' <code>' + localeTimeString(after) + '</code></b> to '
               + ' <b>' + d2 + ' <code>' + localeTimeString(before) + '</code></b>, '
@@ -2933,11 +2932,18 @@ function initializeDynamicDashboard(newReduxStore) {
         }
         if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
             const { after, before } = lastAction.payload
+            // additional check to prevent loop, after setting initial state from url
             if (urlOptions.after !== after || urlOptions.before !== before) {
                 urlOptions.netdataPanAndZoomCallback(true, after, before)
             }
         } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
             urlOptions.netdataPanAndZoomCallback(false, 0, 0)
+        } else if (lastAction.type === setGlobalChartUnderlayAction.toString()) {
+            const { after, before } = lastAction.payload
+            // additional check to prevent loop, after setting initial state from url
+            if (urlOptions.after !== after || urlOptions.before !== before) {
+                urlOptions.netdataHighlightCallback(true, after, before)
+            }
         }
     })
 
