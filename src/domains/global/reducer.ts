@@ -7,6 +7,7 @@ import {
   setGlobalChartUnderlayAction,
   setGlobalSelectionAction,
   setGlobalPanAndZoomAction,
+  centerAroundHighlightAction,
   setTimezoneAction,
   resetGlobalPanAndZoomAction,
   windowFocusChangeAction,
@@ -218,6 +219,23 @@ globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID
     masterID,
   },
 }))
+
+globalReducer.on(centerAroundHighlightAction, (state) => {
+  if (!state.globalChartUnderlay) {
+    // eslint-disable-next-line no-console
+    console.warn("Cannot center around empty selection")
+    return state
+  }
+  const { after, before } = state.globalChartUnderlay
+  const highlightMargin = (before - after) / 2
+  return {
+    ...state,
+    globalPanAndZoom: {
+      after: after - highlightMargin,
+      before: before + highlightMargin,
+    },
+  }
+})
 
 globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
   ...state,
