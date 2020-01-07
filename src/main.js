@@ -7,6 +7,7 @@
 // netdata snapshot data
 import {
     centerAroundHighlightAction,
+    clearHighlightAction,
     resetGlobalPanAndZoomAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
@@ -312,12 +313,7 @@ window.urlOptions = {
     },
 
     clearHighlight: function () {
-        return // todo
-        NETDATA.globalChartUnderlay.clear();
-
-        if (NETDATA.globalPanAndZoom.isActive() === true) {
-            NETDATA.globalPanAndZoom.clearMaster();
-        }
+        reduxStore.dispatch(clearHighlightAction())
     },
 
     showHighlight: function () {
@@ -1861,14 +1857,10 @@ function renderPage(menus, data) {
     document.getElementById('sidebar').innerHTML = sidebar;
 
     if (urlOptions.highlight === true) {
-        NETDATA.globalChartUnderlay.init(null
-          , urlOptions.highlight_after
-          , urlOptions.highlight_before
-          , (urlOptions.after > 0) ? urlOptions.after : null
-          , (urlOptions.before > 0) ? urlOptions.before : null
-        );
-    } else {
-        NETDATA.globalChartUnderlay.clear();
+        reduxStore.dispatch(setGlobalChartUnderlayAction({
+            after: urlOptions.highlight_after,
+            before: urlOptions.highlight_before,
+        }))
     }
 
     if (urlOptions.mode === 'print') {
@@ -2945,6 +2937,8 @@ function initializeDynamicDashboard(newReduxStore) {
             if (urlOptions.after !== after || urlOptions.before !== before) {
                 urlOptions.netdataHighlightCallback(true, after, before)
             }
+        } else if (lastAction.type === clearHighlightAction.toString()) {
+            urlOptions.netdataHighlightCallback(false, 0, 0)
         }
     })
 
@@ -4497,17 +4491,12 @@ function finalizePage() {
 
     // ------------------------------------------------------------------------
 
-    NETDATA.globalChartUnderlay.callback = null;
-
     if (urlOptions.pan_and_zoom === true) {
         reduxStore.dispatch(setGlobalPanAndZoomAction({
             after: urlOptions.after,
             before: urlOptions.before,
         }))
     }
-
-    // callback for us to track PanAndZoom operations
-    NETDATA.globalChartUnderlay.callback = urlOptions.netdataHighlightCallback;
 
     // ------------------------------------------------------------------------
 
