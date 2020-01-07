@@ -6,6 +6,7 @@
 
 // netdata snapshot data
 import {
+    centerAroundHighlightAction,
     resetGlobalPanAndZoomAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
@@ -320,7 +321,7 @@ window.urlOptions = {
     },
 
     showHighlight: function () {
-        NETDATA.globalChartUnderlay.focus();
+        reduxStore.dispatch(centerAroundHighlightAction())
     }
 };
 
