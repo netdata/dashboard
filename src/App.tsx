@@ -12,6 +12,7 @@ import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { useStore } from "react-redux"
 import { loadCss } from "utils/css-loader"
+import { useDateTime } from "utils/date-time"
 import { Portals } from "domains/chart/components/portals"
 import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
@@ -20,6 +21,7 @@ import "./types/global"
 
 import {
   netdataCallback,
+  updateLocaleFunctions,
 } from "./main"
 // @ts-ignore
 import "./dashboard_info"
@@ -53,6 +55,14 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
   const parseDom = useRef(() => {
     setRefreshHelper(Math.random())
   })
+
+  const { localeDateString, localeTimeString } = useDateTime()
+  useEffect(() => {
+    updateLocaleFunctions({
+      localeDateString,
+      localeTimeString,
+    })
+  }, [localeDateString, localeTimeString])
 
   useRegistry(true)
   useAlarms(true)

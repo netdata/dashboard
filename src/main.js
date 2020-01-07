@@ -11,6 +11,17 @@ import {
     setOptionAction,
 } from './domains/global/actions';
 import { createSelectOption } from './domains/global/selectors';
+import { seconds4human } from './domains/chart/utils/seconds4human';
+
+// this is temporary, hook will be used after the full main.js refactor
+let localeDateString, localeTimeString
+export const updateLocaleFunctions = ({
+    localeDateString: newLocaleDateString,
+    localeTimeString: newLocaleTimeString,
+}) => {
+    localeDateString = newLocaleDateString
+    localeTimeString = newLocaleTimeString
+}
 
 var netdataSnapshotData = null;
 
@@ -274,17 +285,17 @@ var urlOptions = {
         var show_eye = NETDATA.globalChartUnderlay.hasViewport();
 
         if (status === true && after > 0 && before > 0 && after < before) {
-            var d1 = NETDATA.dateTime.localeDateString(after);
-            var d2 = NETDATA.dateTime.localeDateString(before);
+            var d1 = localeDateString(after);
+            var d2 = localeDateString(before);
             if (d1 === d2) {
                 d2 = '';
             }
             document.getElementById('navbar-highlight-content').innerHTML =
               ((show_eye === true) ? '<span class="navbar-highlight-bar highlight-tooltip" onclick="urlOptions.showHighlight();" title="restore the highlighted view" data-toggle="tooltip" data-placement="bottom">' : '<span>').toString()
               + 'highlighted time-frame'
-              + ' <b>' + d1 + ' <code>' + NETDATA.dateTime.localeTimeString(after) + '</code></b> to '
-              + ' <b>' + d2 + ' <code>' + NETDATA.dateTime.localeTimeString(before) + '</code></b>, '
-              + 'duration <b>' + NETDATA.seconds4human(Math.round((before - after) / 1000)) + '</b>'
+              + ' <b>' + d1 + ' <code>' + localeTimeString(after) + '</code></b> to '
+              + ' <b>' + d2 + ' <code>' + localeTimeString(before) + '</code></b>, '
+              + 'duration <b>' + seconds4human(Math.round((before - after) / 1000)) + '</b>'
               + '</span>'
               + '<span class="navbar-highlight-button-right highlight-tooltip" onclick="urlOptions.clearHighlight();" title="clear the highlighted time-frame" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-times"></i></span>';
 
@@ -3441,7 +3452,7 @@ function loadSnapshotPreflightFile(file) {
             document.getElementById('loadSnapshotURL').innerHTML = result.url;
             document.getElementById('loadSnapshotCharts').innerHTML = result.charts.charts_count.toString() + ' charts, ' + result.charts.dimensions_count.toString() + ' dimensions, ' + result.data_points.toString() + ' points per dimension, ' + Math.round(result.duration_ms / result.data_points).toString() + ' ms per point';
             document.getElementById('loadSnapshotInfo').innerHTML = 'version: <b>' + result.snapshot_version.toString() + '</b>, includes <b>' + result.charts_ok.toString() + '</b> unique chart data queries ' + ((result.charts_failed > 0) ? ('<b>' + result.charts_failed.toString() + '</b> failed') : '').toString() + ', compressed with <code>' + result.compression.toString() + '</code>, data size ' + (Math.round(result.data_size * 100 / 1024 / 1024) / 100).toString() + ' MB';
-            document.getElementById('loadSnapshotTimeRange').innerHTML = '<b>' + NETDATA.dateTime.localeDateString(date_after) + ' ' + NETDATA.dateTime.localeTimeString(date_after) + '</b> to <b>' + NETDATA.dateTime.localeDateString(date_before) + ' ' + NETDATA.dateTime.localeTimeString(date_before) + '</b>';
+            document.getElementById('loadSnapshotTimeRange').innerHTML = '<b>' + localeDateString(date_after) + ' ' + localeTimeString(date_after) + '</b> to <b>' + localeDateString(date_before) + ' ' + localeTimeString(date_before) + '</b>';
             document.getElementById('loadSnapshotComments').innerHTML = ((result.comments) ? result.comments : '').toString();
             loadSnapshotModalLog('success', 'File loaded, click <b>Import</b> to render it!');
             $('#loadSnapshotImport').removeClass('disabled');
