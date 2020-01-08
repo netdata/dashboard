@@ -276,10 +276,13 @@ export const DygraphChart = ({
   viewAfter,
   viewBefore,
 }: Props) => {
+  const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
+
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
   // for interactionModel callbacks so we need to keep the callback in mutable ref
   const propsRef = useRef({
+    globalChartUnderlay,
     hoveredX,
     setGlobalChartUnderlay,
     viewAfter,
@@ -287,10 +290,11 @@ export const DygraphChart = ({
   })
   useLayoutEffect(() => {
     propsRef.current.hoveredX = hoveredX
+    propsRef.current.globalChartUnderlay = globalChartUnderlay
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [hoveredX, setGlobalChartUnderlay, viewAfter, viewBefore])
+  }, [globalChartUnderlay, hoveredX, setGlobalChartUnderlay, viewAfter, viewBefore])
 
   const { xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
@@ -313,7 +317,6 @@ export const DygraphChart = ({
       shouldNotExceedAvailableRange,
     })
   }, [chartUuid, onUpdateChartPanAndZoom])
-  const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
   // state.tmp.dygraph_user_action in old dashboard
   const latestIsUserAction = useRef(false)
@@ -496,6 +499,7 @@ export const DygraphChart = ({
               // eslint-disable-next-line no-underscore-dangle
               dygraph.clearZoomRect_()
               // this call probably fixes the broken selection circle during highlighting
+              // and forces underlayCallback to fire (and draw highlight-rect
               // @ts-ignore
               // eslint-disable-next-line no-underscore-dangle
               dygraph.drawGraph_(false)
@@ -719,9 +723,8 @@ export const DygraphChart = ({
           // the chart is about to be drawn
           // this function renders global highlighted time-frame
 
-          if (globalChartUnderlay) {
-            const { after, before } = globalChartUnderlay
-            // todo limit that to view_after, view_before
+          if (propsRef.current.globalChartUnderlay) {
+            const { after, before } = propsRef.current.globalChartUnderlay
 
             if (after < before) {
               const bottomLeft = g.toDomCoords(after, -20)
@@ -738,7 +741,7 @@ export const DygraphChart = ({
         },
       })
     }
-  }, [dygraphInstance, globalChartUnderlay])
+  }, [dygraphInstance])
 
   // update data of the chart
   useLayoutEffect(() => {
