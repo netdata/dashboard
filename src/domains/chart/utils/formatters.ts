@@ -1,6 +1,9 @@
 import { identity } from "ramda"
 import { useCallback, useState, useMemo } from "react"
+
 import { unitsConversionCreator } from "utils/units-conversion"
+import { safeEqualCheck } from "utils/safe-equal-check"
+
 import { ChartData } from "../chart-types"
 import { Attributes } from "./transformDataAttributes"
 
@@ -126,7 +129,7 @@ export const useFormatters = ({
   } = attributes
 
   const legendFormatValueDecimalsFromMinMax = useCallback((newMin: number, newMax: number) => {
-    if (newMin === min && newMax === max) {
+    if (safeEqualCheck(newMin, min) && safeEqualCheck(newMax, max)) {
       return
     }
     // we should call the convertUnits-creation only when original app was doing this
