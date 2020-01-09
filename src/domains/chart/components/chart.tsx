@@ -34,6 +34,7 @@ interface Props {
   chartWidth: number
   attributes: Attributes
   isRemotelyControlled: boolean
+  requestedViewRange: [number, number]
   selectedDimensions: string[]
   setSelectedDimensions: (newState: string[]) => void
   showLatestOnBlur: boolean
@@ -51,6 +52,7 @@ export const Chart = memo(({
   chartUuid,
   chartWidth,
   isRemotelyControlled,
+  requestedViewRange,
   selectedDimensions,
   setSelectedDimensions,
   showLatestOnBlur,
@@ -319,6 +321,7 @@ export const Chart = memo(({
         unitsCurrent={unitsCurrent}
         viewAfter={viewAfter}
         viewBefore={viewBefore}
+        requestedViewRange={requestedViewRange}
       />
       {hasLegend(attributes) && (
         <ChartLegend

@@ -256,6 +256,7 @@ export const ChartWithLoader = ({
         chartHeight={chartHeight}
         chartWidth={chartWidth}
         isRemotelyControlled={fetchDataParams.isRemotelyControlled}
+        requestedViewRange={fetchDataParams.viewRange}
         selectedDimensions={selectedDimensions}
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!globalPanAndZoom}
