@@ -52,6 +52,7 @@ const dygraphDefaultProps = {
   onUpdateChartPanAndZoom: () => {},
   orderedColors: ["#ff00ff", "#00ffff", "#ffff00"],
   hoveredX: null,
+  requestedViewRange: [chartDataMock.after, chartDataMock.before] as [number, number],
   setGlobalChartUnderlay: () => {},
   setHoveredX: () => {},
   setMinMax: () => {},

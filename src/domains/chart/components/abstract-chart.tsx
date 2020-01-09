@@ -45,6 +45,7 @@ interface Props {
   unitsCurrent: string
   viewAfter: number,
   viewBefore: number,
+  requestedViewRange: [number, number]
 }
 
 export const AbstractChart = ({
@@ -70,6 +71,7 @@ export const AbstractChart = ({
   unitsCurrent,
   viewAfter,
   viewBefore,
+  requestedViewRange,
 }: Props) => {
   const dispatch = useDispatch()
 
@@ -255,6 +257,7 @@ export const AbstractChart = ({
       unitsCurrent={unitsCurrent}
       viewAfter={viewAfter}
       viewBefore={viewBefore}
+      requestedViewRange={requestedViewRange}
     />
   )
 }

@@ -251,6 +251,7 @@ interface Props {
   unitsCurrent: string
   viewAfter: number
   viewBefore: number
+  requestedViewRange: [number, number]
 }
 export const DygraphChart = ({
   attributes,
@@ -275,6 +276,7 @@ export const DygraphChart = ({
   unitsCurrent,
   viewAfter,
   viewBefore,
+  requestedViewRange,
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
@@ -755,8 +757,18 @@ export const DygraphChart = ({
       // dateWindow was set to null, and new dygraph got the new dateWindow from results.
       // this caused small unsync between dateWindow of parent (master) and child charts
       // i also detected that forceDateWindow timestamps have slightly better performance (10%)
-      // so if the chart needs to change local dateWindow, we'll always use timestamps
-      const optionsDateWindow = isRemotelyControlled ? { dateWindow: forceDateWindow } : {}
+      // so if the chart needs to change local dateWindow, we'll always use timestamps instead of
+      // null.
+
+      const xAxisRange = dygraphInstance.xAxisRange()
+      const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
+        && (xAxisRange[1] > viewBefore)
+        // if viewAfter is bigger than current dateWindow start, just reset dateWindow
+        && (xAxisRange[0] > viewAfter)
+
+      const optionsDateWindow = (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
+        ? { dateWindow: forceDateWindow }
+        : {}
 
       const { dygraphColors = orderedColors } = attributes
 
@@ -769,7 +781,7 @@ export const DygraphChart = ({
       })
     }
   }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphInstance,
-    isRemotelyControlled, orderedColors, viewAfter, viewBefore])
+    isRemotelyControlled, orderedColors, requestedViewRange, viewAfter, viewBefore])
 
 
   // set selection
