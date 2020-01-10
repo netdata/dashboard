@@ -129,7 +129,7 @@ export const useFormatters = ({
   } = attributes
 
   const legendFormatValueDecimalsFromMinMax = useCallback((newMin: number, newMax: number) => {
-    if (safeEqualCheck(newMin, min) && safeEqualCheck(newMax, max)) {
+    if (safeEqualCheck(min, newMin) && safeEqualCheck(max, newMax)) {
       return
     }
     // we should call the convertUnits-creation only when original app was doing this
