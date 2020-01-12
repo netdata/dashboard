@@ -284,6 +284,7 @@ export const DygraphChart = ({
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
   // for interactionModel callbacks so we need to keep the callback in mutable ref
   const propsRef = useRef({
+    chartData,
     globalChartUnderlay,
     hoveredX,
     setGlobalChartUnderlay,
@@ -291,12 +292,13 @@ export const DygraphChart = ({
     viewBefore,
   })
   useLayoutEffect(() => {
+    propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
     propsRef.current.globalChartUnderlay = globalChartUnderlay
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [globalChartUnderlay, hoveredX, setGlobalChartUnderlay, viewAfter, viewBefore])
+  }, [chartData, globalChartUnderlay, hoveredX, setGlobalChartUnderlay, viewAfter, viewBefore])
 
   const { xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
@@ -396,8 +398,9 @@ export const DygraphChart = ({
             const after = Math.round(xRange[0])
             const before = Math.round(xRange[1])
 
-            if (before <= (chartData.last_entry * 1000)
-              && after >= (chartData.first_entry * 1000)
+            const { first_entry: firstEntry, last_entry: lastEntry } = propsRef.current.chartData
+            if (before <= (lastEntry * 1000)
+              && after >= (firstEntry * 1000)
             ) {
               updateChartPanOrZoom({ after, before })
             }
