@@ -5,11 +5,12 @@ import React, {
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
 
-import { useSelector } from "store/redux-separate-context"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { AppStateT } from "store/app-state"
 import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { useDateTime } from "utils/date-time"
 import { selectGlobalChartUnderlay, selectGlobalSelectionMaster } from "domains/global/selectors"
+import { resetGlobalPanAndZoomAction } from "domains/global/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
 import {
@@ -280,26 +281,6 @@ export const DygraphChart = ({
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
-  // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
-  // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
-  // for interactionModel callbacks so we need to keep the callback in mutable ref
-  const propsRef = useRef({
-    chartData,
-    globalChartUnderlay,
-    hoveredX,
-    setGlobalChartUnderlay,
-    viewAfter,
-    viewBefore,
-  })
-  useLayoutEffect(() => {
-    propsRef.current.chartData = chartData
-    propsRef.current.hoveredX = hoveredX
-    propsRef.current.globalChartUnderlay = globalChartUnderlay
-    propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
-    propsRef.current.viewAfter = viewAfter
-    propsRef.current.viewBefore = viewBefore
-  }, [chartData, globalChartUnderlay, hoveredX, setGlobalChartUnderlay, viewAfter, viewBefore])
-
   const { xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const hiddenLabelsElementId = `${chartUuid}-hidden-labels-id`
@@ -335,6 +316,44 @@ export const DygraphChart = ({
   // state.dygraph_last_touch_end in old dashboard
   const dygraphLastTouchEnd = useRef<undefined | number>()
 
+  const dispatch = useDispatch()
+  const resetGlobalPanAndZoom = useCallback(() => {
+    latestIsUserAction.current = false // prevent starting panAndZoom
+    if (dygraphInstance) {
+      // todo on toolbox reset click, do updateOptions({ dateWindow: null })
+      // (issue existed also before rewrite)
+      dygraphInstance.updateOptions({
+        // reset dateWindow to the current
+        // @ts-ignore external typings dont support null
+        dateWindow: null,
+      })
+    }
+    dispatch(resetGlobalPanAndZoomAction())
+  }, [dispatch, dygraphInstance])
+
+  // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
+  // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
+  // for interactionModel callbacks so we need to keep the callback in mutable ref
+  const propsRef = useRef({
+    chartData,
+    globalChartUnderlay,
+    hoveredX,
+    resetGlobalPanAndZoom,
+    setGlobalChartUnderlay,
+    viewAfter,
+    viewBefore,
+  })
+  useLayoutEffect(() => {
+    propsRef.current.chartData = chartData
+    propsRef.current.hoveredX = hoveredX
+    propsRef.current.globalChartUnderlay = globalChartUnderlay
+    propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
+    propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
+    propsRef.current.viewAfter = viewAfter
+    propsRef.current.viewBefore = viewBefore
+  }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom, setGlobalChartUnderlay,
+    viewAfter, viewBefore])
+
   useLayoutEffect(() => {
     if (chartElement && chartElement.current && !dygraphInstance) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
@@ -357,7 +376,7 @@ export const DygraphChart = ({
         // and user scrolls down/up so the chart hides and then unhides. This causes the chart
         // to re-create, but the data has additional padding which should be outside of
         // visible range
-        dateWindow: [viewAfter, viewBefore],
+        dateWindow: [propsRef.current.viewAfter, propsRef.current.viewBefore],
 
         highlightCallback(
           event: MouseEvent, xval: number,
@@ -619,7 +638,10 @@ export const DygraphChart = ({
 
           click(event: MouseEvent) {
             event.preventDefault()
-            // todo
+          },
+
+          dblclick() {
+            propsRef.current.resetGlobalPanAndZoom()
           },
 
           touchstart(event: TouchEvent, dygraph: Dygraph, context: any) {
@@ -680,8 +702,7 @@ export const DygraphChart = ({
               if (dygraphLastTouchMove.current === 0) {
                 const dt = now - dygraphLastTouchEnd.current
                 if (dt <= window.NETDATA.options.current.double_click_speed) {
-                  // todo (reset)
-                  // NETDATA.resetAllCharts(state)
+                  propsRef.current.resetGlobalPanAndZoom()
                 }
               }
             }
@@ -702,8 +723,8 @@ export const DygraphChart = ({
     }
   }, [attributes, chartData, chartDetails, chartSettings, chartUuid, dimensionsVisibility,
     dygraphInstance, globalChartUnderlay, hiddenLabelsElementId, isMouseDown, orderedColors,
-    setGlobalChartUnderlay, setHoveredX, setMinMax, unitsCurrent, updateChartPanOrZoom, viewAfter,
-    viewBefore, xAxisTimeString])
+    setGlobalChartUnderlay, setHoveredX, setMinMax, unitsCurrent, updateChartPanOrZoom,
+    xAxisTimeString])
 
   useLayoutEffect(() => {
     if (dygraphInstance && legendFormatValue) {
@@ -764,6 +785,7 @@ export const DygraphChart = ({
       // null.
 
       const xAxisRange = dygraphInstance.xAxisRange()
+      // check if the time is relative
       const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
         && (xAxisRange[1] > viewBefore)
         // if viewAfter is bigger than current dateWindow start, just reset dateWindow
