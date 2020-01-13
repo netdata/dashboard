@@ -1,8 +1,15 @@
-import { takeEvery, put, call } from "redux-saga/effects"
+import {
+  call,
+  put,
+  takeEvery,
+  select,
+} from "redux-saga/effects"
 
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash } from "utils/server-detection"
 
+import { selectGlobalPanAndZoom } from "domains/global/selectors"
+import { StateT as GlobalStateT } from "domains/global/reducer"
 import {
   fetchDataAction, FetchDataPayload,
   fetchChartAction, FetchChartPayload,
@@ -40,6 +47,18 @@ function* fetchDataSaga({ payload }: FetchDataSaga) {
     return
   }
   // todo do xss check of data
+  const globalPanAndZoom = (yield select(
+    selectGlobalPanAndZoom,
+  )) as GlobalStateT["globalPanAndZoom"]
+
+  // if requested relative timeRange, and during request the mode has been changed to absolute
+  // global-pan-and-zoom, cancel the store update
+  if (globalPanAndZoom
+    && (fetchDataParams.viewRange[0] <= 0 || fetchDataParams.viewRange[1] <= 0)
+  ) {
+    return
+  }
+
   yield put(fetchDataAction.success({
     chartData: response.data,
     fetchDataParams,
