@@ -26,6 +26,7 @@
     "peity": "3.2.1",
     "perfect-scrollbar": "0.6.15",
     "ramda": "^0.26.1",
+    "ramda-adjunct": "^2.24.0",
     "react-redux": "^7.1.1",
     "react-scripts": "^3.3.0",
     "react-use": "^12.5.0",
