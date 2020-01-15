@@ -1,0 +1,7 @@
+.print-modal {
+  &__close-button {
+    &--disabled {
+      pointer-events: none;
+    }
+  }
+}

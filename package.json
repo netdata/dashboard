@@ -60,7 +60,8 @@
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^2.0.1",
     "install-peers-cli": "^2.1.1",
-    "jest-environment-jsdom-fourteen": "^0.1.0"
+    "jest-environment-jsdom-fourteen": "^0.1.0",
+    "node-sass": "^4.13.0"
   },
   "scripts": {
     "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts start",
