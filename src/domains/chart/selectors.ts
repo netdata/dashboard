@@ -40,3 +40,24 @@ export const selectResizeHeight = createSelector(
   selectSingleChartState,
   (chartState) => chartState.resizeHeight,
 )
+
+
+export const selectAmountOfFetchedCharts = createSelector(
+  selectChartsState,
+  (chartsState) => Object.values(chartsState)
+    // count the nr of "success" or "failure" charts
+    .map((chartState) => chartState.isFetchDataFailure
+      || Boolean(chartState.chartData) || Boolean(chartState.isFetchDetailsFailure))
+    .reduce((acc, value) => acc + Number(value), 0),
+)
+
+export const selectAmountOfCharts = createSelector(
+  selectChartsState,
+  (chartsState) => Object.keys(chartsState).length,
+)
+
+export const selectNameOfAnyFetchingChart = createSelector(
+  selectChartsState,
+  (chartsState) => Object.values(chartsState)
+    .find((chartState) => chartState.isFetchingData)?.chartDetails?.id,
+)

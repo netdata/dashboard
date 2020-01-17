@@ -1,6 +1,6 @@
 import { Subject, from, empty } from "rxjs"
 import {
-  mergeMap, tap, delay, catchError,
+  mergeMap, tap, catchError,
 } from "rxjs/operators"
 
 import { axiosInstance } from "./axios-instance"
@@ -29,7 +29,6 @@ const output = stream.pipe(
         onErrorCallback()
         return empty
       }),
-      delay(3000),
     )
   ), CONCURRENT_CALLS_LIMIT),
 )
