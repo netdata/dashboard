@@ -286,10 +286,14 @@ export const Chart = memo(({
     commonColorsAttribute: attributes.commonColors,
   }), [attributes.colors, attributes.commonColors, chartDetails, chartUuid])
   const colors = useSelector(selectAssignedColors)
+  const orderedColors = useMemo(
+    () => chartData.dimension_names.map(prop(__, colors)),
+    [chartData, colors],
+  )
+
   if (!colors) {
     return <span /> // wait for createSelectAssignedColors reducer result to come back
   }
-  const orderedColors = chartData.dimension_names.map(prop(__, colors))
 
   const isTimeVisible = hoveredX && hoveredX >= viewAfter && hoveredX <= viewBefore
   const viewUpdateEvery = chartData.view_update_every * 1000
