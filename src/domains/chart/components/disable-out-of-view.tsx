@@ -3,6 +3,7 @@ import { useDebounce, useIntersection } from "react-use"
 import { forEachObjIndexed, pathOr } from "ramda"
 
 import { useSelector } from "store/redux-separate-context"
+import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { selectDestroyOnHide, selectIsAsyncOnScroll } from "domains/global/selectors"
 import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
@@ -97,6 +98,11 @@ export const DisableOutOfView = ({
 
 
   const [clonedChildren, setClonedChildren] = useState<Element[]>()
+
+  if (isPrintMode) {
+    // we should show everything in this case
+    return children
+  }
 
   if (shouldHide) {
     if (destroyOnHide) {
