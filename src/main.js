@@ -3115,7 +3115,7 @@ function showPageFooter() {
     document.getElementById('footer').style.display = 'block';
 }
 
-function printPreflight() {
+window.printPreflight = () => {
     var url = document.location.origin.toString() + document.location.pathname.toString() + document.location.search.toString() + urlOptions.genHash() + ';mode=print';
     var width = 990;
     var height = screen.height * 90 / 100;
@@ -3126,75 +3126,8 @@ function printPreflight() {
 }
 
 function printPage() {
-    var print_is_rendering = true;
-
-    $('#printModal').on('hide.bs.modal', function (e) {
-        if (print_is_rendering === true) {
-            e.preventDefault();
-            return false;
-        }
-
-        return true;
-    });
-
-    $('#printModal').on('show.bs.modal', function () {
-        var print_options = {
-            stop_updates_when_focus_is_lost: false,
-            update_only_visible: false,
-            sync_selection: false,
-            eliminate_zero_dimensions: false,
-            pan_and_zoom_data_padding: false,
-            show_help: false,
-            legend_toolbox: false,
-            resize_charts: false,
-            pixels_per_point: 1
-        };
-
-        var x;
-        for (x in print_options) {
-            if (print_options.hasOwnProperty(x)) {
-                NETDATA.options.current[x] = print_options[x];
-            }
-        }
-
-        NETDATA.parseDom();
-        showPageFooter();
-
-        NETDATA.globalSelectionSync.stop();
-        NETDATA.globalPanAndZoom.setMaster(NETDATA.options.targets[0], urlOptions.after, urlOptions.before);
-        // NETDATA.onresize();
-
-        var el = document.getElementById('printModalProgressBar');
-        var eltxt = document.getElementById('printModalProgressBarText');
-
-        function update_chart(idx) {
-            var state = NETDATA.options.targets[--idx];
-
-            var pcent = (NETDATA.options.targets.length - idx) * 100 / NETDATA.options.targets.length;
-            $(el).css('width', pcent + '%').attr('aria-valuenow', pcent);
-            eltxt.innerText = Math.round(pcent).toString() + '%, ' + state.id;
-
-            setTimeout(function () {
-                state.updateChart(function () {
-                    NETDATA.options.targets[idx].resizeForPrint();
-
-                    if (idx > 0) {
-                        update_chart(idx);
-                    } else {
-                        print_is_rendering = false;
-                        $('#printModal').modal('hide');
-                        window.print();
-                        window.close();
-                    }
-                })
-            }, 0);
-        }
-
-        print_is_rendering = true;
-        update_chart(NETDATA.options.targets.length);
-    });
-
-    $('#printModal').modal('show');
+    window.NETDATA.parseDom()
+    showPageFooter(); // todo after full rewrite the footer should show when charts are loaded
 }
 
 // --------------------------------------------------------------------
