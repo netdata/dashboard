@@ -16,6 +16,9 @@ export const initialSingleState = {
     isRemotelyControlled: false,
     viewRange: null,
   },
+  isFetchingData: false,
+  isFetchDataFailure: false,
+  isFetchDetailsFailure: false,
   isFetchingDetails: false,
   resizeHeight: null,
 }
@@ -27,12 +30,31 @@ export const chartReducer = createReducer<StateT>(
 
 const getSubstate = (state: StateT, id: string) => state[id] || initialSingleState
 
+chartReducer.on(fetchDataAction.request, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    isFetchingData: true,
+  },
+}))
+
+chartReducer.on(fetchDataAction.failure, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    isFetchingData: false,
+    isFetchDataFailure: true,
+  },
+}))
+
 chartReducer.on(fetchDataAction.success, (state, { id, chartData, fetchDataParams }) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
     chartData,
     fetchDataParams,
+    isFetchingData: false,
+    isFetchDataFailure: false,
   },
 }))
 
@@ -44,12 +66,21 @@ chartReducer.on(fetchChartAction.request, (state, { id }) => ({
   },
 }))
 
+chartReducer.on(fetchChartAction.failure, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    isFetchDetailsFailure: true,
+  },
+}))
+
 chartReducer.on(fetchChartAction.success, (state, { id, chartDetails }) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
     chartDetails,
     isFetchingDetails: false,
+    isFetchDetailsFailure: false,
   },
 }))
 
