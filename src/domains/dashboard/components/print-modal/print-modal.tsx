@@ -1,8 +1,15 @@
 import React, { useRef, useEffect } from "react"
-import { ModalPortal } from "domains/dashboard/components/modal-portal"
 import classNames from "classnames"
 
+import { useSelector } from "store/redux-separate-context"
+import { ModalPortal } from "domains/dashboard/components/modal-portal"
+import {
+  selectAmountOfCharts, selectAmountOfFetchedCharts, selectNameOfAnyFetchingChart,
+} from "domains/chart/selectors"
+
 import "./print-modal.scss"
+
+const TIMEOUT_DURATION_TO_MAKE_SURE_ALL_CHARTS_HAVE_BEEN_RENDERED = 1000
 
 export const PrintModal = () => {
   const printModalElement = useRef<HTMLDivElement>(null)
@@ -15,6 +22,30 @@ export const PrintModal = () => {
       $element.modal("show")
     }
   }) // render just once
+
+  const amountOfCharts = useSelector(selectAmountOfCharts)
+  const amountOfFetchedCharts = useSelector(selectAmountOfFetchedCharts)
+  const nameOfAnyFetchingChart = useSelector(selectNameOfAnyFetchingChart)
+
+  const percentage = amountOfCharts === 0
+    ? 0
+    : (amountOfFetchedCharts / amountOfCharts) * 100
+
+  useEffect(() => {
+    if (percentage === 100) {
+      setTimeout(() => {
+        // in case browser will not be able to close the window
+        window.$(printModalElement.current).modal("hide")
+        window.print()
+        window.close()
+      }, TIMEOUT_DURATION_TO_MAKE_SURE_ALL_CHARTS_HAVE_BEEN_RENDERED)
+    }
+  }, [percentage])
+
+
+  const progressBarText = nameOfAnyFetchingChart
+    && `${Math.round(percentage)}%, ${nameOfAnyFetchingChart}`
+
 
   return (
     <ModalPortal>
@@ -56,10 +87,13 @@ export const PrintModal = () => {
                   id="printModalProgressBar"
                   className="progress-bar progress-bar-info"
                   role="progressbar"
-                  aria-valuenow={0}
+                  aria-valuenow={percentage}
                   aria-valuemin={0}
                   aria-valuemax={100}
-                  style={{ minWidth: "2em" }}
+                  style={{
+                    minWidth: "2em",
+                    width: `${percentage}%`,
+                  }}
                 >
                   <span
                     id="printModalProgressBarText"
@@ -73,7 +107,9 @@ export const PrintModal = () => {
                       display: "block",
                       color: "black",
                     }}
-                  />
+                  >
+                    {progressBarText}
+                  </span>
                 </div>
               </div>
               The print dialog will appear as soon as we finish rendering the page.
