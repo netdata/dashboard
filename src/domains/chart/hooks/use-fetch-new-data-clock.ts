@@ -4,6 +4,7 @@ import { useInterval } from "react-use"
 import { useSelector } from "store/redux-separate-context"
 import { selectHasWindowFocus, selectStopUpdatesWhenFocusIsLost } from "domains/global/selectors"
 import { BIGGEST_INTERVAL_NUMBER } from "utils/biggest-interval-number"
+import { isPrintMode } from "domains/dashboard/utils/parse-url"
 
 
 type UseFetchNewDataClock = (arg: {
@@ -29,7 +30,7 @@ export const useFetchNewDataClock: UseFetchNewDataClock = ({
   }, [shouldFetchImmediatelyAfterFocus, setShouldFetchImmediatelyAfterFocus, shouldBeUpdating])
 
   // don't use setInterval when we loose focus
-  const intervalTime = (shouldBeUpdating || !shouldFetchImmediatelyAfterFocus)
+  const intervalTime = ((shouldBeUpdating || !shouldFetchImmediatelyAfterFocus) && !isPrintMode)
     ? preferedIntervalTime
     : BIGGEST_INTERVAL_NUMBER
   useInterval(() => {
