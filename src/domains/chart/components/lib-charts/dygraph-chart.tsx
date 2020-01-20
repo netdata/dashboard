@@ -8,6 +8,7 @@ import "dygraphs/src-es5/extras/smooth-plotter"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { AppStateT } from "store/app-state"
 import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
+import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
 import { selectGlobalChartUnderlay, selectGlobalSelectionMaster } from "domains/global/selectors"
 import { resetGlobalPanAndZoomAction } from "domains/global/actions"
@@ -248,11 +249,11 @@ interface Props {
   hoveredX: number | null
   setGlobalChartUnderlay: (arg: { after: number, before: number, masterID: string }) => void
   setHoveredX: (hoveredX: number | null, noMaster?: boolean) => void
-  setMinMax: (minMax: [number, number]) => void
+  setMinMax: (minMax: TimeRange) => void
   unitsCurrent: string
   viewAfter: number
   viewBefore: number
-  requestedViewRange: [number, number]
+  requestedViewRange: TimeRange
 }
 export const DygraphChart = ({
   attributes,
