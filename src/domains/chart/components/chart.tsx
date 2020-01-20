@@ -12,6 +12,7 @@ import {
 import { createSelectAssignedColors, selectGlobalSelection } from "domains/global/selectors"
 import { AppStateT } from "store/app-state"
 import { useDispatch, useSelector } from "store/redux-separate-context"
+import { TimeRange } from "types/common"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
@@ -34,7 +35,7 @@ interface Props {
   chartWidth: number
   attributes: Attributes
   isRemotelyControlled: boolean
-  requestedViewRange: [number, number]
+  requestedViewRange: TimeRange
   selectedDimensions: string[]
   setSelectedDimensions: (newState: string[]) => void
   showLatestOnBlur: boolean

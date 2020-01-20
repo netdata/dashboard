@@ -3,7 +3,10 @@ import React from "react"
 import Dygraph from "dygraphs"
 
 import "../../../../../../public/dashboard-react"
+
 import { storeProviderMock } from "test/store-provider-mock"
+import { TimeRange } from "types/common"
+
 import { DygraphChart } from "../dygraph-chart"
 
 import { attributesMock } from "../../../__mocks__/attributes-mock"
@@ -52,7 +55,7 @@ const dygraphDefaultProps = {
   onUpdateChartPanAndZoom: () => {},
   orderedColors: ["#ff00ff", "#00ffff", "#ffff00"],
   hoveredX: null,
-  requestedViewRange: [chartDataMock.after, chartDataMock.before] as [number, number],
+  requestedViewRange: [chartDataMock.after, chartDataMock.before] as TimeRange,
   setGlobalChartUnderlay: () => {},
   setHoveredX: () => {},
   setMinMax: () => {},

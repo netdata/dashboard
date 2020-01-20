@@ -3,6 +3,7 @@ import classNames from "classnames"
 
 import { useDispatch } from "store/redux-separate-context"
 import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+import { TimeRange } from "types/common"
 
 import { Attributes } from "../utils/transformDataAttributes"
 import {
@@ -45,7 +46,7 @@ interface Props {
   unitsCurrent: string
   viewAfter: number,
   viewBefore: number,
-  requestedViewRange: [number, number]
+  requestedViewRange: TimeRange
 }
 
 export const AbstractChart = ({
