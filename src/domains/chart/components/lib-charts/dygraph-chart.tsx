@@ -24,6 +24,13 @@ import { selectResizeHeight } from "../../selectors"
 
 import "./dygraph-chart.css"
 
+type IsInRangeOfAvailableData = (props: {
+  after: number, before: number, chartData: DygraphData,
+}) => boolean
+const isInRangeOfAvailableData: IsInRangeOfAvailableData = ({ after, before, chartData }) => (
+  after >= (chartData.first_entry * 1000) && before <= (chartData.last_entry * 1000)
+)
+
 interface GetInitialDygraphOptions {
   attributes: Attributes,
   chartData: DygraphData,
@@ -418,10 +425,9 @@ export const DygraphChart = ({
             const after = Math.round(xRange[0])
             const before = Math.round(xRange[1])
 
-            const { first_entry: firstEntry, last_entry: lastEntry } = propsRef.current.chartData
-            if (before <= (lastEntry * 1000)
-              && after >= (firstEntry * 1000)
-            ) {
+            if (isInRangeOfAvailableData({
+              after, before, chartData: propsRef.current.chartData,
+            })) {
               updateChartPanOrZoom({ after, before })
             }
           }
