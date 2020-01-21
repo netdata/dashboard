@@ -1,8 +1,10 @@
-import React, { useLayoutEffect, useRef, useState } from "react"
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from "react"
 import { useDebounce, useIntersection } from "react-use"
 import { forEachObjIndexed, pathOr } from "ramda"
 
-import { useSelector } from "store/redux-separate-context"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { selectDestroyOnHide, selectIsAsyncOnScroll } from "domains/global/selectors"
 import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
@@ -10,6 +12,7 @@ import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { chartLibrariesSettings } from "domains/chart/utils/chartLibrariesSettings"
 
 import { InvisibleSearchableText } from "./invisible-searchable-text"
+import { clearChartStateAction } from "../actions"
 
 const cloneWithCanvas = (element: Element) => {
   const cloned = element.cloneNode(true) as Element
@@ -32,14 +35,25 @@ const cloneWithCanvas = (element: Element) => {
 
 interface Props {
   attributes: Attributes
+  chartUuid: string
   children: any
   portalNode: HTMLElement
 }
 export const DisableOutOfView = ({
   attributes,
+  chartUuid,
   children,
   portalNode,
 }: Props) => {
+  /* when unmounting, clear redux state for this chart */
+  const dispatch = useDispatch()
+  useEffect(() => { // eslint-disable-line arrow-body-style
+    return () => {
+      dispatch(clearChartStateAction({ id: chartUuid }))
+    }
+  })
+
+
   /* separate functionality - adding custom styles to portalNode */
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const [hasPortalNodeBeenStyled, setHasPortalNodeBeenStyled] = useState<boolean>(false)

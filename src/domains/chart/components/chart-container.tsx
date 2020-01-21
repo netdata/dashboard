@@ -22,6 +22,7 @@ export const ChartContainer = ({
   <DisableOutOfView
     attributes={attributes}
     portalNode={portalNode}
+    chartUuid={chartID}
   >
     <ChartWithLoader
       attributes={attributes}

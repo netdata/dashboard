@@ -62,6 +62,10 @@ export interface SetResizeHeightAction {
   id: string
   resizeHeight: number
 }
-export const setResizeHeightAction = createRequestAction<SetResizeHeightAction>(
+export const setResizeHeightAction = createAction<SetResizeHeightAction>(
   `${storeKey}/setResizeHeight`,
+)
+
+export const clearChartStateAction = createAction<{ id: string }>(
+  `${storeKey}/clearChartStateAction`,
 )
