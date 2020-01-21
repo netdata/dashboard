@@ -15,6 +15,7 @@ import {
 } from './domains/global/actions';
 import { createSelectOption } from './domains/global/selectors';
 import { seconds4human } from './domains/chart/utils/seconds4human';
+import { zeropad } from './utils/units-conversion';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -1956,22 +1957,14 @@ function renderChartsAndMenu(data) {
 
 // ----------------------------------------------------------------------------
 
-function loadJs(url, callback) {
-    $.ajax({
-        url: url,
-        cache: true,
-        dataType: "script",
-        xhrFields: { withCredentials: true } // required for the cookie
+const handleLoadJs = (promise, library, callback) => promise
+    .catch(() => {
+        alert(`Cannot load required JS library: ${library}`)
     })
-    .fail(function () {
-        alert('Cannot load required JS library: ' + url);
+    .then(() => {
+        callback()
     })
-    .always(function () {
-        if (typeof callback === 'function') {
-            callback();
-        }
-    })
-}
+
 
 var clipboardLoaded = false;
 
@@ -1999,40 +1992,25 @@ function loadBootstrapTable(callback) {
     }
 }
 
-var bootstrapSliderLoaded = false;
-
 function loadBootstrapSlider(callback) {
-    if (bootstrapSliderLoaded === false) {
-        bootstrapSliderLoaded = true;
-        loadJs('lib/bootstrap-slider-10.0.0.min.js', function () {
-            NETDATA._loadCSS('css/bootstrap-slider-10.0.0.min.css');
-            callback();
-        });
-    } else {
-        callback();
-    }
+    handleLoadJs(
+      Promise.all([
+        import("bootstrap-slider").then(({ default: slider }) => {
+            window.Slider = slider
+        }),
+        import("bootstrap-slider/dist/css/bootstrap-slider.min.css"),
+      ]),
+      "bootstrap-slider",
+      callback,
+    )
 }
-
-var lzStringLoaded = false;
 
 function loadLzString(callback) {
-    if (lzStringLoaded === false) {
-        lzStringLoaded = true;
-        loadJs('lib/lz-string-1.4.4.min.js', callback);
-    } else {
-        callback();
-    }
+    handleLoadJs(import("lz-string"), "lz-string", callback)
 }
 
-var pakoLoaded = false;
-
 function loadPako(callback) {
-    if (pakoLoaded === false) {
-        pakoLoaded = true;
-        loadJs('lib/pako-1.0.6.min.js', callback);
-    } else {
-        callback();
-    }
+    handleLoadJs(import("pako"), "pako", callback)
 }
 
 // ----------------------------------------------------------------------------
@@ -3539,7 +3517,7 @@ function saveSnapshotModalInit() {
         }
 
         var start_date = new Date(start_ms);
-        var yyyymmddhhssmm = start_date.getFullYear() + NETDATA.zeropad(start_date.getMonth() + 1) + NETDATA.zeropad(start_date.getDate()) + '-' + NETDATA.zeropad(start_date.getHours()) + NETDATA.zeropad(start_date.getMinutes()) + NETDATA.zeropad(start_date.getSeconds());
+        var yyyymmddhhssmm = start_date.getFullYear() + zeropad(start_date.getMonth() + 1) + zeropad(start_date.getDate()) + '-' + zeropad(start_date.getHours()) + zeropad(start_date.getMinutes()) + zeropad(start_date.getSeconds());
 
         document.getElementById('saveSnapshotFilename').value = 'netdata-' + options.hostname.toString() + '-' + yyyymmddhhssmm.toString() + '-' + saveSnapshotViewDuration.toString() + '.snapshot';
         saveSnapshotSetCompression(saveSnapshotCompression);
