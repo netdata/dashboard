@@ -3268,7 +3268,7 @@ function loadSnapshotModalLog(priority, msg) {
 
 var tmpSnapshotData = null;
 
-function loadSnapshot() {
+window.loadSnapshot = () => {
     $('#loadSnapshotImport').addClass('disabled');
 
     if (tmpSnapshotData === null) {
@@ -3438,7 +3438,7 @@ function loadSnapshotDragAndDropSetup() {
     }
 };
 
-function loadSnapshotPreflight() {
+window.loadSnapshotPreflight = () => {
     var files = document.getElementById('loadSnapshotSelectFiles').files;
     if (files.length <= 0) {
         loadSnapshotPreflightEmpty();

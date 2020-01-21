@@ -13,16 +13,18 @@ export const Portals = memo(() => {
     <>
       {nodes.map((node, index) => {
         const attributesMapped = getAttributes(node)
+        const chartId = `${attributesMapped.id}-${index}`
         return (
           createPortal(
             <DisableOutOfView
               attributes={attributesMapped}
+              chartUuid={chartId}
               portalNode={(node as HTMLElement)}
             >
               <ChartWithLoader
                 attributes={attributesMapped}
                 // todo change to uuid generator (when we disconnect dashboard.js)
-                chartUuid={`${attributesMapped.id}-${index}`}
+                chartUuid={chartId}
                 portalNode={(node as HTMLElement)}
               />
             </DisableOutOfView>,

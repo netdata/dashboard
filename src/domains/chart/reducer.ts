@@ -1,6 +1,10 @@
+import { omit } from "ramda"
 import { createReducer } from "redux-act"
 
-import { fetchDataAction, fetchChartAction, setResizeHeightAction } from "./actions"
+import {
+  fetchDataAction, fetchChartAction, setResizeHeightAction,
+  clearChartStateAction,
+} from "./actions"
 import { ChartState } from "./chart-types"
 
 export type StateT = {
@@ -100,3 +104,5 @@ chartReducer.on(setResizeHeightAction, (state, { id, resizeHeight }) => ({
     resizeHeight,
   },
 }))
+
+chartReducer.on(clearChartStateAction, (state, { id }) => omit([id], state))
