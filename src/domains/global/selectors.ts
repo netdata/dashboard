@@ -50,6 +50,11 @@ export const selectIsFetchingHello = createSelector(
   prop("isFetchingHello"),
 )
 
+export const selectSnapshot = createSelector(
+  selectGlobal,
+  prop("snapshot"),
+)
+
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
   path(["alarms", "hasStartedAlarms"]),

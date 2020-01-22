@@ -8,6 +8,7 @@
 import {
     centerAroundHighlightAction,
     clearHighlightAction,
+    loadSnapshotAction,
     resetGlobalPanAndZoomAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
@@ -2010,7 +2011,13 @@ function loadLzString(callback) {
 }
 
 function loadPako(callback) {
-    handleLoadJs(import("pako"), "pako", callback)
+    handleLoadJs(
+      import("pako").then(({ default: pako }) => {
+          window.pako = pako
+      }),
+      "pako",
+      callback,
+    )
 }
 
 // ----------------------------------------------------------------------------
@@ -3267,7 +3274,6 @@ window.loadSnapshot = () => {
 
             document.getElementById('charts_div').innerHTML = '';
             document.getElementById('sidebar').innerHTML = '';
-            NETDATA.globalReset();
 
             if (typeof tmpSnapshotData.hash !== 'undefined') {
                 urlOptions.hash = tmpSnapshotData.hash;
@@ -3300,6 +3306,11 @@ window.loadSnapshot = () => {
             }
 
             tmpSnapshotData.uncompress = snapshotOptions.compressions[tmpSnapshotData.compression].uncompress;
+
+            reduxStore.dispatch(loadSnapshotAction({
+                snapshot: tmpSnapshotData,
+            }))
+
             netdataSnapshotData = tmpSnapshotData;
 
             urlOptions.after = tmpSnapshotData.after_ms;
@@ -4457,7 +4468,10 @@ function finalizePage() {
     NETDATA.onresizeCallback();
 
     if (netdataSnapshotData !== null) {
-        NETDATA.globalPanAndZoom.setMaster(NETDATA.options.targets[0], netdataSnapshotData.after_ms, netdataSnapshotData.before_ms);
+        reduxStore.dispatch(setGlobalPanAndZoomAction({
+            after: netdataSnapshotData.after_ms,
+            before: netdataSnapshotData.before_ms,
+        }))
     }
 
     //if (urlOptions.nowelcome !== true) {

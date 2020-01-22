@@ -2,6 +2,7 @@ import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
 import { RegistryMachine } from "domains/global/sagas"
+import { Snapshot } from "domains/global/types"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -16,6 +17,7 @@ import {
   updatePersonUrlsAction,
   startAlarmsAction,
   setOptionAction,
+  loadSnapshotAction,
 } from "./actions"
 import { Options, optionsMergedWithLocalStorage } from "./options"
 
@@ -58,6 +60,8 @@ export type StateT = {
     hasStarted: boolean,
   }
 
+  snapshot: Snapshot | null
+
   isFetchingHello: boolean
 
   options: Options
@@ -80,6 +84,7 @@ export const initialState = {
     registryMachinesArray: null,
   },
 
+  snapshot: null,
   alarms: {
     hasStarted: false,
   },
@@ -293,3 +298,57 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
     [key]: value,
   },
 }))
+
+globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
+  const parsedData = Object.keys(snapshot.data)
+    .map((dataKey) => {
+      let uncompressed
+      try {
+        // @ts-ignore
+        uncompressed = snapshot.uncompress(snapshot.data[dataKey])
+
+        // repeat old logging
+        if (uncompressed === null) {
+          // eslint-disable-next-line no-console
+          console.warn(`uncompressed snapshot data for key ${dataKey} is null`)
+          return null
+        }
+
+        if (typeof uncompressed === "undefined") {
+          // eslint-disable-next-line no-console
+          console.warn(`uncompressed snapshot data for key ${dataKey} is undefined`)
+          return null
+        }
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`decompression of snapshot data for key ${dataKey} failed`, e)
+        uncompressed = null
+      }
+
+      if (typeof uncompressed !== "string") {
+        // eslint-disable-next-line no-console
+        console.warn(`uncompressed snapshot data for key ${dataKey} is not string`)
+        return {}
+      }
+
+      let data
+      try {
+        data = JSON.parse(uncompressed)
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(`parsing snapshot data for key ${dataKey} failed`)
+        return {}
+      }
+
+      return ({ [dataKey]: data })
+    })
+    .reduce((acc, obj) => ({ ...acc, ...obj }), {})
+
+  return {
+    ...state,
+    snapshot: {
+      ...snapshot,
+      data: parsedData as {[key: string]: unknown},
+    },
+  }
+})

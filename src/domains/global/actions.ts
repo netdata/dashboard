@@ -3,6 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
+import { Snapshot } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -88,4 +89,8 @@ export interface SetOptionAction {
 }
 export const setOptionAction = createAction<SetOptionAction>(
   `${storeKey}/setOptionAction`,
+)
+
+export const loadSnapshotAction = createAction<{snapshot: Snapshot}>(
+  `${storeKey}/loadSnapshotAction`,
 )
