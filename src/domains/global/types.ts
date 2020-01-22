@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
 
+import { ChartDetails } from "domains/chart/chart-types"
+
 // it's possible that this interface is too narrow
 export interface AlarmLog {
   hostname: string
@@ -46,10 +48,61 @@ interface Alarms {
   }
 }
 
+export interface ChartsMetadata {
+  alarms_count: number
+  charts: {
+    [chartName: string]: ChartDetails
+  }
+  charts_count: number
+  custom_info: string
+  dimensions_count: number
+  history: number
+  hostname: string
+  hosts: { hostname: string }[]
+  hosts_count: number
+  labels: {
+    _is_master: string
+    _container: string
+    _virtualization: string
+    _architecture: string
+    _kernel_version: string
+    _os_version: string
+    _os_name: string
+  }
+  memory_mode: string
+  os: string
+  release_channel: string
+  rrd_memory_bytes: number
+  timezone: string
+  update_every: number
+  version: string
+}
+
 export interface ActiveAlarms {
   alarms: Alarms
   hostname: string
   latest_alarm_log_unique_id: number
   now: number
   status: boolean
+}
+
+export interface Snapshot {
+  after_ms: number
+  before_ms: number
+  duration_ms: number
+
+  highlight_after_ms: number
+  highlight_before_ms: number
+  update_every_ms: number
+
+  charts: ChartsMetadata
+  comments: string
+  data: {[ chartUniqueId: string ]: unknown}
+  data_points: number
+  hash: string
+  hostname: string
+  server: string
+  netdata_version: string
+  snapshot_version: number
+  url: string
 }
