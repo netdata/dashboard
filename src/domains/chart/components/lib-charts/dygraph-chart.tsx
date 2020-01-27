@@ -689,6 +689,7 @@ export const DygraphChart = ({
             if (dygraphLastTouchMove.current === 0 && dygraphLastTouchPageX.current !== 0
               && chartElement.current // this is just for TS
             ) {
+              latestIsUserAction.current = false // prevent updating pan-and-zoom
               // internal api of dygraph
               // @ts-ignore
               // eslint-disable-next-line no-underscore-dangle
