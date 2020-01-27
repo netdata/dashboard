@@ -78,3 +78,8 @@ export const selectShouldEliminateZeroDimensions = createSelectOption(
   "eliminate_zero_dimensions",
 )
 export const selectIsAsyncOnScroll = createSelectOption("async_on_scroll")
+
+export const selectParallelRefresher = createSelectOption("parallel_refresher")
+export const selectConcurrentRefreshes = createSelectOption("concurrent_refreshes")
+export const selectSyncSelection = createSelectOption("sync_selection")
+export const selectSyncPanAndZoom = createSelectOption("sync_pan_and_zoom")

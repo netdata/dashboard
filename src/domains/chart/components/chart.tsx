@@ -9,7 +9,11 @@ import {
   setGlobalPanAndZoomAction,
   setGlobalSelectionAction,
 } from "domains/global/actions"
-import { createSelectAssignedColors, selectGlobalSelection } from "domains/global/selectors"
+import {
+  createSelectAssignedColors,
+  selectGlobalSelection,
+  selectSyncSelection,
+} from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
 import { isTimestamp, MS_IN_SECOND } from "utils"
@@ -109,9 +113,9 @@ export const Chart = memo(({
 
   const [localHoveredX, setLocalHoveredX] = useState<number | null>(null)
 
-  const isGlobalSelectionSyncFlagTrue = true // todo
+  const isSyncSelection = useSelector(selectSyncSelection)
   const handleSetHoveredX = useCallback((newHoveredX, noMaster) => {
-    if (isGlobalSelectionSyncFlagTrue) {
+    if (isSyncSelection) {
       const action = noMaster
         ? { chartUuid: null, hoveredX: newHoveredX }
         : { chartUuid, hoveredX: newHoveredX }
@@ -119,9 +123,9 @@ export const Chart = memo(({
     } else {
       setLocalHoveredX(newHoveredX)
     }
-  }, [chartUuid, dispatch, isGlobalSelectionSyncFlagTrue])
+  }, [chartUuid, dispatch, isSyncSelection])
   const globalHoveredX = useSelector(selectGlobalSelection)
-  const hoveredX = isGlobalSelectionSyncFlagTrue
+  const hoveredX = isSyncSelection
     ? globalHoveredX
     : localHoveredX
 
