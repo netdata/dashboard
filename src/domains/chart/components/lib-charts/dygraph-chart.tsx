@@ -700,6 +700,7 @@ export const DygraphChart = ({
               const { current } = propsRef
               const t = Math.round(current.viewAfter
                 + (current.viewBefore - current.viewAfter) * pct)
+              // dont set "master" so the highlight is recalculated (to match existing row)
               setHoveredX(t, true)
             }
 
