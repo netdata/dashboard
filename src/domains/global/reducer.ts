@@ -215,6 +215,7 @@ globalReducer.on(setGlobalPanAndZoomAction, (state, {
 globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
   ...state,
   globalPanAndZoom: initialState.globalPanAndZoom,
+  hoveredX: initialState.hoveredX, // need to reset this also on mobile
 }))
 
 globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID }) => ({
