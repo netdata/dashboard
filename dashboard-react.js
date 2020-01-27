@@ -320,15 +320,20 @@ NETDATA.themes = {
 
 // Codacy declarations
 /* global netdataTheme */
-if (typeof window.netdataTheme !== 'undefined'
-  && typeof NETDATA.themes[netdataTheme] !== 'undefined'
-) {
-  NETDATA.themes.current = NETDATA.themes[window.netdataTheme];
-} else {
-  NETDATA.themes.current = NETDATA.themes.white;
+
+NETDATA.updateTheme = function () {
+  if (typeof window.netdataTheme !== 'undefined'
+    && typeof NETDATA.themes[netdataTheme] !== 'undefined'
+  ) {
+    NETDATA.themes.current = NETDATA.themes[window.netdataTheme];
+  } else {
+    NETDATA.themes.current = NETDATA.themes.white;
+  }
+
+  NETDATA.colors = NETDATA.themes.current.colors;
 }
 
-NETDATA.colors = NETDATA.themes.current.colors;
+NETDATA.updateTheme()
 
 // these are the colors Google Charts are using
 // we have them here to attempt emulate their look and feel on the other chart libraries

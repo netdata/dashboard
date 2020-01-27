@@ -416,12 +416,15 @@ function setTheme(theme) {
     return saveLocalStorage('netdataTheme', theme);
 }
 
-var netdataTheme = getTheme('slate');
+window.netdataTheme = getTheme('slate');
+// this is of course temporary, will be fixed during complete main.js rewrite
+NETDATA.updateTheme()
 var netdataShowHelp = true;
 
 if (urlOptions.theme !== null) {
     setTheme(urlOptions.theme);
     netdataTheme = urlOptions.theme;
+    window.NETDATA.updateTheme()
 } else {
     urlOptions.theme = netdataTheme;
 }

@@ -38,10 +38,6 @@ if (!window.netdataNoFontAwesome) {
 // support legacy code
 window.Ps = Ps
 
-loadCss(window.NETDATA.themes.current.bootstrap_css)
-loadCss(window.NETDATA.themes.current.dashboard_css)
-
-
 const App: React.FC = () => { // eslint-disable-line arrow-body-style
   const store = useStore()
   useEffect(() => {
