@@ -10,16 +10,15 @@ import {
   setGlobalSelectionAction,
 } from "domains/global/actions"
 import { createSelectAssignedColors, selectGlobalSelection } from "domains/global/selectors"
-import { AppStateT } from "store/app-state"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
+import { isTimestamp } from "utils"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { useFormatters } from "../utils/formatters"
 import { ChartData, ChartDetails, DygraphData } from "../chart-types"
-import { selectChartViewRange } from "../selectors"
 
 import { ChartLegend } from "./chart-legend"
 import { LegendToolbox } from "./legend-toolbox"
@@ -126,12 +125,11 @@ export const Chart = memo(({
     ? globalHoveredX
     : localHoveredX
 
-  const viewRange = useSelector((state: AppStateT) => selectChartViewRange(
-    state, { id: chartUuid },
-  ))
-  const viewAfter = Math.max(chartData.after * 1000, viewRange[0])
-  const viewBefore = viewRange[1] > 0
-    ? Math.min(chartData.before * 1000, viewRange[1])
+  const viewAfter = isTimestamp(requestedViewRange[0])
+    ? requestedViewRange[0]
+    : chartData.after * 1000
+  const viewBefore = isTimestamp(requestedViewRange[1])
+    ? requestedViewRange[1]
     : chartData.before * 1000 // when 'before' is 0 or negative
 
   const netdataFirst = chartData.first_entry * 1000
