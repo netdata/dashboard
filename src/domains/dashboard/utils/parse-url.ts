@@ -27,9 +27,12 @@ const defaultUrlOptions = {
   alarm_when: 0,
 } as {[key: string]: unknown}
 
-const parseQueryPair = (queryTuple: [string, string]): {[key: string] : unknown} => {
-  const [key, value] = queryTuple
-  if (defaultUrlOptions[key] === undefined || value === undefined) {
+const isInvalidPair = ([key, value]: [string, string]) => (
+  defaultUrlOptions[key] === undefined || value === undefined
+)
+
+const parseQueryPair = ([key, value]: [string, string]): {[key: string] : unknown} => {
+  if (isInvalidPair([key, value])) {
     return {}
   }
   return {

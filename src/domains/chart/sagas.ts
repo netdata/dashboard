@@ -31,12 +31,13 @@ export function* watchFetchDataResponseChannel() {
     // todo do xss check of data
     if (action.type === fetchDataAction.success.toString()) {
       const { viewRange } = action.payload.fetchDataParams
+      const [start, end] = viewRange
       const globalPanAndZoom = (yield select(
         selectGlobalPanAndZoom,
       )) as GlobalStateT["globalPanAndZoom"]
 
       if (globalPanAndZoom
-        && (viewRange[0] <= 0 || viewRange[1] <= 0)
+        && (start <= 0 || end <= 0) // check if they are not timestamps
       ) {
         // eslint-disable-next-line no-continue
         continue
