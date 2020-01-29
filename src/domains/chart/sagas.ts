@@ -7,6 +7,7 @@ import {
   take,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
+import { Action } from "redux-act"
 
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash } from "utils/server-detection"
@@ -47,8 +48,7 @@ export function* watchFetchDataResponseChannel() {
 }
 
 
-type FetchDataSaga = { payload: FetchDataPayload }
-function fetchDataSaga({ payload }: FetchDataSaga) {
+function fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
     host, chart, format, points, group, gtime, options, after, before, dimensions,
@@ -92,8 +92,7 @@ function fetchDataSaga({ payload }: FetchDataSaga) {
   })
 }
 
-type FetchChartSaga = { payload: FetchChartPayload }
-function* fetchChartSaga({ payload }: FetchChartSaga) {
+function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   const { chart, id, host } = payload
   let response
   const url = `${alwaysEndWithSlash(host)}api/v1/chart`

@@ -4,6 +4,7 @@ import {
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
+import { Action } from "redux-act"
 
 import { axiosInstance } from "utils/api"
 
@@ -186,8 +187,7 @@ export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
   }
 }
 
-interface FetchHelloSaga { payload: FetchHelloPayload }
-function* fetchHelloSaga({ payload }: FetchHelloSaga) {
+function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const { serverDefault } = payload
   const helloCallUrl = `${serverDefault}api/v1/registry?action=hello`
   const response: AxiosResponse<HelloResponse> = yield call(axiosInstance.get, helloCallUrl, {
@@ -238,8 +238,7 @@ function* fetchHelloSaga({ payload }: FetchHelloSaga) {
 }
 
 const constructOptionStorageKey = (key: string) => `options.${key}`
-interface SetOptionSaga { payload: SetOptionAction }
-function setOptonSaga({ payload }: SetOptionSaga) {
+function setOptonSaga({ payload }: Action<SetOptionAction>) {
   const { key, value } = payload
   if (key === "stop_updates_when_focus_is_lost") {
     // old dashboard was saving that property to localStorage, but was always ommiting it when
