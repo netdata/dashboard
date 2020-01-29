@@ -13,6 +13,7 @@ import {
   createSelectAssignedColors,
   selectGlobalSelection,
   selectSyncSelection,
+  selectUnitsScalingMethod,
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
@@ -61,12 +62,13 @@ export const Chart = memo(({
   setSelectedDimensions,
   showLatestOnBlur,
 }: Props) => {
+  const unitsScalingMethod = useSelector(selectUnitsScalingMethod)
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings
   const {
     units = chartDetails.units,
     unitsCommon,
-    unitsDesired = window.NETDATA.options.current.units,
+    unitsDesired = unitsScalingMethod,
   } = attributes
 
   // we need to have empty selectedDimensions work as {all enabled}, in case
