@@ -11,6 +11,7 @@ import {
   selectGlobalPanAndZoom,
   selectGlobalSelection,
   selectShouldEliminateZeroDimensions,
+  selectPanAndZoomDataPadding,
 } from "domains/global/selectors"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "domains/chart/constants"
 import { Loader } from "domains/chart/components/loader"
@@ -151,6 +152,7 @@ export const ChartWithLoader = ({
   const chartHeight = boundingClientRect.height
 
   const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions)
+  const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
   /**
    * fetch data
    */
@@ -171,7 +173,7 @@ export const ChartWithLoader = ({
 
           viewRange = [after, before]
 
-          if (window.NETDATA.options.current.pan_and_zoom_data_padding) {
+          if (shouldUsePanAndZoomPadding) {
             const requestedPadding = Math.round((before - after) / 2)
             after -= requestedPadding
             before += requestedPadding
@@ -223,7 +225,8 @@ export const ChartWithLoader = ({
     }
   }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
     hasLegend, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
-    isRemotelyControlled, portalNode, setShouldFetch, shouldEliminateZeroDimensions, shouldFetch])
+    isRemotelyControlled, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
+    shouldUsePanAndZoomPadding, shouldFetch])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
