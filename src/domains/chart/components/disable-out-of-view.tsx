@@ -51,7 +51,8 @@ export const DisableOutOfView = ({
     return () => {
       dispatch(clearChartStateAction({ id: chartUuid }))
     }
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 
   /* separate functionality - adding custom styles to portalNode */
