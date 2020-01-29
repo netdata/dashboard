@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react"
 import classNames from "classnames"
 
+import { useSelector } from "store/redux-separate-context"
+import { selectShowHelp } from "domains/global/selectors"
 import { Icon, IconType } from "components/icon"
 import { Button } from "components/button"
 
@@ -26,8 +28,9 @@ export const ToolboxButton = ({
   popoverTitle,
 }: ToolboxButtonProps) => {
   const buttonRef = useRef(null)
+  const showHelp = useSelector(selectShowHelp)
   useEffect(() => {
-    if (buttonRef.current && window.NETDATA.options.current.show_help) {
+    if (buttonRef.current && showHelp) {
       window.$(buttonRef.current).popover({
         container: "body",
         animation: false,
