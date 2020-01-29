@@ -83,3 +83,8 @@ export const selectParallelRefresher = createSelectOption("parallel_refresher")
 export const selectConcurrentRefreshes = createSelectOption("concurrent_refreshes")
 export const selectSyncSelection = createSelectOption("sync_selection")
 export const selectSyncPanAndZoom = createSelectOption("sync_pan_and_zoom")
+
+export const selectTheme = createSelectOption("theme")
+export const selectShowHelp = createSelectOption("show_help")
+export const selectPanAndZoomDataPadding = createSelectOption("pan_and_zoom_data_padding")
+export const selectSmoothPlot = createSelectOption("smooth_plot")
