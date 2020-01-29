@@ -10,7 +10,11 @@ import { AppStateT } from "store/app-state"
 import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
-import { selectGlobalChartUnderlay, selectGlobalSelectionMaster } from "domains/global/selectors"
+import {
+  selectGlobalChartUnderlay,
+  selectGlobalSelectionMaster,
+  selectSmoothPlot,
+} from "domains/global/selectors"
 import { resetGlobalPanAndZoomAction } from "domains/global/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
@@ -39,6 +43,7 @@ interface GetInitialDygraphOptions {
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
   orderedColors: string[],
+  shouldSmoothPlot: boolean,
   unitsCurrent: string,
   xAxisTimeString: (d: Date) => string,
 }
@@ -50,6 +55,7 @@ const getInitialDygraphOptions = ({
   dimensionsVisibility,
   hiddenLabelsElementId,
   orderedColors,
+  shouldSmoothPlot,
   unitsCurrent,
   xAxisTimeString,
 }: GetInitialDygraphOptions) => {
@@ -161,7 +167,7 @@ const getInitialDygraphOptions = ({
     yLabelWidth: dygraphYLabelWidth,
 
     // the function to plot the chart
-    plotter: (dygraphSmooth && window.NETDATA.options.current) ? window.smoothPlotter : null,
+    plotter: (dygraphSmooth && shouldSmoothPlot) ? window.smoothPlotter : null,
 
     // The width of the lines connecting data points.
     // This can be used to increase the contrast or some graphs.
@@ -362,6 +368,7 @@ export const DygraphChart = ({
   }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom, setGlobalChartUnderlay,
     viewAfter, viewBefore])
 
+  const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
     if (chartElement && chartElement.current && !dygraphInstance) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
@@ -372,6 +379,7 @@ export const DygraphChart = ({
         dimensionsVisibility,
         hiddenLabelsElementId,
         orderedColors,
+        shouldSmoothPlot,
         unitsCurrent,
         xAxisTimeString,
       })
@@ -732,8 +740,8 @@ export const DygraphChart = ({
     }
   }, [attributes, chartData, chartDetails, chartSettings, chartUuid, dimensionsVisibility,
     dygraphInstance, globalChartUnderlay, hiddenLabelsElementId, isMouseDown, orderedColors,
-    setGlobalChartUnderlay, setHoveredX, setMinMax, unitsCurrent, updateChartPanOrZoom,
-    xAxisTimeString])
+    setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
+    updateChartPanOrZoom, xAxisTimeString])
 
   useLayoutEffect(() => {
     if (dygraphInstance && legendFormatValue) {
