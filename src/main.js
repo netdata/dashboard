@@ -997,7 +997,7 @@ function gotoServerModalHandler(guid) {
 
     if (!isSignedIn()) {
         // When the registry is enabled, if the user's known URLs are not working
-        // we consult the registry to get additional URLs.  
+        // we consult the registry to get additional URLs.
         setTimeout(function () {
             if (gotoServerStop === false) {
                 document.getElementById('gotoServerResponse').innerHTML = '<b>Added all the known URLs for this machine.</b>';
@@ -3432,7 +3432,7 @@ function loadSnapshotDragAndDropSetup() {
 
 window.loadSnapshotPreflight = () => {
     var files = document.getElementById('loadSnapshotSelectFiles').files;
-    if (files.length <= 0) {
+    if (!files.length) {
         loadSnapshotPreflightEmpty();
         loadSnapshotModalLog('danger', 'No file selected');
         return;
@@ -5116,7 +5116,7 @@ function netdataRegistryCallback(machinesArray) {
     registryAgents = machinesArray;
 
     if (isSignedIn()) {
-        // We call getCloudAccountAgents() here because it requires that 
+        // We call getCloudAccountAgents() here because it requires that
         // NETDATA.registry is initialized.
         clearMyNetdataMenu();
         getCloudAccountAgents().then((agents) => {
