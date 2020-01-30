@@ -12,7 +12,7 @@ import {
 import { createSelectAssignedColors, selectGlobalSelection } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
-import { isTimestamp } from "utils"
+import { isTimestamp, MS_IN_SECOND } from "utils"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
@@ -127,18 +127,18 @@ export const Chart = memo(({
 
   const viewAfter = isTimestamp(requestedViewRange[0])
     ? requestedViewRange[0]
-    : chartData.after * 1000
+    : chartData.after * MS_IN_SECOND
   const viewBefore = isTimestamp(requestedViewRange[1])
     ? requestedViewRange[1]
-    : chartData.before * 1000 // when 'before' is 0 or negative
+    : chartData.before * MS_IN_SECOND // when 'before' is 0 or negative
 
-  const netdataFirst = chartData.first_entry * 1000
-  const netdataLast = chartData.last_entry * 1000
+  const netdataFirst = chartData.first_entry * MS_IN_SECOND
+  const netdataLast = chartData.last_entry * MS_IN_SECOND
 
   // old dashboard persists min duration based on first chartWidth, i assume it's a bug
   // and will update fixedMinDuration when width changes
   const fixedMinDuration = useMemo(() => (
-    Math.round((chartWidth / 30) * chartDetails.update_every * 1000)
+    Math.round((chartWidth / 30) * chartDetails.update_every * MS_IN_SECOND)
   ), [chartDetails.update_every, chartWidth])
 
 
@@ -157,7 +157,7 @@ export const Chart = memo(({
 
     let afterForced = Math.round(after)
     let beforeForced = Math.round(before)
-    const viewUpdateEvery = chartData.view_update_every * 1000
+    const viewUpdateEvery = chartData.view_update_every * MS_IN_SECOND
 
     if (shouldNotExceedAvailableRange) {
       const first = netdataFirst + viewUpdateEvery
@@ -294,9 +294,9 @@ export const Chart = memo(({
   }
 
   const isTimeVisible = hoveredX && hoveredX >= viewAfter && hoveredX <= viewBefore
-  const viewUpdateEvery = chartData.view_update_every * 1000
+  const viewUpdateEvery = chartData.view_update_every * MS_IN_SECOND
   const hoveredRow = isTimeVisible
-    ? Math.floor(((hoveredX as number) - chartData.after * 1000) / viewUpdateEvery)
+    ? Math.floor(((hoveredX as number) - chartData.after * MS_IN_SECOND) / viewUpdateEvery)
     : -1
 
   return (
