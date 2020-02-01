@@ -17,6 +17,7 @@ import {
 import { createSelectOption } from './domains/global/selectors';
 import { seconds4human } from './domains/chart/utils/seconds4human';
 import { zeropad } from './utils/units-conversion';
+import { isSnapshotModeAction } from './domains/dashboard/actions';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -3687,6 +3688,8 @@ function saveSnapshot() {
                     return 0;
                 }
             }
+            reduxStore.dispatch(isSnapshotModeAction(true))
+
 
             var clearPanAndZoom = false;
             if (NETDATA.globalPanAndZoom.isActive() === false) {
