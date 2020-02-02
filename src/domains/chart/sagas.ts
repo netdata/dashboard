@@ -11,7 +11,7 @@ import { Action } from "redux-act"
 
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash } from "utils/server-detection"
-import { fetchMetricsStream } from "utils/netdata-sdk"
+import { getFetchStream } from "utils/netdata-sdk"
 
 import { selectGlobalPanAndZoom, selectSnapshot } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
@@ -19,7 +19,11 @@ import { StateT as GlobalStateT } from "domains/global/reducer"
 import {
   fetchDataAction, FetchDataPayload,
   fetchChartAction, FetchChartPayload,
+  fetchDataForSnapshotAction, FetchDataForSnapshotPayload,
 } from "./actions"
+
+const CONCURRENT_CALLS_LIMIT_METRICS = 20
+const CONCURRENT_CALLS_LIMIT_SNAPSHOTS = 1
 
 const fetchDataResponseChannel = channel()
 export function* watchFetchDataResponseChannel() {
@@ -60,6 +64,7 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
+const fetchMetricsStream = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
@@ -70,6 +75,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 
   const snapshot = yield select(selectSnapshot)
   if (snapshot) {
+    // if reading snapshot
     const dimensionsWithUrlOptions = constructCompatibleKey(dimensions, options)
     const matchingKey = Object.keys(snapshot.data).find((snapshotKey) => (
       snapshotKey.startsWith(chart) && snapshotKey.includes(dimensionsWithUrlOptions)
@@ -125,6 +131,65 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   })
 }
 
+const fetchDataForSnapshotStream = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
+function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
+  const {
+    host, chart, format, points, group, gtime, options, after, before, dimensions,
+    chartLibrary, id,
+  } = payload
+
+  // backwards-compatibility, the keys look like this:
+  // net_errors.stf0,dygraph,null,ms%7Cflip%7Cjsonwrap%7Cnonzero
+  const chartDataUniqueID = `${chart},${chartLibrary},${constructCompatibleKey(
+    dimensions,
+    options,
+  )}`
+
+  const url = `${alwaysEndWithSlash(host)}api/v1/data`
+  const params = {
+    chart,
+    _: new Date().valueOf(),
+    format,
+    points,
+    group,
+    gtime,
+    options,
+    after,
+    before,
+    dimensions,
+  }
+
+  const onSuccessCallback = (data: unknown) => {
+    fetchDataResponseChannel.put(fetchDataForSnapshotAction.success({
+      snapshotData: data,
+      id,
+    }))
+    // temporarly, until main.js finished rewrite
+    // @ts-ignore
+    window.chartUpdated({
+      chartDataUniqueID,
+      data,
+    })
+  }
+
+  const onErrorCallback = () => {
+    fetchDataResponseChannel.put(fetchDataForSnapshotAction.failure({ id }))
+    // @ts-ignore
+    window.chartUpdated({
+      chartDataUniqueID,
+      chart,
+      data: null,
+    })
+  }
+
+  fetchDataForSnapshotStream.next({
+    url,
+    params,
+    onErrorCallback,
+    onSuccessCallback,
+  })
+}
+
 function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   const { chart, id, host } = payload
 
@@ -159,5 +224,7 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
 export function* chartSagas() {
   yield takeEvery(fetchDataAction.request, fetchDataSaga)
   yield takeEvery(fetchChartAction.request, fetchChartSaga)
+  yield takeEvery(fetchDataForSnapshotAction.request, fetchDataForSnapshotSaga)
+
   yield spawn(watchFetchDataResponseChannel)
 }

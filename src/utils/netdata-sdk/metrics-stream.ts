@@ -5,8 +5,6 @@ import {
 
 import { axiosInstance } from "./axios-instance"
 
-const CONCURRENT_CALLS_LIMIT = 20
-
 interface FetchInputEvent {
   url: string
   params: { [key: string]: unknown }
@@ -14,23 +12,24 @@ interface FetchInputEvent {
   onSuccessCallback: (data: { [key: string]: unknown }) => void
 }
 
-const stream = new Subject<FetchInputEvent>()
+export const getFetchStream = (concurrentCallsLimit: number) => {
+  const stream = new Subject<FetchInputEvent>()
 
-export const fetchMetricsStream = stream
-
-const output = stream.pipe(
-  mergeMap(({
-    url, params, onErrorCallback, onSuccessCallback,
-  }: FetchInputEvent) => (
-    from(axiosInstance.get(url, { params })).pipe(
-      tap(({ data }) => { onSuccessCallback(data) }),
-      catchError(() => {
+  const output = stream.pipe(
+    mergeMap(({
+      url, params, onErrorCallback, onSuccessCallback,
+    }: FetchInputEvent) => (
+      from(axiosInstance.get(url, { params })).pipe(
+        tap(({ data }) => { onSuccessCallback(data) }),
+        catchError(() => {
         // todo implement error handling to support NETDATA.options.current.retries_on_data_failures
-        onErrorCallback()
-        return empty
-      }),
-    )
-  ), CONCURRENT_CALLS_LIMIT),
-)
+          onErrorCallback()
+          return empty()
+        }),
+      )
+    ), concurrentCallsLimit),
+  )
 
-output.subscribe()
+  output.subscribe()
+  return stream
+}

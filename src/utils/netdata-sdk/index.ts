@@ -1,1 +1,1 @@
-export { fetchMetricsStream } from "./metrics-stream"
+export * from "./metrics-stream"

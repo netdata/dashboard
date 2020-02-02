@@ -87,5 +87,10 @@ export interface ChartState {
   isFetchDataFailure: boolean
   isFetchDetailsFailure: boolean
   isFetchingDetails: boolean
+
+  snapshotDataIsFetching: boolean,
+  snapshotDataIsError: boolean,
+  snapshotData: ChartData | null,
+
   resizeHeight: number | null
 }

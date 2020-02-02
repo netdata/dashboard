@@ -25,7 +25,7 @@ export interface FetchDataParams {
   isRemotelyControlled: boolean
   viewRange: [number, number]
 }
-export interface FetchDataPayload {
+export interface FetchDataUrlParams {
   host: string,
   chart: string,
   format: string,
@@ -36,7 +36,8 @@ export interface FetchDataPayload {
   after: number | null,
   before?: number | null,
   dimensions?: string,
-
+}
+export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,
   fetchDataParams: FetchDataParams
 }
@@ -45,6 +46,16 @@ export const fetchDataAction = createRequestAction<
   FetchDataPayload,
   { id: string, chartData: ChartData, fetchDataParams: FetchDataParams }
 >(`${storeKey}/fetchDataAction`)
+
+
+export interface FetchDataForSnapshotPayload extends FetchDataUrlParams {
+  chartLibrary: string
+  id: string
+}
+export const fetchDataForSnapshotAction = createRequestAction<
+  FetchDataForSnapshotPayload,
+  { id: string, snapshotData: ChartData }
+>(`${storeKey}/fetchDataForSnapshotAction`)
 
 export interface FetchChartPayload {
   chart: string
