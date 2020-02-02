@@ -15,6 +15,7 @@ import { getFetchStream } from "utils/netdata-sdk"
 
 import { selectGlobalPanAndZoom, selectSnapshot } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
+import { stopSnapshotModeAction } from "domains/dashboard/actions"
 
 import {
   fetchDataAction, FetchDataPayload,
@@ -26,6 +27,7 @@ const CONCURRENT_CALLS_LIMIT_METRICS = 20
 const CONCURRENT_CALLS_LIMIT_SNAPSHOTS = 1
 
 const fetchDataResponseChannel = channel()
+
 export function* watchFetchDataResponseChannel() {
   while (true) {
     const action = (yield take(fetchDataResponseChannel))
@@ -64,7 +66,7 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
-const fetchMetricsStream = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
+const [ fetchMetrics$, resetFetch$ ] = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
@@ -123,7 +125,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   }
 
 
-  fetchMetricsStream.next({
+  fetchMetrics$.next({
     url,
     params,
     onErrorCallback,
@@ -131,7 +133,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   })
 }
 
-const fetchDataForSnapshotStream = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
+const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
     host, chart, format, points, group, gtime, options, after, before, dimensions,
@@ -182,12 +184,17 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     })
   }
 
-  fetchDataForSnapshotStream.next({
+  fetchForSnapshot$.next({
     url,
     params,
     onErrorCallback,
     onSuccessCallback,
   })
+}
+
+function stopSnapshotModeSaga() {
+  // any calls in the queue should stop when save-snapshot modal is closed
+  resetFetchForSnapshot$.next()
 }
 
 function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
@@ -225,6 +232,7 @@ export function* chartSagas() {
   yield takeEvery(fetchDataAction.request, fetchDataSaga)
   yield takeEvery(fetchChartAction.request, fetchChartSaga)
   yield takeEvery(fetchDataForSnapshotAction.request, fetchDataForSnapshotSaga)
+  yield takeEvery(stopSnapshotModeAction, stopSnapshotModeSaga)
 
   yield spawn(watchFetchDataResponseChannel)
 }
