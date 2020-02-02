@@ -23,6 +23,7 @@ import {
     selectAmountOfSnapshotsFailed,
     selectAmountOfSnapshotsFetched,
 } from './domains/chart/selectors';
+import { serverDefault } from './utils/server-detection';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -3282,7 +3283,7 @@ window.loadSnapshot = () => {
             netdataShowAlarms = false;
             netdataRegistry = false;
             netdataServer = tmpSnapshotData.server;
-            NETDATA.serverDefault = netdataServer;
+            // NETDATA.serverDefault = netdataServer;
 
             document.getElementById('charts_div').innerHTML = '';
             document.getElementById('sidebar').innerHTML = '';
@@ -3535,10 +3536,12 @@ function saveSnapshotModalInit() {
     loadBootstrapSlider(function () {
         saveSnapshotViewDuration = options.duration;
         var start_ms = Math.round(Date.now() - saveSnapshotViewDuration * 1000);
+        const reduxState = reduxStore.getState()
+        const globalPanAndZoom = selectGlobalPanAndZoom(reduxState)
 
-        if (NETDATA.globalPanAndZoom.isActive() === true) {
-            saveSnapshotViewDuration = Math.round((NETDATA.globalPanAndZoom.force_before_ms - NETDATA.globalPanAndZoom.force_after_ms) / 1000);
-            start_ms = NETDATA.globalPanAndZoom.force_after_ms;
+        if (Boolean(globalPanAndZoom)) {
+            saveSnapshotViewDuration = Math.round((globalPanAndZoom.before - globalPanAndZoom.after) / 1000);
+            start_ms = globalPanAndZoom.after;
         }
 
         var start_date = new Date(start_ms);
@@ -3550,7 +3553,7 @@ function saveSnapshotModalInit() {
         var min = options.update_every;
         var max = Math.round(saveSnapshotViewDuration / 100);
 
-        if (NETDATA.globalPanAndZoom.isActive() === false) {
+        if (Boolean(globalPanAndZoom)) {
             max = Math.round(saveSnapshotViewDuration / 50);
         }
 
@@ -3618,26 +3621,6 @@ window.saveSnapshot = () => {
             // console.log(filename);
             saveSnapshotModalLog('info', 'Generating snapshot as <code>' + filename.toString() + '</code>');
 
-            var save_options = {
-                stop_updates_when_focus_is_lost: false,
-                update_only_visible: false,
-                sync_selection: false,
-                eliminate_zero_dimensions: true,
-                pan_and_zoom_data_padding: false,
-                show_help: false,
-                legend_toolbox: false,
-                resize_charts: false,
-                pixels_per_point: 1
-            };
-            var backedup_options = {};
-
-            var x;
-            for (x in save_options) {
-                if (save_options.hasOwnProperty(x)) {
-                    backedup_options[x] = NETDATA.options.current[x];
-                    NETDATA.options.current[x] = save_options[x];
-                }
-            }
 
             var el = document.getElementById('saveSnapshotModalProgressBar');
             var eltxt = document.getElementById('saveSnapshotModalProgressBarText');
@@ -3646,7 +3629,7 @@ window.saveSnapshot = () => {
 
             var saveData = {
                 hostname: options.hostname,
-                server: NETDATA.serverDefault,
+                server: serverDefault,
                 netdata_version: options.data.version,
                 snapshot_version: 1,
                 after_ms: Date.now() - options.duration * 1000,
