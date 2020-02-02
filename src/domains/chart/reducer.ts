@@ -3,7 +3,7 @@ import { createReducer } from "redux-act"
 
 import {
   fetchDataAction, fetchChartAction, setResizeHeightAction,
-  clearChartStateAction,
+  clearChartStateAction, fetchDataForSnapshotAction,
 } from "./actions"
 import { ChartState } from "./chart-types"
 
@@ -25,6 +25,10 @@ export const initialSingleState = {
   isFetchDetailsFailure: false,
   isFetchingDetails: false,
   resizeHeight: null,
+
+  snapshotDataIsFetching: false,
+  snapshotDataIsError: false,
+  snapshotData: null,
 }
 
 export const chartReducer = createReducer<StateT>(
@@ -61,6 +65,35 @@ chartReducer.on(fetchDataAction.success, (state, { id, chartData, fetchDataParam
     isFetchDataFailure: false,
   },
 }))
+
+
+chartReducer.on(fetchDataForSnapshotAction.request, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    snapshotDataIsFetching: true,
+  },
+}))
+
+chartReducer.on(fetchDataForSnapshotAction.failure, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    snapshotDataIsFetching: false,
+    snapshotDataIsError: true,
+  },
+}))
+
+chartReducer.on(fetchDataForSnapshotAction.success, (state, { id, snapshotData }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    snapshotDataIsFetching: false,
+    snapshotDataIsError: false,
+    snapshotData,
+  },
+}))
+
 
 chartReducer.on(fetchChartAction.request, (state, { id }) => ({
   ...state,

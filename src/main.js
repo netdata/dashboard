@@ -14,10 +14,15 @@ import {
     setGlobalPanAndZoomAction,
     setOptionAction,
 } from './domains/global/actions';
-import { createSelectOption } from './domains/global/selectors';
+import { createSelectOption, selectGlobalPanAndZoom } from './domains/global/selectors';
 import { seconds4human } from './domains/chart/utils/seconds4human';
 import { zeropad } from './utils/units-conversion';
-import { isSnapshotModeAction } from './domains/dashboard/actions';
+import { startSnapshotModeAction, stopSnapshotModeAction } from './domains/dashboard/actions';
+import {
+    selectAmountOfCharts,
+    selectAmountOfSnapshotsFailed,
+    selectAmountOfSnapshotsFetched,
+} from './domains/chart/selectors';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -2896,40 +2901,43 @@ function xssModalKeepXss() {
 }
 
 function initializeDynamicDashboard(newReduxStore) {
-    reduxStore = newReduxStore
+    if (newReduxStore) {
+        reduxStore = newReduxStore
 
-    netdataPrepCallback()
+        netdataPrepCallback()
 
-    // const netdata_url = NETDATA.serverDefault;
-    const netdata_url = "http://localhost:19999"; // todo
+        // const netdata_url = NETDATA.serverDefault;
+        const netdata_url = "http://localhost:19999"; // todo
 
-    initializeConfig.url = netdata_url;
+        initializeConfig.url = netdata_url;
 
-    // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
-    // refractored)
-    reduxStore.subscribe(() => {
-        const lastAction = reduxStore.getState().lastActionForMainJs
-        if (!lastAction) {
-            return
-        }
-        if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
-            const { after, before } = lastAction.payload
-            // additional check to prevent loop, after setting initial state from url
-            if (urlOptions.after !== after || urlOptions.before !== before) {
-                urlOptions.netdataPanAndZoomCallback(true, after, before)
+        // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
+        // refractored)
+        reduxStore.subscribe(() => {
+            const lastAction = reduxStore.getState().lastActionForMainJs
+            if (!lastAction) {
+                return
             }
-        } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
-            urlOptions.netdataPanAndZoomCallback(false, 0, 0)
-        } else if (lastAction.type === setGlobalChartUnderlayAction.toString()) {
-            const { after, before } = lastAction.payload
-            // additional check to prevent loop, after setting initial state from url
-            if (urlOptions.after !== after || urlOptions.before !== before) {
-                urlOptions.netdataHighlightCallback(true, after, before)
+            if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
+                const { after, before } = lastAction.payload
+                // additional check to prevent loop, after setting initial state from url
+                if (urlOptions.after !== after || urlOptions.before !== before) {
+                    urlOptions.netdataPanAndZoomCallback(true, after, before)
+                }
+            } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
+                urlOptions.netdataPanAndZoomCallback(false, 0, 0)
+            } else if (lastAction.type === setGlobalChartUnderlayAction.toString()) {
+                const { after, before } = lastAction.payload
+                // additional check to prevent loop, after setting initial state from url
+                if (urlOptions.after !== after || urlOptions.before !== before) {
+                    urlOptions.netdataHighlightCallback(true, after, before)
+                }
+            } else if (lastAction.type === clearHighlightAction.toString()) {
+                urlOptions.netdataHighlightCallback(false, 0, 0)
             }
-        } else if (lastAction.type === clearHighlightAction.toString()) {
-            urlOptions.netdataHighlightCallback(false, 0, 0)
-        }
-    })
+        })
+    }
+
 
     // initialize clickable alarms
     NETDATA.alarms.chart_div_offset = -50;
@@ -3314,6 +3322,7 @@ window.loadSnapshot = () => {
             reduxStore.dispatch(loadSnapshotAction({
                 snapshot: tmpSnapshotData,
             }))
+            window.NETDATA.parseDom()
 
             netdataSnapshotData = tmpSnapshotData;
 
@@ -3450,6 +3459,7 @@ window.loadSnapshotPreflight = () => {
 var saveSnapshotStop = false;
 
 function saveSnapshotCancel() {
+    reduxStore.dispatch(stopSnapshotModeAction())
     saveSnapshotStop = true;
 }
 
@@ -3596,7 +3606,7 @@ function saveSnapshotModalInit() {
     });
 }
 
-function saveSnapshot() {
+window.saveSnapshot = () => {
     loadPako(function () {
         loadLzString(function () {
             saveSnapshotStop = false;
@@ -3670,79 +3680,97 @@ function saveSnapshot() {
             var compress = snapshotOptions.compressions[saveData.compression].compress;
             var compressed_length = snapshotOptions.compressions[saveData.compression].compressed_length;
 
-            function pack_api1_v1_chart_data(state) {
-                if (state.library_name === null || state.data === null) {
-                    return;
+            function pack_api1_v1_chart_data({ data, chartDataUniqueID }) {
+                if (data === null) {
+                    return 0
                 }
 
-                var data = state.data;
-                state.data = null;
-                data.state = null;
                 var str = JSON.stringify(data);
 
-                if (typeof str === 'string') {
-                    var cstr = compress(str);
-                    saveData.data[state.chartDataUniqueID()] = cstr;
-                    return compressed_length(cstr);
-                } else {
-                    return 0;
-                }
+                var cstr = compress(str);
+                saveData.data[chartDataUniqueID] = cstr;
+                return compressed_length(cstr);
             }
-            reduxStore.dispatch(isSnapshotModeAction(true))
 
+            const reduxState = reduxStore.getState()
 
+            const globalPanAndZoom = selectGlobalPanAndZoom(reduxState)
             var clearPanAndZoom = false;
-            if (NETDATA.globalPanAndZoom.isActive() === false) {
-                NETDATA.globalPanAndZoom.setMaster(NETDATA.options.targets[0], saveData.after_ms, saveData.before_ms);
+            if (!globalPanAndZoom) {
+                reduxStore.dispatch(setGlobalPanAndZoomAction({
+                    after: saveData.after_ms,
+                    before: saveData.before_ms,
+                }))
                 clearPanAndZoom = true;
+            } else {
+                saveData.after_ms = globalPanAndZoom.after
+                saveData.before_ms = globalPanAndZoom.before
             }
 
-            saveData.after_ms = NETDATA.globalPanAndZoom.force_after_ms;
-            saveData.before_ms = NETDATA.globalPanAndZoom.force_before_ms;
+
             saveData.duration_ms = saveData.before_ms - saveData.after_ms;
             saveData.data_points = Math.round((saveData.before_ms - saveData.after_ms) / (saveSnapshotSelectedSecondsPerPoint * 1000));
             saveSnapshotModalLog('info', 'Generating snapshot with ' + saveData.data_points.toString() + ' data points per dimension...');
 
-            var charts_count = 0;
-            var charts_ok = 0;
-            var charts_failed = 0;
+            reduxStore.dispatch(startSnapshotModeAction({
+                charts: saveData.charts,
+                dataPoints: saveData.data_points,
+            }))
 
-            function saveSnapshotRestore() {
+
+            window.saveSnapshotRestore = () => {
                 $('#saveSnapshotModal').modal('hide');
-
-                // restore the options
-                var x;
-                for (x in backedup_options) {
-                    if (backedup_options.hasOwnProperty(x)) {
-                        NETDATA.options.current[x] = backedup_options[x];
-                    }
-                }
 
                 $(el).css('width', '0%').attr('aria-valuenow', 0);
                 eltxt.innerText = '0%';
 
+                reduxStore.dispatch(stopSnapshotModeAction())
                 if (clearPanAndZoom) {
-                    NETDATA.globalPanAndZoom.clearMaster();
+                    // clear that afterwards
+                    reduxStore.dispatch(resetGlobalPanAndZoomAction())
                 }
-
-                NETDATA.options.force_data_points = 0;
-                NETDATA.options.fake_chart_rendering = false;
-                NETDATA.onscroll_updater_enabled = true;
-                NETDATA.onresize();
-                NETDATA.unpause();
 
                 $('#saveSnapshotExport').removeClass('disabled');
             }
 
-            NETDATA.globalSelectionSync.stop();
-            NETDATA.options.force_data_points = saveData.data_points;
-            NETDATA.options.fake_chart_rendering = true;
-            NETDATA.onscroll_updater_enabled = false;
-            NETDATA.abortAllRefreshes();
-
             var size = 0;
             var info = ' Resolution: <b>' + saveSnapshotSelectedSecondsPerPoint.toString() + ((saveSnapshotSelectedSecondsPerPoint === 1) ? ' second ' : ' seconds ').toString() + 'per point</b>.';
 
+            window.chartUpdated = ({ chart, chartDataUniqueID, data }) => {
+                if (saveSnapshotStop === true) {
+                    saveSnapshotModalLog('info', 'Cancelled!');
+                    saveSnapshotRestore()
+                }
+                const state = reduxStore.getState()
+                const chartsCount = selectAmountOfCharts(state)
+                const chartsOk = selectAmountOfSnapshotsFetched(state) // hook
+                const chartsFailed = selectAmountOfSnapshotsFailed(state)
+
+                const pcent = ((chartsOk + chartsFailed) / chartsCount) * 100
+                $(el).css('width', pcent + '%').attr('aria-valuenow', pcent);
+                eltxt.innerText = Math.round(pcent).toString() + '%, ' + (chart || data.id)
+
+                size += pack_api1_v1_chart_data({ data, chartDataUniqueID })
+
+                saveSnapshotModalLog((chartsFailed) ? 'danger' : 'info', 'Generated snapshot data size <b>' + (Math.round(size * 100 / 1024 / 1024) / 100).toString() + ' MB</b>. ' + ((chartsFailed) ? (chartsFailed.toString() + ' charts have failed to be downloaded') : '').toString() + info);
+
+                window.saveData = saveData
+                // better not to use equality against pcent in case of floating point errors
+                if (chartsOk + chartsFailed === chartsCount) {
+                    saveData.charts_ok = chartsOk
+                    saveData.charts_failed = chartsFailed
+                    saveData.data_size = size
+
+                    saveObjectToClient(saveData, filename)
+                    if (chartsFailed > 0) {
+                        alert(`${chartsFailed} failed to be downloaded`);
+                    }
+                    saveSnapshotRestore()
+                    saveData = null
+                }
+            }
+
+            // called for every chart
             function update_chart(idx) {
                 if (saveSnapshotStop === true) {
                     saveSnapshotModalLog('info', 'Cancelled!');
@@ -3800,7 +3828,6 @@ function saveSnapshot() {
                 }, 0);
             }
 
-            update_chart(NETDATA.options.targets.length);
         });
     });
 }
