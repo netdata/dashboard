@@ -3996,20 +3996,16 @@ function scrollDashboardTo() {
 
 var modalHiddenCallback = null;
 
-function scrollToChartAfterHidingModal(chart, alarmDate, alarmStatus) {
+window.scrollToChartAfterHidingModal = (chart, alarmDate, alarmStatus) => {
     modalHiddenCallback = function () {
         NETDATA.alarms.scrollToChart(chart, alarmDate);
 
         if (['WARNING', 'CRITICAL'].includes(alarmStatus)) {
-            const currentChartState = NETDATA.options.targets.find(
-              (chartState) => chartState.id === chart,
-            )
             const twoMinutes = 2 * 60 * 1000
-            NETDATA.globalPanAndZoom.setMaster(
-              currentChartState,
-              alarmDate - twoMinutes,
-              alarmDate + twoMinutes,
-            )
+            reduxStore.dispatch(setGlobalPanAndZoomAction({
+                after: alarmDate - twoMinutes,
+                before: alarmDate + twoMinutes,
+            }))
         }
     };
 }
