@@ -17,6 +17,7 @@ import {
   setOptionAction,
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
+import { MASKED_DATA } from "./constants"
 
 const windowFocusChannel = channel()
 
@@ -68,8 +69,6 @@ const injectGTM = (machineGuid: string) => {
   dataLayer.push({"anonymous_statistics" : "true", "machine_guid" : machineGuid});
   /* eslint-enable */
 }
-
-const MASKED_DATA = "***"
 
 export type PersonUrl = [
   string, // guid

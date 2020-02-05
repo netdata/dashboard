@@ -5,10 +5,11 @@
 /* global NETDATA */
 
 // netdata snapshot data
+import { MASKED_DATA } from 'domains/global/constants';
 import {
     centerAroundHighlightAction,
     clearHighlightAction,
-     fetchAllAlarmsAction,
+    fetchAllAlarmsAction,
     loadSnapshotAction,
     resetGlobalPanAndZoomAction,
     setGlobalChartUnderlayAction,
@@ -618,7 +619,7 @@ function renderMachines(machinesArray) {
     let found = false;
     let displayedAgents = false;
 
-    const maskedURL = NETDATA.registry.MASKED_DATA;
+    const maskedURL = MASKED_DATA;
 
     if (machinesArray) {
         saveLocalStorage("registryCallback", JSON.stringify(machinesArray));
@@ -4713,7 +4714,7 @@ function postCloudAccountAgents(agentsToSync) {
         return [];
     }
 
-    const maskedURL = NETDATA.registry.MASKED_DATA;
+    const maskedURL = MASKED_DATA;
 
     const agents = agentsToSync.map((a) => {
         const urls = a.alternate_urls.filter((url) => url != maskedURL);
@@ -4990,7 +4991,7 @@ function mergeAgents(cloud, local) {
         const cagent = union.get(lagent.guid);
         if (cagent) {
             for (const u of lagent.alternate_urls) {
-                if (u === NETDATA.registry.MASKED_DATA) { // TODO: temp until registry is updated.
+                if (u === MASKED_DATA) { // TODO: temp until registry is updated.
                     continue;
                 }
 
