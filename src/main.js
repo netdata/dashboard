@@ -8,6 +8,7 @@
 import {
     centerAroundHighlightAction,
     clearHighlightAction,
+     fetchAllAlarmsAction,
     loadSnapshotAction,
     resetGlobalPanAndZoomAction,
     setGlobalChartUnderlayAction,
@@ -34,8 +35,6 @@ export const updateLocaleFunctions = ({
     localeDateString = newLocaleDateString
     localeTimeString = newLocaleTimeString
 }
-
-var netdataSnapshotData = null;
 
 // enable alarms checking and notifications
 var netdataShowAlarms = true;
@@ -284,7 +283,7 @@ window.urlOptions = {
             before = 0;
         }
 
-        if (netdataSnapshotData === null) {
+        if (window.netdataSnapshotData === null) {
             urlOptions.highlight = status;
         } else {
             urlOptions.highlight = false;
@@ -521,7 +520,7 @@ function toggleExpandIcon(svgEl) {
     }
 }
 
-function toggleAgentItem(e, guid) {
+window.toggleAgentItem = function(e, guid) {
     e.stopPropagation();
     e.preventDefault();
 
@@ -982,7 +981,7 @@ function gotoServerValidateUrl(id, guid, url) {
     }, (id * 50) + penalty);
 }
 
-function gotoServerModalHandler(guid) {
+window.gotoServerModalHandler = function gotoServerModalHandler(guid) {
     // console.log('goto server: ' + guid);
 
     gotoServerStop = false;
@@ -1977,30 +1976,20 @@ const handleLoadJs = (promise, library, callback) => promise
     })
 
 
-var clipboardLoaded = false;
-
 function loadClipboard(callback) {
-    if (clipboardLoaded === false) {
-        clipboardLoaded = true;
-        loadJs('lib/clipboard-polyfill-be05dad.js', callback);
-    } else {
-        callback();
-    }
+    handleLoadJs(import("clipboard-polyfill"), "clipboard-polyfill", callback)
 }
 
-var bootstrapTableLoaded = false;
-
 function loadBootstrapTable(callback) {
-    if (bootstrapTableLoaded === false) {
-        bootstrapTableLoaded = true;
-        loadJs('lib/bootstrap-table-1.11.0.min.js', function () {
-            loadJs('lib/bootstrap-table-export-1.11.0.min.js', function () {
-                loadJs('lib/tableExport-1.6.0.min.js', callback);
-            })
-        });
-    } else {
-        callback();
-    }
+    handleLoadJs(
+      Promise.all([
+        import("bootstrap-table"),
+        import("bootstrap-table/dist/extensions/export/bootstrap-table-export.min"),
+        import("tableexport.jquery.plugin")
+      ]),
+      "bootstrap-table",
+      callback,
+    )
 }
 
 function loadBootstrapSlider(callback) {
@@ -2050,7 +2039,8 @@ function alarmsUpdateModal() {
     loadClipboard(function () {
     });
 
-    NETDATA.alarms.get('all', function (data) {
+
+    const callback = (data) => {
         options.alarm_families = [];
 
         alarmsCallback(data);
@@ -2109,7 +2099,7 @@ function alarmsUpdateModal() {
 
             return '<code>' + alarm.lookup_method + '</code> '
               + dimensions + ', of chart <code>' + alarm.chart + '</code>'
-              + ', starting <code>' + NETDATA.seconds4human(alarm.lookup_after + alarm.lookup_before, { space: '&nbsp;' }) + '</code> and up to <code>' + NETDATA.seconds4human(alarm.lookup_before, { space: '&nbsp;' }) + '</code>'
+              + ', starting <code>' + seconds4human(alarm.lookup_after + alarm.lookup_before, { space: '&nbsp;' }) + '</code> and up to <code>' + seconds4human(alarm.lookup_before, { space: '&nbsp;' }) + '</code>'
               + ((alarm.lookup_options) ? (', with options <code>' + alarm.lookup_options.replace(/ /g, ',&nbsp;') + '</code>') : '')
               + '.';
         }
@@ -2128,7 +2118,7 @@ function alarmsUpdateModal() {
             }
 
             var has_alarm = (typeof alarm.warn !== 'undefined' || typeof alarm.crit !== 'undefined');
-            var badge_url = NETDATA.alarms.server + '/api/v1/badge.svg?chart=' + alarm.chart + '&alarm=' + alarm.name + '&refresh=auto';
+            var badge_url = `${serverDefault}/api/v1/badge.svg?chart=${alarm.chart}&alarm=${alarm.name}&refresh=auto`;
 
             var action_buttons = '<br/>&nbsp;<br/>role: <b>' + alarm.recipient + '</b><br/>&nbsp;<br/>'
               + '<div class="action-button ripple" title="click to scroll the dashboard to the chart of this alarm" data-toggle="tooltip" data-placement="bottom" onClick="scrollToChartAfterHidingModal(\'' + alarm.chart + '\', ' + alarm.last_status_change * 1000 + ', \'' + alarm.status + '\'); $(\'#alarmsModal\').modal(\'hide\'); return false;"><i class="fab fa-periscope"></i></div>'
@@ -2153,30 +2143,30 @@ function alarmsUpdateModal() {
             }
 
             if (alarm.warn_repeat_every > 0) {
-                html += '<tr><td width="10%" style="text-align:right">repeat&nbsp;warning</td><td>' + NETDATA.seconds4human(alarm.warn_repeat_every) + '</td></tr>';
+                html += '<tr><td width="10%" style="text-align:right">repeat&nbsp;warning</td><td>' + seconds4human(alarm.warn_repeat_every) + '</td></tr>';
             }
 
             if (alarm.crit_repeat_every > 0) {
-                html += '<tr><td width="10%" style="text-align:right">repeat&nbsp;critical</td><td>' + NETDATA.seconds4human(alarm.crit_repeat_every) + '</td></tr>';
+                html += '<tr><td width="10%" style="text-align:right">repeat&nbsp;critical</td><td>' + seconds4human(alarm.crit_repeat_every) + '</td></tr>';
             }
 
             var delay = '';
             if ((alarm.delay_up_duration > 0 || alarm.delay_down_duration > 0) && alarm.delay_multiplier !== 0 && alarm.delay_max_duration > 0) {
                 if (alarm.delay_up_duration === alarm.delay_down_duration) {
-                    delay += '<small><br/>hysteresis ' + NETDATA.seconds4human(alarm.delay_up_duration, {
+                    delay += '<small><br/>hysteresis ' + seconds4human(alarm.delay_up_duration, {
                         space: '&nbsp;',
                         negative_suffix: ''
                     });
                 } else {
                     delay = '<small><br/>hysteresis ';
                     if (alarm.delay_up_duration > 0) {
-                        delay += 'on&nbsp;escalation&nbsp;<code>' + NETDATA.seconds4human(alarm.delay_up_duration, {
+                        delay += 'on&nbsp;escalation&nbsp;<code>' + seconds4human(alarm.delay_up_duration, {
                             space: '&nbsp;',
                             negative_suffix: ''
                         }) + '</code>, ';
                     }
                     if (alarm.delay_down_duration > 0) {
-                        delay += 'on&nbsp;recovery&nbsp;<code>' + NETDATA.seconds4human(alarm.delay_down_duration, {
+                        delay += 'on&nbsp;recovery&nbsp;<code>' + seconds4human(alarm.delay_down_duration, {
                             space: '&nbsp;',
                             negative_suffix: ''
                         }) + '</code>, ';
@@ -2184,7 +2174,7 @@ function alarmsUpdateModal() {
                 }
                 if (alarm.delay_multiplier !== 1.0) {
                     delay += 'multiplied&nbsp;by&nbsp;<code>' + alarm.delay_multiplier.toString() + '</code>';
-                    delay += ',&nbsp;up&nbsp;to&nbsp;<code>' + NETDATA.seconds4human(alarm.delay_max_duration, {
+                    delay += ',&nbsp;up&nbsp;to&nbsp;<code>' + seconds4human(alarm.delay_max_duration, {
                         space: '&nbsp;',
                         negative_suffix: ''
                     }) + '</code>';
@@ -2192,7 +2182,7 @@ function alarmsUpdateModal() {
                 delay += '</small>';
             }
 
-            html += '<tr><td width="10%" style="text-align:right">check&nbsp;every</td><td>' + NETDATA.seconds4human(alarm.update_every, {
+            html += '<tr><td width="10%" style="text-align:right">check&nbsp;every</td><td>' + seconds4human(alarm.update_every, {
                   space: '&nbsp;',
                   negative_suffix: ''
               }) + '</td></tr>'
@@ -2358,7 +2348,7 @@ function alarmsUpdateModal() {
 
         loadBootstrapTable(function () {
             $('#alarms_log_table').bootstrapTable({
-                url: NETDATA.alarms.server + '/api/v1/alarm_log?all',
+                url: `${serverDefault}/api/v1/alarm_log?all`,
                 cache: false,
                 pagination: true,
                 pageSize: 10,
@@ -2586,7 +2576,7 @@ function alarmsUpdateModal() {
                         formatter: function (value, row, index) {
                             void (row);
                             void (index);
-                            return NETDATA.seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
+                            return seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
                         },
                         align: 'center',
                         valign: 'middle',
@@ -2600,7 +2590,7 @@ function alarmsUpdateModal() {
                         formatter: function (value, row, index) {
                             void (row);
                             void (index);
-                            return NETDATA.seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
+                            return seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
                         },
                         align: 'center',
                         valign: 'middle',
@@ -2732,7 +2722,7 @@ function alarmsUpdateModal() {
                             void (row);
                             void (index);
 
-                            return NETDATA.seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
+                            return seconds4human(value, { negative_suffix: '', space: ' ', now: 'no time' });
                         },
                         align: 'center',
                         valign: 'middle',
@@ -2775,7 +2765,12 @@ function alarmsUpdateModal() {
             });
             // console.log($('#alarms_log_table').bootstrapTable('getOptions'));
         });
-    });
+    }
+
+    reduxStore.dispatch(fetchAllAlarmsAction.request({
+        callback,
+        serverDefault,
+    }))
 }
 
 function alarmsCallback(data) {
@@ -2811,11 +2806,11 @@ function initializeDynamicDashboardWithData(data) {
         }
 
         // update the dashboard hostname
-        document.getElementById('hostname').innerHTML = '<span id="hostnametext">' + options.hostname + ((netdataSnapshotData !== null) ? ' (snap)' : '').toString() + '</span>&nbsp;&nbsp;<strong class="caret">';
-        document.getElementById('hostname').href = NETDATA.serverDefault;
+        document.getElementById('hostname').innerHTML = '<span id="hostnametext">' + options.hostname + ((window.netdataSnapshotData !== null) ? ' (snap)' : '').toString() + '</span>&nbsp;&nbsp;<strong class="caret">';
+        document.getElementById('hostname').href = tmpSnapshotData?.server || serverDefault;
         document.getElementById('netdataVersion').innerHTML = options.version;
 
-        if (netdataSnapshotData !== null) {
+        if (window.netdataSnapshotData !== null) {
             $('#alarmsButton').hide();
             $('#updateButton').hide();
             // $('#loadButton').hide();
@@ -3289,7 +3284,6 @@ window.loadSnapshot = () => {
             netdataShowAlarms = false;
             netdataRegistry = false;
             netdataServer = tmpSnapshotData.server;
-            // NETDATA.serverDefault = netdataServer;
 
             document.getElementById('charts_div').innerHTML = '';
             document.getElementById('sidebar').innerHTML = '';
@@ -3331,7 +3325,7 @@ window.loadSnapshot = () => {
             }))
             window.NETDATA.parseDom()
 
-            netdataSnapshotData = tmpSnapshotData;
+            window.netdataSnapshotData = tmpSnapshotData;
 
             urlOptions.after = tmpSnapshotData.after_ms;
             urlOptions.before = tmpSnapshotData.before_ms;
@@ -3984,9 +3978,8 @@ function dashboardSettingsSetup() {
 }
 
 function scrollDashboardTo() {
-    if (netdataSnapshotData !== null && typeof netdataSnapshotData.hash !== 'undefined') {
-        //console.log(netdataSnapshotData.hash);
-        scrollToId(netdataSnapshotData.hash.replace('#', ''));
+    if (window.netdataSnapshotData !== null && typeof window.netdataSnapshotData.hash !== 'undefined') {
+        scrollToId(window.netdataSnapshotData.hash.replace('#', ''));
     } else {
         // check if we have to jump to a specific section
         scrollToId(urlOptions.hash.replace('#', ''));
@@ -4485,10 +4478,10 @@ function finalizePage() {
     };
     NETDATA.onresizeCallback();
 
-    if (netdataSnapshotData !== null) {
+    if (window.netdataSnapshotData !== null) {
         reduxStore.dispatch(setGlobalPanAndZoomAction({
-            after: netdataSnapshotData.after_ms,
-            before: netdataSnapshotData.before_ms,
+            after: window.netdataSnapshotData.after_ms,
+            before: window.netdataSnapshotData.before_ms,
         }))
     }
 

@@ -1,14 +1,14 @@
 import { sortBy, prop, last } from "ramda"
-
+import { Action } from "redux-act"
 import {
-  call, delay, spawn, take,
+  call, delay, spawn, take, takeEvery,
 } from "redux-saga/effects"
 
 import { axiosInstance } from "utils/api"
 import { serverStatic } from "utils/server-detection"
 import { name2id } from "utils/name-2-id"
 
-import { startAlarmsAction, StartAlarmsPayload } from "./actions"
+import { startAlarmsAction, StartAlarmsPayload, fetchAllAlarmsAction } from "./actions"
 import { AlarmLogs, AlarmLog, ActiveAlarms } from "./types"
 
 const ALARMS_INITIALIZATION_DELAY = 1000
@@ -283,6 +283,17 @@ function* startAlarms() {
   yield call(alarmsLoop, serverDefault)
 }
 
+type FetchAllAlarmsPayload = {
+  callback: (x: unknown) => void,
+  serverDefault: string,
+}
+function* fetchAllAlarmsSaga({ payload }: Action<FetchAllAlarmsPayload>) {
+  const { callback, serverDefault } = payload
+  const allAlarms = yield call(get, "all", serverDefault)
+  callback(allAlarms)
+}
+
 export function* alarmsSagas() {
   yield spawn(startAlarms)
+  yield takeEvery(fetchAllAlarmsAction.request, fetchAllAlarmsSaga)
 }
