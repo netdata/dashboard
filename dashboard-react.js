@@ -527,8 +527,8 @@ NETDATA.chartRegistry = {
       }
     }
 
-    if (netdataSnapshotData !== null) {
-      got_data(host, netdataSnapshotData.charts, callback);
+    if (window.netdataSnapshotData !== null) {
+      got_data(host, window.netdataSnapshotData.charts, callback);
     } else {
       $.ajax({
         url: host + '/api/v1/charts',

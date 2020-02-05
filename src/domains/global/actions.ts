@@ -83,6 +83,8 @@ export const startAlarmsAction = createAction<StartAlarmsPayload>(
   `${storeKey}/startAlarmsAction`,
 )
 
+export const fetchAllAlarmsAction = createRequestAction(`${storeKey}/fetchAllAlarmsAction`)
+
 export interface SetOptionAction {
   key: string
   value: unknown

@@ -14,8 +14,10 @@
     "axios": "^0.19.0",
     "bootstrap": "^3.4.1",
     "bootstrap-slider": "^10.6.2",
+    "bootstrap-table": "^1.11.2",
     "bootstrap-toggle": "~2.2.2",
     "classnames": "^2.2.6",
+    "clipboard-polyfill": "^2.8.6",
     "d3": "4.12.2",
     "dygraphs": "2.1.0",
     "easy-pie-chart": "^2.1.7",
@@ -38,6 +40,7 @@
     "redux-saga": "^1.0.5",
     "reselect": "^4.0.0",
     "rxjs": "^6.5.4",
+    "tableexport.jquery.plugin": "^1.6.7",
     "typescript": "^3.7.3"
   },
   "devDependencies": {
