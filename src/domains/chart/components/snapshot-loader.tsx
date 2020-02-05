@@ -5,6 +5,7 @@ import { serverDefault } from "utils/server-detection"
 import { selectIsSnapshotMode, selectSnapshotOptions } from "domains/dashboard/selectors"
 import { selectGlobalPanAndZoom } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
+import { TimeRangeObjT } from "types/common"
 
 import { Attributes } from "../utils/transformDataAttributes"
 import { fetchDataForSnapshotAction } from "../actions"
@@ -26,8 +27,8 @@ const SnapshotLoader = ({
   const chartSettings = chartLibrariesSettings[chartLibrary]
 
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const after = (globalPanAndZoom as { after: number, before: number }).after / MS_IN_SECOND
-  const before = (globalPanAndZoom as { after: number, before: number }).before / MS_IN_SECOND
+  const after = (globalPanAndZoom as TimeRangeObjT).after / MS_IN_SECOND
+  const before = (globalPanAndZoom as TimeRangeObjT).before / MS_IN_SECOND
 
   const dispatch = useDispatch()
   useEffect(() => {

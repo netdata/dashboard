@@ -1,16 +1,17 @@
 import {
   Subject, from, empty,
 } from "rxjs"
-
 import {
   mergeMap, tap, catchError, startWith, switchMap,
 } from "rxjs/operators"
+
+import { UnknownStringKeyT } from "types/common"
 
 import { axiosInstance } from "./axios-instance"
 
 interface FetchInputEvent {
   url: string
-  params: { [key: string]: unknown }
+  params: UnknownStringKeyT
   onErrorCallback: (data?: { [key: string]: unknown }) => void
   onSuccessCallback: (data: { [key: string]: unknown }) => void
 }
