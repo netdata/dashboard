@@ -57,7 +57,8 @@
         overlayEl.innerHTML = 'netdata<br/><div style="font-size: 3vh;">Real-time performance monitoring, done right!</div>';
         overlayEl.style = theme == 'slate' ? "background-color: #272b30; color: #373b40;" : "background-color: #fff; color: #ddd;";
     </script>
-    <nav class="navbar navbar-default navbar-fixed-top" role="banner">
+   <div id="root"></div>
+     <nav style="display: none;" class="navbar navbar-default navbar-fixed-top" role="banner">
         <div class="container">
             <div class="navbar-header">
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
@@ -101,7 +102,7 @@
                 </ul>
             </nav>
         </div>
-    </nav>
+    </nav> 
     <div class="navbar-highlight">
         <div id="navbar-highlight-content" class="navbar-highlight-content"></div>
     </div>
@@ -1311,7 +1312,6 @@
             </div>
         </div>
     </div>
-    <div id="root"></div>
     <div id="modal-root"></div>
     <iframe id="ssoifrm" width="0" height="0"></iframe>
     <div id="hiddenDownloadLinks" style="display: none;" hidden></div>
