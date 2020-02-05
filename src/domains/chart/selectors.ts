@@ -2,6 +2,7 @@ import { prop } from "ramda"
 import { createSelector } from "reselect"
 
 import { AppStateT } from "store/app-state"
+import { ChartState } from "./chart-types"
 import { initialSingleState } from "./reducer"
 import { storeKey } from "./constants"
 
@@ -42,13 +43,14 @@ export const selectResizeHeight = createSelector(
 )
 
 
+// count the nr of "success" or "failure" charts
+const hasCompletedFetching = (chartState: ChartState) => chartState.isFetchDataFailure
+  || Boolean(chartState.chartData) || chartState.isFetchDetailsFailure
+
 export const selectAmountOfFetchedCharts = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-    // count the nr of "success" or "failure" charts
-    .map((chartState) => chartState.isFetchDataFailure
-      || Boolean(chartState.chartData) || Boolean(chartState.isFetchDetailsFailure))
-    .reduce((acc, value) => acc + Number(value), 0),
+    .reduce((acc, chartState) => acc + (hasCompletedFetching(chartState) ? 1 : 0), 0),
 )
 
 export const selectAmountOfCharts = createSelector(
