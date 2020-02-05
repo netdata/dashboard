@@ -65,15 +65,11 @@ export const selectNameOfAnyFetchingChart = createSelector(
 export const selectAmountOfSnapshotsFetched = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-  // count the nr of "success" or "failure" charts
-    .map((chartState) => Boolean(chartState.snapshotData))
-    .reduce((acc, value) => acc + Number(value), 0),
+    .reduce((acc, chartState) => acc + (chartState.snapshotData ? 1 : 0), 0),
 )
 
 export const selectAmountOfSnapshotsFailed = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-  // count the nr of "success" or "failure" charts
-    .map((chartState) => Boolean(chartState.snapshotDataIsError))
-    .reduce((acc, value) => acc + Number(value), 0),
+    .reduce((acc, chartState) => acc + (chartState.snapshotDataIsError ? 1 : 0), 0),
 )
