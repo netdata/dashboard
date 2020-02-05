@@ -2858,10 +2858,19 @@ var initializeConfig = {
 };
 
 function loadCustomDashboardInfo(url, callback) {
-    loadJs(url, function () {
+    $.ajax({
+        url,
+        cache: true,
+        dataType: "script",
+        xhrFields: { withCredentials: true } // required for the cookie
+    })
+    .fail(function () {
+        alert(`Cannot load required JS library: ${url}`);
+    })
+    .always(function () {
         $.extend(true, netdataDashboard, customDashboard);
         callback();
-    });
+    })
 }
 
 function initializeChartsAndCustomInfo() {
@@ -2870,9 +2879,9 @@ function initializeChartsAndCustomInfo() {
     // download all the charts the server knows
     NETDATA.chartRegistry.downloadAll(initializeConfig.url, function (data) {
         if (data !== null) {
-            if (initializeConfig.custom_info === true && typeof data.custom_info !== 'undefined' && data.custom_info !== "" && netdataSnapshotData === null) {
+            if (initializeConfig.custom_info === true && typeof data.custom_info !== 'undefined' && data.custom_info !== "" && window.netdataSnapshotData === null) {
                 //console.log('loading custom dashboard decorations from server ' + initializeConfig.url);
-                loadCustomDashboardInfo(NETDATA.serverDefault + data.custom_info, function () {
+                loadCustomDashboardInfo(serverDefault + data.custom_info, function () {
                     initializeDynamicDashboardWithData(data);
                 });
             } else {
@@ -2907,10 +2916,7 @@ function initializeDynamicDashboard(newReduxStore) {
 
         netdataPrepCallback()
 
-        // const netdata_url = NETDATA.serverDefault;
-        const netdata_url = "http://localhost:19999"; // todo
-
-        initializeConfig.url = netdata_url;
+        initializeConfig.url = serverDefault;
 
         // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
         // refractored)
