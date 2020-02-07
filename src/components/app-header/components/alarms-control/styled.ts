@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { Button, getSizeBy, getColor } from "@netdata/netdata-ui"
+import { Button, getColor } from "@netdata/netdata-ui"
 
 export const Container = styled.div`
   position: relative;

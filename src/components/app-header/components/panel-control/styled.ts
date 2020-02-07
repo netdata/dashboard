@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { getSizeBy, getColor } from "@netdata/netdata-ui"
+import { getSizeBy, getColor, breakpoints } from "@netdata/netdata-ui"
 
 export const LogoSection = styled.section`
   position: relative;
@@ -12,6 +12,14 @@ export const LogoSection = styled.section`
   justify-content: space-between;
   align-items: center;
   padding: 0 ${getSizeBy(2)};
+
+  @media ${breakpoints.mobileSmall} {
+    width: 68px;
+  }
+
+  @media ${breakpoints.desktop} {
+    width: ${getSizeBy(35)};
+  }
 
   &::after {
     position: absolute;

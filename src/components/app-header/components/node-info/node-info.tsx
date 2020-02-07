@@ -1,12 +1,6 @@
 import React from "react"
 import { NavigationItem, StyledIcon, Hostname, AlarmIndicator } from "./styled"
-
-const mockedAlarmsCount = {
-  critical: 3,
-  warning: 1,
-}
-
-const mockedHostname = "placeholder.domain.io"
+import { mockedAlarmsCount, mockedHostname } from "../../mocks"
 
 const getAlarmsCount = (count: number) => (count > 9 ? "9+" : `${count}`)
 

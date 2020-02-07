@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { getColor, getSizeBy, Icon, Text } from "@netdata/netdata-ui"
+import { getColor, getSizeBy, Icon, Text, breakpoints } from "@netdata/netdata-ui"
 
 export const NavigationItem = styled.div`
   flex-shrink: 0;
@@ -8,6 +8,14 @@ export const NavigationItem = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   height: 100%;
+
+  @media ${breakpoints.mobileSmall} {
+    display: none;
+  }
+
+  @media ${breakpoints.tablet} {
+    display: flex;
+  }
 `
 
 export const StyledIcon = styled(Icon)`

@@ -71,3 +71,6 @@ export const IconContainer = styled.div`
   position: relative;
   margin: 0 ${getSizeBy()};
 `
+export const IframeContainer = styled.div`
+  width: ${getSizeBy(9)};
+`
