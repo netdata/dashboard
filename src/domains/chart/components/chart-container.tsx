@@ -10,23 +10,23 @@ export type Props = {
   attributes: Attributes
   // warning! this is not the same as chartId in old dashboard
   // here, the chartID must be unique across all agents
-  chartID: string
+  chartUuid: string
   portalNode: HTMLElement
 }
 
 export const ChartContainer = ({
   attributes,
-  chartID,
+  chartUuid,
   portalNode,
 }: Props) => (
   <DisableOutOfView
     attributes={attributes}
     portalNode={portalNode}
-    chartUuid={chartID}
+    chartUuid={chartUuid}
   >
     <ChartWithLoader
       attributes={attributes}
-      chartUuid={chartID}
+      chartUuid={chartUuid}
       portalNode={portalNode}
     />
   </DisableOutOfView>
