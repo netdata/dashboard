@@ -1,3 +1,5 @@
+import { clone } from "ramda"
+
 import { ChartsMetadata } from "domains/global/types"
 import { ChartDetails, ChartEnriched } from "domains/chart/chart-types"
 import { netdataDashboard, options } from "./netdata-dashboard"
@@ -11,9 +13,7 @@ function enrichChartData(chart: ChartDetails) {
   const parts = chart.type.split("_")
   const tmp = parts[0]
 
-  // const chartEnriched = clone(chart) as ChartEnriched
-  // cant avoid mutation yet, todo refactor
-  const chartEnriched = chart as ChartEnriched
+  const chartEnriched = clone(chart) as ChartEnriched
 
   switch (tmp) {
     case "ap":
@@ -131,6 +131,7 @@ function enrichChartData(chart: ChartDetails) {
   }
 
   chartEnriched.submenu = chartEnriched.family
+  return chartEnriched
 }
 
 
@@ -141,9 +142,8 @@ export const renderChartsAndMenu = (data: ChartsMetadata) => {
   const { menus } = options
   const { charts } = data
 
-  Object.keys(charts).forEach((c) => {
-    const chart = charts[c] as ChartEnriched
-    enrichChartData(chart)
+  Object.keys(charts).forEach((chartName) => {
+    const chart = enrichChartData(charts[chartName] as ChartEnriched)
     const m = chart.menu
 
     // create the menu
@@ -203,5 +203,5 @@ export const renderChartsAndMenu = (data: ChartsMetadata) => {
     })
   })
 
-  // renderPage(menus, data)
+  return menus
 }

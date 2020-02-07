@@ -1,13 +1,17 @@
 import { mergeAll } from "ramda"
 import React from "react"
 
-// needs to be imported before "dashboard_info"
-import "../../utils/netdata-dashboard"
-import "dashboard_info"
-
+import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
-import { ChartDetails } from "domains/chart/chart-types"
+import { ChartDetails, ChartEnriched } from "domains/chart/chart-types"
 import { renderChartsAndMenu } from "domains/dashboard/utils/render-charts-and-menu"
+import { Menus, options } from "domains/dashboard/utils/netdata-dashboard"
+import { HeadMain } from "domains/dashboard/components/head-main"
+
+// needs to be imported before "dashboard_info"
+import "dashboard_info"
+import { netdataDashboard } from "../../utils/netdata-dashboard"
+
 
 interface ChartsMetadataEnriched extends ChartsMetadata {
   // eslint-disable-next-line camelcase
@@ -15,10 +19,10 @@ interface ChartsMetadataEnriched extends ChartsMetadata {
 }
 
 interface Props {
-  charts: ChartsMetadata
+  chartsMetadata: ChartsMetadata
 }
 export const NodeView = ({
-  charts,
+  chartsMetadata,
 }: Props) => {
   // example of id and name difference:
   // id: "disk_inodes./Volumes/Recovery"
@@ -30,6 +34,11 @@ export const NodeView = ({
   const output = renderChartsAndMenu(charts)
 
   return (
-    <div>Node View</div>
+    <div>
+      <HeadMain
+        charts={chartsMetadata.charts}
+        duration={240} // todo
+      />
+    </div>
   )
 }
