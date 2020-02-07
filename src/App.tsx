@@ -1,7 +1,7 @@
-import React, {
-  useEffect, useLayoutEffect, useRef, useState,
-} from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Ps from "perfect-scrollbar"
+import { ThemeProvider } from "styled-components"
+import { DefaultTheme } from "@netdata/netdata-ui"
 
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
@@ -16,17 +16,15 @@ import { useStore } from "react-redux"
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { Portals } from "domains/chart/components/portals"
-import { PrintModal} from "domains/dashboard/components/print-modal"
+import { PrintModal } from "domains/dashboard/components/print-modal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
+import { AppHeader } from "components/app-header"
 
 import "./types/global"
 
-import {
-  netdataCallback,
-  updateLocaleFunctions,
-} from "./main"
+import { netdataCallback, updateLocaleFunctions } from "./main"
 // @ts-ignore
 import "./dashboard_info"
 
@@ -38,14 +36,15 @@ if (!window.netdataNoFontAwesome) {
 // support legacy code
 window.Ps = Ps
 
-const App: React.FC = () => { // eslint-disable-line arrow-body-style
+const App: React.FC = () => {
+  // eslint-disable-line arrow-body-style
   const store = useStore()
   useEffect(() => {
     // todo
     // @ts-ignore
     window.NETDATA.alarms = {}
     // @ts-ignore
-    window.NETDATA.pause = (callback) => {
+    window.NETDATA.pause = callback => {
       callback()
     }
     netdataCallback(store)
@@ -84,14 +83,19 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
   window.NETDATA.parseDom = parseDom.current
 
   return (
-    <div className="App">
-      {hasFetchDependencies && haveDOMReadyForParsing && (
-        <>
-          <Portals key={refreshHelper} />
-          {isPrintMode && <PrintModal />}
-        </>
-      )}
-    </div>
+    <ThemeProvider theme={DefaultTheme}>
+      <>
+        <AppHeader />
+        <div className="App">
+          {hasFetchDependencies && haveDOMReadyForParsing && (
+            <>
+              <Portals key={refreshHelper} />
+              {isPrintMode && <PrintModal />}
+            </>
+          )}
+        </div>
+      </>
+    </ThemeProvider>
   )
 }
 
