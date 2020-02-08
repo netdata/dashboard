@@ -6,6 +6,7 @@ const appHeaderZIndex = 5
 export const StyledHeader = styled.header`
   z-index: ${appHeaderZIndex};
   top: 0;
+  left: 0;
   position: fixed;
   height: 56px;
   width: 100%;
