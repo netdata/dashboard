@@ -13,10 +13,10 @@ interface RequestCommonColors {
   dimensionNames: string[]
 }
 export const requestCommonColorsAction = createAction<RequestCommonColors>(
-  `${storeKey}/globalRequestCommonColors`,
+  `${storeKey}/globalRequestCommonColors`
 )
 
-export const setTimezoneAction = createAction<{timezone: string}>(`${storeKey}/globalSetTmezone`)
+export const setTimezoneAction = createAction<{ timezone: string }>(`${storeKey}/globalSetTmezone`)
 window.TEMPORARY_setTimezoneAction = setTimezoneAction
 
 interface SetGlobalSelectionAction {
@@ -24,7 +24,7 @@ interface SetGlobalSelectionAction {
   hoveredX: number
 }
 export const setGlobalSelectionAction = createAction<SetGlobalSelectionAction>(
-  `${storeKey}/setGlobalSelection`,
+  `${storeKey}/setGlobalSelection`
 )
 
 interface SetGlobalPanAndZoomAction {
@@ -34,7 +34,7 @@ interface SetGlobalPanAndZoomAction {
   shouldForceTimeRange?: boolean
 }
 export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>(
-  `${storeKey}/setGlobalPanAndZoom`,
+  `${storeKey}/setGlobalPanAndZoom`
 )
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
@@ -45,7 +45,7 @@ interface SetGlobalChartUnderlayAction {
   masterID: string
 }
 export const setGlobalChartUnderlayAction = createAction<SetGlobalChartUnderlayAction>(
-  `${storeKey}/setGlobalChartUnderlay`,
+  `${storeKey}/setGlobalChartUnderlay`
 )
 
 export const centerAroundHighlightAction = createAction(`${storeKey}/centerAroundHighlightAction`)
@@ -55,33 +55,31 @@ interface WindowFocusChangeAction {
   hasWindowFocus: boolean
 }
 export const windowFocusChangeAction = createAction<WindowFocusChangeAction>(
-  `${storeKey}/windowFocusChangeAction`,
+  `${storeKey}/windowFocusChangeAction`
 )
 
 export interface FetchHelloPayload {
-  serverDefault: string,
+  serverDefault: string
 }
 
-export const fetchHelloAction = createRequestAction<
-  FetchHelloPayload,
-  {}
-  >(`${storeKey}/fetchHelloAction`)
-
+export const fetchHelloAction = createRequestAction<FetchHelloPayload, {}>(
+  `${storeKey}/fetchHelloAction`
+)
 
 interface UpdatePersonUrlsAction {
   isCloudEnabled: boolean
   personGuid: string
-  registryMachines: {[key: string]: RegistryMachine}
+  registryMachines: { [key: string]: RegistryMachine }
   registryMachinesArray: RegistryMachine[]
 }
 export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
-  `${storeKey}/updatePersonUrlsAction`,
+  `${storeKey}/updatePersonUrlsAction`
 )
 
-export interface StartAlarmsPayload { serverDefault: string }
-export const startAlarmsAction = createAction<StartAlarmsPayload>(
-  `${storeKey}/startAlarmsAction`,
-)
+export interface StartAlarmsPayload {
+  serverDefault: string
+}
+export const startAlarmsAction = createAction<StartAlarmsPayload>(`${storeKey}/startAlarmsAction`)
 
 export const fetchAllAlarmsAction = createRequestAction(`${storeKey}/fetchAllAlarmsAction`)
 
@@ -89,10 +87,15 @@ export interface SetOptionAction {
   key: string
   value: unknown
 }
-export const setOptionAction = createAction<SetOptionAction>(
-  `${storeKey}/setOptionAction`,
+export const setOptionAction = createAction<SetOptionAction>(`${storeKey}/setOptionAction`)
+
+export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
+  `${storeKey}/loadSnapshotAction`
 )
 
-export const loadSnapshotAction = createAction<{snapshot: Snapshot}>(
-  `${storeKey}/loadSnapshotAction`,
+export interface SetSpacePanelStatusActionPayload {
+  status: boolean
+}
+export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
+  `${storeKey}/setSpacePanelStatusAction`
 )

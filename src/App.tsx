@@ -22,6 +22,7 @@ import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
 import { AppHeader } from "components/app-header"
 import { SpacesBar } from "components/spaces-bar"
+import { SpacePanel } from "components/space-panel"
 
 import "./types/global"
 
@@ -87,6 +88,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={DefaultTheme}>
       <>
         <SpacesBar />
+        <SpacePanel />
         <AppHeader />
         <div className="App">
           {hasFetchDependencies && haveDOMReadyForParsing && (

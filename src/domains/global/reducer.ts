@@ -18,13 +18,16 @@ import {
   startAlarmsAction,
   setOptionAction,
   loadSnapshotAction,
+  setSpacePanelStatusAction,
 } from "./actions"
 import { Options, optionsMergedWithLocalStorage } from "./options"
 
 export type StateT = {
   commonColorsKeys: {
-    [key: string]: { // key can be uuid, chart's context or commonColors attribute
-      assigned: { // name-value of dimensions and their colors
+    [key: string]: {
+      // key can be uuid, chart's context or commonColors attribute
+      assigned: {
+        // name-value of dimensions and their colors
         [dimensionName: string]: string
       }
       available: string[] // an array of colors available to be used
@@ -49,15 +52,17 @@ export type StateT = {
   hoveredX: number | null
   hasWindowFocus: boolean
 
+  spacePanelIsActive: boolean
+
   registry: {
     isCloudEnabled: boolean
     personGuid: string | null
-    registryMachines: {[key: string]: RegistryMachine} | null
+    registryMachines: { [key: string]: RegistryMachine } | null
     registryMachinesArray: RegistryMachine[] | null
   }
 
   alarms: {
-    hasStarted: boolean,
+    hasStarted: boolean
   }
 
   snapshot: Snapshot | null
@@ -65,7 +70,6 @@ export type StateT = {
   isFetchingHello: boolean
 
   options: Options
-
 }
 
 export const initialState = {
@@ -76,6 +80,7 @@ export const initialState = {
   timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
   hasWindowFocus: true,
+  spacePanelIsActive: true, // set to true only for testing layout
 
   registry: {
     isCloudEnabled: false,
@@ -94,17 +99,13 @@ export const initialState = {
   options: optionsMergedWithLocalStorage,
 }
 
-export const globalReducer = createReducer<StateT>(
-  {},
-  initialState,
-)
-
+export const globalReducer = createReducer<StateT>({}, initialState)
 
 export interface GetKeyArguments {
-  colorsAttribute: string | undefined,
-  commonColorsAttribute: string | undefined,
-  chartUuid: string,
-  chartContext: string,
+  colorsAttribute: string | undefined
+  commonColorsAttribute: string | undefined
+  chartUuid: string
+  chartContext: string
 }
 export const getKeyForCommonColorsState = ({
   colorsAttribute,
@@ -117,29 +118,23 @@ export const getKeyForCommonColorsState = ({
   // when there's commonColors attribute, share the state between all charts with that attribute
   // if not, when there are custom colors, make each chart independent
   // if not, share the same state between charts with the same context
-  return commonColorsAttribute
-    || (hasCustomColors ? chartUuid : chartContext)
+  return commonColorsAttribute || (hasCustomColors ? chartUuid : chartContext)
 }
 
 const hasLastOnly = (array: string[]) => last(array) === "ONLY"
 const removeLastOnly = (array: string[]) => (hasLastOnly(array) ? init(array) : array)
 const createCommonColorsKeysSubstate = (
   colorsAttribute: string | undefined,
-  hasCustomColors: boolean,
+  hasCustomColors: boolean
 ) => {
-  const custom = hasCustomColors
-    ? removeLastOnly(
-      (colorsAttribute as string)
-        .split(" "),
-    )
-    : []
+  const custom = hasCustomColors ? removeLastOnly((colorsAttribute as string).split(" ")) : []
   const shouldCopyTheme = hasCustomColors
-    // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
-    ? !hasLastOnly((colorsAttribute as string).split(" "))
+    ? // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
+      !hasLastOnly((colorsAttribute as string).split(" "))
     : true
   const available = [
     ...custom,
-    ...(shouldCopyTheme || custom.length === 0) ? window.NETDATA.themes.current.colors : [],
+    ...(shouldCopyTheme || custom.length === 0 ? window.NETDATA.themes.current.colors : []),
   ]
   return {
     assigned: {},
@@ -148,50 +143,57 @@ const createCommonColorsKeysSubstate = (
   }
 }
 
-globalReducer.on(requestCommonColorsAction, (state, {
-  chartContext,
-  chartUuid,
-  colorsAttribute,
-  commonColorsAttribute,
-  dimensionNames,
-}) => {
-  const keyName = getKeyForCommonColorsState({
-    colorsAttribute, commonColorsAttribute, chartUuid, chartContext,
-  })
+globalReducer.on(
+  requestCommonColorsAction,
+  (state, { chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames }) => {
+    const keyName = getKeyForCommonColorsState({
+      colorsAttribute,
+      commonColorsAttribute,
+      chartUuid,
+      chartContext,
+    })
 
-  const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
-  const subState = state.commonColorsKeys[keyName]
-    || createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
+    const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
+    const subState =
+      state.commonColorsKeys[keyName] ||
+      createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
 
-  const currentlyAssignedNr = Object.keys(subState.assigned).length
-  const requestedDimensionsAssigned = mergeAll(
-    dimensionNames
-      // dont assign already assigned dimensions
-      .filter((dimensionName) => !subState.assigned[dimensionName])
-      .map((dimensionName, i) => ({
-        [dimensionName]: subState.available[(i + currentlyAssignedNr) % subState.available.length],
-      })),
-  )
-  const assigned = {
-    ...subState.assigned,
-    ...requestedDimensionsAssigned,
-  }
+    const currentlyAssignedNr = Object.keys(subState.assigned).length
+    const requestedDimensionsAssigned = mergeAll(
+      dimensionNames
+        // dont assign already assigned dimensions
+        .filter(dimensionName => !subState.assigned[dimensionName])
+        .map((dimensionName, i) => ({
+          [dimensionName]:
+            subState.available[(i + currentlyAssignedNr) % subState.available.length],
+        }))
+    )
+    const assigned = {
+      ...subState.assigned,
+      ...requestedDimensionsAssigned,
+    }
 
-  return {
-    ...state,
-    commonColorsKeys: {
-      ...state.commonColorsKeys,
-      [keyName]: {
-        ...subState,
-        assigned,
+    return {
+      ...state,
+      commonColorsKeys: {
+        ...state.commonColorsKeys,
+        [keyName]: {
+          ...subState,
+          assigned,
+        },
       },
-    },
+    }
   }
-})
+)
 
 globalReducer.on(setTimezoneAction, (state, { timezone = "default" }) => ({
   ...state,
   timezone,
+}))
+
+globalReducer.on(setSpacePanelStatusAction, (state, { status }) => ({
+  ...state,
+  spacePanelIsActive: status,
 }))
 
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({
@@ -200,19 +202,20 @@ globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => (
   currentSelectionMasterId: chartUuid,
 }))
 
-globalReducer.on(setGlobalPanAndZoomAction, (state, {
-  after, before, masterID, shouldForceTimeRange,
-}) => ({
-  ...state,
-  globalPanAndZoom: {
-    after,
-    before,
-    masterID,
-    shouldForceTimeRange,
-  },
-}))
+globalReducer.on(
+  setGlobalPanAndZoomAction,
+  (state, { after, before, masterID, shouldForceTimeRange }) => ({
+    ...state,
+    globalPanAndZoom: {
+      after,
+      before,
+      masterID,
+      shouldForceTimeRange,
+    },
+  })
+)
 
-globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
+globalReducer.on(resetGlobalPanAndZoomAction, state => ({
   ...state,
   globalPanAndZoom: initialState.globalPanAndZoom,
   hoveredX: initialState.hoveredX, // need to reset this also on mobile
@@ -227,7 +230,7 @@ globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID
   },
 }))
 
-globalReducer.on(centerAroundHighlightAction, (state) => {
+globalReducer.on(centerAroundHighlightAction, state => {
   if (!state.globalChartUnderlay) {
     // eslint-disable-next-line no-console
     console.warn("Cannot center around empty selection")
@@ -244,7 +247,7 @@ globalReducer.on(centerAroundHighlightAction, (state) => {
   }
 })
 
-globalReducer.on(clearHighlightAction, (state) => ({
+globalReducer.on(clearHighlightAction, state => ({
   ...state,
   globalChartUnderlay: initialState.globalChartUnderlay,
   globalPanAndZoom: initialState.globalPanAndZoom,
@@ -255,36 +258,36 @@ globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
   hasWindowFocus,
 }))
 
-
-globalReducer.on(fetchHelloAction.request, (state) => ({
+globalReducer.on(fetchHelloAction.request, state => ({
   ...state,
   isFetchingHello: true,
 }))
 
-globalReducer.on(fetchHelloAction.success, (state) => ({
+globalReducer.on(fetchHelloAction.success, state => ({
   ...state,
   isFetchingHello: false,
 }))
 
-globalReducer.on(fetchHelloAction.failure, (state) => ({
+globalReducer.on(fetchHelloAction.failure, state => ({
   ...state,
   isFetchingHello: true,
 }))
 
-globalReducer.on(updatePersonUrlsAction, (state, {
-  isCloudEnabled, personGuid, registryMachines, registryMachinesArray,
-}) => ({
-  ...state,
-  registry: {
-    ...state.registry,
-    isCloudEnabled,
-    personGuid,
-    registryMachines,
-    registryMachinesArray,
-  },
-}))
+globalReducer.on(
+  updatePersonUrlsAction,
+  (state, { isCloudEnabled, personGuid, registryMachines, registryMachinesArray }) => ({
+    ...state,
+    registry: {
+      ...state.registry,
+      isCloudEnabled,
+      personGuid,
+      registryMachines,
+      registryMachinesArray,
+    },
+  })
+)
 
-globalReducer.on(startAlarmsAction, (state) => ({
+globalReducer.on(startAlarmsAction, state => ({
   ...state,
   alarms: {
     ...state.alarms,
@@ -302,7 +305,7 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
 
 globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   const parsedData = Object.keys(snapshot.data)
-    .map((dataKey) => {
+    .map(dataKey => {
       let uncompressed
       try {
         // @ts-ignore
@@ -341,7 +344,7 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
         return {}
       }
 
-      return ({ [dataKey]: data })
+      return { [dataKey]: data }
     })
     .reduce((acc, obj) => ({ ...acc, ...obj }), {})
 
@@ -349,7 +352,7 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
     ...state,
     snapshot: {
       ...snapshot,
-      data: parsedData as {[key: string]: unknown},
+      data: parsedData as { [key: string]: unknown },
     },
   }
 })

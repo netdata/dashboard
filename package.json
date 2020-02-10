@@ -12,7 +12,10 @@
     "styled-components": "^4.4.1"
   },
   "dependencies": {
+    "@material/list": "^4.0.0",
     "@netdata/netdata-ui": "^0.7.17",
+    "@rmwc/icon": "^5.7.2",
+    "@rmwc/list": "^5.7.2",
     "@rmwc/tooltip": "^5.7.2",
     "axios": "^0.19.0",
     "bootstrap": "^3.4.1",
