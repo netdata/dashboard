@@ -1,5 +1,7 @@
 import { mergeAll } from "ramda"
-import React from "react"
+import React, {
+  useRef, useState, useEffect,
+} from "react"
 
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
@@ -28,10 +30,28 @@ export const NodeView = ({
   // id: "disk_inodes./Volumes/Recovery"
   // name: "disk_inodes._Volumes_Recovery"
   const chartsByName = mergeAll(
-    Object.values(charts.charts).map((chart) => ({ [chart.name]: chart })),
+    Object.values(chartsMetadata.charts).map((chart) => ({ [chart.name]: chart })),
   )
 
-  const output = renderChartsAndMenu(charts)
+
+  const [width, setWidth] = useState(0)
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!width && ref.current) {
+      setWidth(ref.current.getBoundingClientRect().width)
+    }
+  }, [width])
+
+
+  // const menus = renderChartsAndMenu(chartsMetadata)
+  // const output = renderPage(menus, chartsMetadata)
+
+  // const isPrintMode = false // needs to be implemented when it will be used in main.js
+  const pcentWidth = Math.floor(100 / chartsPerRow())
+  const duration = Math.round(
+    ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
+  ) * 60
+
 
   return (
     <div>
