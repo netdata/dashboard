@@ -21,7 +21,7 @@ export const PanelControl = () => {
         type="borderless"
         icon="hamburger"
         onClick={() => {
-          dispatch(setSpacePanelStatusAction({ status: !spacePanelIsActive }))
+          dispatch(setSpacePanelStatusAction({ isActive: !spacePanelIsActive }))
         }}
       />
     </LogoSection>

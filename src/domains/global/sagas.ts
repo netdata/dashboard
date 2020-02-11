@@ -267,7 +267,7 @@ function setOptonSaga({ payload }: Action<SetOptionAction>) {
 }
 
 function spacePanelSaga({ payload }: Action<SetSpacePanelStatusActionPayload>) {
-  if (payload.status) {
+  if (payload.isActive) {
     document.body.className = "with-panel"
   } else {
     document.body.className = ""

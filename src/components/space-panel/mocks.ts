@@ -15,86 +15,6 @@ export const agentsMock = [
   { name: "Birb" },
   { name: "Quality Node" },
   { name: "Clarity Wave" },
-  {
-    name: "Secret Agent Legakis",
-    validURLs: {
-      "www.google.ru": null,
-      "www.google.com": null,
-    },
-  },
-  {
-    name: "企鹅",
-    validURLs: {
-      "www.企鹅.com": null,
-    },
-  },
-  { name: "Birb" },
-  { name: "Quality Node" },
-  { name: "Clarity Wave" },
-  {
-    name: "Secret Agent Legakis",
-    validURLs: {
-      "www.google.ru": null,
-      "www.google.com": null,
-    },
-  },
-  {
-    name: "企鹅",
-    validURLs: {
-      "www.企鹅.com": null,
-    },
-  },
-  { name: "Birb" },
-  { name: "Quality Node" },
-  { name: "Clarity Wave" },
-  {
-    name: "Secret Agent Legakis",
-    validURLs: {
-      "www.google.ru": null,
-      "www.google.com": null,
-    },
-  },
-  {
-    name: "企鹅",
-    validURLs: {
-      "www.企鹅.com": null,
-    },
-  },
-  { name: "Birb" },
-  { name: "Quality Node" },
-  { name: "Clarity Wave" },
-  {
-    name: "Secret Agent Legakis",
-    validURLs: {
-      "www.google.ru": null,
-      "www.google.com": null,
-    },
-  },
-  {
-    name: "企鹅",
-    validURLs: {
-      "www.企鹅.com": null,
-    },
-  },
-  { name: "Birb" },
-  { name: "Quality Node" },
-  { name: "Clarity Wave" },
-  {
-    name: "Secret Agent Legakis",
-    validURLs: {
-      "www.google.ru": null,
-      "www.google.com": null,
-    },
-  },
-  {
-    name: "企鹅",
-    validURLs: {
-      "www.企鹅.com": null,
-    },
-  },
-  { name: "Birb" },
-  { name: "Quality Node" },
-  { name: "Clarity Wave" },
 ]
 
 export const masterNodeMock = {
@@ -102,8 +22,29 @@ export const masterNodeMock = {
   nodes: [{ name: "Abstract name" }, { name: "Even more abstract" }, { name: "企业猫" }],
 }
 
+export const roomsMock = [
+  { name: "Insanity Room", alarmCounter: { critical: 3, warning: 2, unreachable: 2 }, id: "x" },
+  { name: "Unreachable Room", alarmCounter: { critical: 0, warning: 0, unreachable: 1 }, id: "d" },
+  {
+    name: "Extremely long name room where a lot of concerning things happen",
+    alarmCounter: { critical: 1000, warning: 9999, unreachable: 101 },
+    id: "dd",
+  },
+  {
+    name: "Just a normal room",
+    alarmCounter: { critical: 0, warning: 0, unreachable: 0 },
+    id: "xdd",
+  },
+  { name: "Warnings Room", alarmCounter: { critical: 0, warning: 1, unreachable: 0 }, id: "dx" },
+  {
+    name: "Critical Room, don't delete",
+    alarmCounter: { critical: 1, warning: 0, unreachable: 0 },
+    id: "dxd",
+  },
+]
+
 /*
-Cloud agent type for reference
+Cloud types for reference
 
 export interface Agent {
   id: string
@@ -146,5 +87,39 @@ export interface Agent {
   container?: string
   container_detection?: string
   collectors?: CollectorStruct[]
+}
+
+export type Workspace = {
+  id: string
+  name: string
+  description?: string | undefined
+  slug: string
+  iconURL?: string | null
+  createdAt?: string
+  state: string
+  defaultRooms?: string[]
+  emailDomains?: string[]
+  inviteAdminsOnly?: boolean
+  createRoomAdminsOnly?: boolean
+  members?: WorkspaceUser[]
+  apps?: WorkspaceApp[]
+  invitations?: WorkspaceInvitation[]
+  claimingTokens?: ClaimingToken[]
+}
+
+export interface Room {
+  id: string
+  name: string
+  description?: string
+  isPrivate: boolean
+  nodeIDs: string[]
+  workspaceId: string
+  createdAt: string
+  members: string[]
+  isUntouchable: boolean
+  alarmCounter?: {
+    warning: number
+    critical: number
+  }
 }
 */

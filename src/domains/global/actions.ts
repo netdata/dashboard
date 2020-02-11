@@ -94,7 +94,7 @@ export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
 )
 
 export interface SetSpacePanelStatusActionPayload {
-  status: boolean
+  isActive: boolean
 }
 export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
   `${storeKey}/setSpacePanelStatusAction`

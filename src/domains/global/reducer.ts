@@ -191,9 +191,9 @@ globalReducer.on(setTimezoneAction, (state, { timezone = "default" }) => ({
   timezone,
 }))
 
-globalReducer.on(setSpacePanelStatusAction, (state, { status }) => ({
+globalReducer.on(setSpacePanelStatusAction, (state, { isActive }) => ({
   ...state,
-  spacePanelIsActive: status,
+  spacePanelIsActive: isActive,
 }))
 
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({

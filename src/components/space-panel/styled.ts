@@ -29,6 +29,7 @@ export const PanelHeader = styled(H4)`
   flex-grow: 0;
   flex-shrink: 0;
   margin-bottom: ${getSizeBy(3)};
+  padding: 0 ${getSizeBy(2)};
 `
 
 export const PanelSection = styled.section<{ leading?: boolean }>`
