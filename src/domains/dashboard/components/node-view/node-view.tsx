@@ -8,7 +8,7 @@ import { ChartDetails } from "domains/chart/chart-types"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 
 import { renderChartsAndMenu } from "domains/dashboard/utils/render-charts-and-menu"
-import { options } from "domains/dashboard/utils/netdata-dashboard"
+import { Menu, options } from "domains/dashboard/utils/netdata-dashboard"
 import { parseChartString } from "domains/dashboard/utils/parse-chart-string"
 import { sortObjectByPriority, prioritySort } from "domains/dashboard/utils/sorting"
 import { HeadMain } from "domains/dashboard/components/head-main"
@@ -60,6 +60,136 @@ const chartCommonMax = (family: string, context: string, units: string) => (
 )
 
 
+interface SubSectionProps {
+  chartsMetadata: ChartsMetadata
+  duration: number
+  menu: Menu
+  pcentWidth: number
+  shouldDisplayHeadMain: boolean
+}
+const SubSection = ({
+  chartsMetadata,
+  duration,
+  menu,
+  pcentWidth,
+  shouldDisplayHeadMain,
+}: SubSectionProps) => {
+  const submenuNames = sortObjectByPriority(menu.submenus)
+  return (
+    <div role="region" className="dashboard-subsection">
+      {/* eslint-disable-next-line react/no-danger */}
+      <span dangerouslySetInnerHTML={{ __html: menu.info }} />
+      <div className="netdata-chart-row">
+        {shouldDisplayHeadMain && (
+          <HeadMain
+            charts={chartsMetadata.charts}
+            duration={duration}
+          />
+        )}
+        {submenuNames.flatMap(
+          (submenu) => menu.submenus[submenu].charts
+            .concat().sort(prioritySort) // shallow clone, sort by priority
+            .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
+            .map(parseChartString)
+            .map((attributes: Attributes | null) => (
+              attributes && (
+                <ChartWrapper
+                  attributes={attributes}
+                  key={`${attributes.id}-${attributes.dimensions}`}
+                />
+              )
+            )),
+        )}
+      </div>
+      {submenuNames.map((submenu: string) => {
+        const submenuID = name2id(`menu_${menu}_submenu_${submenu}`)
+        const chartsSorted = menu.submenus[submenu].charts
+          .concat() // shallow clone
+          .sort(prioritySort)
+        const submenuInfo = menu.submenus[submenu].info
+        return (
+          <div
+            role="region"
+            className="dashboard-section-container"
+            id={submenuID}
+            key={submenu}
+          >
+            <h2 id={submenuID} className="netdata-chart-alignment">
+              {menu.submenus[submenu].title}
+            </h2>
+            {submenuInfo && (
+              <div
+                className="dashboard-submenu-info netdata-chart-alignment"
+                role="document"
+              >
+                {submenuInfo}
+              </div>
+            )}
+            <div className="netdata-chart-row">
+              {chartsSorted
+                .flatMap((chart) => generateHeadCharts("heads", chart, duration))
+                .map(parseChartString)
+                .map((attributes: Attributes | null) => (
+                  attributes && (
+                    <ChartWrapper
+                      attributes={attributes}
+                      key={`${attributes.id}-${attributes.dimensions}`}
+                    />
+                  )
+                ))}
+            </div>
+            {chartsSorted.map((chart) => {
+              const commonMin = chartCommonMin(chart.family, chart.context, chart.units)
+              const commonMax = chartCommonMax(chart.family, chart.context, chart.units)
+              return (
+                <div
+                  className="netdata-chartblock-container"
+                  style={{ width: `${pcentWidth}%` }}
+                  key={`${chart.id}-${chart.dimensions}`}
+                >
+                  {/* eslint-disable-next-line react/no-danger */}
+                  <span dangerouslySetInnerHTML={{
+                    __html: netdataDashboard.contextInfo(chart.context),
+                  }}
+                  />
+                  <ChartWrapper
+                    id={`chart_${name2id(chart.id)}`}
+                    attributes={{
+                      id: chart.id,
+                      chartLibrary: "dygraph",
+                      width: "100%",
+                      height: netdataDashboard.contextHeight(
+                        chart.context, options.chartsHeight,
+                      ),
+                      dygraphValueRange: netdataDashboard.contextValueRange(
+                        chart.context,
+                      ),
+                      before: 0,
+                      after: -duration,
+                      heightId: `${name2id(`${options.hostname}/${chart.id}`)}`,
+                      colors: `${netdataDashboard.anyAttribute(
+                        netdataDashboard.context, "colors", chart.context, "",
+                      )}`,
+                      decimalDigits: netdataDashboard.contextDecimalDigits(
+                        chart.context, -1,
+                      ),
+                      // add commonMin/commonMax attributes only if they are set
+                      ...(commonMin ? { commonMin } : {}),
+                      ...(commonMax ? { commonMax } : {}),
+                    }}
+                  />
+                </div>
+              )
+            })}
+          </div>
+        )
+      })}
+
+    </div>
+  )
+}
+
+
 interface Props {
   chartsMetadata: ChartsMetadata
 }
@@ -85,136 +215,34 @@ export const NodeView = ({
   const main = sortObjectByPriority(menus)
 
   return (
-    <div ref={ref}>
-      {!!duration && (
-        <>
-          {main.map((menu, menuIndex) => {
-            const submenuNames = sortObjectByPriority(menus[menu].submenus)
+    <div>
+      <div ref={ref} className="charts-body" role="main">
+        {!!duration && (
+          main.map((menuName, menuIndex) => {
+            const menu = menus[menuName]
             return (
-              <div role="region" className="dashboard-section" key={menu}>
+              <div role="region" className="dashboard-section" key={menuName}>
                 <div>
-                  <h1 id={name2id(`menu_${menu}`)}>
+                  <h1 id={name2id(`menu_${menuName}`)}>
                     {/* eslint-disable-next-line react/no-danger */}
-                    <span dangerouslySetInnerHTML={{ __html: menus[menu].icon }} />
+                    <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
                     {" "}
-                    {menus[menu].title}
+                    {menu.title}
                   </h1>
                 </div>
-                <div role="region" className="dashboard-subsection">
-                  {/* eslint-disable-next-line react/no-danger */}
-                  <span dangerouslySetInnerHTML={{ __html: menus[menu].info }} />
-                  <div className="netdata-chart-row">
-                    {menuIndex === 0 && (
-                      <HeadMain
-                        charts={chartsMetadata.charts}
-                        duration={duration}
-                      />
-                    )}
-                    {submenuNames.flatMap(
-                      (submenu) => menus[menu].submenus[submenu].charts
-                        .concat().sort(prioritySort) // shallow clone, sort by priority
-                        .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
-                        .map(parseChartString)
-                        .map((attributes: Attributes | null) => (
-                          attributes && (
-                            <ChartWrapper
-                              attributes={attributes}
-                              key={`${attributes.id}-${attributes.dimensions}`}
-                            />
-                          )
-                        )),
-                    )}
-                  </div>
-                  {submenuNames.map((submenu: string) => {
-                    const submenuID = name2id(`menu_${menu}_submenu_${submenu}`)
-                    const chartsSorted = menus[menu].submenus[submenu].charts
-                      .concat() // shallow clone
-                      .sort(prioritySort)
-                    const submenuInfo = menus[menu].submenus[submenu].info
-                    return (
-                      <div
-                        role="region"
-                        className="dashboard-section-container"
-                        id={submenuID}
-                        key={submenu}
-                      >
-                        <h2 id={submenuID} className="netdata-chart-alignment">
-                          {menus[menu].submenus[submenu].title}
-                        </h2>
-                        {submenuInfo && (
-                          <div
-                            className="dashboard-submenu-info netdata-chart-alignment"
-                            role="document"
-                          >
-                            {submenuInfo}
-                          </div>
-                        )}
-                        <div className="netdata-chart-row">
-                          {chartsSorted
-                            .flatMap((chart) => generateHeadCharts("heads", chart, duration))
-                            .map(parseChartString)
-                            .map((attributes: Attributes | null) => (
-                              attributes && (
-                                <ChartWrapper
-                                  attributes={attributes}
-                                  key={`${attributes.id}-${attributes.dimensions}`}
-                                />
-                              )
-                            ))}
-                        </div>
-                        {chartsSorted.map((chart) => {
-                          const commonMin = chartCommonMin(chart.family, chart.context, chart.units)
-                          const commonMax = chartCommonMax(chart.family, chart.context, chart.units)
-                          return (
-                            <div
-                              className="netdata-chartblock-container"
-                              style={{ width: `${pcentWidth}%` }}
-                              key={`${chart.id}-${chart.dimensions}`}
-                            >
-                              {/* eslint-disable-next-line react/no-danger */}
-                              <span dangerouslySetInnerHTML={{
-                                __html: netdataDashboard.contextInfo(chart.context),
-                              }}
-                              />
-                              <ChartWrapper
-                                id={`chart_${name2id(chart.id)}`}
-                                attributes={{
-                                  id: chart.id,
-                                  chartLibrary: "dygraph",
-                                  width: "100%",
-                                  height: netdataDashboard.contextHeight(
-                                    chart.context, options.chartsHeight,
-                                  ),
-                                  dygraphValueRange: netdataDashboard.contextValueRange(
-                                    chart.context,
-                                  ),
-                                  before: 0,
-                                  after: -duration,
-                                  heightId: `${name2id(`${options.hostname}/${chart.id}`)}`,
-                                  colors: `${netdataDashboard.anyAttribute(
-                                    netdataDashboard.context, "colors", chart.context, "",
-                                  )}`,
-                                  decimalDigits: netdataDashboard.contextDecimalDigits(
-                                    chart.context, -1,
-                                  ),
-                                  // add commonMin/commonMax attributes only if they are set
-                                  ...(commonMin ? { commonMin } : {}),
-                                  ...(commonMax ? { commonMax } : {}),
-                                }}
-                              />
-                            </div>
-                          )
-                        })}
-                      </div>
-                    )
-                  })}
-
-                </div>
+                <SubSection
+                  chartsMetadata={chartsMetadata}
+                  duration={duration}
+                  menu={menu}
+                  pcentWidth={pcentWidth}
+                  shouldDisplayHeadMain={menuIndex === 0}
+                />
               </div>
             )
-          })}
-        </>
-      )}
+          })
+        )}
+      </div>
+      <div className="sidebar-body" role="complementary" />
     </div>
   )
 }
