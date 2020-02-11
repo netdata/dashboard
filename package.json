@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@material/list": "^4.0.0",
-    "@netdata/netdata-ui": "^0.7.17",
+    "@netdata/netdata-ui": "^0.7.18",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/tooltip": "^5.7.2",

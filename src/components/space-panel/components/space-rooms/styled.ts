@@ -10,10 +10,10 @@ export const RoomAddSection = styled.section`
   flex-grow: 0;
   flex-shrink: 0;
   align-items: center;
-  margin-bottom: ${getSizeBy(3)};
 `
 
 export const StyledAnnotation = styled(H5)`
+  text-shadow: unset;
   color: ${getColor(["borderColor"])};
 `
 
