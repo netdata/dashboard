@@ -7,11 +7,14 @@ import { ChartContainer } from "domains/chart/components/chart-container"
 interface Props {
   attributes: Attributes
   height?: number
+  id?: string
   style?: React.CSSProperties
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-export const ChartWrapper = ({ attributes, height, style: styleOverride }: Props) => {
+export const ChartWrapper = ({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
+  attributes, height, id, style: styleOverride,
+}: Props) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const [chartContainerElement, setChartContainerElement] = useState<HTMLDivElement>()
   useLayoutEffect(() => {
@@ -30,6 +33,7 @@ export const ChartWrapper = ({ attributes, height, style: styleOverride }: Props
     <div
       ref={chartContainerRef}
       className="dashboardjs-chart"
+      id={id}
       role="application"
       style={styleOverride}
     >

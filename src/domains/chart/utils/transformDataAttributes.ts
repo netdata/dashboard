@@ -97,6 +97,7 @@ export interface Attributes {
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
+  heightId?: string
 
   dygraphType?: string
   dygraphValueRange?: any[]
@@ -313,6 +314,7 @@ const getAttributesMap = (): AttributesMap => ({
   overrideOptions: { key: "override-options" },
   pixelsPerPoint: { key: "pixels-per-point" },
   points: { key: "points" },
+  heightId: { key: "id" },
 
   // let's not put the default values here, because they will also be needed by the main Agent page
   // and the Cloud App
