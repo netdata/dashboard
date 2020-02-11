@@ -4,15 +4,48 @@ import { Text } from "@netdata/netdata-ui"
 import "@material/list/dist/mdc.list.css"
 import "@rmwc/list/collapsible-list.css"
 import "@rmwc/icon/icon.css"
-import { NodesContainer, ListItem, StyledIcon, ListHeaderContainer } from "./styled"
+import { NodesContainer, ListItem, StyledIcon, ListHeaderContainer, NodeUrl } from "./styled"
 import { agentsMock } from "../../mocks"
+
+const Node = ({ agent: { name, validURLs }, visitNode }: any) => {
+  const urls = validURLs ? Object.keys(validURLs) : []
+  return (
+    <CollapsibleList
+      handle={
+        <SimpleListItem
+          text={
+            <>
+              <StyledIcon name="node" />
+              <Text>{name}</Text>
+            </>
+          }
+          metaIcon={urls.length && "chevron_right"}
+        />
+      }
+    >
+      {urls.map((url: string, i: number) => (
+        <ListItem
+          key={i}
+          onClick={() => {
+            visitNode(url)
+          }}
+        >
+          <NodeUrl>{url}</NodeUrl>
+        </ListItem>
+      ))}
+    </CollapsibleList>
+  )
+}
 
 export const VisitedNodes = () => {
   const agents = agentsMock as any[] // useSelector(selectAgentsSortedList)
 
-  const visitNode = (index: number) => {
-    // const checkedUrls = agents[index].validURLs || {}
-    // tryRedirect(Object.keys(checkedUrls), "", true)
+  const visitNode = (url: string) => {
+    if (url.includes("http://") || url.includes("https://")) {
+      window.open(url, "_blank")
+    } else {
+      window.open(`http://${url}`, "_blank")
+    }
   }
 
   return (
@@ -26,10 +59,7 @@ export const VisitedNodes = () => {
         }
       >
         {agents.map((agent: any, i: any) => (
-          <ListItem key={i} onClick={() => visitNode(i)}>
-            <StyledIcon name="node" />
-            <Text>{agent.name}</Text>
-          </ListItem>
+          <Node key={i} visitNode={visitNode} agent={agent} />
         ))}
       </CollapsibleList>
     </NodesContainer>

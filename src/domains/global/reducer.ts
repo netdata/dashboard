@@ -80,7 +80,7 @@ export const initialState = {
   timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
   hasWindowFocus: true,
-  spacePanelIsActive: true, // set to true only for testing layout
+  spacePanelIsActive: false, // set to true only for testing layout
 
   registry: {
     isCloudEnabled: false,
