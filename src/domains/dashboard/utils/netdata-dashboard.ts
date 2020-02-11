@@ -3,27 +3,33 @@ import { ChartsMetadata } from "domains/global/types"
 import { AnyStringKeyT } from "types/common"
 import { ChartEnriched } from "domains/chart/chart-types"
 
+export interface Submenus {
+  [submenus: string]: {
+    charts: ChartEnriched[]
+    height: number
+    info: string | null
+    priority: number
+    title: string | null
+  }
+}
+
+export interface Menu {
+  // eslint-disable-next-line camelcase
+  menu_pattern: string
+  priority: number
+  submenus: Submenus
+  title: string
+  icon: string
+  info: string
+  height: number
+}
+
+export interface Menus {
+  [menu: string]: Menu
+}
+
 export const options = {
-  menus: {} as {
-    [menu: string]: {
-      // eslint-disable-next-line camelcase
-      menu_pattern: string
-      priority: number
-      submenus: {
-        [submenus: string]: {
-          charts: ChartEnriched[]
-          height: number
-          info: string | null
-          priority: number
-          title: string | null
-        }
-      }
-      title: string
-      icon: string
-      info: string
-      height: number
-    }
-  },
+  menus: {} as Menus,
   submenu_names: {} as {[family: string]: string},
   data: null as (ChartsMetadata | null),
   hostname: "netdata_server", // will be overwritten by the netdata server
@@ -54,7 +60,7 @@ export const netdataDashboard = {
   },
   context: {} as {
     [id: string]: {
-      valueRange: [number, number]
+      valueRange: string // examples: "[0, 100]", "[null, null]"
       height: number
       decimalDigits: number
   }},
@@ -206,9 +212,13 @@ export const netdataDashboard = {
     if (typeof this.context[id] !== "undefined"
       && typeof this.context[id].valueRange !== "undefined"
     ) {
-      return this.context[id].valueRange
+      try {
+        return JSON.parse(this.context[id].valueRange)
+      } catch (e) {
+        return [null, null]
+      }
     }
-    return "[null, null]"
+    return [null, null]
   },
 
   contextHeight(id: string, def: number) {
