@@ -12,11 +12,6 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
 
-@media (min-width: 325px) {
-  .with-panel {
-    padding-left: 56px;
-  }
-}
 @media (min-width: 1200px) {
   .with-panel {
     padding-left: 280px;
