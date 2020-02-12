@@ -14,7 +14,8 @@ export const LogoSection = styled.section`
   padding: 0 ${getSizeBy(2)};
 
   @media ${breakpoints.mobileSmall} {
-    width: 68px;
+    width: 56px;
+    padding: 0 ${getSizeBy()};
   }
 
   @media ${breakpoints.desktop} {
