@@ -1,6 +1,7 @@
 import React, {
   useRef, useState, useEffect,
 } from "react"
+import classNames from "classnames"
 
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
@@ -20,7 +21,7 @@ import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 import { netdataDashboard } from "../../utils/netdata-dashboard"
 import "dashboard_info"
 
-import "./node-view.css"
+import "./node-view.scss"
 
 const chartsPerRow = () => (
   options.chartsPerRow === 0 ? 1 : options.chartsPerRow
@@ -250,27 +251,46 @@ export const NodeView = ({
             const menu = menus[menuName]
             const menuID = name2id(`menu_${menuName}`)
             const submenuNames = sortObjectByPriority(menu.submenus)
-
+            const isMenuActive = menuName === "system" // todo
             return (
-              <li key={menuName}>
+              <li
+                key={menuName}
+                className={classNames(
+                  "node-view__sidebar-menu-li",
+                  { "node-view__sidebar-menu-li--active": isMenuActive },
+                )}
+              >
                 <a
+                  className="node-view__sidebar-link"
                   href={`#${menuID}`}
-                  onClick={() => {
-
-                  }}
+                  onClick={() => {}}
                 >
                   {/* eslint-disable-next-line react/no-danger */}
                   <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
                   {" "}
                   {menu.title}
                 </a>
-                <ul className="nav">
+                <ul
+                  className={classNames(
+                    "node-view__sidebar-submenu",
+                  )}
+                >
                   {submenuNames.map((submenuName) => {
                     const submenuID = name2id(`menu_${menu}_submenu_${submenuName}`)
                     const submenu = menu.submenus[submenuName]
+                    const isSubmenuActive = submenuName === "ram" // todo
                     return (
-                      <li key={submenuName}>
-                        <a href={`#${submenuID}`}>
+                      <li
+                        key={submenuName}
+                        className={classNames(
+                          "node-view__sidebar-submenu-li",
+                          { "node-view__sidebar-submenu-li--active": isSubmenuActive },
+                        )}
+                      >
+                        <a
+                          className="node-view__sidebar-link"
+                          href={`#${submenuID}`}
+                        >
                           {submenu.title}
                         </a>
                       </li>
