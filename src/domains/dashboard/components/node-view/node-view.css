@@ -1,0 +1,15 @@
+.node-view__container {
+  display: flex;
+  align-items: start;
+}
+
+.node-view__sidebar-container {
+  position: relative;
+}
+
+.node-view__sidebar {
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow: auto;
+}
