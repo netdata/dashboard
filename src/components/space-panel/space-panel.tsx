@@ -45,8 +45,3 @@ export const SpacePanel = () => {
     </PanelContainer>
   )
 }
-
-/*
-      <WorkspaceRooms />
-      <WorkspaceApps />
- */

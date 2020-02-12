@@ -1,5 +1,4 @@
 import React from "react"
-import { Text } from "@netdata/netdata-ui"
 import { CollapsibleList, SimpleListItem } from "@rmwc/list"
 import "@material/list/dist/mdc.list.css"
 import "@rmwc/list/collapsible-list.css"
@@ -10,6 +9,7 @@ import {
   StyledIcon,
   ListHeaderContainer,
   MasterNodeContainer,
+  NodeName,
 } from "./styled"
 import { masterNodeMock } from "../../mocks"
 
@@ -28,12 +28,12 @@ export const ReplicatedNodes = () => {
       >
         <MasterNodeContainer>
           <StyledIcon size="small" name="nodes" />
-          <Text>{masterNode.name}</Text>
+          <NodeName>{masterNode.name}</NodeName>
         </MasterNodeContainer>
         {masterNode.nodes.map(({ name }: any, i: any) => (
           <ListItem key={i}>
             <StyledIcon name="node" />
-            <Text>{name}</Text>
+            <NodeName>{name}</NodeName>
           </ListItem>
         ))}
       </CollapsibleList>

@@ -12,6 +12,10 @@ export const Container = styled.div`
   align-items: center;
   height: ${getSizeBy(4)};
   cursor: pointer;
+  padding: 0 ${getSizeBy(2)};
+  &:hover {
+    background: #e0e0e0;
+  }
 `
 
 export const RoomName = styled(Text)`

@@ -19,7 +19,11 @@ export const agentsMock = [
 
 export const masterNodeMock = {
   name: "Master Node",
-  nodes: [{ name: "Abstract name" }, { name: "Even more abstract" }, { name: "企业猫" }],
+  nodes: [
+    { name: "Abstract name" },
+    { name: "Even more abstract name, but very-very long, like really" },
+    { name: "企业猫" },
+  ],
 }
 
 export const roomsMock = [

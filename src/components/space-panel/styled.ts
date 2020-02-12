@@ -22,7 +22,6 @@ export const PanelContainer = styled.aside<{ isActive: boolean }>`
 export const ScrollContainer = styled.div`
   flex: 1;
   overflow-y: auto;
-  padding: 0 ${getSizeBy(2)};
 `
 
 export const PanelHeader = styled(H4)`

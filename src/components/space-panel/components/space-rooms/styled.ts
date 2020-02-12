@@ -10,6 +10,7 @@ export const RoomAddSection = styled.section`
   flex-grow: 0;
   flex-shrink: 0;
   align-items: center;
+  padding: 0 ${getSizeBy(2)};
 `
 
 export const StyledAnnotation = styled(H5)`

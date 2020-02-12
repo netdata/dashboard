@@ -1,10 +1,15 @@
 import styled from "styled-components"
-import { getSizeBy, getColor, Icon } from "@netdata/netdata-ui"
+import { getSizeBy, getColor, Icon, Text } from "@netdata/netdata-ui"
 
 export const NodesContainer = styled.div`
   .mdc-list-item {
     padding: 0 0;
     padding-left: 0;
+  }
+  .rmwc-collapsible-list__handle {
+    .mdc-list-item {
+      padding: 0 ${getSizeBy(2)};
+    }
   }
 `
 
@@ -12,11 +17,21 @@ export const ListHeaderContainer = styled.div``
 
 export const ListItem = styled.div`
   width: 100%;
+  max-width: 100%;
   height: ${getSizeBy(4)};
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
-  padding-left: ${getSizeBy(2)};
+  padding-left: ${getSizeBy(4)};
+  overflow: hidden;
+`
+
+export const NodeName = styled(Text)`
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  white-space: nowrap;
 `
 
 export const StyledIcon = styled(Icon)`
@@ -31,4 +46,5 @@ export const MasterNodeContainer = styled.div`
   align-items: center;
   height: ${getSizeBy(4)};
   flex-flow: row nowrap;
+  padding: 0 ${getSizeBy(2)};
 `

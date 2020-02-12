@@ -1,10 +1,16 @@
 import React from "react"
 import { CollapsibleList, SimpleListItem } from "@rmwc/list"
-import { Text } from "@netdata/netdata-ui"
 import "@material/list/dist/mdc.list.css"
 import "@rmwc/list/collapsible-list.css"
 import "@rmwc/icon/icon.css"
-import { NodesContainer, ListItem, StyledIcon, ListHeaderContainer, NodeUrl } from "./styled"
+import {
+  NodesContainer,
+  ListItem,
+  StyledIcon,
+  ListHeaderContainer,
+  NodeUrl,
+  NodeName,
+} from "./styled"
 import { agentsMock } from "../../mocks"
 
 const Node = ({ agent: { name, validURLs }, visitNode }: any) => {
@@ -16,7 +22,7 @@ const Node = ({ agent: { name, validURLs }, visitNode }: any) => {
           text={
             <>
               <StyledIcon name="node" />
-              <Text>{name}</Text>
+              <NodeName>{name}</NodeName>
             </>
           }
           metaIcon={urls.length && "chevron_right"}
