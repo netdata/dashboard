@@ -20,6 +20,8 @@ import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 import { netdataDashboard } from "../../utils/netdata-dashboard"
 import "dashboard_info"
 
+import "./node-view.css"
+
 const chartsPerRow = () => (
   options.chartsPerRow === 0 ? 1 : options.chartsPerRow
 )
@@ -215,7 +217,7 @@ export const NodeView = ({
   const main = sortObjectByPriority(menus)
 
   return (
-    <div>
+    <div className="node-view__container">
       <div ref={ref} className="charts-body" role="main">
         {!!duration && (
           main.map((menuName, menuIndex) => {
@@ -242,7 +244,44 @@ export const NodeView = ({
           })
         )}
       </div>
-      <div className="sidebar-body" role="complementary" />
+      <div className="node-view__sidebar" role="complementary">
+        <ul className="nav dashboard-sidenav">
+          {main.map((menuName) => {
+            const menu = menus[menuName]
+            const menuID = name2id(`menu_${menuName}`)
+            const submenuNames = sortObjectByPriority(menu.submenus)
+
+            return (
+              <li key={menuName}>
+                <a
+                  href={`#${menuID}`}
+                  onClick={() => {
+
+                  }}
+                >
+                  {/* eslint-disable-next-line react/no-danger */}
+                  <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
+                  {" "}
+                  {menu.title}
+                </a>
+                <ul className="nav">
+                  {submenuNames.map((submenuName) => {
+                    const submenuID = name2id(`menu_${menu}_submenu_${submenuName}`)
+                    const submenu = menu.submenus[submenuName]
+                    return (
+                      <li key={submenuName}>
+                        <a href={`#${submenuID}`}>
+                          {submenu.title}
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
     </div>
   )
 }
