@@ -196,6 +196,9 @@ const SubSection = memo(({
   )
 })
 
+const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as string).startsWith("menu")
+  && node.getBoundingClientRect().top > 0
+
 
 interface Props {
   chartsMetadata: ChartsMetadata
@@ -220,8 +223,7 @@ export const NodeView = ({
   useEffect(() => {
     if (ref.current) {
       const currentNode = Array.from(ref.current.querySelectorAll("[id]"))
-        .filter((node) => (node.getAttribute("id") as string).startsWith("menu"))
-        .find((node) => node.getBoundingClientRect().top > 0)
+        .find(isSectionNodeVisible)
 
       if (!currentNode) {
         return
