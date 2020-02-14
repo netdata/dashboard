@@ -66,7 +66,7 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
-const [ fetchMetrics$, resetFetch$ ] = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
+const [fetchMetrics$] = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api

@@ -1,4 +1,6 @@
-import React, { useState, useLayoutEffect, useMemo, useRef } from "react"
+import React, {
+  useState, useLayoutEffect, useMemo, useRef,
+} from "react"
 import uuid from "uuid"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"

@@ -14,10 +14,10 @@ import {
   selectPanAndZoomDataPadding,
   selectSnapshot,
 } from "domains/global/selectors"
+import { serverDefault } from "utils/server-detection"
 
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../constants"
 import { getChartURLOptions } from "../utils/get-chart-url-options"
-import { serverDefault } from "utils/server-detection"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { Attributes } from "../utils/transformDataAttributes"
 import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
