@@ -7,7 +7,8 @@ const sagaMiddleware = createSagaMiddleware()
 
 const reduxDevTools = process.env.NODE_ENV === "development"
   && window.__REDUX_DEVTOOLS_EXTENSION__
-  && window.__REDUX_DEVTOOLS_EXTENSION__()
+  // @ts-ignore
+  && window.__REDUX_DEVTOOLS_EXTENSION__({ name: "Dashboard Charts" })
 
 const composeMiddlewaresWithDevTools = () => (reduxDevTools
   ? compose(applyMiddleware(sagaMiddleware), reduxDevTools)
