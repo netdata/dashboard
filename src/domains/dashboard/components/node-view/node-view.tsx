@@ -1,7 +1,7 @@
 import React, {
-  useRef, useState, useEffect,
+  memo, useRef, useState, useEffect, useMemo,
 } from "react"
-import classNames from "classnames"
+import { useWindowScroll } from "react-use"
 
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
@@ -13,6 +13,7 @@ import { Menu, options } from "domains/dashboard/utils/netdata-dashboard"
 import { parseChartString } from "domains/dashboard/utils/parse-chart-string"
 import { sortObjectByPriority, prioritySort } from "domains/dashboard/utils/sorting"
 import { HeadMain } from "domains/dashboard/components/head-main"
+import { MenuSidebar } from "domains/dashboard/components/menu-sidebar"
 
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 
@@ -67,13 +68,15 @@ interface SubSectionProps {
   chartsMetadata: ChartsMetadata
   duration: number
   menu: Menu
+  menuName: string
   pcentWidth: number
   shouldDisplayHeadMain: boolean
 }
-const SubSection = ({
+const SubSection = memo(({
   chartsMetadata,
   duration,
   menu,
+  menuName,
   pcentWidth,
   shouldDisplayHeadMain,
 }: SubSectionProps) => {
@@ -104,21 +107,22 @@ const SubSection = ({
             )),
         )}
       </div>
-      {submenuNames.map((submenu: string) => {
-        const submenuID = name2id(`menu_${menu}_submenu_${submenu}`)
-        const chartsSorted = menu.submenus[submenu].charts
+      {submenuNames.map((submenuName: string) => {
+        const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
+        const submenu = menu.submenus[submenuName]
+        const chartsSorted = submenu.charts
           .concat() // shallow clone
           .sort(prioritySort)
-        const submenuInfo = menu.submenus[submenu].info
+        const submenuInfo = submenu.info
         return (
           <div
             role="region"
             className="dashboard-section-container"
             id={submenuID}
-            key={submenu}
+            key={submenuName}
           >
             <h2 id={submenuID} className="netdata-chart-alignment">
-              {menu.submenus[submenu].title}
+              {submenu.title}
             </h2>
             {submenuInfo && (
               <div
@@ -190,14 +194,18 @@ const SubSection = ({
 
     </div>
   )
-}
+})
 
 
 interface Props {
   chartsMetadata: ChartsMetadata
+  currentChart: string
+  setCurrentChart: (currentChart: string) => void
 }
 export const NodeView = ({
   chartsMetadata,
+  currentChart,
+  setCurrentChart,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
@@ -208,14 +216,31 @@ export const NodeView = ({
   }, [width])
 
 
+  const { y } = useWindowScroll()
+  useEffect(() => {
+    if (ref.current) {
+      const currentNode = Array.from(ref.current.querySelectorAll("[id]"))
+        .filter((node) => (node.getAttribute("id") as string).startsWith("menu"))
+        .find((node) => node.getBoundingClientRect().top > 0)
+
+      if (!currentNode) {
+        return
+      }
+
+      const chartIdInMenu = currentNode.getAttribute("id") as string
+      setCurrentChart(chartIdInMenu)
+    }
+  }, [ref, setCurrentChart, y])
+
+
   // todo support print mode when it will be used in main.js
   const pcentWidth = Math.floor(100 / chartsPerRow())
   const duration = Math.round(
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
 
-  const menus = renderChartsAndMenu(chartsMetadata)
-  const main = sortObjectByPriority(menus)
+  const menus = useMemo(() => renderChartsAndMenu(chartsMetadata), [chartsMetadata])
+  const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
   return (
     <div className="node-view__container">
@@ -237,6 +262,7 @@ export const NodeView = ({
                   chartsMetadata={chartsMetadata}
                   duration={duration}
                   menu={menu}
+                  menuName={menuName}
                   pcentWidth={pcentWidth}
                   shouldDisplayHeadMain={menuIndex === 0}
                 />
@@ -245,63 +271,11 @@ export const NodeView = ({
           })
         )}
       </div>
-      <div className="node-view__sidebar" role="complementary">
-        <ul className="nav dashboard-sidenav">
-          {main.map((menuName) => {
-            const menu = menus[menuName]
-            const menuID = name2id(`menu_${menuName}`)
-            const submenuNames = sortObjectByPriority(menu.submenus)
-            const isMenuActive = menuName === "system" // todo
-            return (
-              <li
-                key={menuName}
-                className={classNames(
-                  "node-view__sidebar-menu-li",
-                  { "node-view__sidebar-menu-li--active": isMenuActive },
-                )}
-              >
-                <a
-                  className="node-view__sidebar-link"
-                  href={`#${menuID}`}
-                  onClick={() => {}}
-                >
-                  {/* eslint-disable-next-line react/no-danger */}
-                  <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
-                  {" "}
-                  {menu.title}
-                </a>
-                <ul
-                  className={classNames(
-                    "node-view__sidebar-submenu",
-                  )}
-                >
-                  {submenuNames.map((submenuName) => {
-                    const submenuID = name2id(`menu_${menu}_submenu_${submenuName}`)
-                    const submenu = menu.submenus[submenuName]
-                    const isSubmenuActive = submenuName === "ram" // todo
-                    return (
-                      <li
-                        key={submenuName}
-                        className={classNames(
-                          "node-view__sidebar-submenu-li",
-                          { "node-view__sidebar-submenu-li--active": isSubmenuActive },
-                        )}
-                      >
-                        <a
-                          className="node-view__sidebar-link"
-                          href={`#${submenuID}`}
-                        >
-                          {submenu.title}
-                        </a>
-                      </li>
-                    )
-                  })}
-                </ul>
-              </li>
-            )
-          })}
-        </ul>
-      </div>
+      <MenuSidebar
+        currentChart={currentChart}
+        menuNames={main}
+        menus={menus}
+      />
     </div>
   )
 }
