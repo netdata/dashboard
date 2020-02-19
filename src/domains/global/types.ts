@@ -43,7 +43,7 @@ export type AlarmLogs = AlarmLog[]
 
 interface Alarms {
   [id: string]: {
-    status: string
+    status: "CRITICAL" | "WARNING"
     value_string: string
   }
 }
