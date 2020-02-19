@@ -17,6 +17,8 @@ import {
   WhiteSpaceSection,
   IconContainer,
   IframeContainer,
+  StyledHelpIcon,
+  StyledGearContainer,
 } from "./styled"
 
 interface Props {
@@ -53,6 +55,11 @@ export const AppHeader = ({
           />
         )}
         <IconContainer>
+          <StyledHelpIcon href="#" className="btn" data-toggle="modal" data-target="#helpModal">
+            <i className="fas fa-question-circle" />
+          </StyledHelpIcon>
+        </IconContainer>
+        <IconContainer>
           <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
             <i className="fas fa-download" />
           </a>
@@ -72,7 +79,14 @@ export const AppHeader = ({
           warningAlarmsCount={warningAlarmsCount}
         />
         <IconContainer>
-          <StyledGear type="borderless" icon="gear" />
+          <StyledGearContainer
+            href="#"
+            className="btn"
+            data-toggle="modal"
+            data-target="#optionsModal"
+          >
+            <StyledGear type="borderless" icon="gear" />
+          </StyledGearContainer>
         </IconContainer>
         <IframeContainer />
       </UtilitySection>
