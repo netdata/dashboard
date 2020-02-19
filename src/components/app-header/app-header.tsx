@@ -67,7 +67,10 @@ export const AppHeader = ({
             <i className="fas fa-print" />
           </a>
         </IconContainer>
-        <AlarmsControl />
+        <AlarmsControl
+          criticalAlarmsCount={criticalAlarmsCount}
+          warningAlarmsCount={warningAlarmsCount}
+        />
         <IconContainer>
           <StyledGear type="borderless" icon="gear" />
         </IconContainer>

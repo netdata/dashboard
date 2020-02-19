@@ -7,6 +7,11 @@ export const Container = styled.div`
 
 export const StyledButton = styled(Button)``
 
+export const StyledButtonContainer = styled.a`
+  padding: 0;
+`
+
+
 const alarmColors = {
   critical: getColor(["error"]),
   warning: getColor(["warning"]),
