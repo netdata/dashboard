@@ -1,14 +1,16 @@
 import { sortBy, prop, last } from "ramda"
 import { Action } from "redux-act"
 import {
-  call, delay, spawn, take, takeEvery,
+  call, delay, spawn, take, takeEvery, put,
 } from "redux-saga/effects"
 
 import { axiosInstance } from "utils/api"
 import { serverStatic } from "utils/server-detection"
 import { name2id } from "utils/name-2-id"
 
-import { startAlarmsAction, StartAlarmsPayload, fetchAllAlarmsAction } from "./actions"
+import {
+  startAlarmsAction, StartAlarmsPayload, fetchAllAlarmsAction, updateActiveAlarmsAction,
+} from "./actions"
 import { AlarmLogs, AlarmLog, ActiveAlarms } from "./types"
 
 const ALARMS_INITIALIZATION_DELAY = 1000
@@ -251,9 +253,10 @@ function* get(what: string, serverDefault: string) {
 
 function* alarmsLoop(serverDefault: string) {
   while (true) {
-    const activeAlarms = yield call(get, "active", serverDefault)
+    const activeAlarms = (yield call(get, "active", serverDefault)) as ActiveAlarms
     // todo xss check
     if (activeAlarms) {
+      yield put(updateActiveAlarmsAction({ activeAlarms }))
       if (
         hasGivenNotificationPermissions()
         && (activeAlarms.latest_alarm_log_unique_id > lastNotificationId)
