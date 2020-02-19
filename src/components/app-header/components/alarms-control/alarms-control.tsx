@@ -1,17 +1,29 @@
 import React from "react"
 import { IconContainer } from "../../styled"
-import { StyledButton, IndicatorsContainer, AlarmIndicator } from "./styled"
-import { mockedAlarmsCount } from "../../mocks"
+import {
+  StyledButton, IndicatorsContainer, AlarmIndicator, StyledButtonContainer,
+} from "./styled"
 
-export const AlarmsControl = () => {
-  const { critical, warning } = mockedAlarmsCount
-  return (
-    <IconContainer>
-      <IndicatorsContainer>
-        {critical > 0 && <AlarmIndicator alarmType="critical" />}
-        {warning > 0 && <AlarmIndicator alarmType="warning" />}
-      </IndicatorsContainer>
-      <StyledButton type="borderless" icon="alarm" />
-    </IconContainer>
-  )
+interface Props {
+  criticalAlarmsCount: number
+  warningAlarmsCount: number
 }
+export const AlarmsControl = ({
+  criticalAlarmsCount,
+  warningAlarmsCount,
+}: Props) => (
+  <IconContainer>
+    <IndicatorsContainer>
+      {criticalAlarmsCount > 0 && <AlarmIndicator alarmType="critical" />}
+      {warningAlarmsCount > 0 && <AlarmIndicator alarmType="warning" />}
+    </IndicatorsContainer>
+    <StyledButtonContainer
+      href="#"
+      className="btn"
+      data-toggle="modal"
+      data-target="#alarmsModal"
+    >
+      <StyledButton type="borderless" icon="alarm" />
+    </StyledButtonContainer>
+  </IconContainer>
+)
