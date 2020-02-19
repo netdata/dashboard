@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getSizeBy, getColor, Icon, Text, breakpoints } from "@netdata/netdata-ui"
+import {
+  getSizeBy, getColor, Icon, Text, breakpoints,
+} from "@netdata/netdata-ui"
 
 export const Container = styled.div`
   height: 100%;
@@ -25,9 +27,12 @@ export const VersionIndicator = styled.div`
   align-items: center;
 `
 
-export const NewVersionIndicator = styled(VersionIndicator)`
+const VersionIndicatorLink = VersionIndicator.withComponent("a")
+
+export const NewVersionIndicator = styled(VersionIndicatorLink)`
   margin-left: ${getSizeBy(2)};
   color: ${getColor(["success"])};
+  cursor: pointer;
 `
 
 export const StyledIcon = styled(Icon)`
