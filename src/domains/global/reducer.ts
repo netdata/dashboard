@@ -2,7 +2,7 @@ import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
 import { RegistryMachine } from "domains/global/sagas"
-import { Snapshot } from "domains/global/types"
+import { ActiveAlarms, Snapshot } from "domains/global/types"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -16,6 +16,7 @@ import {
   fetchHelloAction,
   updatePersonUrlsAction,
   startAlarmsAction,
+  updateActiveAlarmsAction,
   setOptionAction,
   loadSnapshotAction,
   setSpacePanelStatusAction,
@@ -62,6 +63,7 @@ export type StateT = {
   }
 
   alarms: {
+    activeAlarms: null | ActiveAlarms
     hasStarted: boolean
   }
 
@@ -91,6 +93,7 @@ export const initialState = {
 
   snapshot: null,
   alarms: {
+    activeAlarms: null,
     hasStarted: false,
   },
 
@@ -292,6 +295,14 @@ globalReducer.on(startAlarmsAction, state => ({
   alarms: {
     ...state.alarms,
     hasStarted: true,
+  },
+}))
+
+globalReducer.on(updateActiveAlarmsAction, (state, { activeAlarms }) => ({
+  ...state,
+  alarms: {
+    ...state.alarms,
+    activeAlarms,
   },
 }))
 

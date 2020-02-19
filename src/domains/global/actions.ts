@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { Snapshot } from "./types"
+import { ActiveAlarms, Snapshot } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -82,6 +82,11 @@ export interface StartAlarmsPayload {
 export const startAlarmsAction = createAction<StartAlarmsPayload>(`${storeKey}/startAlarmsAction`)
 
 export const fetchAllAlarmsAction = createRequestAction(`${storeKey}/fetchAllAlarmsAction`)
+
+export interface UpdateActiveAlarmAction { activeAlarms: ActiveAlarms }
+export const updateActiveAlarmsAction = createAction<UpdateActiveAlarmAction>(
+  `${storeKey}/updateActiveAlarmsAction`,
+)
 
 export interface SetOptionAction {
   key: string
