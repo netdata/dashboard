@@ -1,22 +1,35 @@
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { PanelContainer, ScrollContainer, PanelHeader, PanelSection } from "./styled"
+
+import { selectSpacePanelIsActive } from "domains/global/selectors"
+import { setSpacePanelStatusAction } from "domains/global/actions"
+import { ChartsMetadata } from "domains/global/types"
+
 import { VisitedNodes } from "./components/visited-nodes"
 import { ReplicatedNodes } from "./components/replicated-nodes"
 import { SpaceRooms } from "./components/space-rooms"
-import { selectSpacePanelIsActive } from "../../domains/global/selectors"
-import { setSpacePanelStatusAction } from "../../domains/global/actions"
+
+import {
+  PanelContainer, ScrollContainer, PanelHeader, PanelSection,
+} from "./styled"
 
 const withPrivateRegistry = true
-const loggedInCloud = true
+const loggedInCloud = false
 
-export const SpacePanel = () => {
+interface Props {
+  chartsMetadata: ChartsMetadata
+}
+export const SpacePanel = ({
+  chartsMetadata,
+}: Props) => {
   const dispatch = useDispatch()
-  const panelIsActive = useSelector(selectSpacePanelIsActive) as boolean
+  const panelIsActive = useSelector(selectSpacePanelIsActive)
 
   useEffect(() => {
     dispatch(setSpacePanelStatusAction({ isActive: true }))
   }, [dispatch])
+
+  const hasStreamedHosts = chartsMetadata.hosts.length > 1
 
   return (
     <PanelContainer isActive={panelIsActive}>
@@ -32,9 +45,11 @@ export const SpacePanel = () => {
         </>
       ) : (
         <ScrollContainer>
-          <PanelSection leading>
-            <ReplicatedNodes />
-          </PanelSection>
+          {hasStreamedHosts && (
+            <PanelSection leading>
+              <ReplicatedNodes chartsMetadata={chartsMetadata} />
+            </PanelSection>
+          )}
           {withPrivateRegistry && (
             <PanelSection>
               <VisitedNodes />
