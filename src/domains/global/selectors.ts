@@ -59,6 +59,10 @@ export const selectHasStartedAlarms = createSelector(
   selectGlobal,
   path(["alarms", "hasStartedAlarms"]),
 )
+export const selectActiveAlarms = createSelector(
+  selectGlobal,
+  (global) => global.alarms.activeAlarms,
+)
 
 export const selectOptions = createSelector(
   selectGlobal,
