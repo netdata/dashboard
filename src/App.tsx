@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 import { DefaultTheme } from "@netdata/netdata-ui"
@@ -47,7 +49,7 @@ const App: React.FC = () => {
     // @ts-ignore
     window.NETDATA.alarms = {}
     // @ts-ignore
-    window.NETDATA.pause = callback => {
+    window.NETDATA.pause = (callback) => {
       callback()
     }
     netdataCallback(store)

@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getColor, getSizeBy, Icon, Text, breakpoints } from "@netdata/netdata-ui"
+import {
+  getColor, getSizeBy, Icon, Text, breakpoints,
+} from "@netdata/netdata-ui"
 
 export const NavigationItem = styled.div`
   flex-shrink: 0;

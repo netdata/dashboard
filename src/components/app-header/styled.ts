@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getColor, getSizeBy, Button, breakpoints } from "@netdata/netdata-ui"
+import {
+  getColor, getSizeBy, Button, breakpoints,
+} from "@netdata/netdata-ui"
 
 const appHeaderZIndex = 5
 

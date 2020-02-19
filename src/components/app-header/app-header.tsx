@@ -60,16 +60,19 @@ export const AppHeader = ({
           </StyledHelpIcon>
         </IconContainer>
         <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
             <i className="fas fa-download" />
           </a>
         </IconContainer>
         <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a href="#" className="btn" data-toggle="modal" data-target="#saveSnapshotModal">
             <i className="fas fa-upload" />
           </a>
         </IconContainer>
         <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
           <a href="#" className="btn" data-toggle="modal" data-target="#printPreflightModal">
             <i className="fas fa-print" />
           </a>
