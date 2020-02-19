@@ -28,13 +28,17 @@ export const ListItem = styled.div`
   overflow: hidden;
 `
 
-export const NodeName = styled(Text)`
+export const NodeLink = styled(Text)`
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
   white-space: nowrap;
-`
+  color: inherit;
+  &:hover {
+    color: inherit
+  }
+`.withComponent("a")
 
 export const StyledIcon = styled(Icon)`
   flex-shrink: 0;

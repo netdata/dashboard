@@ -94,7 +94,7 @@ const App: React.FC = () => {
       {chartsMetadata && (
         <>
           {!isPrintMode && <SpacesBar /> }
-          {!isPrintMode && <SpacePanel /> }
+          {!isPrintMode && <SpacePanel chartsMetadata={chartsMetadata} /> }
           <AppHeader chartsMetadata={chartsMetadata} />
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (

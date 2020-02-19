@@ -48,7 +48,7 @@ export const selectActiveAlarms = createSelector(
   (global) => global.alarms.activeAlarms,
 )
 
-export const selectSpacePanelIsActive = createSelector(selectGlobal, path(["spacePanelIsActive"]))
+export const selectSpacePanelIsActive = createSelector(selectGlobal, prop("spacePanelIsActive"))
 
 export const selectOptions = createSelector(selectGlobal, global => global.options)
 
