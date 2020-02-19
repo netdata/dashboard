@@ -128,12 +128,12 @@ const hasLastOnly = (array: string[]) => last(array) === "ONLY"
 const removeLastOnly = (array: string[]) => (hasLastOnly(array) ? init(array) : array)
 const createCommonColorsKeysSubstate = (
   colorsAttribute: string | undefined,
-  hasCustomColors: boolean
+  hasCustomColors: boolean,
 ) => {
   const custom = hasCustomColors ? removeLastOnly((colorsAttribute as string).split(" ")) : []
   const shouldCopyTheme = hasCustomColors
-    ? // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
-      !hasLastOnly((colorsAttribute as string).split(" "))
+    // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
+    ? !hasLastOnly((colorsAttribute as string).split(" "))
     : true
   const available = [
     ...custom,
@@ -148,7 +148,9 @@ const createCommonColorsKeysSubstate = (
 
 globalReducer.on(
   requestCommonColorsAction,
-  (state, { chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames }) => {
+  (state, {
+    chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames,
+  }) => {
     const keyName = getKeyForCommonColorsState({
       colorsAttribute,
       commonColorsAttribute,
@@ -157,19 +159,18 @@ globalReducer.on(
     })
 
     const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
-    const subState =
-      state.commonColorsKeys[keyName] ||
-      createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
+    const subState = state.commonColorsKeys[keyName]
+      || createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
 
     const currentlyAssignedNr = Object.keys(subState.assigned).length
     const requestedDimensionsAssigned = mergeAll(
       dimensionNames
         // dont assign already assigned dimensions
-        .filter(dimensionName => !subState.assigned[dimensionName])
+        .filter((dimensionName) => !subState.assigned[dimensionName])
         .map((dimensionName, i) => ({
           [dimensionName]:
             subState.available[(i + currentlyAssignedNr) % subState.available.length],
-        }))
+        })),
     )
     const assigned = {
       ...subState.assigned,
@@ -186,7 +187,7 @@ globalReducer.on(
         },
       },
     }
-  }
+  },
 )
 
 globalReducer.on(setTimezoneAction, (state, { timezone = "default" }) => ({
@@ -207,7 +208,9 @@ globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => (
 
 globalReducer.on(
   setGlobalPanAndZoomAction,
-  (state, { after, before, masterID, shouldForceTimeRange }) => ({
+  (state, {
+    after, before, masterID, shouldForceTimeRange,
+  }) => ({
     ...state,
     globalPanAndZoom: {
       after,
@@ -215,10 +218,10 @@ globalReducer.on(
       masterID,
       shouldForceTimeRange,
     },
-  })
+  }),
 )
 
-globalReducer.on(resetGlobalPanAndZoomAction, state => ({
+globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
   ...state,
   globalPanAndZoom: initialState.globalPanAndZoom,
   hoveredX: initialState.hoveredX, // need to reset this also on mobile
@@ -233,7 +236,7 @@ globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID
   },
 }))
 
-globalReducer.on(centerAroundHighlightAction, state => {
+globalReducer.on(centerAroundHighlightAction, (state) => {
   if (!state.globalChartUnderlay) {
     // eslint-disable-next-line no-console
     console.warn("Cannot center around empty selection")
@@ -250,7 +253,7 @@ globalReducer.on(centerAroundHighlightAction, state => {
   }
 })
 
-globalReducer.on(clearHighlightAction, state => ({
+globalReducer.on(clearHighlightAction, (state) => ({
   ...state,
   globalChartUnderlay: initialState.globalChartUnderlay,
   globalPanAndZoom: initialState.globalPanAndZoom,
@@ -261,24 +264,26 @@ globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
   hasWindowFocus,
 }))
 
-globalReducer.on(fetchHelloAction.request, state => ({
+globalReducer.on(fetchHelloAction.request, (state) => ({
   ...state,
   isFetchingHello: true,
 }))
 
-globalReducer.on(fetchHelloAction.success, state => ({
+globalReducer.on(fetchHelloAction.success, (state) => ({
   ...state,
   isFetchingHello: false,
 }))
 
-globalReducer.on(fetchHelloAction.failure, state => ({
+globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
   isFetchingHello: true,
 }))
 
 globalReducer.on(
   updatePersonUrlsAction,
-  (state, { isCloudEnabled, personGuid, registryMachines, registryMachinesArray }) => ({
+  (state, {
+    isCloudEnabled, personGuid, registryMachines, registryMachinesArray,
+  }) => ({
     ...state,
     registry: {
       ...state.registry,
@@ -287,10 +292,10 @@ globalReducer.on(
       registryMachines,
       registryMachinesArray,
     },
-  })
+  }),
 )
 
-globalReducer.on(startAlarmsAction, state => ({
+globalReducer.on(startAlarmsAction, (state) => ({
   ...state,
   alarms: {
     ...state.alarms,
@@ -316,7 +321,7 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
 
 globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   const parsedData = Object.keys(snapshot.data)
-    .map(dataKey => {
+    .map((dataKey) => {
       let uncompressed
       try {
         // @ts-ignore

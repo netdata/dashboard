@@ -27,7 +27,11 @@ module.exports = {
     "import/prefer-default-export": 0,
     "@typescript-eslint/no-unused-vars": "error",
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn"
+    "react-hooks/exhaustive-deps": "warn",
+    "max-len": ["error", {
+      "code": 100,
+      "ignorePattern": "http([\s\S]*?)"
+    }]
   },
   "settings": {
     "import/resolver": {

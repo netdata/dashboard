@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getSizeBy, getColor, Icon, Text } from "@netdata/netdata-ui"
+import {
+  getSizeBy, getColor, Icon, Text,
+} from "@netdata/netdata-ui"
 
 export const NodesContainer = styled.div`
   .mdc-list-item {
