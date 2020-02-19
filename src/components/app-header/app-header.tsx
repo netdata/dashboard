@@ -46,7 +46,12 @@ export const AppHeader = ({
         <WhiteSpaceSection />
       </CollapsableSection>
       <UtilitySection>
-        <VersionControl />
+        {!snapshot && (
+          <VersionControl
+            currentVersion={chartsMetadata.version}
+            releaseChannel={chartsMetadata.release_channel}
+          />
+        )}
         <IconContainer>
           <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
             <i className="fas fa-download" />
