@@ -1,4 +1,7 @@
 module.exports = {
+  babel: {
+    plugins: ["babel-plugin-styled-components"],
+  },
   webpack: {
     configure: (webpackConfig, { env, paths }) => {
       const [
