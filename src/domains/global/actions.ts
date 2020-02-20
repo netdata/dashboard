@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { Snapshot } from "./types"
+import { ActiveAlarms, Snapshot } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -13,7 +13,7 @@ interface RequestCommonColors {
   dimensionNames: string[]
 }
 export const requestCommonColorsAction = createAction<RequestCommonColors>(
-  `${storeKey}/globalRequestCommonColors`
+  `${storeKey}/globalRequestCommonColors`,
 )
 
 export const setTimezoneAction = createAction<{ timezone: string }>(`${storeKey}/globalSetTmezone`)
@@ -24,7 +24,7 @@ interface SetGlobalSelectionAction {
   hoveredX: number
 }
 export const setGlobalSelectionAction = createAction<SetGlobalSelectionAction>(
-  `${storeKey}/setGlobalSelection`
+  `${storeKey}/setGlobalSelection`,
 )
 
 interface SetGlobalPanAndZoomAction {
@@ -34,7 +34,7 @@ interface SetGlobalPanAndZoomAction {
   shouldForceTimeRange?: boolean
 }
 export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>(
-  `${storeKey}/setGlobalPanAndZoom`
+  `${storeKey}/setGlobalPanAndZoom`,
 )
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
@@ -45,7 +45,7 @@ interface SetGlobalChartUnderlayAction {
   masterID: string
 }
 export const setGlobalChartUnderlayAction = createAction<SetGlobalChartUnderlayAction>(
-  `${storeKey}/setGlobalChartUnderlay`
+  `${storeKey}/setGlobalChartUnderlay`,
 )
 
 export const centerAroundHighlightAction = createAction(`${storeKey}/centerAroundHighlightAction`)
@@ -55,7 +55,7 @@ interface WindowFocusChangeAction {
   hasWindowFocus: boolean
 }
 export const windowFocusChangeAction = createAction<WindowFocusChangeAction>(
-  `${storeKey}/windowFocusChangeAction`
+  `${storeKey}/windowFocusChangeAction`,
 )
 
 export interface FetchHelloPayload {
@@ -63,7 +63,7 @@ export interface FetchHelloPayload {
 }
 
 export const fetchHelloAction = createRequestAction<FetchHelloPayload, {}>(
-  `${storeKey}/fetchHelloAction`
+  `${storeKey}/fetchHelloAction`,
 )
 
 interface UpdatePersonUrlsAction {
@@ -73,7 +73,7 @@ interface UpdatePersonUrlsAction {
   registryMachinesArray: RegistryMachine[]
 }
 export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
-  `${storeKey}/updatePersonUrlsAction`
+  `${storeKey}/updatePersonUrlsAction`,
 )
 
 export interface StartAlarmsPayload {
@@ -83,6 +83,11 @@ export const startAlarmsAction = createAction<StartAlarmsPayload>(`${storeKey}/s
 
 export const fetchAllAlarmsAction = createRequestAction(`${storeKey}/fetchAllAlarmsAction`)
 
+export interface UpdateActiveAlarmAction { activeAlarms: ActiveAlarms }
+export const updateActiveAlarmsAction = createAction<UpdateActiveAlarmAction>(
+  `${storeKey}/updateActiveAlarmsAction`,
+)
+
 export interface SetOptionAction {
   key: string
   value: unknown
@@ -90,12 +95,12 @@ export interface SetOptionAction {
 export const setOptionAction = createAction<SetOptionAction>(`${storeKey}/setOptionAction`)
 
 export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
-  `${storeKey}/loadSnapshotAction`
+  `${storeKey}/loadSnapshotAction`,
 )
 
 export interface SetSpacePanelStatusActionPayload {
   isActive: boolean
 }
 export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
-  `${storeKey}/setSpacePanelStatusAction`
+  `${storeKey}/setSpacePanelStatusAction`,
 )

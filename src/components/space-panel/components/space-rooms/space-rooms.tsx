@@ -1,7 +1,9 @@
 import React from "react"
 import { RoomLabel } from "./room-label"
 import { roomsMock } from "../../mocks"
-import { RoomListContainer, RoomAddSection, StyledAnnotation, PlusButton } from "./styled"
+import {
+  RoomListContainer, RoomAddSection, StyledAnnotation, PlusButton,
+} from "./styled"
 
 const mockedWorkspace = {}
 

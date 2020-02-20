@@ -1,4 +1,6 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, {
+  useEffect, useLayoutEffect, useRef, useState,
+} from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 import { DefaultTheme } from "@netdata/netdata-ui"
@@ -16,6 +18,7 @@ import { useStore } from "react-redux"
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { Portals } from "domains/chart/components/portals"
+import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { useRegistry } from "hooks/use-registry"
@@ -46,7 +49,7 @@ const App: React.FC = () => {
     // @ts-ignore
     window.NETDATA.alarms = {}
     // @ts-ignore
-    window.NETDATA.pause = callback => {
+    window.NETDATA.pause = (callback) => {
       callback()
     }
     netdataCallback(store)
@@ -81,24 +84,28 @@ const App: React.FC = () => {
     })
   }, [])
 
+  const chartsMetadata = useChartsMetadata()
+
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
 
   return (
     <ThemeProvider theme={DefaultTheme}>
-      <>
-        <SpacesBar />
-        <SpacePanel />
-        <AppHeader />
-        <div className="App">
-          {hasFetchDependencies && haveDOMReadyForParsing && (
-            <>
-              <Portals key={refreshHelper} />
-              {isPrintMode && <PrintModal />}
-            </>
-          )}
-        </div>
-      </>
+      {chartsMetadata && (
+        <>
+          {!isPrintMode && <SpacesBar /> }
+          {!isPrintMode && <SpacePanel /> }
+          <AppHeader chartsMetadata={chartsMetadata} />
+          <div className="App">
+            {hasFetchDependencies && haveDOMReadyForParsing && (
+              <>
+                <Portals key={refreshHelper} />
+                {isPrintMode && <PrintModal />}
+              </>
+            )}
+          </div>
+        </>
+      )}
     </ThemeProvider>
   )
 }

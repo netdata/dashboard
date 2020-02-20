@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { H5, getColor, Button, getSizeBy } from "@netdata/netdata-ui"
+import {
+  H5, getColor, Button, getSizeBy,
+} from "@netdata/netdata-ui"
 
 export const RoomListContainer = styled.div``
 

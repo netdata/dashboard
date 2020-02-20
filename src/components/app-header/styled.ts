@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getColor, getSizeBy, Button, breakpoints } from "@netdata/netdata-ui"
+import {
+  getColor, getSizeBy, Button, breakpoints,
+} from "@netdata/netdata-ui"
 
 const appHeaderZIndex = 5
 
@@ -20,6 +22,10 @@ export const StyledHeader = styled.header`
 
   @media ${breakpoints.laptopLarge} {
     padding-right: ${getSizeBy(3)};
+  }
+  
+  @media print {
+    display: none;
   }
 `
 
@@ -66,12 +72,20 @@ export const StyledGear = styled(Button)`
   fill: ${getColor(["white", "pure"])};
 `
 
+export const StyledGearContainer = styled.a`
+  padding: 0;
+`
+
 export const IconContainer = styled.div`
   flex-shrink: 0;
   flex-grow: 0;
   position: relative;
-  margin: 0 ${getSizeBy()};
+  margin: 0 5px;
 `
 export const IframeContainer = styled.div`
   width: ${getSizeBy(9)};
+`
+
+export const StyledHelpIcon = styled.a`
+  font-size: 16px;
 `

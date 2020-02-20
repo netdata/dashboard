@@ -1,4 +1,9 @@
 import React from "react"
+
+import { useSelector } from "store/redux-separate-context"
+import { ChartsMetadata } from "domains/global/types"
+import { selectSnapshot, selectActiveAlarms } from "domains/global/selectors"
+
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
 import { AlarmsControl } from "./components/alarms-control"
@@ -12,40 +17,82 @@ import {
   WhiteSpaceSection,
   IconContainer,
   IframeContainer,
+  StyledHelpIcon,
+  StyledGearContainer,
 } from "./styled"
 
-export const AppHeader = () => (
-  <StyledHeader>
-    <CollapsableSection>
-      <PanelControl />
-      <NavigationSection>
-        <NodeInfo />
-      </NavigationSection>
-      <WhiteSpaceSection />
-    </CollapsableSection>
-    <UtilitySection>
-      <VersionControl />
+interface Props {
+  chartsMetadata: ChartsMetadata
+}
+export const AppHeader = ({
+  chartsMetadata,
+}: Props) => {
+  const snapshot = useSelector(selectSnapshot)
+  const hostname = snapshot ? snapshot.hostname : chartsMetadata.hostname
 
-      <IconContainer>
-        <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
-          <i className="fas fa-download" />
-        </a>
-      </IconContainer>
-      <IconContainer>
-        <a href="#" className="btn" data-toggle="modal" data-target="#saveSnapshotModal">
-          <i className="fas fa-upload" />
-        </a>
-      </IconContainer>
-      <IconContainer>
-        <a href="#" className="btn" data-toggle="modal" data-target="#printPreflightModal">
-          <i className="fas fa-print" />
-        </a>
-      </IconContainer>
-      <AlarmsControl />
-      <IconContainer>
-        <StyledGear type="borderless" icon="gear" />
-      </IconContainer>
-      <IframeContainer />
-    </UtilitySection>
-  </StyledHeader>
-)
+  const activeAlarms = useSelector(selectActiveAlarms)
+  const alarms = activeAlarms ? Object.values(activeAlarms.alarms) : []
+  const criticalAlarmsCount = alarms.filter((alarm) => alarm.status === "CRITICAL").length
+  const warningAlarmsCount = alarms.filter((alarm) => alarm.status === "WARNING").length
+  return (
+    <StyledHeader>
+      <CollapsableSection>
+        <PanelControl />
+        <NavigationSection>
+          <NodeInfo
+            criticalAlarmsCount={criticalAlarmsCount}
+            warningAlarmsCount={warningAlarmsCount}
+            hostname={hostname}
+          />
+        </NavigationSection>
+        <WhiteSpaceSection />
+      </CollapsableSection>
+      <UtilitySection>
+        {!snapshot && (
+          <VersionControl
+            currentVersion={chartsMetadata.version}
+            releaseChannel={chartsMetadata.release_channel}
+          />
+        )}
+        <IconContainer>
+          <StyledHelpIcon href="#" className="btn" data-toggle="modal" data-target="#helpModal">
+            <i className="fas fa-question-circle" />
+          </StyledHelpIcon>
+        </IconContainer>
+        <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
+            <i className="fas fa-download" />
+          </a>
+        </IconContainer>
+        <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#" className="btn" data-toggle="modal" data-target="#saveSnapshotModal">
+            <i className="fas fa-upload" />
+          </a>
+        </IconContainer>
+        <IconContainer>
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#" className="btn" data-toggle="modal" data-target="#printPreflightModal">
+            <i className="fas fa-print" />
+          </a>
+        </IconContainer>
+        <AlarmsControl
+          criticalAlarmsCount={criticalAlarmsCount}
+          warningAlarmsCount={warningAlarmsCount}
+        />
+        <IconContainer>
+          <StyledGearContainer
+            href="#"
+            className="btn"
+            data-toggle="modal"
+            data-target="#optionsModal"
+          >
+            <StyledGear type="borderless" icon="gear" />
+          </StyledGearContainer>
+        </IconContainer>
+        <IframeContainer />
+      </UtilitySection>
+    </StyledHeader>
+  )
+}

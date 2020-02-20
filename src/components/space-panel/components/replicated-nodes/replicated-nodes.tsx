@@ -20,17 +20,18 @@ export const ReplicatedNodes = () => {
     <NodesContainer>
       <CollapsibleList
         startOpen
-        handle={
+        handle={(
           <ListHeaderContainer>
             <SimpleListItem metaIcon="chevron_right" text="Replicated Nodes" />
           </ListHeaderContainer>
-        }
+        )}
       >
         <MasterNodeContainer>
           <StyledIcon size="small" name="nodes" />
           <NodeName>{masterNode.name}</NodeName>
         </MasterNodeContainer>
         {masterNode.nodes.map(({ name }: any, i: any) => (
+          // eslint-disable-next-line react/no-array-index-key
           <ListItem key={i}>
             <StyledIcon name="node" />
             <NodeName>{name}</NodeName>
