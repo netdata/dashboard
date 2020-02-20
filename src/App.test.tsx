@@ -5,7 +5,7 @@ import "../dashboard-react"
 
 import App from "./custom-dashboards-app"
 
-jest.mock("react-redux", () => ({
+jest.mock("store/redux-separate-context", () => ({
   useDispatch: () => {},
   useSelector: () => {},
   useStore: () => {},
