@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "main": "./lib/src/index-npm.js",
   "files": [
     "/lib"
@@ -47,7 +47,8 @@
     "reselect": "^4.0.0",
     "rxjs": "^6.5.4",
     "tableexport.jquery.plugin": "^1.6.7",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.3",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@craco/craco": "^5.6.3",
@@ -68,6 +69,7 @@
     "@types/react-redux": "^7.1.2",
     "@types/redux-saga": "^0.10.5",
     "@types/styled-components": "^4.4.3",
+    "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "babel-plugin-styled-components": "^1.10.7",
@@ -88,7 +90,7 @@
     "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && npm run start",
     "start:index": "cd public && rm ./index.html && ln -s ../index.html index.html && cd .. && REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "build": "craco build",
-    "test": "craco test --env=jest-environment-jsdom-fourteen",
+    "test": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco test --env=jest-environment-jsdom-fourteen",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
     "clean": "./node_modules/rimraf/bin.js ./lib",
     "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",

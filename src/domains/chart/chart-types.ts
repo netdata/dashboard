@@ -76,6 +76,13 @@ export interface ChartDetails {
   url: string
 }
 
+// type created temporarly during old main.js enrichChartData function
+export interface ChartEnriched extends ChartDetails {
+  menu: string
+  menu_pattern: string
+  submenu: string
+}
+
 export interface ChartState {
   chartData: ChartData | null
   chartDetails: ChartDetails | null

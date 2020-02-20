@@ -75,11 +75,11 @@ type AttributeConfig = BaseAttributeConfig | BooleanAttributeConfig
 
 export interface Attributes {
   id: string
-  host: string | undefined
+  host?: string | undefined
   title?: string
   chartLibrary: ChartLibraryName
   width: number | string | null
-  height: number | string | null
+  height?: number | string | null
   after?: number
   before?: number
   legend?: boolean
@@ -97,6 +97,7 @@ export interface Attributes {
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
+  heightId?: string
 
   dygraphType?: string
   dygraphValueRange?: any[]
@@ -313,6 +314,7 @@ const getAttributesMap = (): AttributesMap => ({
   overrideOptions: { key: "override-options" },
   pixelsPerPoint: { key: "pixels-per-point" },
   points: { key: "points" },
+  heightId: { key: "id" },
 
   // let's not put the default values here, because they will also be needed by the main Agent page
   // and the Cloud App

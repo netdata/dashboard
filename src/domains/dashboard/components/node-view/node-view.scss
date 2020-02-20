@@ -1,0 +1,141 @@
+/* copied from main.css */
+.charts-body {
+  width: 100%;
+  flex: 0 1 auto;
+}
+
+@media (min-width: 1360px) {
+  .charts-body {
+    width: calc(100% - 263px) !important;
+    padding-left: 1% !important;
+    padding-right: 2% !important;
+  }
+}
+@media (min-width: 1200px) {
+  .charts-body {
+    width: calc(100% - 233px) !important;
+    padding-left: 1% !important;
+    padding-right: 1% !important;
+  }
+}
+@media (min-width: 992px) {
+  .charts-body {
+    width: calc(100% - 213px) !important;
+    padding-left: 1% !important;
+    padding-right: 0% !important;
+  }
+}
+/* end copy from main.css */
+
+.node-view {
+  &__container {
+    display: flex;
+    align-items: flex-start;
+
+    /* copied from bootstrap */
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+    & a {
+      text-decoration: none;
+    }
+    & ul {
+      padding-left: 0;
+    }
+  }
+
+  &__sidebar-container {
+    position: relative;
+  }
+
+  &__sidebar {
+    position: sticky;
+    top: 0;
+    max-height: 100vh;
+    overflow: auto;
+    flex: 0 1 auto;
+  }
+
+  &__sidebar-menu-li, &__sidebar-submenu-li {
+    display: block;
+  }
+
+  &__sidebar-link {
+    display: block;
+    padding: 4px 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #767676;
+    & .svg-inline--fa {
+      width: 20px;
+      text-align: center;
+    }
+  }
+
+  &__sidebar-link {
+    &:hover, &:focus {
+      padding-left: 19px;
+      color: #563d7c;
+      text-decoration: none;
+      background-color: transparent;
+      border-left: 1px solid #563d7c;
+    }
+  }
+
+  &__sidebar-menu-li--active, &__sidebar-submenu-li--active {
+    .node-view__sidebar-link {
+
+    }
+
+  }
+
+
+  /* active menu */
+  &__sidebar-menu-li--active, &__sidebar-submenu-li--active {
+    & > .node-view__sidebar-link {
+      padding-left: 18px;
+      font-weight: bold;
+      color: #563d7c;
+      background-color: transparent;
+      border-left: 2px solid #563d7c;
+    }
+    & .node-view__sidebar-submenu {
+      display: block;
+    }
+  }
+
+
+  /* Nav: second level (shown on .active) */
+  &__sidebar-submenu {
+    display: none;
+    padding-bottom: 10px;
+  }
+
+  &__sidebar-submenu {
+    .node-view__sidebar-link {
+      padding-top: 1px;
+      padding-bottom: 1px;
+      padding-left: 30px;
+      font-size: 12px;
+      font-weight: normal;
+      &:hover, &:focus {
+        padding-left: 29px;
+      }
+    }
+  }
+
+  &__sidebar-submenu &__sidebar-link:hover,
+  &__sidebar-submenu &__sidebar-link:focus  {
+    padding-left: 29px;
+  }
+
+
+  &__sidebar-submenu-li--active {
+    .node-view__sidebar-link {
+      padding-left: 28px;
+      font-weight: 500;
+    }
+  }
+}

@@ -2,7 +2,7 @@
 import { isProperTimezone, useDateTime } from "./date-time"
 import { testHook } from "./test-utils"
 
-jest.mock("react-redux", () => ({
+jest.mock("store/redux-separate-context", () => ({
   useSelector: () => "default",
 }))
 jest.mock("../domains/global/selectors", () => ({
