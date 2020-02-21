@@ -12,12 +12,15 @@ import {
 import {
   createSelectAssignedColors,
   selectGlobalSelection,
+  selectSyncPanAndZoom,
   selectSyncSelection,
   selectUnitsScalingMethod,
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
 import { isTimestamp, MS_IN_SECOND } from "utils"
+
+import { resetChartPanAndZoomAction, setChartPanAndZoomAction } from "domains/chart/actions"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
@@ -147,6 +150,7 @@ export const Chart = memo(({
     Math.round((chartWidth / 30) * chartDetails.update_every * MS_IN_SECOND)
   ), [chartDetails.update_every, chartWidth])
 
+  const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
 
   /**
    * pan-and-zoom handler (both for toolbox and mouse events)
@@ -216,19 +220,27 @@ export const Chart = memo(({
       return
     }
 
-    dispatch(setGlobalPanAndZoomAction({
-      after: afterForced,
-      before: beforeForced,
-      masterID: chartUuid,
-      shouldForceTimeRange,
-    }))
+    if (isSyncPanAndZoom) {
+      dispatch(setGlobalPanAndZoomAction({
+        after: afterForced,
+        before: beforeForced,
+        masterID: chartUuid,
+        shouldForceTimeRange,
+      }))
+    } else {
+      dispatch(setChartPanAndZoomAction({
+        after: afterForced,
+        before: beforeForced,
+        id: chartUuid,
+        shouldForceTimeRange,
+      }))
+    }
 
     if (doCallback && typeof callback === "function") {
       callback(afterForced, beforeForced)
     }
-  }, [chartData.view_update_every, chartUuid, dispatch, fixedMinDuration, netdataFirst,
-    netdataLast, viewAfter, viewBefore])
-
+  }, [chartData.view_update_every, chartUuid, dispatch, fixedMinDuration, isSyncPanAndZoom,
+    netdataFirst, netdataLast, viewAfter, viewBefore])
 
   /**
    * toolbox handlers
@@ -276,9 +288,12 @@ export const Chart = memo(({
   }, [handleToolBoxPanAndZoom, viewAfter, viewBefore])
 
   const handleToolboxResetClick = useCallback(() => {
-    dispatch(resetGlobalPanAndZoomAction())
-  }, [dispatch])
-
+    if (isSyncPanAndZoom) {
+      dispatch(resetGlobalPanAndZoomAction())
+    } else {
+      dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, isSyncPanAndZoom])
 
   /**
    * assign colors

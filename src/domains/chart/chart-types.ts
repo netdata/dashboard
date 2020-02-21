@@ -86,6 +86,13 @@ export interface ChartEnriched extends ChartDetails {
 export interface ChartState {
   chartData: ChartData | null
   chartDetails: ChartDetails | null
+  chartPanAndZoom: null | {
+    after: number
+    before: number
+    masterID?: string
+    shouldForceTimeRange?: boolean
+  }
+
   fetchDataParams: {
     isRemotelyControlled: boolean
     viewRange: [number, number]

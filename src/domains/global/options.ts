@@ -1,5 +1,7 @@
 import { mergeAll, mergeRight } from "ramda"
 
+export const SYNC_PAN_AND_ZOOM = "sync_pan_and_zoom"
+
 /* eslint-disable camelcase */
 
 export interface Options {
@@ -13,7 +15,7 @@ export interface Options {
   parallel_refresher: boolean
   concurrent_refreshes: boolean
   sync_selection: boolean
-  sync_pan_and_zoom: boolean
+  [SYNC_PAN_AND_ZOOM]: boolean
 
   // visual options
   theme: string
@@ -52,7 +54,7 @@ export const INITIAL_OPTIONS: Options = {
   // enable or disable selection sync
   sync_selection: true,
   // enable or disable pan and zoom sync
-  sync_pan_and_zoom: true,
+  [SYNC_PAN_AND_ZOOM]: true,
 
   // visual options
   theme: "slate",

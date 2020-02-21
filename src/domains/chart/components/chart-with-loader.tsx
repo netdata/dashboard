@@ -1,5 +1,5 @@
 import {
-  propOr, cond, always, T,
+  cond, always, T,
 } from "ramda"
 import React, { useEffect, useState, useMemo } from "react"
 import { useThrottle } from "react-use"
@@ -28,6 +28,7 @@ import {
   selectChartData,
   selectChartFetchDataParams,
   makeSelectChartDetailsRequest,
+  selectChartPanAndZoom,
 } from "../selectors"
 import {
   ChartData,
@@ -75,13 +76,19 @@ export const ChartWithLoader = ({
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const isGlobalPanAndZoomMaster = !!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid
-  const shouldForceTimeRange: boolean = propOr(false, "shouldForceTimeRange", globalPanAndZoom)
+  const chartPanAndZoom = useSelector((state: AppStateT) => (
+    selectChartPanAndZoom(state, { id: chartUuid })
+  ))
+  const panAndZoom = chartPanAndZoom || globalPanAndZoom
+
+  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid)
+    || Boolean(chartPanAndZoom)
+  const shouldForceTimeRange = panAndZoom?.shouldForceTimeRange || false
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
-  const isRemotelyControlled = !globalPanAndZoom
-    || !isGlobalPanAndZoomMaster
+  const isRemotelyControlled = !panAndZoom
+    || !isPanAndZoomMaster
     || shouldForceTimeRange // used when zooming/shifting in toolbox
 
 
@@ -102,14 +109,14 @@ export const ChartWithLoader = ({
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
-    areCriteriaMet: !globalPanAndZoom && !hoveredX,
+    areCriteriaMet: !panAndZoom && !hoveredX,
     preferedIntervalTime: viewUpdateEvery,
   })
 
-  const globalPanAndZoomThrottled = useThrottle(globalPanAndZoom, panAndZoomDelay)
+  const panAndZoomThrottled = useThrottle(panAndZoom, panAndZoomDelay)
   useEffect(() => {
     setShouldFetch(true)
-  }, [globalPanAndZoomThrottled, setShouldFetch])
+  }, [panAndZoomThrottled, setShouldFetch])
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
@@ -142,10 +149,10 @@ export const ChartWithLoader = ({
       let viewRange
       let pointsMultiplier = 1
 
-      if (globalPanAndZoom) {
-        if (isGlobalPanAndZoomMaster) {
-          after = Math.round(globalPanAndZoom.after / 1000)
-          before = Math.round(globalPanAndZoom.before / 1000)
+      if (panAndZoom) {
+        if (isPanAndZoomMaster) {
+          after = Math.round(panAndZoom.after / 1000)
+          before = Math.round(panAndZoom.before / 1000)
 
           viewRange = [after, before]
 
@@ -156,12 +163,12 @@ export const ChartWithLoader = ({
             pointsMultiplier = 2
           }
         } else {
-          after = Math.round(globalPanAndZoom.after / 1000)
-          before = Math.round(globalPanAndZoom.before / 1000)
+          after = Math.round(panAndZoom.after / 1000)
+          before = Math.round(panAndZoom.before / 1000)
           pointsMultiplier = 1
         }
       } else {
-        // no globalPanAndZoom
+        // no panAndZoom
         before = initialBefore
         after = initialAfter
         pointsMultiplier = 1
@@ -199,9 +206,9 @@ export const ChartWithLoader = ({
         id: chartUuid,
       }))
     }
-  }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
-    hasLegend, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
-    isRemotelyControlled, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
+  }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch,
+    hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
+    isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
     shouldUsePanAndZoomPadding, shouldFetch])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
@@ -238,7 +245,7 @@ export const ChartWithLoader = ({
         requestedViewRange={fetchDataParams.viewRange}
         selectedDimensions={selectedDimensions}
         setSelectedDimensions={setSelectedDimensions}
-        showLatestOnBlur={!globalPanAndZoom}
+        showLatestOnBlur={!panAndZoom}
       />
     </>
   )

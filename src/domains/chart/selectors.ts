@@ -42,6 +42,7 @@ export const selectResizeHeight = createSelector(
   (chartState) => chartState.resizeHeight,
 )
 
+export const selectChartPanAndZoom = createSelector(selectSingleChartState, prop("chartPanAndZoom"))
 
 // count the nr of "success" or "failure" charts
 const hasCompletedFetching = (chartState: ChartState) => chartState.isFetchDataFailure

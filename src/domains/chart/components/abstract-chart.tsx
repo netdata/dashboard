@@ -1,8 +1,10 @@
 import React, { useCallback } from "react"
 import classNames from "classnames"
 
-import { useDispatch } from "store/redux-separate-context"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+import { selectSyncPanAndZoom } from "domains/global/selectors"
+import {setChartPanAndZoomAction} from "domains/chart/actions"
 import { TimeRange } from "types/common"
 
 import { Attributes } from "../utils/transformDataAttributes"
@@ -76,13 +78,18 @@ export const AbstractChart = ({
 }: Props) => {
   const dispatch = useDispatch()
 
+  const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
   const setGlobalChartUnderlay = useCallback(({ after, before, masterID }) => {
     dispatch(setGlobalChartUnderlayAction({ after, before, masterID }))
 
     // freeze charts
     // don't send masterID, so no padding is applied
-    dispatch(setGlobalPanAndZoomAction({ after: viewAfter, before: viewBefore }))
-  }, [dispatch, viewAfter, viewBefore])
+    if (isSyncPanAndZoom) {
+      dispatch(setGlobalPanAndZoomAction({ after: viewAfter, before: viewBefore }))
+    } else {
+      dispatch(setChartPanAndZoomAction({ after: viewAfter, before: viewBefore, id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, isSyncPanAndZoom, viewAfter, viewBefore])
 
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings

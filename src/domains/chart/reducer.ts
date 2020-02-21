@@ -1,9 +1,17 @@
-import { omit } from "ramda"
+import { map, omit, assoc } from "ramda"
 import { createReducer } from "redux-act"
 
+import { setOptionAction } from "domains/global/actions"
+import { SYNC_PAN_AND_ZOOM } from "domains/global/options"
+
 import {
-  fetchDataAction, fetchChartAction, setResizeHeightAction,
-  clearChartStateAction, fetchDataForSnapshotAction,
+  fetchDataAction,
+  fetchChartAction,
+  setResizeHeightAction,
+  clearChartStateAction,
+  fetchDataForSnapshotAction,
+  setChartPanAndZoomAction,
+  resetChartPanAndZoomAction,
 } from "./actions"
 import { ChartState } from "./chart-types"
 
@@ -16,6 +24,7 @@ export const initialState = {
 export const initialSingleState = {
   chartData: null,
   chartDetails: null,
+  chartPanAndZoom: null,
   fetchDataParams: {
     isRemotelyControlled: false,
     viewRange: null,
@@ -137,5 +146,32 @@ chartReducer.on(setResizeHeightAction, (state, { id, resizeHeight }) => ({
     resizeHeight,
   },
 }))
+
+chartReducer.on(setChartPanAndZoomAction, (state, { after, before, id, shouldForceTimeRange }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    chartPanAndZoom: { after, before, shouldForceTimeRange },
+  },
+}))
+
+chartReducer.on(resetChartPanAndZoomAction, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    chartPanAndZoom: initialSingleState.chartPanAndZoom,
+  },
+}))
+
+chartReducer.on(setOptionAction, (state, { key, value }) => {
+  // clear chartPanAndZoom, when SYNC_PAN_AND_ZOOM flag is turned on
+  if (key === SYNC_PAN_AND_ZOOM && value === true) {
+    return map(
+      assoc("chartPanAndZoom", initialSingleState.chartPanAndZoom),
+      state,
+    )
+  }
+  return state
+})
 
 chartReducer.on(clearChartStateAction, (state, { id }) => omit([id], state))
