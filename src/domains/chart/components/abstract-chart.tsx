@@ -4,7 +4,7 @@ import classNames from "classnames"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains/global/actions"
 import { selectSyncPanAndZoom } from "domains/global/selectors"
-import {setChartPanAndZoomAction} from "domains/chart/actions"
+import { setChartPanAndZoomAction } from "domains/chart/actions"
 import { TimeRange } from "types/common"
 
 import { Attributes } from "../utils/transformDataAttributes"

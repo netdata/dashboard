@@ -147,7 +147,9 @@ chartReducer.on(setResizeHeightAction, (state, { id, resizeHeight }) => ({
   },
 }))
 
-chartReducer.on(setChartPanAndZoomAction, (state, { after, before, id, shouldForceTimeRange }) => ({
+chartReducer.on(setChartPanAndZoomAction, (state, {
+  after, before, id, shouldForceTimeRange,
+}) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
