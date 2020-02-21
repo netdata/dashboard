@@ -14,8 +14,10 @@ import {
   selectGlobalChartUnderlay,
   selectGlobalSelectionMaster,
   selectSmoothPlot,
+  selectSyncPanAndZoom,
 } from "domains/global/selectors"
 import { resetGlobalPanAndZoomAction } from "domains/global/actions"
+import { resetChartPanAndZoomAction } from "domains/chart/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
 import {
@@ -331,6 +333,8 @@ export const DygraphChart = ({
   const dygraphLastTouchEnd = useRef<undefined | number>()
 
   const dispatch = useDispatch()
+  const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
+
   const resetGlobalPanAndZoom = useCallback(() => {
     latestIsUserAction.current = false // prevent starting panAndZoom
     if (dygraphInstance) {
@@ -342,8 +346,13 @@ export const DygraphChart = ({
         dateWindow: null,
       })
     }
-    dispatch(resetGlobalPanAndZoomAction())
-  }, [dispatch, dygraphInstance])
+
+    if (isSyncPanAndZoom) {
+      dispatch(resetGlobalPanAndZoomAction())
+    } else {
+      dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, dygraphInstance, isSyncPanAndZoom])
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
@@ -785,6 +794,14 @@ export const DygraphChart = ({
       })
     }
   }, [dygraphInstance])
+
+  // immediately update when changing global chart underlay
+  useLayoutEffect(() => {
+    if (dygraphInstance) {
+      dygraphInstance.updateOptions({})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalChartUnderlay]) // no dygraphInstance in deps, on purpose (prevent unnecessary update)
 
   // update data of the chart
   useLayoutEffect(() => {

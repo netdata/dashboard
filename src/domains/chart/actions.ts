@@ -77,6 +77,20 @@ export const setResizeHeightAction = createAction<SetResizeHeightAction>(
   `${storeKey}/setResizeHeight`,
 )
 
+export interface SetChartPanAndZoomAction {
+  id: string
+  after: number
+  before: number
+  shouldForceTimeRange?: boolean
+}
+export const setChartPanAndZoomAction = createAction<SetChartPanAndZoomAction>(
+  `${storeKey}/setChartPanAndZoom`,
+)
+
+export const resetChartPanAndZoomAction = createAction<{ id: string }>(
+  `${storeKey}/resetChartPanAndZoomAction`,
+)
+
 export const clearChartStateAction = createAction<{ id: string }>(
   `${storeKey}/clearChartStateAction`,
 )
