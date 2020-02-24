@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useRef, useEffect } from "react"
 import classNames from "classnames"
 
 import { colorHex2Rgb } from "utils/color-hex-2-rgb"
@@ -149,6 +149,25 @@ export const ChartLegend = ({
 
   const { localeDateString, localeTimeString } = useDateTime()
 
+  const scrollbarRef = useRef(null)
+  useEffect(() => {
+    if (scrollbarRef.current) {
+      window.Ps.initialize(scrollbarRef.current, {
+        wheelSpeed: 0.2,
+        wheelPropagation: true,
+        swipePropagation: true,
+        minScrollbarLength: null,
+        maxScrollbarLength: null,
+        useBothWheelAxes: false,
+        suppressScrollX: true,
+        suppressScrollY: false,
+        scrollXMarginOffset: 0,
+        scrollYMarginOffset: 0,
+        theme: "default",
+      })
+    }
+  }, [scrollbarRef])
+
   return (
     <div className={classNames(
       "netdata-chart-legend",
@@ -175,76 +194,77 @@ export const ChartLegend = ({
       <br />
       <span className="netdata-legend-title-units">{unitsCurrent}</span>
       <br />
-      {/* perfect_scroller */}
-      <div className="netdata-legend-series-content">
-        {chartData.dimension_names.map((dimensionName, i) => {
-          // todo dimension could be a separate component
-          const color = colors[dimensionName]
-          const rgb = colorHex2Rgb(color)
+      <div className="netdata-legend-series" ref={scrollbarRef}>
+        <div className="netdata-legend-series-content">
+          {chartData.dimension_names.map((dimensionName, i) => {
+            // todo dimension could be a separate component
+            const color = colors[dimensionName]
+            const rgb = colorHex2Rgb(color)
 
-          const isSelected = selectedDimensions.length === 0
-            || selectedDimensions.includes(dimensionName)
+            const isSelected = selectedDimensions.length === 0
+              || selectedDimensions.includes(dimensionName)
 
-          let value
-          if (showUndefined) {
-            value = null
-          } else if (hoveredRow !== -1) {
-            const hoveredValueArray = chartData.result.data[hoveredRow]
-            // [timestamp, valueDim1, valueDim2, ...]
-            value = hoveredValueArray[i + 1]
-          } else {
-            value = chartData.view_latest_values[i]
-          }
+            let value
+            if (showUndefined) {
+              value = null
+            } else if (hoveredRow !== -1) {
+              const hoveredValueArray = chartData.result.data[hoveredRow]
+              // [timestamp, valueDim1, valueDim2, ...]
+              value = hoveredValueArray[i + 1]
+            } else {
+              value = chartData.view_latest_values[i]
+            }
 
-          return (
-            <Fragment key={dimensionName}>
-              {i !== 0 && <br />}
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-              <span
-                title={dimensionName}
-                className={classNames(
-                  "netdata-legend-name",
-                  isSelected ? "selected" : "not-selected",
-                )}
-                onClick={handleDimensionClick(dimensionName)}
-                role="button"
-                style={{ color }}
-                tabIndex={0}
-              >
-                <table
-                  className={`netdata-legend-name-table-${chartDetails.chart_type}`}
-                  style={{
-                    backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${colorFillOpacity})`,
-                  }}
+            return (
+              <Fragment key={dimensionName}>
+                {i !== 0 && <br />}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  title={dimensionName}
+                  className={classNames(
+                    "netdata-legend-name",
+                    isSelected ? "selected" : "not-selected",
+                  )}
+                  onClick={handleDimensionClick(dimensionName)}
+                  role="button"
+                  style={{ color }}
+                  tabIndex={0}
                 >
-                  <tbody>
-                    <tr className="netdata-legend-name-tr">
-                      <td className="netdata-legend-name-td" />
-                    </tr>
-                  </tbody>
-                </table>
-                {" "}
-                {dimensionName}
-              </span>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-              <span
-                title={dimensionName}
-                className={classNames(
-                  "netdata-legend-value",
-                  !isSelected && "hidden",
-                )}
-                onClick={handleDimensionClick(dimensionName)}
-                role="button"
-                style={{ color }} // omitted !important during refractor (react doesn't support it)
-                tabIndex={0}
-              >
-                {legendFormatValue(
-                  value,
-                )}
-              </span>
-            </Fragment>
-          )
-        })}
+                  <table
+                    className={`netdata-legend-name-table-${chartDetails.chart_type}`}
+                    style={{
+                      backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${colorFillOpacity})`,
+                    }}
+                  >
+                    <tbody>
+                      <tr className="netdata-legend-name-tr">
+                        <td className="netdata-legend-name-td" />
+                      </tr>
+                    </tbody>
+                  </table>
+                  {" "}
+                  {dimensionName}
+                </span>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  title={dimensionName}
+                  className={classNames(
+                    "netdata-legend-value",
+                    !isSelected && "hidden",
+                  )}
+                  onClick={handleDimensionClick(dimensionName)}
+                  role="button"
+                  style={{ color }} // omitted !important during refractor, react doesn't support it
+                  tabIndex={0}
+                >
+                  {legendFormatValue(
+                    value,
+                  )}
+                </span>
+              </Fragment>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
