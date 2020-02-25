@@ -76,8 +76,8 @@
     "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts start",
     "start:console": "cp ../console.html public/index.html && npm run start",
     "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && npm run start",
-    "start:index": "cd public && rm ./index.html && ln -s ../index.html index.html && cd .. && REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
-    "build": "react-scripts build",
+    "start:dashboard": "cd public && rm ./index.html && ln -s ../index.html index.html && cd .. && REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
+    "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts build",
     "test": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts test --env=jest-environment-jsdom-fourteen --watchAll=false",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
     "clean": "./node_modules/rimraf/bin.js ./lib",
@@ -112,6 +112,5 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/netdata/dashboard/issues"
-  },
-  "homepage": "https://github.com/netdata/dashboard#readme"
+  }
 }
