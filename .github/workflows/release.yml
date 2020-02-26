@@ -7,7 +7,7 @@ jobs:
   build:
     name: 'Build and Publish Artifacts'
     runs-on: ubuntu-latest
-    stages:
+    steps:
       - name: 'Checkout Sources'
         uses: actions/checkout@v2
       - name: 'Prepare Node.js'
