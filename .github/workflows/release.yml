@@ -1,0 +1,31 @@
+---
+name: Release
+on:
+  release:
+    type: [created]
+jobs:
+  build:
+    name: 'Build and Publish Artifacts'
+    runs-on: ubuntu-latest
+    stages:
+      - name: 'Checkout Sources'
+        uses: actions/checkout@v2
+      - name: 'Prepare Node.js'
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: 'Fetch Dependencies'
+        run: npm install
+      - name: 'Build Dashboard'
+        run: npm run build
+      - name: 'Prepare Tarball'
+        run: tar -cvzf ./dashboard.tar.gz build/
+      - name: 'Upload Tarball'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          asset_path: ./dashboard.tar.gz
+          asset_name: dashboard.tar.gz
+          asset_content_type: application/gzip
+          upload_url: ${{ github.event.release.upload_url }}
