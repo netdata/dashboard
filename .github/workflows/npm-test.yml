@@ -12,6 +12,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Run `npm install`
+        run: npm install
       - name: Run `npm test`
         run: npm test
   npm-lint:
@@ -24,5 +26,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Run `npm install`
+        run: npm install
       - name: Run `npm run lint`
         run: npm run lint
