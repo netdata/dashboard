@@ -1,0 +1,28 @@
+---
+name: Pull Request NPM Checks
+on: [pull_request]
+jobs:
+  npm-test:
+    name: NPM test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - name: Prepare Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Run `npm test`
+        run: npm test
+  npm-lint:
+    name: NPM lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Sources
+        uses: actions/checkout@v2
+      - name: Prepare Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Run `npm run lint`
+        run: npm run lint
