@@ -768,14 +768,7 @@ function errorMyNetdataMenu() {
     </div>`);
 }
 
-function restrictMyNetdataMenu() {
-    setMyNetdataMenu(`<div class="info-item" style="white-space: nowrap">
-        <span>Please <a href="#" onclick="signInDidClick(event); return false">sign in to netdata.cloud</a> to view your nodes!</span>
-        <div></div>
-    </div>`);
-}
-
-function openAuthenticatedUrl(url) {
+window.openAuthenticatedUrl = (url) => {
     if (isSignedIn()) {
         window.open(url);
     } else {
@@ -938,7 +931,7 @@ function netdataReload(url) {
     location.reload();
 }
 
-function gotoHostedModalHandler(url) {
+window.gotoHostedModalHandler = (url) => {
     document.location = verifyURL(url + urlOptions.genHash());
     return false;
 }
@@ -1066,7 +1059,7 @@ window.switchRegistryModalHandler = () => {
     $('#switchRegistryModal').modal('show');
 };
 
-function notifyForSwitchRegistry() {
+window.notifyForSwitchRegistry = () => {
     var n = document.getElementById('switchRegistryPersonGUID').value;
 
     if (n !== '' && n.length === 36) {
@@ -1081,14 +1074,12 @@ function notifyForSwitchRegistry() {
     } else {
         document.getElementById('switchRegistryResponse').innerHTML = "<b>The ID you have entered is not a GUID.</b>";
     }
-}
+};
 
 var deleteRegistryGuid = null;
 var deleteRegistryUrl = null;
 
-function deleteRegistryModalHandler(guid, name, url) {
-    // void (guid);
-
+window.deleteRegistryModalHandler = (guid, name, url) => {
     deleteRegistryGuid = guid;
     deleteRegistryUrl = url;
 
@@ -1100,7 +1091,7 @@ function deleteRegistryModalHandler(guid, name, url) {
     $('#deleteRegistryModal').modal('show');
 }
 
-function notifyForDeleteRegistry() {
+window.notifyForDeleteRegistry = () => {
     const responseEl = document.getElementById('deleteRegistryResponse');
 
     if (deleteRegistryUrl) {
@@ -1206,7 +1197,7 @@ function sortObjectByPriority(object) {
 // ----------------------------------------------------------------------------
 // scroll to a section, without changing the browser history
 
-function scrollToId(hash) {
+window.scrollToId = (hash) => {
     if (hash && hash !== '' && document.getElementById(hash) !== null) {
         var offset = $('#' + hash).offset();
         if (typeof offset !== 'undefined') {
@@ -2040,13 +2031,13 @@ function loadPako(callback) {
 
 // ----------------------------------------------------------------------------
 
-function clipboardCopy(text) {
+window.clipboardCopy = text => {
     clipboard.writeText(text);
-}
+};
 
-function clipboardCopyBadgeEmbed(url) {
+window.clipboardCopyBadgeEmbed = url => {
     clipboard.writeText('<embed src="' + url + '" type="image/svg+xml" height="20"/>');
-}
+};
 
 // ----------------------------------------------------------------------------
 
@@ -2906,23 +2897,24 @@ function initializeChartsAndCustomInfo() {
     });
 }
 
-function xssModalDisableXss() {
+window.xssModalDisableXss = () => {
     //console.log('disabling xss checks');
     NETDATA.xss.enabled = false;
     NETDATA.xss.enabled_for_data = false;
     initializeConfig.custom_info = true;
     initializeChartsAndCustomInfo();
     return false;
-}
+};
 
-function xssModalKeepXss() {
+
+window.xssModalKeepXss = () => {
     //console.log('keeping xss checks');
     NETDATA.xss.enabled = true;
     NETDATA.xss.enabled_for_data = true;
     initializeConfig.custom_info = false;
     initializeChartsAndCustomInfo();
     return false;
-}
+};
 
 function initializeDynamicDashboard(newReduxStore) {
     if (newReduxStore) {
@@ -3080,7 +3072,7 @@ function checkForUpdateByVersion(force, callback) {
     return null;
 }
 
-function notifyForUpdate(force) {
+window.notifyForUpdate = (force) => {
     versionLog('<p>checking for updates...</p>');
 
     var now = Date.now();
@@ -4806,7 +4798,7 @@ function deleteCloudAgentURL(agentID, url) {
 
 // -------------------------------------------------------------------------------------------------
 
-function signInDidClick(e) {
+window.signInDidClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
@@ -4836,15 +4828,15 @@ function closeSignInBanner() {
     }
 }
 
-function closeSignInBannerDidClick(e) {
+window.closeSignInBannerDidClick = () => {
     closeSignInBanner();
 }
 
-function signOutDidClick(e) {
+window.signOutDidClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
     signOut();
-}
+};
 
 // -------------------------------------------------------------------------------------------------
 
@@ -4865,7 +4857,7 @@ function myNetdataMenuDidShow() {
     }
 }
 
-function myNetdataFilterDidChange(e) {
+window.myNetdataFilterDidChange = (e) => {
     const inputEl = e.target;
     setTimeout(() => {
         myNetdataMenuFilterValue = inputEl.value;
@@ -4985,15 +4977,6 @@ function isSignedIn() {
     return cloudToken != null && cloudAccountID != null;
 }
 
-function sortedArraysEqual(a, b) {
-    if (a.length != b.length) return false;
-
-    for (var i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-
-    return true;
-}
 
 // If merging is needed returns the merged agents set, otherwise returns null.
 function mergeAgents(cloud, local) {
@@ -5036,10 +5019,10 @@ function showSignInModal() {
     $("#signInModal").modal("show");
 }
 
-function explicitlySignIn() {
+window.explicitlySignIn = () => {
     $("#signInModal").modal("hide");
     signIn();
-}
+};
 
 window.showSyncModal = () => {
     document.getElementById("sync-registry-modal-registry").innerHTML = getFromRegistry("registryServer");
