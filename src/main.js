@@ -2000,8 +2000,9 @@ function loadClipboard(callback) {
 function loadBootstrapTable(callback) {
     handleLoadJs(
       Promise.all([
-        import("bootstrap-table"),
-        import("bootstrap-table/dist/extensions/export/bootstrap-table-export.min"),
+        import("bootstrap-table").then(() => (
+          import('bootstrap-table/dist/extensions/export/bootstrap-table-export.min')
+        )),
         import("tableexport.jquery.plugin")
       ]),
       "bootstrap-table",
