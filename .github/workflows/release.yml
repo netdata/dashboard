@@ -2,7 +2,8 @@
 name: Release
 on:
   release:
-    type: [created]
+    types:
+      - created
 jobs:
   build:
     name: 'Build and Publish Artifacts'
