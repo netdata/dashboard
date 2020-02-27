@@ -51,10 +51,16 @@ export type StateT = {
   hasWindowFocus: boolean
 
   registry: {
+    cloudBaseURL: string | null
+    hasFetchedHello: boolean
+    hostname: string
     isCloudEnabled: boolean
+    isFetchingHello: boolean
+    machineGuid: string | null
     personGuid: string | null
     registryMachines: {[key: string]: RegistryMachine} | null
     registryMachinesArray: RegistryMachine[] | null
+    registryServer: string | null,
   }
 
   alarms: {
@@ -64,13 +70,11 @@ export type StateT = {
 
   snapshot: Snapshot | null
 
-  isFetchingHello: boolean
-
   options: Options
 
 }
 
-export const initialState = {
+export const initialState: StateT = {
   commonColorsKeys: {},
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
@@ -80,10 +84,16 @@ export const initialState = {
   hasWindowFocus: true,
 
   registry: {
+    cloudBaseURL: null,
+    hasFetchedHello: false,
+    hostname: "unknown",
     isCloudEnabled: false,
+    isFetchingHello: false,
+    machineGuid: null,
     personGuid: null,
     registryMachines: null,
     registryMachinesArray: null,
+    registryServer: null,
   },
 
   snapshot: null,
@@ -264,9 +274,20 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
   isFetchingHello: true,
 }))
 
-globalReducer.on(fetchHelloAction.success, (state) => ({
+globalReducer.on(fetchHelloAction.success, (state, {
+  cloudBaseURL, hostname, isCloudEnabled, machineGuid, registryServer,
+}) => ({
   ...state,
   isFetchingHello: false,
+  registry: {
+    ...state.registry,
+    cloudBaseURL,
+    hasFetchedHello: true,
+    hostname,
+    isCloudEnabled,
+    machineGuid,
+    registryServer,
+  },
 }))
 
 globalReducer.on(fetchHelloAction.failure, (state) => ({
@@ -275,12 +296,11 @@ globalReducer.on(fetchHelloAction.failure, (state) => ({
 }))
 
 globalReducer.on(updatePersonUrlsAction, (state, {
-  isCloudEnabled, personGuid, registryMachines, registryMachinesArray,
+  personGuid, registryMachines, registryMachinesArray,
 }) => ({
   ...state,
   registry: {
     ...state.registry,
-    isCloudEnabled,
     personGuid,
     registryMachines,
     registryMachinesArray,

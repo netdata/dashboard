@@ -64,12 +64,12 @@ export interface FetchHelloPayload {
 
 export const fetchHelloAction = createRequestAction<
   FetchHelloPayload,
-  {}
+  { cloudBaseURL: string, hostname: string, isCloudEnabled: boolean, machineGuid: string,
+    registryServer: string }
   >(`${storeKey}/fetchHelloAction`)
 
 
 interface UpdatePersonUrlsAction {
-  isCloudEnabled: boolean
   personGuid: string
   registryMachines: {[key: string]: RegistryMachine}
   registryMachinesArray: RegistryMachine[]

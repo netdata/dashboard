@@ -73,6 +73,18 @@ const setOption = (key, value) => {
     }))
 }
 
+// temporary function that will be removed after full main.js migration to react
+const getFromRegistry = (prop) => {
+    const registry = selectRegistry(reduxStore.getState())
+    return registry?.[prop]
+}
+
+export const NETDATA_REGISTRY_SERVER = "https://registry.my-netdata.io"
+
+const isUsingGlobalRegistry = () => (
+  getFromRegistry("registryServer") === NETDATA_REGISTRY_SERVER
+)
+
 function verifyURL(s) {
     if (typeof (s) === 'string' && (s.startsWith('http://') || s.startsWith('https://'))) {
         return s

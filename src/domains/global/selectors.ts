@@ -45,15 +45,14 @@ export const selectHasWindowFocus = createSelector(
   prop("hasWindowFocus"),
 )
 
-export const selectIsFetchingHello = createSelector(
-  selectGlobal,
-  prop("isFetchingHello"),
-)
-
 export const selectSnapshot = createSelector(
   selectGlobal,
   prop("snapshot"),
 )
+
+export const selectRegistry = createSelector(selectGlobal, prop("registry"))
+
+export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
