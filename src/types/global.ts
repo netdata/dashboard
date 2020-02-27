@@ -1,3 +1,13 @@
+// @ts-ignore isolated-modules
+interface RegistryMachine {
+  guid: string
+  url: string
+  lastTimestamp: number
+  accesses: number
+  name: string
+  alternateUrls: string[]
+}
+
 /* eslint-disable camelcase */
 // @ts-ignore isolated-modules
 
@@ -120,16 +130,17 @@ interface Window {
   smoothPlotter: () => void
 
   // user configuration options
-  netdataNoBootstrap: boolean | undefined
-  netdataNoFontAwesome: boolean | undefined
-  netdataRegistry: boolean | undefined
-  netdataAlarmsRemember: boolean | undefined
-  netdataShowAlarms: boolean | undefined
-  netdataShowHelp: boolean | undefined
-  netdataServer: string | undefined
+  netdataNoBootstrap?: boolean
+  netdataNoFontAwesome?: boolean
+  netdataRegistry?: boolean
+  netdataRegistryCallback: (machinesArray?: RegistryMachine[]) => void
+  netdataAlarmsRemember?: boolean
+  netdataPrepCallback?: () => void
+  netdataShowAlarms?: boolean
+  netdataShowHelp?: boolean
+  netdataServer?: string
   netdataTheme: "white" | "slate"
   netdataAlarmsNotifCallback: ((x: any) => boolean) | undefined
-  netdataPrepCallback: (() => void) | undefined
 
   __REDUX_DEVTOOLS_EXTENSION__: (() => void | undefined)
 

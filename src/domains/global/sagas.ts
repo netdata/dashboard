@@ -7,6 +7,7 @@ import { AxiosResponse } from "axios"
 import { Action } from "redux-act"
 
 import { axiosInstance } from "utils/api"
+import { NETDATA_REGISTRY_SERVER } from "main"
 
 import {
   fetchHelloAction,
@@ -79,9 +80,9 @@ export type PersonUrl = [
 ]
 
 type AccessRegistryResponse = null | {
-  personGuid: string
+  personGuid?: string
   registryServer: string
-  urls: PersonUrl[]
+  urls?: PersonUrl[]
 }
 
 type AccessRegistry = (args: {
@@ -125,7 +126,7 @@ const accessRegistry: AccessRegistry = ({
         url,
       })
     }
-    return null
+    return { registryServer }
   }
   const urls = data.urls.filter((u: [string, string]) => u[1] !== MASKED_DATA)
   return {
@@ -206,7 +207,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const machineGuid = response.data.machine_guid
   const { hostname } = response.data
 
-  const isUsingGlobalRegistry = registryServer === "https://registry.my-netdata.io"
+  const isUsingGlobalRegistry = registryServer === NETDATA_REGISTRY_SERVER
 
   const name = isUsingGlobalRegistry ? MASKED_DATA : hostname
   const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
@@ -214,8 +215,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   if (response.data.anonymous_statistics) {
     injectGTM(response.data.machine_guid)
   }
-
-  // yield put(fetchHelloAction.success()) // todo
 
   // now make access call - max_redirects, callback, etc...
   const accessRegistryResponse: AccessRegistryResponse = yield call(accessRegistry, {
@@ -226,13 +225,25 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     url,
   })
 
-  if (accessRegistryResponse) {
+  yield put(fetchHelloAction.success({
+    cloudBaseURL,
+    hostname,
+    isCloudEnabled,
+    isUsingGlobalRegistry,
+    machineGuid,
+    registryServer: accessRegistryResponse?.registryServer || registryServer,
+  }))
+
+  if (accessRegistryResponse?.urls && accessRegistryResponse?.personGuid) {
     const personUrls = parsePersonUrls(accessRegistryResponse.urls)
+    const { registryMachines, registryMachinesArray } = personUrls
     yield put(updatePersonUrlsAction({
-      isCloudEnabled,
       personGuid: accessRegistryResponse.personGuid,
-      ...personUrls,
+      registryMachines,
+      registryMachinesArray,
     }))
+  } else {
+    window.netdataRegistryCallback()
   }
 }
 
