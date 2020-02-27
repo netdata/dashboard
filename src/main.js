@@ -1978,7 +1978,8 @@ function renderChartsAndMenu(data) {
 // ----------------------------------------------------------------------------
 
 const handleLoadJs = (promise, library, callback) => promise
-    .catch(() => {
+    .catch((e) => {
+        console.warn('error', e);
         alert(`Cannot load required JS library: ${library}`)
     })
     .then(() => {
@@ -1987,7 +1988,13 @@ const handleLoadJs = (promise, library, callback) => promise
 
 
 function loadClipboard(callback) {
-    handleLoadJs(import("clipboard-polyfill"), "clipboard-polyfill", callback)
+    handleLoadJs(
+      import("clipboard-polyfill").then((clipboard) => {
+          window.clipboard = clipboard
+      }),
+      "clipboard-polyfill",
+      callback,
+      )
 }
 
 function loadBootstrapTable(callback) {
