@@ -4,6 +4,7 @@
 // Codacy declarations
 /* global NETDATA */
 
+import { identity, memoizeWith } from "ramda"
 // netdata snapshot data
 import { MASKED_DATA } from 'domains/global/constants';
 import {
@@ -1213,14 +1214,14 @@ window.scrollToId = (hash) => {
 // ----------------------------------------------------------------------------
 
 // user editable information
-var customDashboard = {
+window.customDashboard = {
     menu: {},
     submenu: {},
     context: {}
 };
 
 // netdata standard information
-var netdataDashboard = {
+const netdataDashboard = {
     sparklines_registry: {},
     os: 'unknown',
 
@@ -1393,8 +1394,7 @@ var netdataDashboard = {
         }
     }
 };
-// todo
-window.netdataDashboard = netdataDashboard
+window.netdataDashboard = netdataDashboard // share with dashboard_info.js :/
 
 // ----------------------------------------------------------------------------
 
@@ -1977,7 +1977,7 @@ function renderChartsAndMenu(data) {
 
 // ----------------------------------------------------------------------------
 
-const handleLoadJs = (promise, library, callback) => promise
+export const handleLoadJs = (promise, library, callback) => promise
     .catch((e) => {
         console.warn('error', e);
         alert(`Cannot load required JS library: ${library}`)
@@ -2002,7 +2002,7 @@ function loadBootstrapTable(callback) {
       Promise.all([
         import("bootstrap-table").then(() => (
           import('bootstrap-table/dist/extensions/export/bootstrap-table-export.min')
-        )),
+          )),
         import("tableexport.jquery.plugin")
       ]),
       "bootstrap-table",
@@ -2870,6 +2870,20 @@ var initializeConfig = {
     custom_info: true,
 };
 
+// will be removed when we'll transform dashboard_info.js into DSL
+// memoize so it's fetched only once
+const loadDashboardInfo = memoizeWith(identity, () => (
+  $.ajax({
+      url: `${serverDefault}dashboard_info.js`,
+      cache: true,
+      dataType: 'script',
+      xhrFields: { withCredentials: true }, // required for the cookie
+  })
+  .fail(function () {
+      alert(`Cannot load required JS library: ${url}`);
+  })
+))
+
 function loadCustomDashboardInfo(url, callback) {
     $.ajax({
         url,
@@ -2889,20 +2903,22 @@ function loadCustomDashboardInfo(url, callback) {
 function initializeChartsAndCustomInfo() {
     NETDATA.alarms.callback = alarmsCallback;
 
-    // download all the charts the server knows
-    NETDATA.chartRegistry.downloadAll(initializeConfig.url, function (data) {
-        if (data !== null) {
-            if (initializeConfig.custom_info === true && typeof data.custom_info !== 'undefined' && data.custom_info !== "" && window.netdataSnapshotData === null) {
-                //console.log('loading custom dashboard decorations from server ' + initializeConfig.url);
-                loadCustomDashboardInfo(serverDefault + data.custom_info, function () {
+    loadDashboardInfo().then(() => {
+        // download all the charts the server knows
+        NETDATA.chartRegistry.downloadAll(initializeConfig.url, function (data) {
+            if (data !== null) {
+                if (initializeConfig.custom_info === true && typeof data.custom_info !== 'undefined' && data.custom_info !== "" && window.netdataSnapshotData === null) {
+                    //console.log('loading custom dashboard decorations from server ' + initializeConfig.url);
+                    loadCustomDashboardInfo(serverDefault + data.custom_info, function () {
+                        initializeDynamicDashboardWithData(data);
+                    });
+                } else {
+                    //console.log('not loading custom dashboard decorations from server ' + initializeConfig.url);
                     initializeDynamicDashboardWithData(data);
-                });
-            } else {
-                //console.log('not loading custom dashboard decorations from server ' + initializeConfig.url);
-                initializeDynamicDashboardWithData(data);
+                }
             }
-        }
-    });
+        });
+    })
 }
 
 window.xssModalDisableXss = () => {
