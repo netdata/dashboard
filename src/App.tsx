@@ -27,8 +27,6 @@ import {
   netdataCallback,
   updateLocaleFunctions,
 } from "./main"
-// @ts-ignore
-import "./dashboard_info"
 
 if (!window.netdataNoFontAwesome) {
   // @ts-ignore
