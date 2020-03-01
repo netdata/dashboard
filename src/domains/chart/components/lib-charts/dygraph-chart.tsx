@@ -146,16 +146,16 @@ const getInitialDygraphOptions = ({
     colors: dygraphColors,
 
     // leave a few pixels empty on the right of the chart
-    rightGap: dygraphRightGap,
+    rightGap: isSparkline ? 0 : dygraphRightGap,
     showRangeSelector: dygraphShowRangeSelector,
     showRoller: dygraphShowRoller,
-    title: dygraphTitle,
+    title: isSparkline ? undefined : dygraphTitle,
     titleHeight: dygraphTitleHeight,
     legend: dygraphLegend, // we need this to get selection events
     labels: chartData.result.labels,
     labelsDiv: dygraphLabelsDiv,
 
-    labelsSeparateLines: dygraphLabelsSeparateLine,
+    labelsSeparateLines: isSparkline ? true : dygraphLabelsSeparateLine,
     labelsShowZeroValues: isLogScale ? false : dygraphShowZeroValues,
     labelsKMB: false,
     labelsKMG2: false,
@@ -163,10 +163,10 @@ const getInitialDygraphOptions = ({
     hideOverlayOnMouseOut: dygraphHideOverlayOnMouseOut,
     includeZero: dygraphIncludeZero,
     xRangePad: dygraphXRangePad,
-    yRangePad: dygraphYRangePad,
+    yRangePad: isSparkline ? 1 : dygraphYRangePad,
     valueRange: dygraphValueRange,
     ylabel: isSparkline ? undefined : unitsCurrent,
-    yLabelWidth: dygraphYLabelWidth,
+    yLabelWidth: isSparkline ? 0 : dygraphYLabelWidth,
 
     // the function to plot the chart
     plotter: (dygraphSmooth && shouldSmoothPlot) ? window.smoothPlotter : null,
@@ -199,11 +199,11 @@ const getInitialDygraphOptions = ({
     fillAlpha: dygraphFillAlpha,
     stackedGraph: dygraphStackedGraph,
     stackedGraphNaNFill: dygraphStackedGraphNanFill,
-    drawAxis: dygraphDrawAxis,
+    drawAxis: isSparkline ? false : dygraphDrawAxis,
     axisLabelFontSize: dygraphAxisLabelFontSize,
     axisLineColor: dygraphAxisLineColor,
     axisLineWidth: dygraphAxisLineWidth,
-    drawGrid: dygraphDrawGrid,
+    drawGrid: isSparkline ? false : dygraphDrawGrid,
     gridLinePattern: dygraphGridLinePattern,
     gridLineWidth: dygraphGridLineWidth,
     gridLineColor: dygraphGridLineColor,
@@ -224,14 +224,14 @@ const getInitialDygraphOptions = ({
         // @ts-ignore
         ticker: Dygraph.dateTicker,
         axisLabelWidth: dygraphXAxisLabelWidth,
-        drawAxis: dygraphDrawXAxis,
+        drawAxis: isSparkline ? false : dygraphDrawXAxis,
         axisLabelFormatter: (d: Date | number) => xAxisTimeString(d as Date),
       },
       y: {
         logscale: isLogScale,
         pixelsPerLabel: dygraphYPixelsPerLabel,
         axisLabelWidth: dygraphYAxisLabelWidth,
-        drawAxis: dygraphDrawYAxis,
+        drawAxis: isSparkline ? false : dygraphDrawYAxis,
         // axisLabelFormatter is added on the updates
       },
     },
