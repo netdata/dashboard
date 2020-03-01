@@ -9,6 +9,7 @@ import { identity, memoizeWith } from "ramda"
 import { MASKED_DATA } from 'domains/global/constants';
 import {
     centerAroundHighlightAction,
+    chartsMetadataRequestSuccess,
     clearHighlightAction,
     fetchAllAlarmsAction,
     loadSnapshotAction,
@@ -2907,6 +2908,7 @@ function initializeChartsAndCustomInfo() {
         // download all the charts the server knows
         NETDATA.chartRegistry.downloadAll(initializeConfig.url, function (data) {
             if (data !== null) {
+                reduxStore.dispatch(chartsMetadataRequestSuccess({ data }))
                 if (initializeConfig.custom_info === true && typeof data.custom_info !== 'undefined' && data.custom_info !== "" && window.netdataSnapshotData === null) {
                     //console.log('loading custom dashboard decorations from server ' + initializeConfig.url);
                     loadCustomDashboardInfo(serverDefault + data.custom_info, function () {

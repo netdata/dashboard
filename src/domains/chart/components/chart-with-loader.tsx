@@ -60,18 +60,18 @@ export const ChartWithLoader = ({
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
   const selectChartDetailsRequest = useMemo(makeSelectChartDetailsRequest, [])
-  const { chartDetails, isFetchingDetails } = useSelector((state: AppStateT) => (
-    selectChartDetailsRequest(state, { id: chartUuid })
+  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
+    selectChartDetailsRequest(state, { chartId: attributes.id, id: chartUuid })
   ))
   useEffect(() => {
-    if (!chartDetails && !isFetchingDetails) {
+    if (!chartMetadata && !isFetchingDetails) {
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
         host,
       }))
     }
-  }, [attributes.id, chartDetails, chartUuid, dispatch, host, isFetchingDetails])
+  }, [attributes.id, chartMetadata, chartUuid, dispatch, host, isFetchingDetails])
 
 
   // todo local state option
@@ -105,7 +105,7 @@ export const ChartWithLoader = ({
   // todo add support to "data-update-every" attribute
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
-    [always(!!chartDetails), () => (chartDetails as ChartDetails).update_every * 1000],
+    [always(!!chartMetadata), () => (chartMetadata as ChartDetails).update_every * 1000],
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
@@ -140,7 +140,7 @@ export const ChartWithLoader = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && chartDetails) {
+    if (shouldFetch && chartMetadata) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -186,7 +186,7 @@ export const ChartWithLoader = ({
       dispatch(fetchDataAction.request({
         // properties to be passed to API
         host,
-        chart: chartDetails.id,
+        chart: chartMetadata.id,
         format: chartSettings.format,
         points,
         group,
@@ -206,7 +206,7 @@ export const ChartWithLoader = ({
         id: chartUuid,
       }))
     }
-  }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch,
+  }, [attributes, chartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
     hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
     isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
     shouldUsePanAndZoomPadding, shouldFetch])
@@ -216,7 +216,7 @@ export const ChartWithLoader = ({
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result.data?.length === 0
     || (chartData as EasyPieChartData | null)?.result.length === 0
 
-  if (!chartData || !chartDetails) {
+  if (!chartData || !chartMetadata) {
     return (
       <Loader
         hasEmptyData={false}
@@ -237,7 +237,7 @@ export const ChartWithLoader = ({
         attributes={attributes}
         chartContainerElement={portalNode}
         chartData={chartData}
-        chartDetails={chartDetails}
+        chartDetails={chartMetadata}
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}

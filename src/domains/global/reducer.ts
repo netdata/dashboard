@@ -2,7 +2,7 @@ import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
 import { RegistryMachine } from "domains/global/sagas"
-import { ActiveAlarms, Snapshot } from "domains/global/types"
+import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -19,6 +19,7 @@ import {
   updateActiveAlarmsAction,
   setOptionAction,
   loadSnapshotAction,
+  chartsMetadataRequestSuccess,
 } from "./actions"
 import { Options, optionsMergedWithLocalStorage } from "./options"
 
@@ -62,6 +63,11 @@ export type StateT = {
     registryMachinesArray: RegistryMachine[] | null
     registryServer: string | null,
   }
+  chartsMetadata: {
+    isFetching: boolean
+    isFetchingError: boolean
+    data: null | ChartsMetadata
+  }
 
   alarms: {
     activeAlarms: null | ActiveAlarms
@@ -102,7 +108,11 @@ export const initialState: StateT = {
     hasStarted: false,
   },
 
-  isFetchingHello: false,
+  chartsMetadata: {
+    isFetching: false,
+    isFetchingError: false,
+    data: null,
+  },
 
   options: optionsMergedWithLocalStorage,
 }
@@ -384,3 +394,12 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
     },
   }
 })
+
+
+globalReducer.on(chartsMetadataRequestSuccess, (state, { data }) => ({
+  ...state,
+  chartsMetadata: {
+    ...state.chartsMetadata,
+    data,
+  },
+}))
