@@ -97,3 +97,14 @@ export const selectTemperatureSetting = createSelectOption("temperature")
 export const selectSecondsAsTimeSetting = createSelectOption("seconds_as_time")
 export const selectTimezoneSetting = createSelectOption("timezone")
 export const selectUserSetServerTimezone = createSelectOption("user_set_server_timezone")
+
+export const selectChartsMetadata = createSelector(
+  selectGlobal,
+  (global) => global.chartsMetadata.data,
+)
+
+export const selectChartMetadataFromChartsCall = createSelector(
+  selectChartsMetadata,
+  (_: unknown, { chartId }: { chartId: string, id: string }) => chartId,
+  (allMetadata, chartId) => allMetadata?.charts[chartId],
+)

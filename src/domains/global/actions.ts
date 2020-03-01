@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { ActiveAlarms, Snapshot } from "./types"
+import { ActiveAlarms, ChartsMetadata, Snapshot} from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -100,4 +100,8 @@ export const setOptionAction = createAction<SetOptionAction>(
 
 export const loadSnapshotAction = createAction<{snapshot: Snapshot}>(
   `${storeKey}/loadSnapshotAction`,
+)
+
+export const chartsMetadataRequestSuccess = createAction<{ data: ChartsMetadata }>(
+  `${storeKey}/chartsMetadataRequestSuccess`,
 )
