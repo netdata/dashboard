@@ -6,6 +6,7 @@ import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains
 import { selectSyncPanAndZoom } from "domains/global/selectors"
 import { setChartPanAndZoomAction } from "domains/chart/actions"
 import { TimeRange } from "types/common"
+import { useShowValueOutside } from "hooks/use-show-value-outside"
 
 import { Attributes } from "../utils/transformDataAttributes"
 import {
@@ -104,6 +105,10 @@ export const AbstractChart = ({
     )
   const chartElementId = `${chartLibrary}-${chartUuid}-chart`
   const showUndefined = hoveredRow === -1 && !showLatestOnBlur
+
+  useShowValueOutside({
+    attributes, chartData, chartSettings, hoveredRow, legendFormatValue, showUndefined,
+  })
 
   if (chartLibrary === "easypiechart") {
     return (
