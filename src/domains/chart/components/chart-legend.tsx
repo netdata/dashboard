@@ -6,12 +6,12 @@ import { useDateTime } from "utils/date-time"
 
 import { seconds4human } from "../utils/seconds4human"
 import { Attributes } from "../utils/transformDataAttributes"
-import { ChartData, ChartDetails, DygraphData } from "../chart-types"
+import { ChartData, ChartMetadata, DygraphData } from "../chart-types"
 
 interface Props {
   attributes: Attributes
   chartData: DygraphData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
     [key: string]: string
@@ -26,24 +26,24 @@ interface Props {
   viewBefore: number
 }
 
-export const legendPluginModuleString = (withContext: boolean, chartDetails: ChartDetails) => {
+export const legendPluginModuleString = (withContext: boolean, chartMetadata: ChartMetadata) => {
   let str = " "
   let context = ""
 
-  if (withContext && typeof chartDetails.context === "string") {
+  if (withContext && typeof chartMetadata.context === "string") {
     // eslint-disable-next-line prefer-destructuring
-    context = chartDetails.context
+    context = chartMetadata.context
   }
 
-  if (typeof chartDetails.plugin === "string" && chartDetails.plugin !== "") {
-    str = chartDetails.plugin
+  if (typeof chartMetadata.plugin === "string" && chartMetadata.plugin !== "") {
+    str = chartMetadata.plugin
 
     if (str.endsWith(".plugin")) {
       str = str.substring(0, str.length - 7)
     }
 
-    if (typeof chartDetails.module === "string" && chartDetails.module !== "") {
-      str += `:${chartDetails.module}`
+    if (typeof chartMetadata.module === "string" && chartMetadata.module !== "") {
+      str += `:${chartMetadata.module}`
     }
 
     if (withContext && context !== "") {
@@ -55,8 +55,8 @@ export const legendPluginModuleString = (withContext: boolean, chartDetails: Cha
   return str
 }
 
-const legendResolutionTooltip = (chartData: ChartData, chartDetails: ChartDetails) => {
-  const collected = chartDetails.update_every
+const legendResolutionTooltip = (chartData: ChartData, chartMetadata: ChartMetadata) => {
+  const collected = chartMetadata.update_every
   // todo if there's no data (but maybe there wont be situation like this), then use "collected"
   const viewed = chartData.view_update_every
   if (collected === viewed) {
@@ -106,7 +106,7 @@ export const getNewSelectedDimensions: GetNewSelectedDimensions = ({
 export const ChartLegend = ({
   // attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartLibrary,
   colors,
   hoveredRow,
@@ -132,7 +132,7 @@ export const ChartLegend = ({
 
   // @ts-ignore ignoring because options.current has inconsistent structure
   const colorFillOpacity = window.NETDATA.options.current[
-    `color_fill_opacity_${chartDetails.chart_type}`
+    `color_fill_opacity_${chartMetadata.chart_type}`
   ]
 
   const handleDimensionClick = (clickedDimensionName: string) => (event: React.MouseEvent) => {
@@ -176,19 +176,19 @@ export const ChartLegend = ({
     >
       <span
         className="netdata-legend-title-date"
-        title={legendPluginModuleString(true, chartDetails)}
+        title={legendPluginModuleString(true, chartMetadata)}
       >
         {showUndefined
-          ? legendPluginModuleString(false, chartDetails)
+          ? legendPluginModuleString(false, chartMetadata)
           : localeDateString(legendDate)}
       </span>
       <br />
       <span
         className="netdata-legend-title-time"
-        title={legendResolutionTooltip(chartData, chartDetails)}
+        title={legendResolutionTooltip(chartData, chartMetadata)}
       >
         {showUndefined
-          ? chartDetails.context.toString()
+          ? chartMetadata.context.toString()
           : localeTimeString(legendDate)}
       </span>
       <br />
@@ -231,7 +231,7 @@ export const ChartLegend = ({
                   tabIndex={0}
                 >
                   <table
-                    className={`netdata-legend-name-table-${chartDetails.chart_type}`}
+                    className={`netdata-legend-name-table-${chartMetadata.chart_type}`}
                     style={{
                       backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${colorFillOpacity})`,
                     }}

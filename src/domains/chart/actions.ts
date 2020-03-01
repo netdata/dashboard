@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 
 import { storeKey } from "./constants"
-import { ChartData, ChartDetails } from "./chart-types"
+import { ChartData, ChartMetadata } from "./chart-types"
 
 export interface UpdateChartDataAction {
   chartData: ChartData
@@ -13,12 +13,12 @@ export const updateChartDataAction = createAction<UpdateChartDataAction>(
   `${storeKey}/updateChartData`,
 )
 
-export interface UpdateChartDetailsAction {
-  chartDetails: ChartDetails
+export interface UpdateChartMetadataAction {
+  chartMetadata: ChartMetadata
   id: string
 }
-export const updateChartDetailsAction = createAction<UpdateChartDetailsAction>(
-  `${storeKey}/updateChartDetails`,
+export const updateChartMetadataAction = createAction<UpdateChartMetadataAction>(
+  `${storeKey}/updateChartMetadata`,
 )
 
 export interface FetchDataParams {
@@ -65,7 +65,7 @@ export interface FetchChartPayload {
 
 export const fetchChartAction = createRequestAction<
   FetchChartPayload,
-  { chartDetails: ChartDetails, id: string }
+  { chartMetadata: ChartMetadata, id: string }
 >(`${storeKey}/fetchChartAction`)
 
 

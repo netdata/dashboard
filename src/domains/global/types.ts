@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 
-import { ChartDetails } from "domains/chart/chart-types"
+import { ChartMetadata } from "domains/chart/chart-types"
 
 // it's possible that this interface is too narrow
 export interface AlarmLog {
@@ -51,7 +51,7 @@ interface Alarms {
 export interface ChartsMetadata {
   alarms_count: number
   charts: {
-    [chartName: string]: ChartDetails
+    [chartName: string]: ChartMetadata
   }
   charts_count: number
   custom_info: string

@@ -23,7 +23,7 @@ export const initialState = {
 }
 export const initialSingleState = {
   chartData: null,
-  chartDetails: null,
+  chartMetadata: null,
   chartPanAndZoom: null,
   fetchDataParams: {
     isRemotelyControlled: false,
@@ -120,11 +120,11 @@ chartReducer.on(fetchChartAction.failure, (state, { id }) => ({
   },
 }))
 
-chartReducer.on(fetchChartAction.success, (state, { id, chartDetails }) => ({
+chartReducer.on(fetchChartAction.success, (state, { id, chartMetadata }) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
-    chartDetails,
+    chartMetadata,
     isFetchingDetails: false,
     isFetchDetailsFailure: false,
   },

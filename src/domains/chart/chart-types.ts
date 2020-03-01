@@ -46,7 +46,7 @@ interface Dimension {
   name: string
 }
 
-export interface ChartDetails {
+export interface ChartMetadata {
   alarms: {}
   chart_type: string
   chart_variables: {
@@ -77,7 +77,7 @@ export interface ChartDetails {
 }
 
 // type created temporarly during old main.js enrichChartData function
-export interface ChartEnriched extends ChartDetails {
+export interface ChartEnriched extends ChartMetadata {
   menu: string
   menu_pattern: string
   submenu: string
@@ -85,7 +85,7 @@ export interface ChartEnriched extends ChartDetails {
 
 export interface ChartState {
   chartData: ChartData | null
-  chartDetails: ChartDetails | null
+  chartMetadata: ChartMetadata | null
   chartPanAndZoom: null | {
     after: number
     before: number

@@ -5,14 +5,14 @@ import React, {
 } from "react"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-import { ChartDetails, EasyPieChartData } from "domains/chart/chart-types"
+import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { colorLuminance } from "domains/chart/utils/color-luminance"
 
 interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: EasyPieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   orderedColors: string[]
@@ -21,7 +21,7 @@ export const PeityChart = ({
   attributes,
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   orderedColors,
@@ -66,7 +66,7 @@ export const PeityChart = ({
   useLayoutEffect(() => {
     if ($chartElement && peityOptions.current) {
       const getFillOverride = () => (
-        chartDetails.chart_type === "line"
+        chartMetadata.chart_type === "line"
           ? window.NETDATA.themes.current.background
           : colorLuminance(orderedColors[0], window.NETDATA.chartDefaults.fill_luminance)
       )
@@ -81,7 +81,7 @@ export const PeityChart = ({
       $chartElement.peity("line", updatedOptions)
       peityOptions.current = updatedOptions
     }
-  }, [$chartElement, chartData, chartDetails, orderedColors])
+  }, [$chartElement, chartData, chartMetadata, orderedColors])
 
   return (
     <div

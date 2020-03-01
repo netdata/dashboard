@@ -9,7 +9,7 @@ import { TimeRange } from "types/common"
 
 import { Attributes } from "../utils/transformDataAttributes"
 import {
-  ChartData, ChartDetails, DygraphData, EasyPieChartData, D3pieChartData,
+  ChartData, ChartMetadata, DygraphData, EasyPieChartData, D3pieChartData,
 } from "../chart-types"
 import { chartLibrariesSettings, ChartLibraryName } from "../utils/chartLibrariesSettings"
 
@@ -26,7 +26,7 @@ interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: ChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartLibrary: ChartLibraryName
   colors: {
     [key: string]: string
@@ -55,7 +55,7 @@ export const AbstractChart = ({
   attributes,
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartLibrary,
   colors,
   chartUuid,
@@ -110,7 +110,7 @@ export const AbstractChart = ({
       <EasyPieChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         chartLibrary={chartLibrary}
@@ -138,7 +138,7 @@ export const AbstractChart = ({
       <GaugeChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         chartLibrary={chartLibrary}
@@ -170,7 +170,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         dimensionsVisibility={dimensionsVisibility}
@@ -187,7 +187,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as D3pieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         dimensionsVisibility={dimensionsVisibility}
@@ -209,7 +209,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         orderedColors={orderedColors}
@@ -222,7 +222,7 @@ export const AbstractChart = ({
       <GoogleChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         orderedColors={orderedColors}
@@ -246,7 +246,7 @@ export const AbstractChart = ({
     <DygraphChart
       attributes={attributes}
       chartData={chartData as DygraphData}
-      chartDetails={chartDetails}
+      chartMetadata={chartMetadata}
       chartElementClassName={chartElementClassName}
       chartElementId={chartElementId}
       chartLibrary={chartLibrary}

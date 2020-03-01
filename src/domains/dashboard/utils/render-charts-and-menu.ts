@@ -1,7 +1,7 @@
 import { clone } from "ramda"
 
 import { ChartsMetadata } from "domains/global/types"
-import { ChartDetails, ChartEnriched } from "domains/chart/chart-types"
+import { ChartMetadata, ChartEnriched } from "domains/chart/chart-types"
 import { netdataDashboard, options } from "./netdata-dashboard"
 
 
@@ -9,7 +9,7 @@ import { netdataDashboard, options } from "./netdata-dashboard"
 // to reflect our menu system and content
 // TODO: this is a shame - we should fix charts naming (issue #807)
 // ^^ (original comment from gsmox, still valid!)
-function enrichChartData(chart: ChartDetails) {
+function enrichChartData(chart: ChartMetadata) {
   const parts = chart.type.split("_")
   const tmp = parts[0]
 

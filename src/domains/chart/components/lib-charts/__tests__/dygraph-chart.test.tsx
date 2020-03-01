@@ -11,7 +11,7 @@ import { DygraphChart } from "../dygraph-chart"
 
 import { attributesMock } from "../../../__mocks__/attributes-mock"
 import { chartDataMock } from "../../../__mocks__/chart-data-mock"
-import { chartDetailsMock } from "../../../__mocks__/chart-details"
+import { chartMetadataMock } from "../../../__mocks__/chart-details"
 import { mockStoreWithGlobal } from "../../../__mocks__/store.mock"
 import { ChartLibraryName } from "../../../utils/chartLibrariesSettings"
 
@@ -42,7 +42,7 @@ const mockUseState = () => {
 const dygraphDefaultProps = {
   attributes: attributesMock,
   chartData: chartDataMock,
-  chartDetails: chartDetailsMock,
+  chartMetadata: chartMetadataMock,
   chartElementClassName: "",
   chartElementId: "",
   chartLibrary: "dygraph" as ChartLibraryName,

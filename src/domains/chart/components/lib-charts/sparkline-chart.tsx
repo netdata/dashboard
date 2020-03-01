@@ -4,14 +4,14 @@ import React, {
 } from "react"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-import { ChartDetails, EasyPieChartData } from "domains/chart/chart-types"
+import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { colorLuminance } from "domains/chart/utils/color-luminance"
 
 interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: EasyPieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   dimensionsVisibility: boolean[]
@@ -23,7 +23,7 @@ export const SparklineChart = ({
   attributes,
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   orderedColors,
@@ -43,7 +43,7 @@ export const SparklineChart = ({
       const {
         sparklineLineColor = orderedColors[0],
       } = attributes
-      const defaultFillColor = chartDetails.chart_type === "line"
+      const defaultFillColor = chartMetadata.chart_type === "line"
         ? window.NETDATA.themes.current.background
         : colorLuminance(sparklineLineColor, window.NETDATA.chartDefaults.fill_luminance)
       const {
@@ -56,7 +56,7 @@ export const SparklineChart = ({
         sparklineTooltipSuffix = ` ${unitsCurrent}`,
         sparklineNumberFormatter = (n: number) => n.toFixed(2),
       } = attributes
-      const chartTitle = attributes.title || chartDetails.title
+      const chartTitle = attributes.title || chartMetadata.title
 
       const emptyStringIfDisable = (x: string | undefined) => (x === "disable" ? "" : x)
       const sparklineInitOptions = {
@@ -116,7 +116,7 @@ export const SparklineChart = ({
       // @ts-ignore
       $element.sparkline(chartData.result, sparklineInitOptions)
     }
-  }, [$chartElement, attributes, chartContainerElement, chartData.result, chartDetails,
+  }, [$chartElement, attributes, chartContainerElement, chartData.result, chartMetadata,
     orderedColors, unitsCurrent])
 
   // update chart
