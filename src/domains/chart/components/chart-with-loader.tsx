@@ -27,12 +27,12 @@ import { fetchChartAction, fetchDataAction } from "../actions"
 import {
   selectChartData,
   selectChartFetchDataParams,
-  makeSelectChartDetailsRequest,
+  makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
 } from "../selectors"
 import {
   ChartData,
-  ChartDetails,
+  ChartMetadata,
   D3pieChartData,
   DygraphData,
   EasyPieChartData,
@@ -59,9 +59,9 @@ export const ChartWithLoader = ({
    */
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
-  const selectChartDetailsRequest = useMemo(makeSelectChartDetailsRequest, [])
+  const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
   const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
-    selectChartDetailsRequest(state, { chartId: attributes.id, id: chartUuid })
+    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
   ))
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails) {
@@ -100,12 +100,12 @@ export const ChartWithLoader = ({
   const hoveredX = useSelector(selectGlobalSelection)
 
   // periodical update of newest data
-  // default to 2000ms. When chartDetails has been fetched, use chartDetails.update_every
+  // default to 2000ms. When chartMetadata has been fetched, use chartMetadata.update_every
   // if chartData has been fetched, use chartData.view_update_every instead
   // todo add support to "data-update-every" attribute
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
-    [always(!!chartMetadata), () => (chartMetadata as ChartDetails).update_every * 1000],
+    [always(!!chartMetadata), () => (chartMetadata as ChartMetadata).update_every * 1000],
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
@@ -237,7 +237,7 @@ export const ChartWithLoader = ({
         attributes={attributes}
         chartContainerElement={portalNode}
         chartData={chartData}
-        chartDetails={chartMetadata}
+        chartMetadata={chartMetadata}
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}

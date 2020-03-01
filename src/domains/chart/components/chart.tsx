@@ -26,7 +26,7 @@ import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { useFormatters } from "../utils/formatters"
-import { ChartData, ChartDetails, DygraphData } from "../chart-types"
+import { ChartData, ChartMetadata, DygraphData } from "../chart-types"
 
 import { ChartLegend } from "./chart-legend"
 import { LegendToolbox } from "./legend-toolbox"
@@ -36,7 +36,7 @@ import { AbstractChart } from "./abstract-chart"
 interface Props {
   chartContainerElement: HTMLElement
   chartData: ChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartHeight: number
   chartUuid: string
   chartWidth: number
@@ -55,7 +55,7 @@ export const Chart = memo(({
   },
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartHeight,
   chartUuid,
   chartWidth,
@@ -69,7 +69,7 @@ export const Chart = memo(({
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings
   const {
-    units = chartDetails.units,
+    units = chartMetadata.units,
     unitsCommon,
     unitsDesired = unitsScalingMethod,
   } = attributes
@@ -89,18 +89,18 @@ export const Chart = memo(({
 
   const dispatch = useDispatch()
   const allDimensionNames = useMemo(
-    () => Object.values(chartDetails.dimensions).map((x) => x.name),
-    [chartDetails.dimensions],
+    () => Object.values(chartMetadata.dimensions).map((x) => x.name),
+    [chartMetadata.dimensions],
   )
   useEffect(() => {
     dispatch(requestCommonColorsAction({
-      chartContext: chartDetails.context,
+      chartContext: chartMetadata.context,
       chartUuid,
       colorsAttribute: attributes.colors,
       commonColorsAttribute: attributes.commonColors,
       dimensionNames: allDimensionNames,
     }))
-  }, [allDimensionNames, attributes.colors, attributes.commonColors, chartDetails.context,
+  }, [allDimensionNames, attributes.colors, attributes.commonColors, chartMetadata.context,
     chartUuid, dispatch])
 
   const {
@@ -147,8 +147,8 @@ export const Chart = memo(({
   // old dashboard persists min duration based on first chartWidth, i assume it's a bug
   // and will update fixedMinDuration when width changes
   const fixedMinDuration = useMemo(() => (
-    Math.round((chartWidth / 30) * chartDetails.update_every * MS_IN_SECOND)
-  ), [chartDetails.update_every, chartWidth])
+    Math.round((chartWidth / 30) * chartMetadata.update_every * MS_IN_SECOND)
+  ), [chartMetadata.update_every, chartWidth])
 
   const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
 
@@ -299,11 +299,11 @@ export const Chart = memo(({
    * assign colors
    */
   const selectAssignedColors = useMemo(() => createSelectAssignedColors({
-    chartContext: chartDetails.context,
+    chartContext: chartMetadata.context,
     chartUuid,
     colorsAttribute: attributes.colors,
     commonColorsAttribute: attributes.commonColors,
-  }), [attributes.colors, attributes.commonColors, chartDetails, chartUuid])
+  }), [attributes.colors, attributes.commonColors, chartMetadata, chartUuid])
   const colors = useSelector(selectAssignedColors)
   const orderedColors = useMemo(
     () => chartData.dimension_names.map(prop(__, colors)),
@@ -326,7 +326,7 @@ export const Chart = memo(({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartLibrary={chartLibrary}
         colors={colors}
         chartUuid={chartUuid}
@@ -351,7 +351,7 @@ export const Chart = memo(({
         <ChartLegend
           attributes={attributes}
           chartData={chartData as DygraphData}
-          chartDetails={chartDetails}
+          chartMetadata={chartMetadata}
           chartLibrary={chartLibrary}
           colors={colors}
           hoveredX={hoveredX}

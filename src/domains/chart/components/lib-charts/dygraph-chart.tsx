@@ -25,7 +25,7 @@ import {
   ChartLibraryConfig,
   ChartLibraryName,
 } from "../../utils/chartLibrariesSettings"
-import { ChartDetails, DygraphData } from "../../chart-types"
+import { ChartMetadata, DygraphData } from "../../chart-types"
 import { selectResizeHeight } from "../../selectors"
 
 import "./dygraph-chart.css"
@@ -40,7 +40,7 @@ const isInRangeOfAvailableData: IsInRangeOfAvailableData = ({ after, before, cha
 interface GetInitialDygraphOptions {
   attributes: Attributes,
   chartData: DygraphData,
-  chartDetails: ChartDetails,
+  chartMetadata: ChartMetadata,
   chartSettings: ChartLibraryConfig,
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
@@ -52,7 +52,7 @@ interface GetInitialDygraphOptions {
 const getInitialDygraphOptions = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartSettings,
   dimensionsVisibility,
   hiddenLabelsElementId,
@@ -66,7 +66,7 @@ const getInitialDygraphOptions = ({
 
   const isLogScale = (chartSettings.isLogScale as ((a: Attributes) => boolean))(attributes)
   const {
-    dygraphType: dygraphRequestedType = chartDetails.chart_type,
+    dygraphType: dygraphRequestedType = chartMetadata.chart_type,
   } = attributes
   // corresponds to state.tmp.dygraph_chart_type in old app
   let dygraphChartType = dygraphRequestedType
@@ -87,7 +87,7 @@ const getInitialDygraphOptions = ({
     dygraphRightGap = 5,
     dygraphShowRangeSelector = false,
     dygraphShowRoller = false,
-    dygraphTitle = attributes.title || chartDetails.title,
+    dygraphTitle = attributes.title || chartMetadata.title,
     dygraphTitleHeight = 19,
     dygraphLegend = "always",
     dygraphLabelsDiv = hiddenLabelsElementId,
@@ -241,7 +241,7 @@ const getInitialDygraphOptions = ({
 interface Props {
   attributes: Attributes
   chartData: DygraphData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   chartLibrary: ChartLibraryName
@@ -273,7 +273,7 @@ interface Props {
 export const DygraphChart = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   chartLibrary,
@@ -383,7 +383,7 @@ export const DygraphChart = ({
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
-        chartDetails,
+        chartMetadata,
         chartSettings,
         dimensionsVisibility,
         hiddenLabelsElementId,
@@ -747,7 +747,7 @@ export const DygraphChart = ({
       const extremes = (instance as NetdataDygraph).yAxisExtremes()[0]
       setMinMax(extremes)
     }
-  }, [attributes, chartData, chartDetails, chartSettings, chartUuid, dimensionsVisibility,
+  }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     dygraphInstance, globalChartUnderlay, hiddenLabelsElementId, isMouseDown, orderedColors,
     setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
     updateChartPanOrZoom, xAxisTimeString])

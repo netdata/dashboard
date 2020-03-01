@@ -21,7 +21,7 @@ export const selectChartData = createSelector(
 )
 
 const selectChartMetadataFromExplicitCall = createSelector(
-  selectSingleChartState, prop("chartDetails"),
+  selectSingleChartState, prop("chartMetadata"),
 )
 // dashboard.js normally fetches metadata for every individual charts, but we can prevent it
 // if metadata for ALL charts will be present in state.global (from single call)
@@ -32,7 +32,7 @@ const selectChartMetadata = createSelector(
 )
 const selectIsFetchingDetails = createSelector(selectSingleChartState, prop("isFetchingDetails"))
 
-export const makeSelectChartDetailsRequest = () => createSelector(
+export const makeSelectChartMetadataRequest = () => createSelector(
   selectChartMetadata,
   selectIsFetchingDetails,
   (chartMetadata, isFetchingDetails) => ({ chartMetadata, isFetchingDetails }),
@@ -73,7 +73,7 @@ export const selectAmountOfCharts = createSelector(
 export const selectNameOfAnyFetchingChart = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-    .find((chartState) => chartState.isFetchingData)?.chartDetails?.id,
+    .find((chartState) => chartState.isFetchingData)?.chartMetadata?.id,
 )
 
 export const selectAmountOfSnapshotsFetched = createSelector(

@@ -203,7 +203,7 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   const snapshot = yield select(selectSnapshot)
   if (snapshot) {
     yield put(fetchChartAction.success({
-      chartDetails: snapshot.charts.charts[chart],
+      chartMetadata: snapshot.charts.charts[chart],
       id,
     }))
     return
@@ -223,7 +223,7 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
     return
   }
   yield put(fetchChartAction.success({
-    chartDetails: response.data,
+    chartMetadata: response.data,
     id,
   }))
 }

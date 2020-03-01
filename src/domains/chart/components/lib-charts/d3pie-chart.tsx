@@ -10,7 +10,7 @@ import d3pie from "vendor/d3pie-0.2.1-netdata-3"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import {
-  ChartDetails,
+  ChartMetadata,
   D3pieChartData,
 } from "domains/chart/chart-types"
 import { seconds4human } from "domains/chart/utils/seconds4human"
@@ -55,7 +55,7 @@ interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: D3pieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   dimensionsVisibility: boolean[]
@@ -72,7 +72,7 @@ export const D3pieChart = ({
   attributes,
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   hoveredRow,
@@ -108,7 +108,7 @@ export const D3pieChart = ({
       }).filter((x) => x.value !== null && x.value > 0)
       const safeContent = content.length > 0 ? content : emptyContent
 
-      const defaultTitle = attributes.title || chartDetails.title
+      const defaultTitle = attributes.title || chartMetadata.title
       const dateRange = getDateRange({
         chartData,
         index: 0,
@@ -347,7 +347,7 @@ export const D3pieChart = ({
       d3pieOptions.current = initialD3pieOptions
       setD3pieInstance(() => newD3pieInstance)
     }
-  }, [attributes, chartContainerElement, chartData, chartDetails, d3pieInstance, legendFormatValue,
+  }, [attributes, chartContainerElement, chartData, chartMetadata, d3pieInstance, legendFormatValue,
     localeDateString, localeTimeString, orderedColors, setMinMax, unitsCurrent])
 
   // update chart
