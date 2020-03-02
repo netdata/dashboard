@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react"
 import { isEmpty } from "ramda"
+import { useMount } from "react-use"
 
 import { ChartData, DygraphData } from "domains/chart/chart-types"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
@@ -30,7 +31,7 @@ export const useShowValueOutside = ({
   const showValueAttributesNodes = useRef<(HTMLElement | null)[]>([])
 
   // find the nodes that will have populated values
-  useEffect(() => {
+  useMount(() => {
     const { showValueOf } = attributes
     // showValueOf will be undefined if not used, but additional isEmpty check can prevent
     // regression performance issue in the future
@@ -48,8 +49,7 @@ export const useShowValueOutside = ({
         document.getElementById(userElementId),
       )
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // do only once on purpose
+  })
 
   useEffect(() => {
     if (showValueAttributesNodes.current.length) {
