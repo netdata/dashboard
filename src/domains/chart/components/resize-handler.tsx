@@ -4,14 +4,18 @@ import { ToolboxButton } from "domains/chart/components/toolbox-button"
 import { setResizeHeightAction } from "domains/chart/actions"
 import { useDispatch } from "store/redux-separate-context"
 
+export const LOCALSTORAGE_HEIGHT_KEY_PREFIX = "chart_heights."
+
 interface Props {
   chartContainerElement: HTMLElement
   chartUuid: string
+  heightId: string | undefined
 }
 // eslint-disable-next-line no-empty-pattern
 export const ResizeHandler = ({
   chartContainerElement,
   chartUuid,
+  heightId,
 }: Props) => {
   const [resizing, setResizing] = useState<
     { mouseStartY: number, startHeight: number }
@@ -39,6 +43,12 @@ export const ResizeHandler = ({
             id: chartUuid,
             resizeHeight: newHeight,
           }))
+          if (heightId) {
+            localStorage.setItem(
+              `${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`,
+              `${newHeight}px`,
+            )
+          }
         }
       }
       document.addEventListener("mousemove", handleMove, false)
@@ -49,7 +59,7 @@ export const ResizeHandler = ({
         document.removeEventListener("touchmove", handleMove)
       }
     }
-  }, [chartContainerElement, chartUuid, dispatch, resizing])
+  }, [chartContainerElement, chartUuid, dispatch, heightId, resizing])
 
   // process end event
   useEffect(() => { // eslint-disable-line consistent-return

@@ -377,6 +377,7 @@ export const Chart = memo(({
         <ResizeHandler
           chartContainerElement={chartContainerElement}
           chartUuid={chartUuid}
+          heightId={attributes.heightId}
         />
       )}
     </>
