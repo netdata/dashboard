@@ -16,6 +16,8 @@ import { clearChartStateAction } from "../actions"
 
 import { InvisibleSearchableText } from "./invisible-searchable-text"
 
+const SCROLL_DEBOUNCE_ASYNC = 750
+const SCROLL_DEBOUNCE_SYNC = 100
 
 const cloneWithCanvas = (element: Element) => {
   const cloned = element.cloneNode(true) as Element
@@ -84,22 +86,20 @@ export const DisableOutOfView = ({
 
   // todo hook to scroll (observe on visible items) instead of changes in intersectionRatio
   // because intersectinnRatio maxes out on 1.0 when element is fully visible
-  const shouldUseDebounce = useSelector(selectIsAsyncOnScroll)
+  const isAsyncOnScroll = useSelector(selectIsAsyncOnScroll)
+  const debounceTime = isAsyncOnScroll ? SCROLL_DEBOUNCE_ASYNC : SCROLL_DEBOUNCE_SYNC
 
   // "should hide because of debounced scroll handler"
   const [shouldHideDebounced, setShouldHideDebounced] = useState(!isVisibleIntersection)
   useDebounce(
     () => {
-      if (!shouldUseDebounce) {
-        return
-      }
       // start rendering, when intersectionRatio is not 0 and it hasn't changed for 1500 ms
       setShouldHideDebounced(!isVisibleIntersection)
     },
-    1500,
+    debounceTime,
     [isVisibleIntersection],
   )
-  const shouldHide = shouldUseDebounce ? shouldHideDebounced : !isVisibleIntersection
+  // const shouldHide = shouldUseDebounce ? shouldHideDebounced : !isVisibleIntersection
 
   const [clonedChildren, setClonedChildren] = useState<Element[]>()
 
@@ -108,7 +108,8 @@ export const DisableOutOfView = ({
     return children
   }
 
-  if (shouldHide) {
+  if (shouldHideDebounced) {
+    // todo perhaps loader should be added here to both scenarios
     if (destroyOnHide) {
       return (
         <InvisibleSearchableText attributes={attributes} />
