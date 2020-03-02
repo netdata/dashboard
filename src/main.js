@@ -33,6 +33,7 @@ import {
     selectAmountOfSnapshotsFetched,
 } from './domains/chart/selectors';
 import { serverDefault } from './utils/server-detection';
+import { name2id } from './utils/name-2-id';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -4020,21 +4021,23 @@ function scrollDashboardTo() {
     } else {
         // check if we have to jump to a specific section
         scrollToId(urlOptions.hash.replace('#', ''));
-
-        if (urlOptions.chart !== null) {
-            NETDATA.alarms.scrollToChart(urlOptions.chart);
-            //urlOptions.hash = '#' + NETDATA.name2id('menu_' + charts[c].menu + '_submenu_' + charts[c].submenu);
-            //urlOptions.hash = '#chart_' + NETDATA.name2id(urlOptions.chart);
-            //console.log('hash = ' + urlOptions.hash);
-        }
     }
 }
 
 var modalHiddenCallback = null;
 
 window.scrollToChartAfterHidingModal = (chart, alarmDate, alarmStatus) => {
+    const CHART_DIV_ID_PREFIX = 'chart_'
+    const CHART_DIV_OFFSET = -50
     modalHiddenCallback = function () {
-        NETDATA.alarms.scrollToChart(chart, alarmDate);
+
+        if (typeof chart === 'string') {
+            const chartElement = document.getElementById(`${CHART_DIV_ID_PREFIX}${name2id(chart)}`)
+            if (chartElement) {
+                const offset = chartElement.offsetTop + CHART_DIV_OFFSET;
+                document.querySelector("html").scrollTop = offset
+            }
+        }
 
         if (['WARNING', 'CRITICAL'].includes(alarmStatus)) {
             const twoMinutes = 2 * 60 * 1000
