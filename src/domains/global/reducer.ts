@@ -87,7 +87,7 @@ export const initialState: StateT = {
   globalChartUnderlay: null,
   timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
-  hasWindowFocus: true,
+  hasWindowFocus: document.hasFocus(),
 
   registry: {
     cloudBaseURL: null,
