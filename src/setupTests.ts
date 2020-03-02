@@ -9,6 +9,22 @@ const NETDATA: any = {
       timezone: "default",
     },
   },
+  themes: {
+    current: {},
+  },
+  updateTheme: () => {},
+}
+
+
+// @ts-ignore
+global.IntersectionObserver = class IntersectionObserver {
+  static observe() {
+    return null
+  }
+
+  static unobserve() {
+    return null
+  }
 }
 
 // @ts-ignore
