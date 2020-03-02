@@ -513,7 +513,7 @@ const getAttributesMap = (): AttributesMap => ({
   textOnlySuffix: { key: "textonly-suffix" },
 })
 
-export const getAttributes = (node: Element): Attributes => mapObjIndexed(
+export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
   (attribute: AttributeConfig) => (
     (attribute as BooleanAttributeConfig).type === "boolean"
       ? getDataAttributeBoolean(

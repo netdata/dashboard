@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { ActiveAlarms, ChartsMetadata, Snapshot} from "./types"
+import { ActiveAlarms, ChartsMetadata, Snapshot } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
