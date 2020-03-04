@@ -37,7 +37,10 @@ export const getPortalNodeStyles: GetPortalNodeStyles = (
     : null
 
   if (heightFromLocalStorage) {
-    height = heightFromLocalStorage
+    // .replace() is for backwards compatibility -  old dashboard was always doing
+    // JSON.stringify when setting localStorage so many users have '"180px"' values set.
+    // We can remove .replace() after some time
+    height = heightFromLocalStorage.replace(/"/g, "")
   }
 
   const chartDefaultsMinWidth = window.NETDATA.chartDefaults.min_width
