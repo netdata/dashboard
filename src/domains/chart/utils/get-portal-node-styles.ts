@@ -1,12 +1,20 @@
+import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
+
 import { Attributes } from "./transformDataAttributes"
 import { ChartLibraryConfig } from "./chartLibrariesSettings"
 
-type GetPortalNodeStyles = (attributes: Attributes, chartSettings: ChartLibraryConfig) => {
+type GetPortalNodeStyles = (
+  attributes: Attributes,
+  chartSettings: ChartLibraryConfig,
+) => {
   height: string | undefined,
   width: string | undefined,
   minWidth: string | undefined
 }
-export const getPortalNodeStyles: GetPortalNodeStyles = (attributes, chartSettings) => {
+export const getPortalNodeStyles: GetPortalNodeStyles = (
+  attributes,
+  chartSettings,
+) => {
   let width
   if (typeof attributes.width === "string") {
     // eslint-disable-next-line prefer-destructuring
@@ -23,6 +31,15 @@ export const getPortalNodeStyles: GetPortalNodeStyles = (attributes, chartSettin
       height = `${attributes.height.toString()}px`
     }
   }
+
+  const heightFromLocalStorage = attributes.heightId
+    ? localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${attributes.heightId}`)
+    : null
+
+  if (heightFromLocalStorage) {
+    height = heightFromLocalStorage
+  }
+
   const chartDefaultsMinWidth = window.NETDATA.chartDefaults.min_width
   const minWidth = chartDefaultsMinWidth === null
     ? undefined

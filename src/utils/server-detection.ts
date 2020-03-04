@@ -29,7 +29,9 @@ const getScriptSource = () => {
 export const getPathFromScriptSource = (source: string) => {
   // match strings not containing slash, ending with `.js`, with optional suffix started by `?`
   const jsFilenameRegex = "[^\\/]*\\.js(\\/?.*)?$"
+  const staticJsPath = "/static/js"
   return source.replace(new RegExp(jsFilenameRegex), "")
+    .replace(staticJsPath, "")
 }
 
 const getDefaultServer = () => {

@@ -1,6 +1,6 @@
-import { ChartDetails } from "../chart-types"
+import { ChartMetadata } from "../chart-types"
 
-export const chartDetailsMock: ChartDetails = {
+export const chartMetadataMock: ChartMetadata = {
   id: "system.cpu",
   name: "system.cpu",
   type: "system",

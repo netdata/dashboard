@@ -30,15 +30,25 @@ export const selectGlobalChartUnderlay = createSelector(selectGlobal, prop("glob
 
 export const selectHasWindowFocus = createSelector(selectGlobal, prop("hasWindowFocus"))
 
-export const selectIsFetchingHello = createSelector(selectGlobal, prop("isFetchingHello"))
+export const selectSnapshot = createSelector(
+  selectGlobal,
+  prop("snapshot"),
+)
 
-export const selectSnapshot = createSelector(selectGlobal, prop("snapshot"))
+export const selectRegistry = createSelector(selectGlobal, prop("registry"))
+
+export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
   path(["alarms", "hasStartedAlarms"]),
 )
 export const selectActiveAlarms = createSelector(
+  selectGlobal,
+  (global) => global.alarms.activeAlarms,
+)
+
+export const selectOptions = createSelector(
   selectGlobal,
   (global) => global.alarms.activeAlarms,
 )
@@ -73,3 +83,14 @@ export const selectTemperatureSetting = createSelectOption("temperature")
 export const selectSecondsAsTimeSetting = createSelectOption("seconds_as_time")
 export const selectTimezoneSetting = createSelectOption("timezone")
 export const selectUserSetServerTimezone = createSelectOption("user_set_server_timezone")
+
+export const selectChartsMetadata = createSelector(
+  selectGlobal,
+  (global) => global.chartsMetadata.data,
+)
+
+export const selectChartMetadataFromChartsCall = createSelector(
+  selectChartsMetadata,
+  (_: unknown, { chartId }: { chartId: string, id: string }) => chartId,
+  (allMetadata, chartId) => allMetadata?.charts[chartId],
+)

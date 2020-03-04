@@ -1,5 +1,5 @@
 import {
-  propOr, cond, always, T,
+  cond, always, T,
 } from "ramda"
 import React, { useEffect, useState, useMemo } from "react"
 import { useThrottle } from "react-use"
@@ -27,11 +27,12 @@ import { fetchChartAction, fetchDataAction } from "../actions"
 import {
   selectChartData,
   selectChartFetchDataParams,
-  makeSelectChartDetailsRequest,
+  makeSelectChartMetadataRequest,
+  selectChartPanAndZoom,
 } from "../selectors"
 import {
   ChartData,
-  ChartDetails,
+  ChartMetadata,
   D3pieChartData,
   DygraphData,
   EasyPieChartData,
@@ -58,30 +59,36 @@ export const ChartWithLoader = ({
    */
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
-  const selectChartDetailsRequest = useMemo(makeSelectChartDetailsRequest, [])
-  const { chartDetails, isFetchingDetails } = useSelector((state: AppStateT) => (
-    selectChartDetailsRequest(state, { id: chartUuid })
+  const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
+  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
+    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
   ))
   useEffect(() => {
-    if (!chartDetails && !isFetchingDetails) {
+    if (!chartMetadata && !isFetchingDetails) {
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
         host,
       }))
     }
-  }, [attributes.id, chartDetails, chartUuid, dispatch, host, isFetchingDetails])
+  }, [attributes.id, chartMetadata, chartUuid, dispatch, host, isFetchingDetails])
 
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const isGlobalPanAndZoomMaster = !!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid
-  const shouldForceTimeRange: boolean = propOr(false, "shouldForceTimeRange", globalPanAndZoom)
+  const chartPanAndZoom = useSelector((state: AppStateT) => (
+    selectChartPanAndZoom(state, { id: chartUuid })
+  ))
+  const panAndZoom = chartPanAndZoom || globalPanAndZoom
+
+  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid)
+    || Boolean(chartPanAndZoom)
+  const shouldForceTimeRange = panAndZoom?.shouldForceTimeRange || false
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
-  const isRemotelyControlled = !globalPanAndZoom
-    || !isGlobalPanAndZoomMaster
+  const isRemotelyControlled = !panAndZoom
+    || !isPanAndZoomMaster
     || shouldForceTimeRange // used when zooming/shifting in toolbox
 
 
@@ -93,23 +100,23 @@ export const ChartWithLoader = ({
   const hoveredX = useSelector(selectGlobalSelection)
 
   // periodical update of newest data
-  // default to 2000ms. When chartDetails has been fetched, use chartDetails.update_every
+  // default to 2000ms. When chartMetadata has been fetched, use chartMetadata.update_every
   // if chartData has been fetched, use chartData.view_update_every instead
   // todo add support to "data-update-every" attribute
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
-    [always(!!chartDetails), () => (chartDetails as ChartDetails).update_every * 1000],
+    [always(!!chartMetadata), () => (chartMetadata as ChartMetadata).update_every * 1000],
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
-    areCriteriaMet: !globalPanAndZoom && !hoveredX,
+    areCriteriaMet: !panAndZoom && !hoveredX,
     preferedIntervalTime: viewUpdateEvery,
   })
 
-  const globalPanAndZoomThrottled = useThrottle(globalPanAndZoom, panAndZoomDelay)
+  const panAndZoomThrottled = useThrottle(panAndZoom, panAndZoomDelay)
   useEffect(() => {
     setShouldFetch(true)
-  }, [globalPanAndZoomThrottled, setShouldFetch])
+  }, [panAndZoomThrottled, setShouldFetch])
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
@@ -133,7 +140,7 @@ export const ChartWithLoader = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && chartDetails) {
+    if (shouldFetch && chartMetadata) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -142,10 +149,10 @@ export const ChartWithLoader = ({
       let viewRange
       let pointsMultiplier = 1
 
-      if (globalPanAndZoom) {
-        if (isGlobalPanAndZoomMaster) {
-          after = Math.round(globalPanAndZoom.after / 1000)
-          before = Math.round(globalPanAndZoom.before / 1000)
+      if (panAndZoom) {
+        if (isPanAndZoomMaster) {
+          after = Math.round(panAndZoom.after / 1000)
+          before = Math.round(panAndZoom.before / 1000)
 
           viewRange = [after, before]
 
@@ -156,12 +163,12 @@ export const ChartWithLoader = ({
             pointsMultiplier = 2
           }
         } else {
-          after = Math.round(globalPanAndZoom.after / 1000)
-          before = Math.round(globalPanAndZoom.before / 1000)
+          after = Math.round(panAndZoom.after / 1000)
+          before = Math.round(panAndZoom.before / 1000)
           pointsMultiplier = 1
         }
       } else {
-        // no globalPanAndZoom
+        // no panAndZoom
         before = initialBefore
         after = initialAfter
         pointsMultiplier = 1
@@ -179,7 +186,7 @@ export const ChartWithLoader = ({
       dispatch(fetchDataAction.request({
         // properties to be passed to API
         host,
-        chart: chartDetails.id,
+        chart: chartMetadata.id,
         format: chartSettings.format,
         points,
         group,
@@ -199,9 +206,9 @@ export const ChartWithLoader = ({
         id: chartUuid,
       }))
     }
-  }, [attributes, chartDetails, chartSettings, chartUuid, chartWidth, dispatch, globalPanAndZoom,
-    hasLegend, host, initialAfter, initialBefore, isGlobalPanAndZoomMaster,
-    isRemotelyControlled, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
+  }, [attributes, chartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
+    hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
+    isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
     shouldUsePanAndZoomPadding, shouldFetch])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
@@ -209,7 +216,7 @@ export const ChartWithLoader = ({
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result.data?.length === 0
     || (chartData as EasyPieChartData | null)?.result.length === 0
 
-  if (!chartData || !chartDetails) {
+  if (!chartData || !chartMetadata) {
     return (
       <Loader
         hasEmptyData={false}
@@ -230,7 +237,7 @@ export const ChartWithLoader = ({
         attributes={attributes}
         chartContainerElement={portalNode}
         chartData={chartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}
@@ -238,7 +245,7 @@ export const ChartWithLoader = ({
         requestedViewRange={fetchDataParams.viewRange}
         selectedDimensions={selectedDimensions}
         setSelectedDimensions={setSelectedDimensions}
-        showLatestOnBlur={!globalPanAndZoom}
+        showLatestOnBlur={!panAndZoom}
       />
     </>
   )

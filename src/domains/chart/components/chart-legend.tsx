@@ -1,4 +1,4 @@
-import React, { Fragment } from "react"
+import React, { Fragment, useRef, useEffect } from "react"
 import classNames from "classnames"
 
 import { colorHex2Rgb } from "utils/color-hex-2-rgb"
@@ -6,12 +6,12 @@ import { useDateTime } from "utils/date-time"
 
 import { seconds4human } from "../utils/seconds4human"
 import { Attributes } from "../utils/transformDataAttributes"
-import { ChartData, ChartDetails, DygraphData } from "../chart-types"
+import { ChartData, ChartMetadata, DygraphData } from "../chart-types"
 
 interface Props {
   attributes: Attributes
   chartData: DygraphData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
     [key: string]: string
@@ -26,24 +26,24 @@ interface Props {
   viewBefore: number
 }
 
-export const legendPluginModuleString = (withContext: boolean, chartDetails: ChartDetails) => {
+export const legendPluginModuleString = (withContext: boolean, chartMetadata: ChartMetadata) => {
   let str = " "
   let context = ""
 
-  if (withContext && typeof chartDetails.context === "string") {
+  if (withContext && typeof chartMetadata.context === "string") {
     // eslint-disable-next-line prefer-destructuring
-    context = chartDetails.context
+    context = chartMetadata.context
   }
 
-  if (typeof chartDetails.plugin === "string" && chartDetails.plugin !== "") {
-    str = chartDetails.plugin
+  if (typeof chartMetadata.plugin === "string" && chartMetadata.plugin !== "") {
+    str = chartMetadata.plugin
 
     if (str.endsWith(".plugin")) {
       str = str.substring(0, str.length - 7)
     }
 
-    if (typeof chartDetails.module === "string" && chartDetails.module !== "") {
-      str += `:${chartDetails.module}`
+    if (typeof chartMetadata.module === "string" && chartMetadata.module !== "") {
+      str += `:${chartMetadata.module}`
     }
 
     if (withContext && context !== "") {
@@ -55,8 +55,8 @@ export const legendPluginModuleString = (withContext: boolean, chartDetails: Cha
   return str
 }
 
-const legendResolutionTooltip = (chartData: ChartData, chartDetails: ChartDetails) => {
-  const collected = chartDetails.update_every
+const legendResolutionTooltip = (chartData: ChartData, chartMetadata: ChartMetadata) => {
+  const collected = chartMetadata.update_every
   // todo if there's no data (but maybe there wont be situation like this), then use "collected"
   const viewed = chartData.view_update_every
   if (collected === viewed) {
@@ -106,7 +106,7 @@ export const getNewSelectedDimensions: GetNewSelectedDimensions = ({
 export const ChartLegend = ({
   // attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartLibrary,
   colors,
   hoveredRow,
@@ -132,7 +132,7 @@ export const ChartLegend = ({
 
   // @ts-ignore ignoring because options.current has inconsistent structure
   const colorFillOpacity = window.NETDATA.options.current[
-    `color_fill_opacity_${chartDetails.chart_type}`
+    `color_fill_opacity_${chartMetadata.chart_type}`
   ]
 
   const handleDimensionClick = (clickedDimensionName: string) => (event: React.MouseEvent) => {
@@ -149,6 +149,25 @@ export const ChartLegend = ({
 
   const { localeDateString, localeTimeString } = useDateTime()
 
+  const scrollbarRef = useRef(null)
+  useEffect(() => {
+    if (scrollbarRef.current) {
+      window.Ps.initialize(scrollbarRef.current, {
+        wheelSpeed: 0.2,
+        wheelPropagation: true,
+        swipePropagation: true,
+        minScrollbarLength: null,
+        maxScrollbarLength: null,
+        useBothWheelAxes: false,
+        suppressScrollX: true,
+        suppressScrollY: false,
+        scrollXMarginOffset: 0,
+        scrollYMarginOffset: 0,
+        theme: "default",
+      })
+    }
+  }, [scrollbarRef])
+
   return (
     <div className={classNames(
       "netdata-chart-legend",
@@ -157,94 +176,95 @@ export const ChartLegend = ({
     >
       <span
         className="netdata-legend-title-date"
-        title={legendPluginModuleString(true, chartDetails)}
+        title={legendPluginModuleString(true, chartMetadata)}
       >
         {showUndefined
-          ? legendPluginModuleString(false, chartDetails)
+          ? legendPluginModuleString(false, chartMetadata)
           : localeDateString(legendDate)}
       </span>
       <br />
       <span
         className="netdata-legend-title-time"
-        title={legendResolutionTooltip(chartData, chartDetails)}
+        title={legendResolutionTooltip(chartData, chartMetadata)}
       >
         {showUndefined
-          ? chartDetails.context.toString()
+          ? chartMetadata.context.toString()
           : localeTimeString(legendDate)}
       </span>
       <br />
       <span className="netdata-legend-title-units">{unitsCurrent}</span>
       <br />
-      {/* perfect_scroller */}
-      <div className="netdata-legend-series-content">
-        {chartData.dimension_names.map((dimensionName, i) => {
-          // todo dimension could be a separate component
-          const color = colors[dimensionName]
-          const rgb = colorHex2Rgb(color)
+      <div className="netdata-legend-series" ref={scrollbarRef}>
+        <div className="netdata-legend-series-content">
+          {chartData.dimension_names.map((dimensionName, i) => {
+            // todo dimension could be a separate component
+            const color = colors[dimensionName]
+            const rgb = colorHex2Rgb(color)
 
-          const isSelected = selectedDimensions.length === 0
-            || selectedDimensions.includes(dimensionName)
+            const isSelected = selectedDimensions.length === 0
+              || selectedDimensions.includes(dimensionName)
 
-          let value
-          if (showUndefined) {
-            value = null
-          } else if (hoveredRow !== -1) {
-            const hoveredValueArray = chartData.result.data[hoveredRow]
-            // [timestamp, valueDim1, valueDim2, ...]
-            value = hoveredValueArray[i + 1]
-          } else {
-            value = chartData.view_latest_values[i]
-          }
+            let value
+            if (showUndefined) {
+              value = null
+            } else if (hoveredRow !== -1) {
+              const hoveredValueArray = chartData.result.data[hoveredRow]
+              // [timestamp, valueDim1, valueDim2, ...]
+              value = hoveredValueArray[i + 1]
+            } else {
+              value = chartData.view_latest_values[i]
+            }
 
-          return (
-            <Fragment key={dimensionName}>
-              {i !== 0 && <br />}
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-              <span
-                title={dimensionName}
-                className={classNames(
-                  "netdata-legend-name",
-                  isSelected ? "selected" : "not-selected",
-                )}
-                onClick={handleDimensionClick(dimensionName)}
-                role="button"
-                style={{ color }}
-                tabIndex={0}
-              >
-                <table
-                  className={`netdata-legend-name-table-${chartDetails.chart_type}`}
-                  style={{
-                    backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${colorFillOpacity})`,
-                  }}
+            return (
+              <Fragment key={dimensionName}>
+                {i !== 0 && <br />}
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  title={dimensionName}
+                  className={classNames(
+                    "netdata-legend-name",
+                    isSelected ? "selected" : "not-selected",
+                  )}
+                  onClick={handleDimensionClick(dimensionName)}
+                  role="button"
+                  style={{ color }}
+                  tabIndex={0}
                 >
-                  <tbody>
-                    <tr className="netdata-legend-name-tr">
-                      <td className="netdata-legend-name-td" />
-                    </tr>
-                  </tbody>
-                </table>
-                {" "}
-                {dimensionName}
-              </span>
-              {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-              <span
-                title={dimensionName}
-                className={classNames(
-                  "netdata-legend-value",
-                  !isSelected && "hidden",
-                )}
-                onClick={handleDimensionClick(dimensionName)}
-                role="button"
-                style={{ color }} // omitted !important during refractor (react doesn't support it)
-                tabIndex={0}
-              >
-                {legendFormatValue(
-                  value,
-                )}
-              </span>
-            </Fragment>
-          )
-        })}
+                  <table
+                    className={`netdata-legend-name-table-${chartMetadata.chart_type}`}
+                    style={{
+                      backgroundColor: `rgba(${rgb.r},${rgb.g},${rgb.b},${colorFillOpacity})`,
+                    }}
+                  >
+                    <tbody>
+                      <tr className="netdata-legend-name-tr">
+                        <td className="netdata-legend-name-td" />
+                      </tr>
+                    </tbody>
+                  </table>
+                  {" "}
+                  {dimensionName}
+                </span>
+                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                <span
+                  title={dimensionName}
+                  className={classNames(
+                    "netdata-legend-value",
+                    !isSelected && "hidden",
+                  )}
+                  onClick={handleDimensionClick(dimensionName)}
+                  role="button"
+                  style={{ color }} // omitted !important during refractor, react doesn't support it
+                  tabIndex={0}
+                >
+                  {legendFormatValue(
+                    value,
+                  )}
+                </span>
+              </Fragment>
+            )
+          })}
+        </div>
       </div>
     </div>
   )

@@ -2,6 +2,8 @@ import { prop } from "ramda"
 import { createSelector } from "reselect"
 
 import { AppStateT } from "store/app-state"
+import { selectChartMetadataFromChartsCall } from "domains/global/selectors"
+
 import { ChartState } from "./chart-types"
 import { initialSingleState } from "./reducer"
 import { storeKey } from "./constants"
@@ -9,7 +11,7 @@ import { storeKey } from "./constants"
 export const selectChartsState = (state: AppStateT) => state[storeKey]
 export const selectSingleChartState = createSelector(
   selectChartsState,
-  (_: any, { id }: { id: string }) => id,
+  (_: unknown, { id }: { chartId?: string, id: string }) => id,
   (chartsState, id) => chartsState[id] || initialSingleState,
 )
 
@@ -18,13 +20,22 @@ export const selectChartData = createSelector(
   (chartState) => chartState.chartData,
 )
 
-const selectChartDetails = createSelector(selectSingleChartState, prop("chartDetails"))
+const selectChartMetadataFromExplicitCall = createSelector(
+  selectSingleChartState, prop("chartMetadata"),
+)
+// dashboard.js normally fetches metadata for every individual charts, but we can prevent it
+// if metadata for ALL charts will be present in state.global (from single call)
+const selectChartMetadata = createSelector(
+  selectChartMetadataFromChartsCall,
+  selectChartMetadataFromExplicitCall,
+  (metadataFromAll, metadataFromSingleCall) => metadataFromAll || metadataFromSingleCall,
+)
 const selectIsFetchingDetails = createSelector(selectSingleChartState, prop("isFetchingDetails"))
 
-export const makeSelectChartDetailsRequest = () => createSelector(
-  selectChartDetails,
+export const makeSelectChartMetadataRequest = () => createSelector(
+  selectChartMetadata,
   selectIsFetchingDetails,
-  (chartDetails, isFetchingDetails) => ({ chartDetails, isFetchingDetails }),
+  (chartMetadata, isFetchingDetails) => ({ chartMetadata, isFetchingDetails }),
 )
 
 export const selectChartViewRange = createSelector(
@@ -42,6 +53,7 @@ export const selectResizeHeight = createSelector(
   (chartState) => chartState.resizeHeight,
 )
 
+export const selectChartPanAndZoom = createSelector(selectSingleChartState, prop("chartPanAndZoom"))
 
 // count the nr of "success" or "failure" charts
 const hasCompletedFetching = (chartState: ChartState) => chartState.isFetchDataFailure
@@ -61,7 +73,7 @@ export const selectAmountOfCharts = createSelector(
 export const selectNameOfAnyFetchingChart = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-    .find((chartState) => chartState.isFetchingData)?.chartDetails?.id,
+    .find((chartState) => chartState.isFetchingData)?.chartMetadata?.id,
 )
 
 export const selectAmountOfSnapshotsFetched = createSelector(

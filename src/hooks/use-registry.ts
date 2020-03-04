@@ -3,17 +3,17 @@ import { useEffect } from "react"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { serverDefault } from "utils/server-detection"
 import { fetchHelloAction } from "domains/global/actions"
-import { selectIsFetchingHello } from "domains/global/selectors"
+import { selectRegistry } from "domains/global/selectors"
 
 export const useRegistry = (shouldUseRegistry: boolean) => {
-  const isFetchingHello = useSelector(selectIsFetchingHello)
+  const registry = useSelector(selectRegistry)
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (shouldUseRegistry && !isFetchingHello) {
+    if (shouldUseRegistry && !registry.isFetchingHello && !registry.hasFetchedHello) {
       dispatch(fetchHelloAction.request({
         serverDefault,
       }))
     }
-  }, [dispatch, isFetchingHello, shouldUseRegistry])
+  }, [dispatch, registry, shouldUseRegistry])
 }

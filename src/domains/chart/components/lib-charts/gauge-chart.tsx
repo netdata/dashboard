@@ -5,7 +5,7 @@ import React, {
 import { Gauge } from "gaugeJS"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-import { ChartDetails, EasyPieChartData } from "domains/chart/chart-types"
+import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { ChartLibraryName } from "domains/chart/utils/chartLibrariesSettings"
 import {
   identity, sortBy, map, pipe, always,
@@ -18,7 +18,7 @@ const isSetByUser = (x: undefined | number): x is number => (
 interface Props {
   attributes: Attributes
   chartData: EasyPieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   chartLibrary: ChartLibraryName
@@ -52,7 +52,7 @@ interface Props {
 export const GaugeChart = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   chartUuid,
@@ -100,6 +100,7 @@ export const GaugeChart = ({
     ([_min, _max]: number[]) => [Math.min(_min, value), Math.max(_max, value)],
   )([min, max])
   // calling outside "useEffect" intentionally,
+  // because it should update the values first, and only then render the chart in useEffect()
   setMinMax([safeMin, safeMax])
 
   const pcent = pipe(
@@ -209,7 +210,7 @@ export const GaugeChart = ({
           top: titleTop,
         }}
       >
-        {attributes.title || chartDetails.title}
+        {attributes.title || chartMetadata.title}
       </span>
       <span
         className="gaugeChartUnits"

@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { ActiveAlarms, Snapshot } from "./types"
+import { ActiveAlarms, ChartsMetadata, Snapshot } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -62,12 +62,14 @@ export interface FetchHelloPayload {
   serverDefault: string
 }
 
-export const fetchHelloAction = createRequestAction<FetchHelloPayload, {}>(
-  `${storeKey}/fetchHelloAction`,
-)
+export const fetchHelloAction = createRequestAction<
+  FetchHelloPayload,
+  { cloudBaseURL: string, hostname: string, isCloudEnabled: boolean, machineGuid: string,
+    registryServer: string }
+  >(`${storeKey}/fetchHelloAction`)
+
 
 interface UpdatePersonUrlsAction {
-  isCloudEnabled: boolean
   personGuid: string
   registryMachines: { [key: string]: RegistryMachine }
   registryMachinesArray: RegistryMachine[]
@@ -96,6 +98,10 @@ export const setOptionAction = createAction<SetOptionAction>(`${storeKey}/setOpt
 
 export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
   `${storeKey}/loadSnapshotAction`,
+)
+
+export const chartsMetadataRequestSuccess = createAction<{ data: ChartsMetadata }>(
+  `${storeKey}/chartsMetadataRequestSuccess`,
 )
 
 export interface SetSpacePanelStatusActionPayload {

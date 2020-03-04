@@ -3,13 +3,13 @@ import React, {
 } from "react"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-import { ChartDetails, EasyPieChartData } from "domains/chart/chart-types"
+import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { loadGoogleVisualizationApi } from "domains/chart/utils/google-visualization-loader"
 
 interface Props {
   attributes: Attributes
   chartData: EasyPieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   orderedColors: string[]
@@ -18,7 +18,7 @@ interface Props {
 export const GoogleChart = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   orderedColors,
@@ -51,9 +51,9 @@ export const GoogleChart = ({
       const dataTable = new window.google.visualization.DataTable(chartData.result)
 
       const {
-        title = chartDetails.title,
+        title = chartMetadata.title,
       } = attributes
-      const chartType = chartDetails.chart_type
+      const chartType = chartMetadata.chart_type
       const areaOpacity = new Map([
         ["area", window.NETDATA.options.current.color_fill_opacity_area],
         ["stacked", window.NETDATA.options.current.color_fill_opacity_stacked],
@@ -122,7 +122,7 @@ export const GoogleChart = ({
         isStacked: chartType === "stacked",
       }
 
-      const googleInstance = ["area", "stacked"].includes(chartDetails.chart_type)
+      const googleInstance = ["area", "stacked"].includes(chartMetadata.chart_type)
         ? new window.google.visualization.AreaChart(chartElement.current)
         : new window.google.visualization.LineChart(chartElement.current)
 
@@ -131,7 +131,7 @@ export const GoogleChart = ({
       googleOptions.current = initialGoogleOptions
       googleChartInstance.current = googleInstance
     }
-  }, [attributes, chartData.result, chartDetails, chartElement, hasApiBeenLoaded, orderedColors,
+  }, [attributes, chartData.result, chartMetadata, chartElement, hasApiBeenLoaded, orderedColors,
     unitsCurrent])
 
 

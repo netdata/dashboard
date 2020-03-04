@@ -1,4 +1,4 @@
-import { mapObjIndexed } from "ramda"
+import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
 
 import { ChartLibraryName } from "./chartLibrariesSettings"
 
@@ -73,7 +73,7 @@ interface BooleanAttributeConfig extends BaseAttributeConfig {
 }
 type AttributeConfig = BaseAttributeConfig | BooleanAttributeConfig
 
-export interface Attributes {
+export interface StaticAttributes {
   id: string
   host?: string | undefined
   title?: string
@@ -281,7 +281,13 @@ export interface Attributes {
   textOnlySuffix?: string,
 }
 
-export type AttributePropKeys = keyof Attributes
+export interface Attributes extends StaticAttributes {
+  // changed structure compared to original dashboard.js (not flat list, but dynamic objects stored
+  // in "showValueOf" property
+  showValueOf?: { [key: string]: string }
+}
+
+export type AttributePropKeys = keyof StaticAttributes
 
 type AttributesMap = {
   [key in AttributePropKeys]: AttributeConfig
@@ -507,7 +513,7 @@ const getAttributesMap = (): AttributesMap => ({
   textOnlySuffix: { key: "textonly-suffix" },
 })
 
-export const getAttributes = (node: Element): Attributes => mapObjIndexed(
+export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
   (attribute: AttributeConfig) => (
     (attribute as BooleanAttributeConfig).type === "boolean"
       ? getDataAttributeBoolean(
@@ -518,3 +524,17 @@ export const getAttributes = (node: Element): Attributes => mapObjIndexed(
   ),
   getAttributesMap(),
 ) as Attributes // need to override because of broken Ramda typings
+
+export const getAttributesDynamic = (node: Element) => {
+  const showValueOfAttribues = Array.from(node.attributes)
+    .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
+    .map((attribute) => ({ [attribute.name.replace("data-", "")]: attribute.value }))
+  const merged = mergeAll(showValueOfAttribues)
+  return isEmpty(merged) ? undefined : merged
+}
+
+export const getAttributes = (node: Element): Attributes => {
+  const attributesStatic = getAttributesStatic(node)
+  const showValueOf = getAttributesDynamic(node)
+  return { ...attributesStatic, showValueOf }
+}

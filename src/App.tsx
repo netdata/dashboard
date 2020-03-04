@@ -29,9 +29,10 @@ import { SpacePanel } from "components/space-panel"
 
 import "./types/global"
 
-import { netdataCallback, updateLocaleFunctions } from "./main"
-// @ts-ignore
-import "./dashboard_info"
+import {
+  netdataCallback,
+  updateLocaleFunctions,
+} from "./main"
 
 if (!window.netdataNoFontAwesome) {
   // @ts-ignore
@@ -42,7 +43,6 @@ if (!window.netdataNoFontAwesome) {
 window.Ps = Ps
 
 const App: React.FC = () => {
-  // eslint-disable-line arrow-body-style
   const store = useStore()
   useEffect(() => {
     // todo

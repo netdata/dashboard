@@ -1,13 +1,16 @@
 import React, { useCallback } from "react"
 import classNames from "classnames"
 
-import { useDispatch } from "store/redux-separate-context"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { setGlobalChartUnderlayAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+import { selectSyncPanAndZoom } from "domains/global/selectors"
+import { setChartPanAndZoomAction } from "domains/chart/actions"
 import { TimeRange } from "types/common"
+import { useShowValueOutside } from "hooks/use-show-value-outside"
 
 import { Attributes } from "../utils/transformDataAttributes"
 import {
-  ChartData, ChartDetails, DygraphData, EasyPieChartData, D3pieChartData,
+  ChartData, ChartMetadata, DygraphData, EasyPieChartData, D3pieChartData,
 } from "../chart-types"
 import { chartLibrariesSettings, ChartLibraryName } from "../utils/chartLibrariesSettings"
 
@@ -24,7 +27,7 @@ interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: ChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartLibrary: ChartLibraryName
   colors: {
     [key: string]: string
@@ -53,7 +56,7 @@ export const AbstractChart = ({
   attributes,
   chartContainerElement,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartLibrary,
   colors,
   chartUuid,
@@ -76,13 +79,18 @@ export const AbstractChart = ({
 }: Props) => {
   const dispatch = useDispatch()
 
+  const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
   const setGlobalChartUnderlay = useCallback(({ after, before, masterID }) => {
     dispatch(setGlobalChartUnderlayAction({ after, before, masterID }))
 
     // freeze charts
     // don't send masterID, so no padding is applied
-    dispatch(setGlobalPanAndZoomAction({ after: viewAfter, before: viewBefore }))
-  }, [dispatch, viewAfter, viewBefore])
+    if (isSyncPanAndZoom) {
+      dispatch(setGlobalPanAndZoomAction({ after: viewAfter, before: viewBefore }))
+    } else {
+      dispatch(setChartPanAndZoomAction({ after: viewAfter, before: viewBefore, id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, isSyncPanAndZoom, viewAfter, viewBefore])
 
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings
@@ -98,12 +106,16 @@ export const AbstractChart = ({
   const chartElementId = `${chartLibrary}-${chartUuid}-chart`
   const showUndefined = hoveredRow === -1 && !showLatestOnBlur
 
+  useShowValueOutside({
+    attributes, chartData, chartSettings, hoveredRow, legendFormatValue, showUndefined,
+  })
+
   if (chartLibrary === "easypiechart") {
     return (
       <EasyPieChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         chartLibrary={chartLibrary}
@@ -131,7 +143,7 @@ export const AbstractChart = ({
       <GaugeChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         chartLibrary={chartLibrary}
@@ -163,7 +175,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         dimensionsVisibility={dimensionsVisibility}
@@ -180,7 +192,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as D3pieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         dimensionsVisibility={dimensionsVisibility}
@@ -202,7 +214,7 @@ export const AbstractChart = ({
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         orderedColors={orderedColors}
@@ -215,7 +227,7 @@ export const AbstractChart = ({
       <GoogleChart
         attributes={attributes}
         chartData={chartData as EasyPieChartData}
-        chartDetails={chartDetails}
+        chartMetadata={chartMetadata}
         chartElementClassName={chartElementClassName}
         chartElementId={chartElementId}
         orderedColors={orderedColors}
@@ -239,7 +251,7 @@ export const AbstractChart = ({
     <DygraphChart
       attributes={attributes}
       chartData={chartData as DygraphData}
-      chartDetails={chartDetails}
+      chartMetadata={chartMetadata}
       chartElementClassName={chartElementClassName}
       chartElementId={chartElementId}
       chartLibrary={chartLibrary}

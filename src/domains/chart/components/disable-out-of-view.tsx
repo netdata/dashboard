@@ -1,8 +1,8 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState,
+  useEffect, useLayoutEffect, useState,
 } from "react"
-import { useDebounce, useIntersection } from "react-use"
-import { forEachObjIndexed, pathOr } from "ramda"
+import { useDebounce } from "react-use"
+import { forEachObjIndexed } from "ramda"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
@@ -10,9 +10,14 @@ import { selectDestroyOnHide, selectIsAsyncOnScroll } from "domains/global/selec
 import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { chartLibrariesSettings } from "domains/chart/utils/chartLibrariesSettings"
+import { useCommonIntersection } from "hooks/use-common-intersection"
+
+import { clearChartStateAction } from "../actions"
 
 import { InvisibleSearchableText } from "./invisible-searchable-text"
-import { clearChartStateAction } from "../actions"
+
+const SCROLL_DEBOUNCE_ASYNC = 750
+const SCROLL_DEBOUNCE_SYNC = 100
 
 const cloneWithCanvas = (element: Element) => {
   const cloned = element.cloneNode(true) as Element
@@ -77,40 +82,24 @@ export const DisableOutOfView = ({
 
 
   const destroyOnHide = useSelector(selectDestroyOnHide)
-
-  const portalNodeRef = useRef(portalNode)
-  const intersection = useIntersection(portalNodeRef, {
-    root: null,
-    rootMargin: "0px",
-    threshold: undefined,
-  })
-
+  const isVisibleIntersection = useCommonIntersection(portalNode)
 
   // todo hook to scroll (observe on visible items) instead of changes in intersectionRatio
   // because intersectinnRatio maxes out on 1.0 when element is fully visible
   const isAsyncOnScroll = useSelector(selectIsAsyncOnScroll)
-
-  const intersectionRatio = intersection ? intersection.intersectionRatio : 0
-  const shouldUseDebounce = isAsyncOnScroll
-
-  // aka "should hide because of intersection observer"
-  const shouldHideIntersection = pathOr(0, ["intersectionRatio"], intersection) === 0
+  const debounceTime = isAsyncOnScroll ? SCROLL_DEBOUNCE_ASYNC : SCROLL_DEBOUNCE_SYNC
 
   // "should hide because of debounced scroll handler"
-  const [shouldHideDebounced, setShouldHideDebounced] = useState(shouldHideIntersection)
+  const [shouldHideDebounced, setShouldHideDebounced] = useState(!isVisibleIntersection)
   useDebounce(
     () => {
-      if (!shouldUseDebounce) {
-        return
-      }
       // start rendering, when intersectionRatio is not 0 and it hasn't changed for 1500 ms
-      setShouldHideDebounced(intersectionRatio === 0)
+      setShouldHideDebounced(!isVisibleIntersection)
     },
-    1500,
-    [intersectionRatio],
+    debounceTime,
+    [isVisibleIntersection],
   )
-  const shouldHide = shouldUseDebounce ? shouldHideDebounced : shouldHideIntersection
-
+  // const shouldHide = shouldUseDebounce ? shouldHideDebounced : !isVisibleIntersection
 
   const [clonedChildren, setClonedChildren] = useState<Element[]>()
 
@@ -119,7 +108,8 @@ export const DisableOutOfView = ({
     return children
   }
 
-  if (shouldHide) {
+  if (shouldHideDebounced) {
+    // todo perhaps loader should be added here to both scenarios
     if (destroyOnHide) {
       return (
         <InvisibleSearchableText attributes={attributes} />

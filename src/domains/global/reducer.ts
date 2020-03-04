@@ -2,7 +2,7 @@ import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
 import { RegistryMachine } from "domains/global/sagas"
-import { ActiveAlarms, Snapshot } from "domains/global/types"
+import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -19,6 +19,7 @@ import {
   updateActiveAlarmsAction,
   setOptionAction,
   loadSnapshotAction,
+  chartsMetadataRequestSuccess,
   setSpacePanelStatusAction,
 } from "./actions"
 import { Options, optionsMergedWithLocalStorage } from "./options"
@@ -56,10 +57,21 @@ export type StateT = {
   spacePanelIsActive: boolean
 
   registry: {
+    cloudBaseURL: string | null
+    hasFetchedHello: boolean
+    hostname: string
     isCloudEnabled: boolean
+    isFetchingHello: boolean
+    machineGuid: string | null
     personGuid: string | null
     registryMachines: { [key: string]: RegistryMachine } | null
     registryMachinesArray: RegistryMachine[] | null
+    registryServer: string | null,
+  }
+  chartsMetadata: {
+    isFetching: boolean
+    isFetchingError: boolean
+    data: null | ChartsMetadata
   }
 
   alarms: {
@@ -69,26 +81,30 @@ export type StateT = {
 
   snapshot: Snapshot | null
 
-  isFetchingHello: boolean
-
   options: Options
 }
 
-export const initialState = {
+export const initialState: StateT = {
   commonColorsKeys: {},
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
   globalChartUnderlay: null,
   timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
-  hasWindowFocus: true,
+  hasWindowFocus: document.hasFocus(),
   spacePanelIsActive: false, // set to true only for testing layout
 
   registry: {
+    cloudBaseURL: null,
+    hasFetchedHello: false,
+    hostname: "unknown",
     isCloudEnabled: false,
+    isFetchingHello: false,
+    machineGuid: null,
     personGuid: null,
     registryMachines: null,
     registryMachinesArray: null,
+    registryServer: null,
   },
 
   snapshot: null,
@@ -97,7 +113,11 @@ export const initialState = {
     hasStarted: false,
   },
 
-  isFetchingHello: false,
+  chartsMetadata: {
+    isFetching: false,
+    isFetchingError: false,
+    data: null,
+  },
 
   options: optionsMergedWithLocalStorage,
 }
@@ -269,9 +289,20 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
   isFetchingHello: true,
 }))
 
-globalReducer.on(fetchHelloAction.success, (state) => ({
+globalReducer.on(fetchHelloAction.success, (state, {
+  cloudBaseURL, hostname, isCloudEnabled, machineGuid, registryServer,
+}) => ({
   ...state,
   isFetchingHello: false,
+  registry: {
+    ...state.registry,
+    cloudBaseURL,
+    hasFetchedHello: true,
+    hostname,
+    isCloudEnabled,
+    machineGuid,
+    registryServer,
+  },
 }))
 
 globalReducer.on(fetchHelloAction.failure, (state) => ({
@@ -279,21 +310,17 @@ globalReducer.on(fetchHelloAction.failure, (state) => ({
   isFetchingHello: true,
 }))
 
-globalReducer.on(
-  updatePersonUrlsAction,
-  (state, {
-    isCloudEnabled, personGuid, registryMachines, registryMachinesArray,
-  }) => ({
-    ...state,
-    registry: {
-      ...state.registry,
-      isCloudEnabled,
-      personGuid,
-      registryMachines,
-      registryMachinesArray,
-    },
-  }),
-)
+globalReducer.on(updatePersonUrlsAction, (state, {
+  personGuid, registryMachines, registryMachinesArray,
+}) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    personGuid,
+    registryMachines,
+    registryMachinesArray,
+  },
+}))
 
 globalReducer.on(startAlarmsAction, (state) => ({
   ...state,
@@ -372,3 +399,12 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
     },
   }
 })
+
+
+globalReducer.on(chartsMetadataRequestSuccess, (state, { data }) => ({
+  ...state,
+  chartsMetadata: {
+    ...state.chartsMetadata,
+    data,
+  },
+}))

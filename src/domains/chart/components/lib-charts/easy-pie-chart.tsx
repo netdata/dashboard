@@ -3,7 +3,7 @@ import React, { useRef, useEffect, useState } from "react"
 import EasyPie from "easy-pie-chart"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-import { ChartDetails, EasyPieChartData } from "domains/chart/chart-types"
+import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { ChartLibraryName } from "domains/chart/utils/chartLibrariesSettings"
 import {
   always, cond, identity, T, sortBy, map, pipe,
@@ -58,7 +58,7 @@ const getPercentFromValueMinMax: GetPercentFromValueMinMax = ({
 interface Props {
   attributes: Attributes
   chartData: EasyPieChartData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   chartLibrary: ChartLibraryName
@@ -89,7 +89,7 @@ interface Props {
 export const EasyPieChart = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   chartWidth,
@@ -213,7 +213,7 @@ export const EasyPieChart = ({
           top: titletop,
         }}
       >
-        {attributes.title || chartDetails.title}
+        {attributes.title || chartMetadata.title}
       </span>
       <span
         className="easyPieChartUnits"

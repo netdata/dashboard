@@ -14,8 +14,10 @@ import {
   selectGlobalChartUnderlay,
   selectGlobalSelectionMaster,
   selectSmoothPlot,
+  selectSyncPanAndZoom,
 } from "domains/global/selectors"
 import { resetGlobalPanAndZoomAction } from "domains/global/actions"
+import { resetChartPanAndZoomAction } from "domains/chart/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
 import {
@@ -23,7 +25,7 @@ import {
   ChartLibraryConfig,
   ChartLibraryName,
 } from "../../utils/chartLibrariesSettings"
-import { ChartDetails, DygraphData } from "../../chart-types"
+import { ChartMetadata, DygraphData } from "../../chart-types"
 import { selectResizeHeight } from "../../selectors"
 
 import "./dygraph-chart.css"
@@ -38,7 +40,7 @@ const isInRangeOfAvailableData: IsInRangeOfAvailableData = ({ after, before, cha
 interface GetInitialDygraphOptions {
   attributes: Attributes,
   chartData: DygraphData,
-  chartDetails: ChartDetails,
+  chartMetadata: ChartMetadata,
   chartSettings: ChartLibraryConfig,
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
@@ -50,7 +52,7 @@ interface GetInitialDygraphOptions {
 const getInitialDygraphOptions = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartSettings,
   dimensionsVisibility,
   hiddenLabelsElementId,
@@ -64,7 +66,7 @@ const getInitialDygraphOptions = ({
 
   const isLogScale = (chartSettings.isLogScale as ((a: Attributes) => boolean))(attributes)
   const {
-    dygraphType: dygraphRequestedType = chartDetails.chart_type,
+    dygraphType: dygraphRequestedType = chartMetadata.chart_type,
   } = attributes
   // corresponds to state.tmp.dygraph_chart_type in old app
   let dygraphChartType = dygraphRequestedType
@@ -85,7 +87,7 @@ const getInitialDygraphOptions = ({
     dygraphRightGap = 5,
     dygraphShowRangeSelector = false,
     dygraphShowRoller = false,
-    dygraphTitle = attributes.title || chartDetails.title,
+    dygraphTitle = attributes.title || chartMetadata.title,
     dygraphTitleHeight = 19,
     dygraphLegend = "always",
     dygraphLabelsDiv = hiddenLabelsElementId,
@@ -144,16 +146,16 @@ const getInitialDygraphOptions = ({
     colors: dygraphColors,
 
     // leave a few pixels empty on the right of the chart
-    rightGap: dygraphRightGap,
+    rightGap: isSparkline ? 0 : dygraphRightGap,
     showRangeSelector: dygraphShowRangeSelector,
     showRoller: dygraphShowRoller,
-    title: dygraphTitle,
+    title: isSparkline ? undefined : dygraphTitle,
     titleHeight: dygraphTitleHeight,
     legend: dygraphLegend, // we need this to get selection events
     labels: chartData.result.labels,
     labelsDiv: dygraphLabelsDiv,
 
-    labelsSeparateLines: dygraphLabelsSeparateLine,
+    labelsSeparateLines: isSparkline ? true : dygraphLabelsSeparateLine,
     labelsShowZeroValues: isLogScale ? false : dygraphShowZeroValues,
     labelsKMB: false,
     labelsKMG2: false,
@@ -161,10 +163,10 @@ const getInitialDygraphOptions = ({
     hideOverlayOnMouseOut: dygraphHideOverlayOnMouseOut,
     includeZero: dygraphIncludeZero,
     xRangePad: dygraphXRangePad,
-    yRangePad: dygraphYRangePad,
+    yRangePad: isSparkline ? 1 : dygraphYRangePad,
     valueRange: dygraphValueRange,
     ylabel: isSparkline ? undefined : unitsCurrent,
-    yLabelWidth: dygraphYLabelWidth,
+    yLabelWidth: isSparkline ? 0 : dygraphYLabelWidth,
 
     // the function to plot the chart
     plotter: (dygraphSmooth && shouldSmoothPlot) ? window.smoothPlotter : null,
@@ -197,11 +199,11 @@ const getInitialDygraphOptions = ({
     fillAlpha: dygraphFillAlpha,
     stackedGraph: dygraphStackedGraph,
     stackedGraphNaNFill: dygraphStackedGraphNanFill,
-    drawAxis: dygraphDrawAxis,
+    drawAxis: isSparkline ? false : dygraphDrawAxis,
     axisLabelFontSize: dygraphAxisLabelFontSize,
     axisLineColor: dygraphAxisLineColor,
     axisLineWidth: dygraphAxisLineWidth,
-    drawGrid: dygraphDrawGrid,
+    drawGrid: isSparkline ? false : dygraphDrawGrid,
     gridLinePattern: dygraphGridLinePattern,
     gridLineWidth: dygraphGridLineWidth,
     gridLineColor: dygraphGridLineColor,
@@ -222,14 +224,14 @@ const getInitialDygraphOptions = ({
         // @ts-ignore
         ticker: Dygraph.dateTicker,
         axisLabelWidth: dygraphXAxisLabelWidth,
-        drawAxis: dygraphDrawXAxis,
+        drawAxis: isSparkline ? false : dygraphDrawXAxis,
         axisLabelFormatter: (d: Date | number) => xAxisTimeString(d as Date),
       },
       y: {
         logscale: isLogScale,
         pixelsPerLabel: dygraphYPixelsPerLabel,
         axisLabelWidth: dygraphYAxisLabelWidth,
-        drawAxis: dygraphDrawYAxis,
+        drawAxis: isSparkline ? false : dygraphDrawYAxis,
         // axisLabelFormatter is added on the updates
       },
     },
@@ -239,7 +241,7 @@ const getInitialDygraphOptions = ({
 interface Props {
   attributes: Attributes
   chartData: DygraphData
-  chartDetails: ChartDetails
+  chartMetadata: ChartMetadata
   chartElementClassName: string
   chartElementId: string
   chartLibrary: ChartLibraryName
@@ -271,7 +273,7 @@ interface Props {
 export const DygraphChart = ({
   attributes,
   chartData,
-  chartDetails,
+  chartMetadata,
   chartElementClassName,
   chartElementId,
   chartLibrary,
@@ -331,6 +333,8 @@ export const DygraphChart = ({
   const dygraphLastTouchEnd = useRef<undefined | number>()
 
   const dispatch = useDispatch()
+  const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
+
   const resetGlobalPanAndZoom = useCallback(() => {
     latestIsUserAction.current = false // prevent starting panAndZoom
     if (dygraphInstance) {
@@ -342,8 +346,13 @@ export const DygraphChart = ({
         dateWindow: null,
       })
     }
-    dispatch(resetGlobalPanAndZoomAction())
-  }, [dispatch, dygraphInstance])
+
+    if (isSyncPanAndZoom) {
+      dispatch(resetGlobalPanAndZoomAction())
+    } else {
+      dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, dygraphInstance, isSyncPanAndZoom])
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
@@ -374,7 +383,7 @@ export const DygraphChart = ({
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
-        chartDetails,
+        chartMetadata,
         chartSettings,
         dimensionsVisibility,
         hiddenLabelsElementId,
@@ -738,7 +747,7 @@ export const DygraphChart = ({
       const extremes = (instance as NetdataDygraph).yAxisExtremes()[0]
       setMinMax(extremes)
     }
-  }, [attributes, chartData, chartDetails, chartSettings, chartUuid, dimensionsVisibility,
+  }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     dygraphInstance, globalChartUnderlay, hiddenLabelsElementId, isMouseDown, orderedColors,
     setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
     updateChartPanOrZoom, xAxisTimeString])
@@ -785,6 +794,14 @@ export const DygraphChart = ({
       })
     }
   }, [dygraphInstance])
+
+  // immediately update when changing global chart underlay
+  useLayoutEffect(() => {
+    if (dygraphInstance) {
+      dygraphInstance.updateOptions({})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [globalChartUnderlay]) // no dygraphInstance in deps, on purpose (prevent unnecessary update)
 
   // update data of the chart
   useLayoutEffect(() => {
