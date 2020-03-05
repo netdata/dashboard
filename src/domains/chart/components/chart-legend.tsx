@@ -210,7 +210,7 @@ export const ChartLegend = ({
             } else if (hoveredRow !== -1) {
               const hoveredValueArray = chartData.result.data[hoveredRow]
               // [timestamp, valueDim1, valueDim2, ...]
-              value = hoveredValueArray[i + 1]
+              value = hoveredValueArray ? hoveredValueArray[i + 1] : null
             } else {
               value = chartData.view_latest_values[i]
             }
