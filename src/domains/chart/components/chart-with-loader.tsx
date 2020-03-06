@@ -245,6 +245,7 @@ export const ChartWithLoader = ({
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}
+        hasEmptyData={hasEmptyData}
         isRemotelyControlled={fetchDataParams.isRemotelyControlled}
         requestedViewRange={fetchDataParams.viewRange}
         selectedDimensions={selectedDimensions}

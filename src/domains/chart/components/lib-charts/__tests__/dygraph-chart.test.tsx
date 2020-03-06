@@ -50,6 +50,7 @@ const dygraphDefaultProps = {
   colors: {},
   dimensionsVisibility: [true, true],
   isRemotelyControlled: true,
+  hasEmptyData: false,
   hoveredRow: -1,
   legendFormatValue: (v: number) => v,
   onUpdateChartPanAndZoom: () => {},
