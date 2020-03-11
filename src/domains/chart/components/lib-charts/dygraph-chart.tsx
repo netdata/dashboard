@@ -250,6 +250,7 @@ interface Props {
     [key: string]: string
   }
   dimensionsVisibility: boolean[]
+  hasEmptyData: boolean
   isRemotelyControlled: boolean
   legendFormatValue: (v: number) => number | string
   onUpdateChartPanAndZoom: (arg: {
@@ -280,6 +281,7 @@ export const DygraphChart = ({
   // colors,
   chartUuid,
   dimensionsVisibility,
+  hasEmptyData,
   isRemotelyControlled,
   legendFormatValue,
   onUpdateChartPanAndZoom,
@@ -379,7 +381,7 @@ export const DygraphChart = ({
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
-    if (chartElement && chartElement.current && !dygraphInstance) {
+    if (chartElement && chartElement.current && !dygraphInstance && !hasEmptyData) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
@@ -748,8 +750,8 @@ export const DygraphChart = ({
       setMinMax(extremes)
     }
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
-    dygraphInstance, globalChartUnderlay, hiddenLabelsElementId, isMouseDown, orderedColors,
-    setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
+    dygraphInstance, globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isMouseDown,
+    orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
     updateChartPanOrZoom, xAxisTimeString])
 
   useLayoutEffect(() => {
@@ -805,9 +807,8 @@ export const DygraphChart = ({
 
   // update data of the chart
   useLayoutEffect(() => {
-    // dont update when there is no data (data.length === 0) - in this case we should still
-    // show old chart
-    if (dygraphInstance && chartData.result.data.length) {
+    // dont update when there is no data - in this case we should still show old chart
+    if (dygraphInstance && !hasEmptyData) {
       // todo support state.tmp.dygraph_force_zoom
       const forceDateWindow = [viewAfter, viewBefore]
 
@@ -839,7 +840,7 @@ export const DygraphChart = ({
         visibility: dimensionsVisibility,
       })
     }
-  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphInstance,
+  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphInstance, hasEmptyData,
     isRemotelyControlled, orderedColors, requestedViewRange, viewAfter, viewBefore])
 
 

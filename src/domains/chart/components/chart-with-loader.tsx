@@ -219,7 +219,10 @@ export const ChartWithLoader = ({
   if (!chartData || !chartMetadata) {
     return (
       <Loader
-        hasEmptyData={false}
+        // Loader should remount when that flag is changed, because inside
+        // there's an oldschool bootstrap icon which doesn't handle updates well
+        key={`${hasEmptyData}`}
+        hasEmptyData={hasEmptyData}
         containerNode={portalNode}
       />
     )
@@ -229,7 +232,8 @@ export const ChartWithLoader = ({
     <>
       {hasEmptyData && (
         <Loader
-          hasEmptyData
+          key={`${hasEmptyData}`}
+          hasEmptyData={hasEmptyData}
           containerNode={portalNode}
         />
       )}
@@ -241,6 +245,7 @@ export const ChartWithLoader = ({
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}
+        hasEmptyData={hasEmptyData}
         isRemotelyControlled={fetchDataParams.isRemotelyControlled}
         requestedViewRange={fetchDataParams.viewRange}
         selectedDimensions={selectedDimensions}

@@ -34,13 +34,14 @@ import { ResizeHandler } from "./resize-handler"
 import { AbstractChart } from "./abstract-chart"
 
 interface Props {
+  attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: ChartData
   chartMetadata: ChartMetadata
   chartHeight: number
   chartUuid: string
   chartWidth: number
-  attributes: Attributes
+  hasEmptyData: boolean
   isRemotelyControlled: boolean
   requestedViewRange: TimeRange
   selectedDimensions: string[]
@@ -59,6 +60,7 @@ export const Chart = memo(({
   chartHeight,
   chartUuid,
   chartWidth,
+  hasEmptyData,
   isRemotelyControlled,
   requestedViewRange,
   selectedDimensions,
@@ -333,6 +335,7 @@ export const Chart = memo(({
         chartHeight={chartHeight}
         chartWidth={chartWidth}
         dimensionsVisibility={dimensionsVisibility}
+        hasEmptyData={hasEmptyData}
         onUpdateChartPanAndZoom={handleUpdateChartPanAndZoom}
         isRemotelyControlled={isRemotelyControlled}
         legendFormatValue={legendFormatValue}
