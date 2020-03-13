@@ -1,29 +1,36 @@
 import React from "react"
 import { Button } from "@netdata/netdata-ui"
-import { SpaceIcon } from "./components/space-icon"
-import { ListContainer, SpacesList, SeparatedSection, SpacePlaceholder } from "./styled"
-import { mockedSpacesList } from "./mocks"
+import { getIframeSrc } from "utils"
+import {
+  ListContainer, SpacesList, SeparatedSection, SpacePlaceholder,
+} from "./styled"
 
-export const SpacesBar = () => {
-  const spaces = mockedSpacesList
-  const currentSpaceId = "id"
-
-  return (
-    <ListContainer>
-      <SpacesList>
-        {spaces.length ? (
-          spaces.map((space, i) => {
-            const isActive = space.id === currentSpaceId
-            return <SpaceIcon key={i} space={space} active={isActive} />
-          })
-        ) : (
-          <SpacePlaceholder />
-        )}
-      </SpacesList>
-
-      <SeparatedSection>
-        <Button icon="plus" onClick={() => {}} />
-      </SeparatedSection>
-    </ListContainer>
-  )
+interface Props {
+  cloudBaseURL: string
+  isSignedIn: boolean
 }
+export const SpacesBar = ({
+  cloudBaseURL,
+  isSignedIn,
+}: Props) => (
+  <ListContainer>
+    {isSignedIn ? (
+      <iframe
+        src={getIframeSrc(cloudBaseURL, "space-bar")}
+        title="Space Bar"
+        height="100%"
+        width="100%"
+        style={{ border: "none" }}
+      />
+    ) : (
+      <>
+        <SpacesList>
+          <SpacePlaceholder />
+        </SpacesList>
+        <SeparatedSection>
+          <Button icon="plus" onClick={() => {}} />
+        </SeparatedSection>
+      </>
+    )}
+  </ListContainer>
+)

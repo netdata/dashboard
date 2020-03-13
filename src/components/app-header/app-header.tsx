@@ -4,6 +4,7 @@ import { useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
 import { selectSnapshot, selectActiveAlarms } from "domains/global/selectors"
 
+import { getIframeSrc } from "utils"
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
 import { AlarmsControl } from "./components/alarms-control"
@@ -22,9 +23,11 @@ import {
 } from "./styled"
 
 interface Props {
+  cloudBaseURL: string
   chartsMetadata: ChartsMetadata
 }
 export const AppHeader = ({
+  cloudBaseURL,
   chartsMetadata,
 }: Props) => {
   const snapshot = useSelector(selectSnapshot)
@@ -91,7 +94,15 @@ export const AppHeader = ({
             <StyledGear type="borderless" icon="gear" />
           </StyledGearContainer>
         </IconContainer>
-        <IframeContainer />
+        <IframeContainer>
+          <iframe
+            title="Sign In"
+            src={getIframeSrc(cloudBaseURL, "sign-in")}
+            width="100%"
+            height="40px"
+            style={{ border: "none" }}
+          />
+        </IframeContainer>
       </UtilitySection>
     </StyledHeader>
   )
