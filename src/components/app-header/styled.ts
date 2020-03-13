@@ -84,6 +84,7 @@ export const IconContainer = styled.div`
 `
 export const IframeContainer = styled.div`
   width: ${getSizeBy(9)};
+  height: 40px;
 `
 
 export const StyledHelpIcon = styled.a`

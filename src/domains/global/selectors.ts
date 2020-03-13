@@ -51,6 +51,8 @@ export const selectSnapshot = createSelector(
 
 export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
+export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
+
 export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
 
 export const selectHasStartedAlarms = createSelector(

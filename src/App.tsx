@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState,
+  useEffect, useLayoutEffect, useRef, useState, useCallback,
 } from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
@@ -15,8 +15,12 @@ import "bootstrap-toggle"
 import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { useStore } from "react-redux"
+
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
+import { useListenToPostMessage } from "utils/post-message"
+import { useSelector } from "store/redux-separate-context"
+import { selectCloudBaseUrl } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
@@ -41,6 +45,8 @@ if (!window.netdataNoFontAwesome) {
 
 // support legacy code
 window.Ps = Ps
+
+const HAS_SIGN_IN_HISTORY = "has-sign-in-history"
 
 const App: React.FC = () => {
   const store = useStore()
@@ -94,17 +100,37 @@ const App: React.FC = () => {
   }, [])
 
   const chartsMetadata = useChartsMetadata()
+  const cloudBaseURL = useSelector(selectCloudBaseUrl)
 
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
 
+  const isSignedInCallback = useCallback((newIsSignedIn) => {
+    if (newIsSignedIn === true) {
+      localStorage.setItem(HAS_SIGN_IN_HISTORY, "true")
+    } else if (newIsSignedIn === false) {
+      // logout
+      localStorage.setItem(HAS_SIGN_IN_HISTORY, "false")
+    }
+  }, [])
+  const [isSignedIn] = useListenToPostMessage("is-signed-in", isSignedInCallback)
+
   return (
     <ThemeProvider theme={DefaultTheme}>
-      {chartsMetadata && (
+      {chartsMetadata && cloudBaseURL && (
         <>
-          {!isPrintMode && <SpacesBar /> }
-          {!isPrintMode && <SpacePanel chartsMetadata={chartsMetadata} /> }
-          <AppHeader chartsMetadata={chartsMetadata} />
+          {!isPrintMode && <SpacesBar isSignedIn={isSignedIn} cloudBaseURL={cloudBaseURL} /> }
+          {!isPrintMode && (
+            <SpacePanel
+              isSignedIn={isSignedIn}
+              cloudBaseURL={cloudBaseURL}
+              chartsMetadata={chartsMetadata}
+            />
+          )}
+          <AppHeader
+            chartsMetadata={chartsMetadata}
+            cloudBaseURL={cloudBaseURL}
+          />
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
