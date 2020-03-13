@@ -1,5 +1,5 @@
 import React from "react"
-import { useHtpp } from "hooks/use-http"
+import { useHttp } from "hooks/use-http"
 import {
   Container,
   VersionIndicator,
@@ -66,17 +66,17 @@ export const VersionControl = ({
   releaseChannel,
 }: Props) => {
   const isStableReleaseChannel = releaseChannel === "stable"
-  const [githubVersion] = useHtpp<GithubResponse>(
+  const [githubVersion] = useHttp<GithubResponse>(
     NETDATA_LATEST_VERSION_URL,
     isStableReleaseChannel,
     true,
   )
 
-  const [gcsVersionResponse] = useHtpp<{mediaLink: string}>(
+  const [gcsVersionResponse] = useHttp<{mediaLink: string}>(
     NETDATA_LATEST_GCS_VERSION_URL,
     !isStableReleaseChannel,
   )
-  const [mediaLinkResponse] = useHtpp<string>(
+  const [mediaLinkResponse] = useHttp<string>(
     gcsVersionResponse?.mediaLink, Boolean(gcsVersionResponse),
   )
 
@@ -95,7 +95,7 @@ export const VersionControl = ({
     <Container>
       <VersionIndicator>
         <CollapsableText>Agent Version</CollapsableText>
-        <VersionNumber>{latestVersion}</VersionNumber>
+        <VersionNumber>{currentVersion}</VersionNumber>
       </VersionIndicator>
       {isNewVersionAvailable && (
         <NewVersionIndicator
