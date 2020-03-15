@@ -1,7 +1,8 @@
 import { sortBy } from "ramda"
 import React, {
-  useLayoutEffect, useRef, useCallback,
+  useLayoutEffect, useRef, useCallback, RefObject,
 } from "react"
+import { useUpdateEffect } from "react-use"
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
 
@@ -45,6 +46,7 @@ interface GetInitialDygraphOptions {
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
   orderedColors: string[],
+  propsRef: RefObject<{ legendFormatValue: (v: number) => string | number }>
   shouldSmoothPlot: boolean,
   unitsCurrent: string,
   xAxisTimeString: (d: Date) => string,
@@ -57,6 +59,7 @@ const getInitialDygraphOptions = ({
   dimensionsVisibility,
   hiddenLabelsElementId,
   orderedColors,
+  propsRef,
   shouldSmoothPlot,
   unitsCurrent,
   xAxisTimeString,
@@ -233,6 +236,9 @@ const getInitialDygraphOptions = ({
         axisLabelWidth: dygraphYAxisLabelWidth,
         drawAxis: isSparkline ? false : dygraphDrawYAxis,
         // axisLabelFormatter is added on the updates
+        axisLabelFormatter: (y: Date | number) => (
+          propsRef.current && propsRef.current.legendFormatValue(y as number)
+        ),
       },
     },
   }
@@ -363,6 +369,8 @@ export const DygraphChart = ({
     chartData,
     globalChartUnderlay,
     hoveredX,
+    // put it to ref to prevent additional updateOptions() after creating dygraph
+    legendFormatValue,
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
     viewAfter,
@@ -372,12 +380,13 @@ export const DygraphChart = ({
     propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
     propsRef.current.globalChartUnderlay = globalChartUnderlay
+    propsRef.current.legendFormatValue = legendFormatValue
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom, setGlobalChartUnderlay,
-    viewAfter, viewBefore])
+  }, [chartData, globalChartUnderlay, hoveredX, legendFormatValue, resetGlobalPanAndZoom,
+    setGlobalChartUnderlay, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -390,6 +399,7 @@ export const DygraphChart = ({
         dimensionsVisibility,
         hiddenLabelsElementId,
         orderedColors,
+        propsRef,
         shouldSmoothPlot,
         unitsCurrent,
         xAxisTimeString,
@@ -757,13 +767,7 @@ export const DygraphChart = ({
   useLayoutEffect(() => {
     if (dygraphInstance && legendFormatValue) {
       const isSparkline = attributes.dygraphTheme === "sparkline"
-      // corresponds to NETDATA.dygraphChartUpdate in old dashboard
-      dygraphInstance.updateOptions({
-        axes: {
-          y: {
-            axisLabelFormatter: (y: Date | number) => legendFormatValue(y as number),
-          },
-        },
+      dygraphInstance.current.updateOptions({
         ylabel: isSparkline ? undefined : unitsCurrent,
       })
     }
