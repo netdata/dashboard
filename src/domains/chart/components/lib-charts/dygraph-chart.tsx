@@ -310,8 +310,6 @@ export const DygraphChart = ({
   const hiddenLabelsElementId = `${chartUuid}-hidden-labels-id`
 
   const chartElement = useRef<HTMLDivElement>(null)
-  // React.useState. so it can be mocked in test
-  const [dygraphInstance, setDygraphInstance] = React.useState<Dygraph | null>(null)
 
   const updateChartPanOrZoom = useCallback(({
     after, before,
@@ -327,6 +325,8 @@ export const DygraphChart = ({
     })
   }, [chartUuid, onUpdateChartPanAndZoom])
 
+  // keep in ref to prevent additional updates
+  const dygraphInstance = useRef<Dygraph | null>()
   // state.tmp.dygraph_user_action in old dashboard
   const latestIsUserAction = useRef(false)
   // state.tmp.dygraph_mouse_down in old dashboard
@@ -345,10 +345,10 @@ export const DygraphChart = ({
 
   const resetGlobalPanAndZoom = useCallback(() => {
     latestIsUserAction.current = false // prevent starting panAndZoom
-    if (dygraphInstance) {
+    if (dygraphInstance.current) {
       // todo on toolbox reset click, do updateOptions({ dateWindow: null })
       // (issue existed also before rewrite)
-      dygraphInstance.updateOptions({
+      dygraphInstance.current.updateOptions({
         // reset dateWindow to the current
         // @ts-ignore external typings dont support null
         dateWindow: null,
@@ -360,7 +360,7 @@ export const DygraphChart = ({
     } else {
       dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
     }
-  }, [chartUuid, dispatch, dygraphInstance, isSyncPanAndZoom])
+  }, [chartUuid, dispatch, isSyncPanAndZoom])
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
@@ -390,7 +390,7 @@ export const DygraphChart = ({
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
-    if (chartElement && chartElement.current && !dygraphInstance && !hasEmptyData) {
+    if (chartElement && chartElement.current && !dygraphInstance.current && !hasEmptyData) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
@@ -464,6 +464,27 @@ export const DygraphChart = ({
         zoomCallback: (minDate: number, maxDate: number) => {
           latestIsUserAction.current = true
           updateChartPanOrZoom({ after: minDate, before: maxDate })
+        },
+
+        underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
+          // the chart is about to be drawn
+          // this function renders global highlighted time-frame
+
+          if (propsRef.current.globalChartUnderlay) {
+            const { after, before } = propsRef.current.globalChartUnderlay
+
+            if (after < before) {
+              const bottomLeft = g.toDomCoords(after, -20)
+              const topRight = g.toDomCoords(before, +20)
+
+              const left = bottomLeft[0]
+              const right = topRight[0]
+
+              // eslint-disable-next-line no-param-reassign
+              canvas.fillStyle = window.NETDATA.themes.current.highlight
+              canvas.fillRect(left, area.y, right - left, area.h)
+            }
+          }
         },
 
         // interactionModel cannot be replaced with updateOptions(). we need to keep all changing
@@ -754,65 +775,39 @@ export const DygraphChart = ({
       // todo if any flickering will happen, show the dygraph chart only when it's
       // updated with proper formatting (toggle visibility with css)
       const instance = new Dygraph((chartElement.current), chartData.result.data, dygraphOptions)
-      setDygraphInstance(instance)
+      dygraphInstance.current = instance
 
       const extremes = (instance as NetdataDygraph).yAxisExtremes()[0]
       setMinMax(extremes)
     }
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
-    dygraphInstance, globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isMouseDown,
+    globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isMouseDown,
     orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
     updateChartPanOrZoom, xAxisTimeString])
 
-  useLayoutEffect(() => {
-    if (dygraphInstance && legendFormatValue) {
+  useUpdateEffect(() => {
+    if (dygraphInstance.current) {
       const isSparkline = attributes.dygraphTheme === "sparkline"
       dygraphInstance.current.updateOptions({
         ylabel: isSparkline ? undefined : unitsCurrent,
       })
     }
-  }, [attributes.dygraphTheme, dygraphInstance, legendFormatValue, unitsCurrent])
+  }, [attributes, unitsCurrent])
 
-  // update chartOverlay
-  useLayoutEffect(() => {
-    if (dygraphInstance) {
-      dygraphInstance.updateOptions({
-        underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
-          // the chart is about to be drawn
-          // this function renders global highlighted time-frame
-
-          if (propsRef.current.globalChartUnderlay) {
-            const { after, before } = propsRef.current.globalChartUnderlay
-
-            if (after < before) {
-              const bottomLeft = g.toDomCoords(after, -20)
-              const topRight = g.toDomCoords(before, +20)
-
-              const left = bottomLeft[0]
-              const right = topRight[0]
-
-              // eslint-disable-next-line no-param-reassign
-              canvas.fillStyle = window.NETDATA.themes.current.highlight
-              canvas.fillRect(left, area.y, right - left, area.h)
-            }
-          }
-        },
-      })
-    }
-  }, [dygraphInstance])
 
   // immediately update when changing global chart underlay
-  useLayoutEffect(() => {
-    if (dygraphInstance) {
-      dygraphInstance.updateOptions({})
+  useUpdateEffect(() => {
+    if (dygraphInstance.current) {
+      dygraphInstance.current.updateOptions({})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalChartUnderlay]) // no dygraphInstance in deps, on purpose (prevent unnecessary update)
+  }, [globalChartUnderlay])
 
   // update data of the chart
-  useLayoutEffect(() => {
+  // first effect should only be made by new DygraphInstance()
+  useUpdateEffect(() => {
     // dont update when there is no data - in this case we should still show old chart
-    if (dygraphInstance && !hasEmptyData) {
+    if (dygraphInstance.current && !hasEmptyData) {
       // todo support state.tmp.dygraph_force_zoom
       const forceDateWindow = [viewAfter, viewBefore]
 
@@ -823,7 +818,7 @@ export const DygraphChart = ({
       // so if the chart needs to change local dateWindow, we'll always use timestamps instead of
       // null.
 
-      const xAxisRange = dygraphInstance.xAxisRange()
+      const xAxisRange = dygraphInstance.current.xAxisRange()
       // check if the time is relative
       const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
         && (xAxisRange[1] > viewBefore)
@@ -836,7 +831,7 @@ export const DygraphChart = ({
 
       const { dygraphColors = orderedColors } = attributes
 
-      dygraphInstance.updateOptions({
+      dygraphInstance.current.updateOptions({
         ...optionsDateWindow,
         colors: dygraphColors,
         file: chartData.result.data,
@@ -844,24 +839,24 @@ export const DygraphChart = ({
         visibility: dimensionsVisibility,
       })
     }
-  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphInstance, hasEmptyData,
+  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, hasEmptyData,
     isRemotelyControlled, orderedColors, requestedViewRange, viewAfter, viewBefore])
 
 
   // set selection
   const currentSelectionMasterId = useSelector(selectGlobalSelectionMaster)
   useLayoutEffect(() => {
-    if (dygraphInstance && currentSelectionMasterId !== chartUuid) {
+    if (dygraphInstance.current && currentSelectionMasterId !== chartUuid) {
       if (hoveredRow === -1) {
         // getSelection is 100 times faster that clearSelection
-        if (dygraphInstance.getSelection() !== -1) {
-          dygraphInstance.clearSelection()
+        if (dygraphInstance.current.getSelection() !== -1) {
+          dygraphInstance.current.clearSelection()
         }
         return
       }
-      dygraphInstance.setSelection(hoveredRow)
+      dygraphInstance.current.setSelection(hoveredRow)
     }
-  }, [chartData, chartUuid, currentSelectionMasterId, dygraphInstance, hoveredRow,
+  }, [chartData, chartUuid, currentSelectionMasterId, hoveredRow,
     viewAfter, viewBefore])
 
 
@@ -870,10 +865,10 @@ export const DygraphChart = ({
     (state: AppStateT) => selectResizeHeight(state, { id: chartUuid }),
   )
   useLayoutEffect(() => {
-    if (dygraphInstance) {
-      (dygraphInstance as NetdataDygraph).resize()
+    if (dygraphInstance.current) {
+      (dygraphInstance.current as NetdataDygraph).resize()
     }
-  }, [dygraphInstance, resizeHeight])
+  }, [resizeHeight])
 
 
   return (
