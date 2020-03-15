@@ -68,7 +68,9 @@ export const useShowValueOutside = ({
         const row = data[rowIndex]
 
         chartData.dimension_names.forEach((dimensionName, dimensionIndex) => {
-          const value = showUndefined ? "" : legendFormatValue(row[dimensionIndex + 1])
+          const value = (showUndefined || !row)
+            ? ""
+            : legendFormatValue(row[dimensionIndex + 1])
           const element = showValueAttributesNodes.current[dimensionIndex]
           if (element) {
             element.innerText = `${value}`
