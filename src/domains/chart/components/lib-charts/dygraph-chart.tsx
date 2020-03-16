@@ -474,8 +474,9 @@ export const DygraphChart = ({
             const { after, before } = propsRef.current.globalChartUnderlay
 
             if (after < before) {
-              const bottomLeft = g.toDomCoords(after, -20)
-              const topRight = g.toDomCoords(before, +20)
+              const HIGHLIGHT_HORIZONTAL_PADDING = 20
+              const bottomLeft = g.toDomCoords(after, -HIGHLIGHT_HORIZONTAL_PADDING)
+              const topRight = g.toDomCoords(before, HIGHLIGHT_HORIZONTAL_PADDING)
 
               const left = bottomLeft[0]
               const right = topRight[0]
