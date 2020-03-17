@@ -86,12 +86,15 @@ interface Props {
   chartsMetadata: ChartsMetadata
   currentChart: string
   setCurrentChart: (currentChart: string) => void
+  host?: string
 }
 export const NodeView = ({
   chartsMetadata,
   currentChart,
   setCurrentChart,
+  host = "http://localhost:19999",
 }: Props) => {
+  window.netdataServer = host
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
