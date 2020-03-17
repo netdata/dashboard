@@ -12,12 +12,16 @@ import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
 import {
+  selectCommonMin,
+  selectCommonMax,
   selectGlobalChartUnderlay,
   selectGlobalSelectionMaster,
   selectSmoothPlot,
   selectSyncPanAndZoom,
 } from "domains/global/selectors"
-import { resetGlobalPanAndZoomAction } from "domains/global/actions"
+import {
+  resetGlobalPanAndZoomAction, setCommonMaxAction, setCommonMinAction,
+} from "domains/global/actions"
 import { resetChartPanAndZoomAction } from "domains/chart/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
@@ -870,6 +874,75 @@ export const DygraphChart = ({
       (dygraphInstance.current as NetdataDygraph).resize()
     }
   }, [resizeHeight])
+
+
+  const commonMinState = useSelector((state: AppStateT) => (
+    attributes.commonMin
+      ? selectCommonMin(state, attributes.commonMin)
+      : undefined
+  ))
+  const commonMaxState = useSelector((state: AppStateT) => (
+    attributes.commonMax
+      ? selectCommonMax(state, attributes.commonMax)
+      : undefined
+  ))
+
+  useLayoutEffect(() => {
+    const { commonMin: commonMinKey, commonMax: commonMaxKey } = attributes
+
+    if (
+      dygraphInstance.current
+      && (commonMinKey || commonMaxKey)
+    ) {
+      const extremes = (dygraphInstance.current as NetdataDygraph).yAxisExtremes()[0]
+      const [currentMin, currentMax] = extremes
+
+      const {
+        dygraphValueRange = [null, null],
+      } = attributes
+      // if the user gave a valueRange, respect it
+      const shouldUseCommonMin = dygraphValueRange[0] === null
+      const shouldUseCommonMax = dygraphValueRange[1] === null
+
+
+      let shouldUpdate = false
+      let valueRange: number[] = [...extremes]
+
+      // check if current extreme (painted by dygraph) is not more extreme than commonMin/Max
+      // if yes - update the chart
+      if (commonMinKey && shouldUseCommonMin) {
+        if (commonMinState && commonMinState.currentExtreme < currentMin) {
+          valueRange[0] = commonMinState.currentExtreme
+          shouldUpdate = true
+        }
+      }
+      if (commonMaxKey && shouldUseCommonMax) {
+        if (commonMaxState && commonMaxState.currentExtreme > currentMax) {
+          valueRange[1] = commonMaxState.currentExtreme
+          shouldUpdate = true
+        }
+      }
+
+      if (shouldUpdate) {
+        dygraphInstance.current.updateOptions({ valueRange })
+        const newExtremes = (dygraphInstance.current as NetdataDygraph).yAxisExtremes()[0]
+        // get updated valueRange (rounded by dygraph)
+        valueRange = [...newExtremes]
+      }
+
+      // if the value is different than the one stored in state, update redux state
+      if (commonMinKey && shouldUseCommonMin
+        && (valueRange[0] !== commonMinState?.charts[chartUuid])
+      ) {
+        dispatch(setCommonMinAction({ chartUuid, commonMinKey, value: valueRange[0] }))
+      }
+      if (commonMaxKey && shouldUseCommonMax
+        && (valueRange[1] !== commonMaxState?.charts[chartUuid])
+      ) {
+        dispatch(setCommonMaxAction({ chartUuid, commonMaxKey, value: valueRange[1] }))
+      }
+    }
+  }, [attributes, chartData.result, chartUuid, commonMinState, commonMaxState, dispatch])
 
 
   return (

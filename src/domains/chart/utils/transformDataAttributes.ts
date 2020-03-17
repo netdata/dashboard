@@ -98,6 +98,8 @@ export interface StaticAttributes {
   pixelsPerPoint?: number
   points?: number
   heightId?: string
+  commonMin?: string
+  commonMax?: string
 
   dygraphType?: string
   dygraphValueRange?: any[]
@@ -321,6 +323,8 @@ const getAttributesMap = (): AttributesMap => ({
   pixelsPerPoint: { key: "pixels-per-point" },
   points: { key: "points" },
   heightId: { key: "id" },
+  commonMin: { key: "common-min" },
+  commonMax: { key: "common-max" },
 
   // let's not put the default values here, because they will also be needed by the main Agent page
   // and the Cloud App
