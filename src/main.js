@@ -961,7 +961,7 @@ function gotoServerValidateUrl(id, guid, url) {
     setTimeout(function () {
         document.getElementById('gotoServerList').innerHTML += '<tr><td style="padding-left: 20px;"><a href="' + verifyURL(finalURL) + '" target="_blank">' + escapeUserInputHTML(url) + '</a></td><td style="padding-left: 30px;"><code id="' + guid + '-' + id + '-status">checking...</code></td></tr>';
 
-        NETDATA.registry.hello(url, function (data) {
+        NETDATA.registryHello(url, function (data) {
             if (typeof data !== 'undefined' && data !== null && typeof data.machine_guid === 'string' && data.machine_guid === guid) {
                 // console.log('OK ' + id + ' URL: ' + url);
                 document.getElementById(guid + '-' + id + '-status').innerHTML = "OK";
@@ -972,7 +972,8 @@ function gotoServerValidateUrl(id, guid, url) {
                     if (gotoServerMiddleClick) {
                         window.open(verifyURL(finalURL), '_blank');
                         gotoServerMiddleClick = false;
-                        document.getElementById('gotoServerResponse').innerHTML = '<b>Opening new window to ' + NETDATA.registry.machines[guid].name + '<br/><a href="' + verifyURL(finalURL) + '">' + escapeUserInputHTML(url) + '</a></b><br/>(check your pop-up blocker if it fails)';
+                        const registryMachines = getFromRegistry("registryMachines");
+                        document.getElementById('gotoServerResponse').innerHTML = '<b>Opening new window to ' + registryMachines[guid].name + '<br/><a href="' + verifyURL(finalURL) + '">' + escapeUserInputHTML(url) + '</a></b><br/>(check your pop-up blocker if it fails)';
                     } else {
                         document.getElementById('gotoServerResponse').innerHTML += 'found it! It is at:<br/><small>' + escapeUserInputHTML(url) + '</small>';
                         document.location = verifyURL(finalURL);
