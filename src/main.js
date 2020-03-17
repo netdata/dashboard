@@ -2950,32 +2950,6 @@ function initializeDynamicDashboard(newReduxStore) {
         netdataPrepCallback()
 
         initializeConfig.url = serverDefault;
-
-        // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
-        // refractored)
-        reduxStore.subscribe(() => {
-            const lastAction = reduxStore.getState().lastActionForMainJs
-            if (!lastAction) {
-                return
-            }
-            if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
-                const { after, before } = lastAction.payload
-                // additional check to prevent loop, after setting initial state from url
-                if (urlOptions.after !== after || urlOptions.before !== before) {
-                    urlOptions.netdataPanAndZoomCallback(true, after, before)
-                }
-            } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
-                urlOptions.netdataPanAndZoomCallback(false, 0, 0)
-            } else if (lastAction.type === setGlobalChartUnderlayAction.toString()) {
-                const { after, before } = lastAction.payload
-                // additional check to prevent loop, after setting initial state from url
-                if (urlOptions.after !== after || urlOptions.before !== before) {
-                    urlOptions.netdataHighlightCallback(true, after, before)
-                }
-            } else if (lastAction.type === clearHighlightAction.toString()) {
-                urlOptions.netdataHighlightCallback(false, 0, 0)
-            }
-        })
     }
 
 
