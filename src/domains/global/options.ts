@@ -1,4 +1,5 @@
 import { mergeAll, mergeRight } from "ramda"
+import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
 
 export const SYNC_PAN_AND_ZOOM = "sync_pan_and_zoom"
 
@@ -96,7 +97,7 @@ const getItemFromLocalStorage = <T extends string>(key: T) => {
   return parsed
 }
 
-const getOptionsMergedWithLocalStorage = (): Options => {
+export const getOptionsMergedWithLocalStorage = (): Options => {
   const optionsFromLocalStorage = Object.keys(localStorage)
     .filter((key) => key.startsWith("options."))
     .map((key) => ({
@@ -109,3 +110,12 @@ const getOptionsMergedWithLocalStorage = (): Options => {
 }
 
 export const optionsMergedWithLocalStorage = getOptionsMergedWithLocalStorage()
+
+export const clearLocalStorage = () => {
+  const localStorageKeys = Object.keys(localStorage)
+  localStorageKeys.forEach((key) => {
+    if (key.startsWith(LOCALSTORAGE_HEIGHT_KEY_PREFIX) || key.startsWith("options.")) {
+      localStorage.removeItem(key)
+    }
+  })
+}

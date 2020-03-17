@@ -14,6 +14,7 @@ import {
     fetchAllAlarmsAction,
     loadSnapshotAction,
     resetGlobalPanAndZoomAction,
+    resetOptionsAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
@@ -4518,17 +4519,16 @@ function finalizePage() {
     // console.log('start up time: ' + (netdataEnded - netdataStarted).toString() + ' ms');
 }
 
-function resetDashboardOptions() {
-    var help = NETDATA.options.current.show_help;
+window.resetDashboardOptions = () => {
+    reduxStore.dispatch(resetOptionsAction())
 
-    NETDATA.resetOptions();
-    if (setTheme('slate')) {
-        netdataReload();
-    }
+    // it's dirty, but this will be rewritten anyway
+    urlOptions.update_always = false;
+    urlOptions.help = false;
+    urlOptions.theme = "slate";
+    urlOptions.hashUpdate();
 
-    if (help !== NETDATA.options.current.show_help) {
-        netdataReload();
-    }
+    netdataReload()
 }
 
 // callback to add the dashboard info to the
