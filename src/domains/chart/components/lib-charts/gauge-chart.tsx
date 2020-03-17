@@ -1,5 +1,5 @@
 import React, {
-  useRef, useEffect, useState, useMemo,
+  useRef, useEffect, useState,
 } from "react"
 // @ts-ignore "declare module" doesn't work properly when importing dashboard in cloud
 import { Gauge } from "gaugeJS"
@@ -166,15 +166,10 @@ export const GaugeChart = ({
         chartInstance.set(showUndefined ? 0 : pcent)
       }, 0)
     }
-  }, [chartInstance, hoveredRow, pcent, showUndefined])
+  }, [chartInstance, chartHeight, chartWidth, hoveredRow, pcent, showUndefined])
 
-  // backwards-compatibility - in old dashboard the initial height was calculated based
-  // on height of the component without gauge-chart rendered inside.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const chartHeightInitial = useMemo(() => chartHeight, [])
-
-  const valueFontSize = Math.floor(chartHeightInitial / 5)
-  const valueTop = Math.round((chartHeightInitial - valueFontSize) / 3.2)
+  const valueFontSize = Math.floor(chartHeight / 5)
+  const valueTop = Math.round((chartHeight - valueFontSize) / 3.2)
 
   const titleFontSize = Math.round(valueFontSize / 2.1)
   const titleTop = 0
@@ -191,8 +186,10 @@ export const GaugeChart = ({
         ref={chartCanvasElement}
         className="gaugeChart"
         id={`gauge-${chartUuid}-canvas`}
-        width={chartWidth}
-        height={chartHeightInitial}
+        style={{
+          width: chartWidth,
+          height: chartHeight,
+        }}
       />
       <span
         className="gaugeChartLabel"
