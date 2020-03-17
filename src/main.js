@@ -2843,9 +2843,6 @@ function initializeDynamicDashboardWithData(data) {
         // update the dashboard title
         document.title = options.hostname + ' netdata dashboard';
 
-        // close the splash screen
-        $("#loadOverlay").css("display", "none");
-
         // create a chart_by_name index
         data.charts_by_name = {};
         var charts = data.charts;
