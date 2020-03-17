@@ -104,6 +104,8 @@ export const setOptionAction = createAction<SetOptionAction>(
   `${storeKey}/setOptionAction`,
 )
 
+export const resetOptionsAction = createAction(`${storeKey}/resetOptions`)
+
 export const loadSnapshotAction = createAction<{snapshot: Snapshot}>(
   `${storeKey}/loadSnapshotAction`,
 )

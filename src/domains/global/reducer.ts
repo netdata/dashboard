@@ -22,8 +22,11 @@ import {
   chartsMetadataRequestSuccess,
   setCommonMaxAction,
   setCommonMinAction,
+  resetOptionsAction,
 } from "./actions"
-import { Options, optionsMergedWithLocalStorage } from "./options"
+import {
+  Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
+} from "./options"
 
 interface CommonMinMax {
   [commonKey: string]: {
@@ -394,6 +397,14 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
     [key]: value,
   },
 }))
+
+globalReducer.on(resetOptionsAction, (state) => {
+  clearLocalStorage()
+  return {
+    ...state,
+    options: getOptionsMergedWithLocalStorage(),
+  }
+})
 
 globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   const parsedData = Object.keys(snapshot.data)
