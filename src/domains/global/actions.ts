@@ -16,6 +16,12 @@ export const requestCommonColorsAction = createAction<RequestCommonColors>(
   `${storeKey}/globalRequestCommonColors`,
 )
 
+interface SetCommonMinAction { chartUuid: string, commonMinKey: string, value: number }
+export const setCommonMinAction = createAction<SetCommonMinAction>(`${storeKey}/setCommonMin`)
+
+interface SetCommonMaxAction { chartUuid: string, commonMaxKey: string, value: number }
+export const setCommonMaxAction = createAction<SetCommonMaxAction>(`${storeKey}/setCommonMax`)
+
 export const setTimezoneAction = createAction<{timezone: string}>(`${storeKey}/globalSetTmezone`)
 window.TEMPORARY_setTimezoneAction = setTimezoneAction
 
