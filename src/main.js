@@ -4015,20 +4015,28 @@ function dashboardSettingsSetup() {
     });
 }
 
+const CHART_DIV_ID_PREFIX = 'chart_'
+const CHART_DIV_OFFSET = -50
+
 function scrollDashboardTo() {
     if (window.netdataSnapshotData !== null && typeof window.netdataSnapshotData.hash !== 'undefined') {
         scrollToId(window.netdataSnapshotData.hash.replace('#', ''));
     } else {
         // check if we have to jump to a specific section
         scrollToId(urlOptions.hash.replace('#', ''));
+        if (urlOptions.chart !== null) {
+            const chartElement = document.getElementById(`${CHART_DIV_ID_PREFIX}${name2id(urlOptions.chart)}`)
+            if (chartElement) {
+                const offset = chartElement.offsetTop + CHART_DIV_OFFSET;
+                document.querySelector("html").scrollTop = offset
+            }
+        }
     }
 }
 
 var modalHiddenCallback = null;
 
 window.scrollToChartAfterHidingModal = (chart, alarmDate, alarmStatus) => {
-    const CHART_DIV_ID_PREFIX = 'chart_'
-    const CHART_DIV_OFFSET = -50
     modalHiddenCallback = function () {
 
         if (typeof chart === 'string') {
