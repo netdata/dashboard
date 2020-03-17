@@ -33,7 +33,7 @@ export const setGlobalSelectionAction = createAction<SetGlobalSelectionAction>(
   `${storeKey}/setGlobalSelection`,
 )
 
-interface SetGlobalPanAndZoomAction {
+export interface SetGlobalPanAndZoomAction {
   after: number
   before: number
   masterID?: string
@@ -45,7 +45,7 @@ export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
 
-interface SetGlobalChartUnderlayAction {
+export interface SetGlobalChartUnderlayAction {
   after: number
   before: number
   masterID: string
