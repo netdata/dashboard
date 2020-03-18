@@ -1,12 +1,10 @@
 import {
   cond, always, T,
 } from "ramda"
-import React, { useEffect, useState, useMemo } from "react"
+import React, { useEffect, useState } from "react"
 import { useThrottle } from "react-use"
-
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
-
 import {
   selectGlobalPanAndZoom,
   selectGlobalSelection,
@@ -15,19 +13,16 @@ import {
   selectSnapshot,
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
-
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../constants"
 import { getChartURLOptions } from "../utils/get-chart-url-options"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { Attributes } from "../utils/transformDataAttributes"
 import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
 import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
-
 import { fetchChartAction, fetchDataAction } from "../actions"
 import {
   selectChartData,
   selectChartFetchDataParams,
-  makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
 } from "../selectors"
 import {
@@ -37,7 +32,6 @@ import {
   DygraphData,
   EasyPieChartData,
 } from "../chart-types"
-
 import { Loader } from "./loader"
 import { Chart } from "./chart"
 import "./chart-with-loader.css"
@@ -47,31 +41,29 @@ export type Props = {
   attributes: Attributes
   chartUuid: string
   portalNode: HTMLElement
+  chartMetadata?: ChartMetadata
 }
 
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
   portalNode,
+  chartMetadata,
 }: Props) => {
   /**
    * fetch chart details
    */
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
-  const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
-  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
-    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
-  ))
   useEffect(() => {
-    if (!chartMetadata && !isFetchingDetails) {
+    if (!chartMetadata) {
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
         host,
       }))
     }
-  }, [attributes.id, chartMetadata, chartUuid, dispatch, host, isFetchingDetails])
+  }, [attributes.id, chartMetadata, chartUuid, dispatch, host])
 
 
   // todo local state option
@@ -206,10 +198,7 @@ export const ChartWithLoader = ({
         id: chartUuid,
       }))
     }
-  }, [attributes, chartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
-    hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
-    isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
-    shouldUsePanAndZoomPadding, shouldFetch])
+  }, [attributes, chartSettings, chartUuid, chartWidth, dispatch, hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster, isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions, shouldUsePanAndZoomPadding, shouldFetch, chartMetadata])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
