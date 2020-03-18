@@ -11,7 +11,7 @@ export type Props = {
   // here, the chartID must be unique across all agents
   chartUuid: string
   portalNode: HTMLElement
-  chartMetadata: ChartMetadata
+  chartMetadata?: ChartMetadata
 }
 
 export const ChartContainer = ({
@@ -29,7 +29,7 @@ export const ChartContainer = ({
       attributes={attributes}
       chartUuid={chartUuid}
       portalNode={portalNode}
-      chartMetadata={chartMetadata}
+      externalChartMetadata={chartMetadata}
     />
   </DisableOutOfView>
 )
