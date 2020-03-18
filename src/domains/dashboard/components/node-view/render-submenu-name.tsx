@@ -2,7 +2,7 @@ import React from "react"
 
 import { name2id } from "utils/name-2-id"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-
+import { ChartsMetadata } from "domains/global/types"
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
 import { netdataDashboard, options, Menu } from "../../utils/netdata-dashboard"
@@ -33,6 +33,7 @@ interface RenderSubmenuNameArg {
   menuName: string
   pcentWidth: number
   host: string
+  chartsMetadata: ChartsMetadata
 }
 export const renderSubmenuName = ({
   duration,
@@ -40,6 +41,7 @@ export const renderSubmenuName = ({
   menuName,
   pcentWidth,
   host,
+  chartsMetadata,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -73,6 +75,7 @@ export const renderSubmenuName = ({
             <ChartWrapper
               attributes={{ ...attributes, host }}
               key={`${attributes.id}-${attributes.dimensions}`}
+              chartMetadata={chartsMetadata.charts[attributes.id]}
             />
           ))}
       </div>
@@ -116,6 +119,7 @@ export const renderSubmenuName = ({
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
               }}
+              chartMetadata={chartsMetadata.charts[chart.id]}
             />
           </div>
         )
