@@ -15,11 +15,6 @@ export const createSelectAssignedColors = (args: GetKeyArguments) => (state: App
 
 export const selectGlobal = (state: AppStateT) => state.global
 
-export const selectTimezone = createSelector(
-  selectGlobal,
-  (subState) => subState.timezone,
-)
-
 export const selectCommonMin = createSelector(
   selectGlobal,
   (_: unknown, commonMinKey: string) => commonMinKey,
