@@ -417,6 +417,9 @@ export const unitsConversionCreator = {
             newConvertFunction = convertibleUnits[(units as string)][x].convert
           }
         })
+        if (newConvertFunction) {
+          return newConvertFunction
+        }
 
         // none checked ok (no conversion available)
         switchUnitsCallback(units)
