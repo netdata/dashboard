@@ -120,6 +120,8 @@ const scalableUnits: ScalableUnits = {
   */
 }
 
+let currentTemperatureSetting: "celsius" | "fahrenheit"
+let currentSecondsAsTimeSetting: boolean
 interface ConvertibleUnits {
   [unitIn: string]: {
     [unitOut: string]: {
@@ -133,7 +135,7 @@ const convertibleUnits: ConvertibleUnits = {
     Fahrenheit: {
       // check(max) {
       check() {
-        return window.NETDATA.options.current.temperature === "fahrenheit"
+        return currentTemperatureSetting === "fahrenheit"
       },
       convert(value: number) {
         return (value * 9) / 5 + 32
@@ -144,7 +146,7 @@ const convertibleUnits: ConvertibleUnits = {
     fahrenheit: {
       // check(max) {
       check() {
-        return window.NETDATA.options.current.temperature === "fahrenheit"
+        return currentTemperatureSetting === "fahrenheit"
       },
       convert(value: number) {
         return (value * 9) / 5 + 32
@@ -155,7 +157,7 @@ const convertibleUnits: ConvertibleUnits = {
     time: {
       // check(max) {
       check() {
-        return window.NETDATA.options.current.seconds_as_time
+        return currentSecondsAsTimeSetting
       },
       convert(seconds: number) {
         // eslint-disable-next-line no-use-before-define
@@ -166,7 +168,7 @@ const convertibleUnits: ConvertibleUnits = {
   milliseconds: {
     milliseconds: {
       check(max: number) {
-        return window.NETDATA.options.current.seconds_as_time && max < 1000
+        return currentSecondsAsTimeSetting && max < 1000
       },
       convert(milliseconds: number) {
         let tms = Math.round(milliseconds * 10)
@@ -179,7 +181,7 @@ const convertibleUnits: ConvertibleUnits = {
     },
     seconds: {
       check(max: number) {
-        return window.NETDATA.options.current.seconds_as_time && max >= 1000 && max < 60000
+        return currentSecondsAsTimeSetting && max >= 1000 && max < 60000
       },
       convert(milliseconds: number) {
         let millisecondsReturn = Math.round(milliseconds)
@@ -195,7 +197,7 @@ const convertibleUnits: ConvertibleUnits = {
     },
     "M:SS.ms": {
       check(max) {
-        return window.NETDATA.options.current.seconds_as_time && max >= 60000
+        return currentSecondsAsTimeSetting && max >= 60000
       },
       convert(milliseconds: number) {
         let millisecondsReturn = Math.round(milliseconds)
@@ -270,13 +272,18 @@ export const unitsConversionCreator = {
   get(
     uuid: string, min: number, max: number, units: string | undefined,
     desiredUnits: undefined | null | string, commonUnitsName: string | null | undefined,
-    switchUnitsCallback: (units: string) => void,
+    switchUnitsCallback: (units: string) => void, temperatureSetting: "celsius" | "fahrenheit",
+    secondsAsTimeSetting: boolean,
   ) {
     // validate the parameters
     if (typeof units === "undefined") {
       // eslint-disable-next-line no-param-reassign
       units = "undefined"
     }
+
+    // it will be removed when we'll lift the state to redux
+    currentTemperatureSetting = temperatureSetting
+    currentSecondsAsTimeSetting = secondsAsTimeSetting
 
     // check if we support units conversion
     if (typeof scalableUnits[units] === "undefined"

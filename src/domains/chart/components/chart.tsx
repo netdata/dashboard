@@ -15,6 +15,8 @@ import {
   selectSyncPanAndZoom,
   selectSyncSelection,
   selectUnitsScalingMethod,
+  selectTemperatureSetting,
+  selectSecondsAsTimeSetting,
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
@@ -105,6 +107,8 @@ export const Chart = memo(({
   }, [allDimensionNames, attributes.colors, attributes.commonColors, chartMetadata.context,
     chartUuid, dispatch])
 
+  const temperatureSetting = useSelector(selectTemperatureSetting)
+  const secondsAsTimeSetting = useSelector(selectSecondsAsTimeSetting)
   const {
     legendFormatValue,
     legendFormatValueDecimalsFromMinMax,
@@ -116,6 +120,8 @@ export const Chart = memo(({
     unitsCommon,
     unitsDesired,
     uuid: chartUuid,
+    temperatureSetting,
+    secondsAsTimeSetting,
   })
 
   const [localHoveredX, setLocalHoveredX] = useState<number | null>(null)
