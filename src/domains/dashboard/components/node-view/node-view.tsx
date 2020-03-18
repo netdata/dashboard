@@ -35,6 +35,7 @@ interface SubSectionProps {
   menuName: string
   pcentWidth: number
   shouldDisplayHeadMain: boolean
+  host: string
 }
 const SubSection = memo(({
   chartsMetadata,
@@ -43,6 +44,7 @@ const SubSection = memo(({
   menuName,
   pcentWidth,
   shouldDisplayHeadMain,
+  host,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
   return (
@@ -54,6 +56,7 @@ const SubSection = memo(({
           <HeadMain
             charts={chartsMetadata.charts}
             duration={duration}
+            host={host}
           />
         )}
         {submenuNames.flatMap(
@@ -61,18 +64,16 @@ const SubSection = memo(({
             .concat().sort(prioritySort) // shallow clone, sort by priority
             .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
             .map(parseChartString)
-            .map((attributes: Attributes | null) => (
-              attributes && (
-                <ChartWrapper
-                  attributes={attributes}
-                  key={`${attributes.id}-${attributes.dimensions}`}
-                />
-              )
+            .map((attributes: Attributes | null) => attributes && (
+              <ChartWrapper
+                attributes={{ ...attributes, host }}
+                key={`${attributes.id}-${attributes.dimensions}`}
+              />
             )),
         )}
       </div>
       {submenuNames.map(renderSubmenuName({
-        duration, menu, menuName, pcentWidth,
+        duration, menu, menuName, pcentWidth, host,
       }))}
     </div>
   )
@@ -94,7 +95,6 @@ export const NodeView = ({
   setCurrentChart,
   host = "http://localhost:19999",
 }: Props) => {
-  window.netdataServer = host
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
@@ -152,6 +152,7 @@ export const NodeView = ({
                   menuName={menuName}
                   pcentWidth={pcentWidth}
                   shouldDisplayHeadMain={menuIndex === 0}
+                  host={host}
                 />
               </div>
             )

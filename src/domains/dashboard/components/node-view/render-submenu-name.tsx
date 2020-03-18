@@ -32,12 +32,14 @@ interface RenderSubmenuNameArg {
   menu: Menu
   menuName: string
   pcentWidth: number
+  host: string
 }
 export const renderSubmenuName = ({
   duration,
   menu,
   menuName,
   pcentWidth,
+  host,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -67,13 +69,11 @@ export const renderSubmenuName = ({
         {chartsSorted
           .flatMap((chart) => generateHeadCharts("heads", chart, duration))
           .map(parseChartString)
-          .map((attributes: Attributes | null) => (
-            attributes && (
-              <ChartWrapper
-                attributes={attributes}
-                key={`${attributes.id}-${attributes.dimensions}`}
-              />
-            )
+          .map((attributes: Attributes | null) => attributes && (
+            <ChartWrapper
+              attributes={{ ...attributes, host }}
+              key={`${attributes.id}-${attributes.dimensions}`}
+            />
           ))}
       </div>
       {chartsSorted.map((chart) => {
@@ -93,6 +93,7 @@ export const renderSubmenuName = ({
             <ChartWrapper
               id={`chart_${name2id(chart.id)}`}
               attributes={{
+                host,
                 id: chart.id,
                 chartLibrary: "dygraph",
                 width: "100%",
