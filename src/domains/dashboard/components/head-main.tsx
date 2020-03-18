@@ -16,6 +16,7 @@ export const HeadMain = ({
   chartsMetadata,
 }: Props) => {
   const commonAttributes = {
+    host,
     after: -duration,
     points: duration,
   }
@@ -29,7 +30,6 @@ export const HeadMain = ({
         <ChartWrapper
           attributes={{
             ...commonAttributes,
-            host,
             id: "system.swap",
             dimensions: "used",
             appendOptions: "percentage",
@@ -52,7 +52,6 @@ export const HeadMain = ({
           <ChartWrapper
             attributes={{
               ...commonAttributes,
-              host,
               id: "system.io",
               dimensions: "in",
               chartLibrary: "easypiechart",
@@ -67,7 +66,6 @@ export const HeadMain = ({
           <ChartWrapper
             attributes={{
               ...commonAttributes,
-              host,
               id: "system.io",
               dimensions: "out",
               chartLibrary: "easypiechart",
@@ -85,7 +83,6 @@ export const HeadMain = ({
           <ChartWrapper
             attributes={{
               ...commonAttributes,
-              host,
               id: "system.pgpgio",
               dimensions: "in",
               chartLibrary: "easypiechart",
@@ -100,7 +97,6 @@ export const HeadMain = ({
           <ChartWrapper
             attributes={{
               ...commonAttributes,
-              host,
               id: "system.pgpgio",
               dimensions: "out",
               chartLibrary: "easypiechart",
@@ -119,7 +115,6 @@ export const HeadMain = ({
         <ChartWrapper
           attributes={{
             ...commonAttributes,
-            host,
             id: "system.cpu",
             chartLibrary: "gauge",
             title: "CPU",
@@ -141,7 +136,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.net",
                 dimensions: "received",
                 chartLibrary: "easypiechart",
@@ -156,7 +150,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.net",
                 dimensions: "sent",
                 chartLibrary: "easypiechart",
@@ -175,7 +168,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ip",
                 dimensions: "received",
                 chartLibrary: "easypiechart",
@@ -190,7 +182,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ip",
                 dimensions: "sent",
                 chartLibrary: "easypiechart",
@@ -209,7 +200,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ipv4",
                 dimensions: "received",
                 chartLibrary: "easypiechart",
@@ -224,7 +214,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ipv4",
                 dimensions: "sent",
                 chartLibrary: "easypiechart",
@@ -243,7 +232,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ipv6",
                 dimensions: "received",
                 chartLibrary: "easypiechart",
@@ -259,7 +247,6 @@ export const HeadMain = ({
             <ChartWrapper
               attributes={{
                 ...commonAttributes,
-                host,
                 id: "system.ipv6",
                 dimensions: "sent",
                 chartLibrary: "easypiechart",
@@ -279,7 +266,6 @@ export const HeadMain = ({
         <ChartWrapper
           attributes={{
             ...commonAttributes,
-            host,
             id: "system.ram",
             dimensions: "used|buffers|active|wired",
             appendOptions: "percentage",
