@@ -10,7 +10,6 @@ import {
   setGlobalPanAndZoomAction,
   centerAroundHighlightAction,
   clearHighlightAction,
-  setTimezoneAction,
   resetGlobalPanAndZoomAction,
   windowFocusChangeAction,
   fetchHelloAction,
@@ -63,7 +62,6 @@ export type StateT = {
     before: number
     masterID: string
   }
-  timezone: string | undefined
   hoveredX: number | null
   hasWindowFocus: boolean
 
@@ -103,7 +101,6 @@ export const initialState: StateT = {
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
   globalChartUnderlay: null,
-  timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
 
@@ -268,11 +265,6 @@ globalReducer.on(setCommonMaxAction, (state, { chartUuid, commonMaxKey, value })
     },
   }
 })
-
-globalReducer.on(setTimezoneAction, (state, { timezone = "default" }) => ({
-  ...state,
-  timezone,
-}))
 
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({
   ...state,

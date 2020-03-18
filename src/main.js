@@ -35,6 +35,7 @@ import {
 } from './domains/chart/selectors';
 import { serverDefault } from './utils/server-detection';
 import { name2id } from './utils/name-2-id';
+import { isProperTimezone } from './utils/date-time';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -2821,6 +2822,7 @@ function initializeDynamicDashboardWithData(data) {
         options.data = data;
         options.version = data.version;
         options.release_channel = data.release_channel;
+        options.timezone = data.timezone;
         netdataDashboard.os = data.os;
 
         if (typeof data.hosts !== 'undefined') {
@@ -3828,15 +3830,22 @@ window.saveSnapshot = () => {
 
 // --------------------------------------------------------------------
 // activate netdata on the page
+let browser_timezone
+try {
+    browser_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+} catch (e) {
+    console.log('failed to detect browser timezone: ' + e.toString());
+    browser_timezone = 'cannot-detect-it';
+}
+
+const getOption = (option) => {
+    const state = reduxStore.getState()
+    return createSelectOption(option)(state)
+}
+
 
 function dashboardSettingsSetup() {
     var update_options_modal = function () {
-        // replacement of `NETDATA.getOption`
-        const getOption = (option) => {
-            const state = reduxStore.getState()
-            return createSelectOption(option)(state)
-        }
-
         var sync_option = function (option) {
             var self = $('#' + option);
 
@@ -3876,14 +3885,16 @@ function dashboardSettingsSetup() {
         var timezone_sync_option = function (option) {
             var self = $('#' + option);
 
-            document.getElementById('browser_timezone').innerText = NETDATA.options.browser_timezone;
-            document.getElementById('server_timezone').innerText = NETDATA.options.server_timezone;
-            document.getElementById('current_timezone').innerText = (NETDATA.options.current.timezone === 'default') ? 'unset, using browser default' : NETDATA.options.current.timezone;
+            const timezoneOption = getOption("timezone")
+            document.getElementById('browser_timezone').innerText = browser_timezone;
+            document.getElementById('server_timezone').innerText = options.timezone || "unknown";
+            document.getElementById('current_timezone').innerText = timezoneOption === 'default'
+              ? 'unset, using browser default' : timezoneOption;
 
-            // todo
-            // if (self.prop('checked') === NETDATA.dateTime.using_timezone) {
-            //     self.bootstrapToggle(NETDATA.dateTime.using_timezone ? 'off' : 'on');
-            // }
+            const isUsingTimezone = timezoneOption !== "" && timezoneOption !== "default"
+            if (self.prop('checked') === isUsingTimezone) {
+                self.bootstrapToggle(isUsingTimezone ? 'off' : 'on');
+            }
         };
 
 
@@ -3963,6 +3974,7 @@ function dashboardSettingsSetup() {
 
     $('#units_conversion').change(function () {
         setOption('units', $(this).prop('checked') ? 'auto' : 'original');
+        update_options_modal()
     });
     $('#units_temp').change(function () {
         setOption('temperature', $(this).prop('checked') ? 'celsius' : 'fahrenheit');
@@ -4562,7 +4574,7 @@ export const netdataPrepCallback = () => {
     }
 };
 
-var selected_server_timezone = function (timezone, status) {
+window.selected_server_timezone = function (timezone, status) {
     //console.log('called with timezone: ' + timezone + ", status: " + ((typeof status === 'undefined')?'undefined':status).toString());
 
     // clear the error
@@ -4573,47 +4585,49 @@ var selected_server_timezone = function (timezone, status) {
 
         setOption('user_set_server_timezone', timezone);
 
-        if (NETDATA.dateTime.init(timezone) === false) {
-            NETDATA.dateTime.init();
+        if (!isProperTimezone(timezone)) {
+            setOption("timezone", "default")
 
             if (!$('#local_timezone').prop('checked')) {
                 $('#local_timezone').bootstrapToggle('on');
             }
 
             document.getElementById('timezone_error_message').innerHTML = 'Ooops! That timezone was not accepted by your browser. Please open a github issue to help us fix it.';
-            setOption('user_set_server_timezone', NETDATA.options.server_timezone);
+            setOption('user_set_server_timezone', options.timezone);
         } else {
             if ($('#local_timezone').prop('checked')) {
                 $('#local_timezone').bootstrapToggle('off');
             }
+            setOption("timezone", timezone)
         }
     } else if (status === true) {
         // the user wants the browser default timezone to be activated
-
-        NETDATA.dateTime.init();
+        setOption("timezone", "default")
     } else {
         // the user wants the server default timezone to be activated
-        //console.log('found ' + NETDATA.options.current.user_set_server_timezone);
 
-        if (NETDATA.options.current.user_set_server_timezone === 'default') {
-            NETDATA.options.current.user_set_server_timezone = NETDATA.options.server_timezone;
+        let userSetServerTimezone = getOption("user_set_server_timezone")
+        if (userSetServerTimezone === 'default') {
+            setOption("user_set_server_timezone", options.timezone) // timezone from /charts endpoint
+            userSetServerTimezone = options.timezone
         }
 
-        timezone = NETDATA.options.current.user_set_server_timezone;
-
-        if (NETDATA.dateTime.init(timezone) === false) {
-            NETDATA.dateTime.init();
+        if (!isProperTimezone(userSetServerTimezone)) {
+            setOption("timezone", "default");
 
             if (!$('#local_timezone').prop('checked')) {
                 $('#local_timezone').bootstrapToggle('on');
             }
 
             document.getElementById('timezone_error_message').innerHTML = 'Sorry. The timezone "' + timezone.toString() + '" is not accepted by your browser. Please select one from the list.';
-            setOption('user_set_server_timezone', NETDATA.options.server_timezone);
+            setOption('user_set_server_timezone', options.timezone);
+        } else {
+            setOption("timezone", userSetServerTimezone)
         }
     }
 
-    document.getElementById('current_timezone').innerText = (NETDATA.options.current.timezone === 'default') ? 'unset, using browser default' : NETDATA.options.current.timezone;
+    const timezoneOption = getOption("timezone")
+    document.getElementById('current_timezone').innerText = (timezoneOption === 'default') ? 'unset, using browser default' : timezoneOption;
     return false;
 };
 

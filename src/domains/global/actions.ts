@@ -22,9 +22,6 @@ export const setCommonMinAction = createAction<SetCommonMinAction>(`${storeKey}/
 interface SetCommonMaxAction { chartUuid: string, commonMaxKey: string, value: number }
 export const setCommonMaxAction = createAction<SetCommonMaxAction>(`${storeKey}/setCommonMax`)
 
-export const setTimezoneAction = createAction<{timezone: string}>(`${storeKey}/globalSetTmezone`)
-window.TEMPORARY_setTimezoneAction = setTimezoneAction
-
 interface SetGlobalSelectionAction {
   chartUuid: string | null
   hoveredX: number

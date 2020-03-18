@@ -149,6 +149,4 @@ interface Window {
   // temporary, for main.js
   // for some reason importing { Store } from "redux" breaks that window interface declaration
   reduxStore: any
-  TEMPORARY_isProperTimezone: any
-  TEMPORARY_setTimezoneAction: any
 }
