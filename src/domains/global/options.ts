@@ -68,7 +68,7 @@ export const INITIAL_OPTIONS: Options = {
   smooth_plot: true, // eventually apply slow device detection
 
   // locale options
-  units: "auto",
+  units: "auto", // auto or original
   temperature: "celsius",
   seconds_as_time: true, // show seconds as DDd:HH:MM:SS ?
   timezone: "default", // the timezone to use, or 'default'
