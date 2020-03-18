@@ -74,7 +74,16 @@ export const ChartWithLoader = ({
         host,
       }))
     }
-  }, [attributes.id, chartUuid, dispatch, host, isFetchingDetails, chartMetadata, externalChartMetadata])
+  },
+  [
+    attributes.id,
+    chartUuid,
+    dispatch,
+    host,
+    isFetchingDetails,
+    chartMetadata,
+    externalChartMetadata,
+  ])
 
 
   // todo local state option
@@ -108,7 +117,10 @@ export const ChartWithLoader = ({
   // todo add support to "data-update-every" attribute
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
-    [always(!!actualChartMetadata), () => (actualChartMetadata as ChartMetadata).update_every * 1000],
+    [
+      always(!!actualChartMetadata),
+      () => (actualChartMetadata as ChartMetadata).update_every * 1000,
+    ],
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
