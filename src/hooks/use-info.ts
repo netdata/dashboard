@@ -4,7 +4,8 @@ import { fetchInfoAction } from "domains/chart/actions"
 import { selectRegistry } from "domains/global/selectors"
 
 export const useInfo = (shouldUseInfo: boolean) => {
-  const { hasStartedInfo } = useSelector(selectRegistry)
+  const registry = useSelector(selectRegistry)
+  const hasStartedInfo = registry?.hasStartedInfo || false
   const dispatch = useDispatch()
   useEffect(() => {
     if (shouldUseInfo && !hasStartedInfo) {
