@@ -7,6 +7,8 @@ import { GetKeyArguments, getKeyForCommonColorsState } from "./reducer"
 import { storeKey } from "./constants"
 import { OptionsKey } from "./options"
 
+const NETDATA_REGISTRY_SERVER = "https://registry.my-netdata.io"
+
 export const createSelectAssignedColors = (args: GetKeyArguments) => (state: AppStateT) => {
   const keyName = getKeyForCommonColorsState(args)
   const substate = state[storeKey].commonColorsKeys[keyName]
@@ -54,6 +56,10 @@ export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
 
 export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
+export const selectIsUsingGlobalRegistry = createSelector(
+  selectRegistry,
+  ({ registryServer }) => registryServer && (registryServer !== NETDATA_REGISTRY_SERVER),
+)
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,

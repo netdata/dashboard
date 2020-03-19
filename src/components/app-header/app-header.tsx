@@ -1,10 +1,13 @@
-import React from "react"
+import React, { useCallback, useRef, useEffect } from "react"
+import { useEffectOnce } from "react-use"
 
 import { useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
 import { selectSnapshot, selectActiveAlarms } from "domains/global/selectors"
 
 import { getIframeSrc } from "utils"
+import { isDevelopmentEnv } from "utils/env"
+import { useListenToPostMessage } from "utils/post-message"
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
 import { AlarmsControl } from "./components/alarms-control"
@@ -22,13 +25,22 @@ import {
   StyledGearContainer,
 } from "./styled"
 
+const iframeTimeout = isDevelopmentEnv ? 2000 : 750
+const WAITING_FOR_HELLO_TIME = 500
+
 interface Props {
   cloudBaseURL: string
   chartsMetadata: ChartsMetadata
+  isSignedIn: boolean
+  onEnoughWaitingForIframe: () => void
+  setIsOffline: (v: boolean) => void
 }
 export const AppHeader = ({
   cloudBaseURL,
   chartsMetadata,
+  isSignedIn,
+  onEnoughWaitingForIframe,
+  setIsOffline,
 }: Props) => {
   const snapshot = useSelector(selectSnapshot)
   const hostname = snapshot ? snapshot.hostname : chartsMetadata.hostname
@@ -37,6 +49,36 @@ export const AppHeader = ({
   const alarms = activeAlarms ? Object.values(activeAlarms.alarms) : []
   const criticalAlarmsCount = alarms.filter((alarm) => alarm.status === "CRITICAL").length
   const warningAlarmsCount = alarms.filter((alarm) => alarm.status === "WARNING").length
+
+  const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
+  const helloFromSignInRef = useRef(helloFromSignIn)
+  useEffect(() => {
+    helloFromSignInRef.current = helloFromSignIn
+  }, [helloFromSignIn])
+
+  const hasIframeRendered = useRef(false)
+  const handleIframeLoad = useCallback(() => {
+    // this is called either on success and failure!
+    hasIframeRendered.current = true
+    setTimeout(() => {
+      if (helloFromSignInRef.current === undefined) {
+        setIsOffline(true)
+      }
+    }, WAITING_FOR_HELLO_TIME)
+  }, [setIsOffline])
+
+  // wait a litte bit before we start showing spinners, rendering offline stuff, etc.
+  useEffectOnce(() => {
+    const timeoutId = setTimeout(() => {
+      if (!hasIframeRendered.current) {
+        // time before we start showing spinners, etc.
+        onEnoughWaitingForIframe()
+      }
+    }, iframeTimeout)
+    return () => {
+      clearTimeout(timeoutId)
+    }
+  })
   return (
     <StyledHeader>
       <CollapsableSection>
@@ -101,6 +143,7 @@ export const AppHeader = ({
             width="100%"
             height="40px"
             style={{ border: "none" }}
+            onLoad={handleIframeLoad}
           />
         </IframeContainer>
       </UtilitySection>

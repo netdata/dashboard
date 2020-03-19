@@ -8,10 +8,12 @@ import {
 interface Props {
   cloudBaseURL: string
   isSignedIn: boolean
+  shouldRenderStatic: boolean
 }
 export const SpacesBar = ({
   cloudBaseURL,
   isSignedIn,
+  shouldRenderStatic,
 }: Props) => (
   <ListContainer>
     {isSignedIn ? (
@@ -22,7 +24,7 @@ export const SpacesBar = ({
         width="100%"
         style={{ border: "none" }}
       />
-    ) : (
+    ) : (shouldRenderStatic && (
       <>
         <SpacesList>
           <SpacePlaceholder />
@@ -31,6 +33,6 @@ export const SpacesBar = ({
           <Button icon="plus" onClick={() => {}} />
         </SeparatedSection>
       </>
-    )}
+    ))}
   </ListContainer>
 )
