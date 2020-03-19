@@ -15,6 +15,8 @@ import {
   selectSyncPanAndZoom,
   selectSyncSelection,
   selectUnitsScalingMethod,
+  selectTemperatureSetting,
+  selectSecondsAsTimeSetting,
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
@@ -34,13 +36,14 @@ import { ResizeHandler } from "./resize-handler"
 import { AbstractChart } from "./abstract-chart"
 
 interface Props {
+  attributes: Attributes
   chartContainerElement: HTMLElement
   chartData: ChartData
   chartMetadata: ChartMetadata
   chartHeight: number
   chartUuid: string
   chartWidth: number
-  attributes: Attributes
+  hasEmptyData: boolean
   isRemotelyControlled: boolean
   requestedViewRange: TimeRange
   selectedDimensions: string[]
@@ -59,6 +62,7 @@ export const Chart = memo(({
   chartHeight,
   chartUuid,
   chartWidth,
+  hasEmptyData,
   isRemotelyControlled,
   requestedViewRange,
   selectedDimensions,
@@ -103,6 +107,8 @@ export const Chart = memo(({
   }, [allDimensionNames, attributes.colors, attributes.commonColors, chartMetadata.context,
     chartUuid, dispatch])
 
+  const temperatureSetting = useSelector(selectTemperatureSetting)
+  const secondsAsTimeSetting = useSelector(selectSecondsAsTimeSetting)
   const {
     legendFormatValue,
     legendFormatValueDecimalsFromMinMax,
@@ -114,6 +120,8 @@ export const Chart = memo(({
     unitsCommon,
     unitsDesired,
     uuid: chartUuid,
+    temperatureSetting,
+    secondsAsTimeSetting,
   })
 
   const [localHoveredX, setLocalHoveredX] = useState<number | null>(null)
@@ -333,6 +341,7 @@ export const Chart = memo(({
         chartHeight={chartHeight}
         chartWidth={chartWidth}
         dimensionsVisibility={dimensionsVisibility}
+        hasEmptyData={hasEmptyData}
         onUpdateChartPanAndZoom={handleUpdateChartPanAndZoom}
         isRemotelyControlled={isRemotelyControlled}
         legendFormatValue={legendFormatValue}

@@ -99,7 +99,7 @@ export const DisableOutOfView = ({
     debounceTime,
     [isVisibleIntersection],
   )
-  // const shouldHide = shouldUseDebounce ? shouldHideDebounced : !isVisibleIntersection
+  const shouldHide = isVisibleIntersection ? shouldHideDebounced : true
 
   const [clonedChildren, setClonedChildren] = useState<Element[]>()
 
@@ -108,7 +108,7 @@ export const DisableOutOfView = ({
     return children
   }
 
-  if (shouldHideDebounced) {
+  if (shouldHide) {
     // todo perhaps loader should be added here to both scenarios
     if (destroyOnHide) {
       return (

@@ -101,6 +101,8 @@ interface Arguments {
   unitsCommon: string | undefined,
   unitsDesired: string,
   uuid: string,
+  temperatureSetting: "celsius" | "fahrenheit"
+  secondsAsTimeSetting: boolean
 }
 export const useFormatters = ({
   attributes,
@@ -109,6 +111,8 @@ export const useFormatters = ({
   unitsCommon,
   unitsDesired,
   uuid,
+  temperatureSetting,
+  secondsAsTimeSetting,
 }: Arguments) => {
   // previously _unitsConversion
   const [convertUnits, setConvertUnits] = useState<Converter>(() => identity)
@@ -144,7 +148,7 @@ export const useFormatters = ({
         // that.legendSetUnitsString(that.units_current);
         // that.legendSetUnitsString just populates some DOM with unitsCurrent
         // on all occurences just take the unitsCurrent from this state
-      },
+      }, temperatureSetting, secondsAsTimeSetting,
     )
 
     // as function, so useState() interpretes it properly

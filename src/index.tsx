@@ -3,13 +3,12 @@ import ReactDOM from "react-dom"
 import { Provider } from "react-redux"
 
 import { store } from "store"
+import { isMainJs } from "utils/env"
 
 import "./index.css"
 
 const CustomDashboardsApp = lazy(() => import("./custom-dashboards-app"))
 const App = lazy(() => import("./App"))
-
-const isMainJs = process.env.REACT_APP_IS_MAIN_DASHBOARD
 
 if (isMainJs) {
 // Dashboard
