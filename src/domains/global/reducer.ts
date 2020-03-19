@@ -11,7 +11,6 @@ import {
   setGlobalPanAndZoomAction,
   centerAroundHighlightAction,
   clearHighlightAction,
-  setTimezoneAction,
   resetGlobalPanAndZoomAction,
   windowFocusChangeAction,
   fetchHelloAction,
@@ -21,8 +20,22 @@ import {
   setOptionAction,
   loadSnapshotAction,
   chartsMetadataRequestSuccess,
+  setCommonMaxAction,
+  setCommonMinAction,
+  resetOptionsAction,
 } from "./actions"
-import { Options, optionsMergedWithLocalStorage } from "./options"
+import {
+  Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
+} from "./options"
+
+interface CommonMinMax {
+  [commonKey: string]: {
+    charts: {
+      [chartUuid: string]: number
+    }
+    currentExtreme: number
+  }
+}
 
 export type StateT = {
   commonColorsKeys: {
@@ -36,6 +49,8 @@ export type StateT = {
       copyTheme: boolean
     }
   }
+  commonMin: CommonMinMax
+  commonMax: CommonMinMax
   currentSelectionMasterId: string | null
   globalPanAndZoom: null | {
     after: number
@@ -48,7 +63,6 @@ export type StateT = {
     before: number
     masterID: string
   }
-  timezone: string | undefined
   hoveredX: number | null
   hasWindowFocus: boolean
 
@@ -84,10 +98,11 @@ export type StateT = {
 
 export const initialState: StateT = {
   commonColorsKeys: {},
+  commonMin: {},
+  commonMax: {},
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
   globalChartUnderlay: null,
-  timezone: window.NETDATA.options.current.timezone,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
 
@@ -216,10 +231,44 @@ globalReducer.on(requestCommonColorsAction, (state, {
   }
 })
 
-globalReducer.on(setTimezoneAction, (state, { timezone = "default" }) => ({
-  ...state,
-  timezone,
-}))
+
+globalReducer.on(setCommonMinAction, (state, { chartUuid, commonMinKey, value }) => {
+  const charts = {
+    ...state.commonMin[commonMinKey]?.charts,
+    [chartUuid]: value,
+  }
+  const currentExtreme = Math.min(...Object.values(charts))
+
+  return {
+    ...state,
+    commonMin: {
+      ...state.commonMin,
+      [commonMinKey]: {
+        charts,
+        currentExtreme,
+      },
+    },
+  }
+})
+
+globalReducer.on(setCommonMaxAction, (state, { chartUuid, commonMaxKey, value }) => {
+  const charts = {
+    ...state.commonMax[commonMaxKey]?.charts,
+    [chartUuid]: value,
+  }
+  const currentExtreme = Math.max(...Object.values(charts))
+
+  return {
+    ...state,
+    commonMax: {
+      ...state.commonMax,
+      [commonMaxKey]: {
+        charts,
+        currentExtreme,
+      },
+    },
+  }
+})
 
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({
   ...state,
@@ -366,6 +415,14 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
     [key]: value,
   },
 }))
+
+globalReducer.on(resetOptionsAction, (state) => {
+  clearLocalStorage()
+  return {
+    ...state,
+    options: getOptionsMergedWithLocalStorage(),
+  }
+})
 
 globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   const parsedData = Object.keys(snapshot.data)

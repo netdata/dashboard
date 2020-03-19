@@ -1,7 +1,7 @@
 import { useMemo } from "react"
 
 import { useSelector } from "store/redux-separate-context"
-import { selectTimezone } from "domains/global/selectors"
+import { selectTimezoneSetting } from "domains/global/selectors"
 
 const zeropad = (x: number) => {
   if (x > -10 && x < 10) {
@@ -46,8 +46,8 @@ export const isProperTimezone = (timeZone: string): boolean => {
 }
 
 export const useDateTime = () => {
-  const timezone = useSelector(selectTimezone)
-  const isUsingTimezone = typeof timezone === "string" && timezone !== "" && timezone !== "default"
+  const timezone = useSelector(selectTimezoneSetting)
+  const isUsingTimezone = timezone !== "" && timezone !== "default"
 
   const localeDateString = useMemo(() => {
     const dateOptions = {

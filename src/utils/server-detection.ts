@@ -2,8 +2,8 @@ import {
   concat, cond, equals, identity, last, pipe, T,
 } from "ramda"
 
-const isTestingEnv = process.env.NODE_ENV === "test"
-const isDevelopmentEnv = process.env.NODE_ENV === "development"
+import { isDevelopmentEnv, isMainJs, isTestingEnv } from "utils/env"
+
 
 // this part needs to be static and should run immediately because otherwise document.currentScript
 // will be null
@@ -38,6 +38,13 @@ const getDefaultServer = () => {
   if (isDevelopmentEnv) {
     return "http://localhost:19999/"
   }
+
+  // Agent Dashboard does not need sophisticated server-detection, which is causing problems
+  // when navigating through streamed nodes. Let's overwrite that setting
+  if (isMainJs) {
+    return window.location.origin + window.location.pathname
+  }
+
   const source = getScriptSource()
   return getPathFromScriptSource(source)
 }

@@ -58,6 +58,15 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     setRefreshHelper(Math.random())
   })
 
+  useEffect(() => {
+    if (haveDOMReadyForParsing) {
+      const loadOverlay = document.getElementById("loadOverlay")
+      if (loadOverlay) {
+        loadOverlay.style.display = "none"
+      }
+    }
+  }, [haveDOMReadyForParsing])
+
   const { localeDateString, localeTimeString } = useDateTime()
   useEffect(() => {
     updateLocaleFunctions({
