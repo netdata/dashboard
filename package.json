@@ -42,7 +42,8 @@
     "rxjs": "^6.5.4",
     "tableexport.jquery.plugin": "^1.6.7",
     "typescript": "^3.7.3",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "react-toastify": "^5.5.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^4.1.0",

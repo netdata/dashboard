@@ -5,22 +5,25 @@ import {
   select,
   spawn,
   take,
+  delay,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { Action } from "redux-act"
 
 import { axiosInstance } from "utils/api"
-import { alwaysEndWithSlash } from "utils/server-detection"
+import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 
-import { selectGlobalPanAndZoom, selectSnapshot } from "domains/global/selectors"
+import { selectGlobalPanAndZoom, selectSnapshot, selectRegistry } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
 import { stopSnapshotModeAction } from "domains/dashboard/actions"
+import { toast } from "react-toastify"
 
+import { INFO_POLLING_FREQUENCY, NOTIFICATIONS_TIMEOUT } from "domains/global/constants"
 import {
   fetchDataAction, FetchDataPayload,
   fetchChartAction, FetchChartPayload,
-  fetchDataForSnapshotAction, FetchDataForSnapshotPayload,
+  fetchDataForSnapshotAction, FetchDataForSnapshotPayload, fetchInfoAction, FetchInfoPayload,
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = 20
@@ -228,11 +231,41 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   }))
 }
 
+function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
+  const { poll } = payload
+
+  try {
+    const registry = yield select(selectRegistry)
+    const wasCloudAvailable = registry?.isCloudAvailable || false
+
+    const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
+    const isCloudAvailable = data?.["cloud-available"] || false
+    yield put(fetchInfoAction.success({
+      isCloudAvailable,
+    }))
+
+    if (wasCloudAvailable && !isCloudAvailable) {
+      toast.error("Link dropped", { type: toast.TYPE.ERROR, autoClose: NOTIFICATIONS_TIMEOUT })
+    } else if (!wasCloudAvailable && isCloudAvailable) {
+      toast.success("Link established", { type: toast.TYPE.SUCCESS, autoClose: NOTIFICATIONS_TIMEOUT })
+    }
+  } catch (e) {
+    console.warn("fetch agent info failure") // eslint-disable-line no-console
+    yield put(fetchInfoAction.failure())
+  }
+
+  yield delay(INFO_POLLING_FREQUENCY)
+  if (poll) {
+    yield put(fetchInfoAction({ poll: true }))
+  }
+}
+
+
 export function* chartSagas() {
   yield takeEvery(fetchDataAction.request, fetchDataSaga)
   yield takeEvery(fetchChartAction.request, fetchChartSaga)
   yield takeEvery(fetchDataForSnapshotAction.request, fetchDataForSnapshotSaga)
   yield takeEvery(stopSnapshotModeAction, stopSnapshotModeSaga)
-
+  yield takeEvery(fetchInfoAction.request, fetchInfoSaga)
   yield spawn(watchFetchDataResponseChannel)
 }
