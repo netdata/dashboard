@@ -2,7 +2,7 @@ import React from "react"
 
 import { name2id } from "utils/name-2-id"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
-
+import { ChartsMetadata } from "domains/global/types"
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
 import { netdataDashboard, options, Menu } from "../../utils/netdata-dashboard"
@@ -32,12 +32,16 @@ interface RenderSubmenuNameArg {
   menu: Menu
   menuName: string
   pcentWidth: number
+  host: string
+  chartsMetadata: ChartsMetadata
 }
 export const renderSubmenuName = ({
   duration,
   menu,
   menuName,
   pcentWidth,
+  host,
+  chartsMetadata,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -67,13 +71,12 @@ export const renderSubmenuName = ({
         {chartsSorted
           .flatMap((chart) => generateHeadCharts("heads", chart, duration))
           .map(parseChartString)
-          .map((attributes: Attributes | null) => (
-            attributes && (
-              <ChartWrapper
-                attributes={attributes}
-                key={`${attributes.id}-${attributes.dimensions}`}
-              />
-            )
+          .map((attributes: Attributes | null) => attributes && (
+            <ChartWrapper
+              attributes={{ ...attributes, host }}
+              key={`${attributes.id}-${attributes.dimensions}`}
+              chartMetadata={chartsMetadata.charts[attributes.id]}
+            />
           ))}
       </div>
       {chartsSorted.map((chart) => {
@@ -93,6 +96,7 @@ export const renderSubmenuName = ({
             <ChartWrapper
               id={`chart_${name2id(chart.id)}`}
               attributes={{
+                host,
                 id: chart.id,
                 chartLibrary: "dygraph",
                 width: "100%",
@@ -115,6 +119,7 @@ export const renderSubmenuName = ({
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
               }}
+              chartMetadata={chartsMetadata.charts[chart.id]}
             />
           </div>
         )

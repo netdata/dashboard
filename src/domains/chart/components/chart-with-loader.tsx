@@ -47,12 +47,14 @@ export type Props = {
   attributes: Attributes
   chartUuid: string
   portalNode: HTMLElement
+  externalChartMetadata?: ChartMetadata
 }
 
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
   portalNode,
+  externalChartMetadata,
 }: Props) => {
   /**
    * fetch chart details
@@ -63,15 +65,25 @@ export const ChartWithLoader = ({
   const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
     selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
   ))
+  const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
-    if (!chartMetadata && !isFetchingDetails) {
+    if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
       dispatch(fetchChartAction.request({
         chart: attributes.id,
         id: chartUuid,
         host,
       }))
     }
-  }, [attributes.id, chartMetadata, chartUuid, dispatch, host, isFetchingDetails])
+  },
+  [
+    attributes.id,
+    chartUuid,
+    dispatch,
+    host,
+    isFetchingDetails,
+    chartMetadata,
+    externalChartMetadata,
+  ])
 
 
   // todo local state option
@@ -105,7 +117,10 @@ export const ChartWithLoader = ({
   // todo add support to "data-update-every" attribute
   const viewUpdateEvery = cond([
     [always(!!chartData), () => (chartData as ChartData).view_update_every * 1000],
-    [always(!!chartMetadata), () => (chartMetadata as ChartMetadata).update_every * 1000],
+    [
+      always(!!actualChartMetadata),
+      () => (actualChartMetadata as ChartMetadata).update_every * 1000,
+    ],
     [T, always(fallbackUpdateTimeInterval)],
   ])()
   const [shouldFetch, setShouldFetch] = useFetchNewDataClock({
@@ -140,7 +155,7 @@ export const ChartWithLoader = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && chartMetadata) {
+    if (shouldFetch && actualChartMetadata) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -186,7 +201,7 @@ export const ChartWithLoader = ({
       dispatch(fetchDataAction.request({
         // properties to be passed to API
         host,
-        chart: chartMetadata.id,
+        chart: actualChartMetadata.id,
         format: chartSettings.format,
         points,
         group,
@@ -206,7 +221,7 @@ export const ChartWithLoader = ({
         id: chartUuid,
       }))
     }
-  }, [attributes, chartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
+  }, [attributes, actualChartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
     hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
     isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
     shouldUsePanAndZoomPadding, shouldFetch])
@@ -216,7 +231,7 @@ export const ChartWithLoader = ({
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result.data?.length === 0
     || (chartData as EasyPieChartData | null)?.result.length === 0
 
-  if (!chartData || !chartMetadata) {
+  if (!chartData || !actualChartMetadata) {
     return (
       <Loader
         // Loader should remount when that flag is changed, because inside
@@ -241,7 +256,7 @@ export const ChartWithLoader = ({
         attributes={attributes}
         chartContainerElement={portalNode}
         chartData={chartData}
-        chartMetadata={chartMetadata}
+        chartMetadata={actualChartMetadata}
         chartUuid={chartUuid}
         chartHeight={chartHeight}
         chartWidth={chartWidth}
