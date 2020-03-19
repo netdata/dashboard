@@ -14,6 +14,8 @@
     <meta name="author" content="costa@tsaousis.gr">
 
     <link rel="icon" href="data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAP9JREFUeNpiYBgFo+A/w34gpiZ8DzWzAYgNiHGAA5UdgA73g+2gcyhgg/0DGQoweB6IBQYyFCCOGOBQwBMd/xnW09ERDtgcoEBHB+zHFQrz6egIBUasocDAcJ9OxWAhE4YQI8MDILmATg7wZ8QRDfQKhQf4Cie6pAVGPA4AhQKo0BCgZRAw4ZSBpIWJNI6CD4wEKikBaFqgVSgcYMIrzcjwgcahcIGRiPYCLUPBkNhWUwP9akVcoQBpatG4MsLviAIqWj6f3Absfdq2igg7IIEKDVQKEzN5ofAenJCp1I8gJRTug5tfkGIdR1FDniMI+QZUjF8Amn5htOdHCAAEGACE6B0cS6mrEwAAAABJRU5ErkJggg==" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,500,700" rel="stylesheet" />
 
     <meta property="og:locale"             content="en_US" />
     <meta property="og:url"                content="https://my-netdata.io" />
@@ -72,7 +74,8 @@
         overlayEl.innerHTML = 'netdata<br/><div style="font-size: 3vh;">Real-time performance monitoring, done right!</div>';
         overlayEl.style = theme == 'slate' ? "background-color: #272b30; color: #373b40;" : "background-color: #fff; color: #ddd;";
     </script>
-    <nav class="navbar navbar-default navbar-fixed-top" role="banner">
+    <div id="root"></div>
+    <nav style="display: none" class="navbar navbar-default navbar-fixed-top" role="banner">
         <div class="container">
             <div class="navbar-header">
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
@@ -1326,7 +1329,6 @@
             </div>
         </div>
     </div>
-    <div id="root"></div>
     <div id="modal-root"></div>
     <iframe id="ssoifrm" width="0" height="0"></iframe>
     <div id="hiddenDownloadLinks" style="display: none;" hidden></div>
