@@ -3,7 +3,7 @@ import { useEffectOnce } from "react-use"
 
 import { useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
-import { selectSnapshot, selectActiveAlarms } from "domains/global/selectors"
+import { selectSnapshot, selectActiveAlarms, selectRegistry } from "domains/global/selectors"
 
 import { getIframeSrc } from "utils"
 import { isDevelopmentEnv } from "utils/env"
@@ -49,6 +49,14 @@ export const AppHeader = ({
   const alarms = activeAlarms ? Object.values(activeAlarms.alarms) : []
   const criticalAlarmsCount = alarms.filter((alarm) => alarm.status === "CRITICAL").length
   const warningAlarmsCount = alarms.filter((alarm) => alarm.status === "WARNING").length
+
+  const registry = useSelector(selectRegistry)
+  const name = encodeURIComponent(registry.hostname)
+  const origin = encodeURIComponent(`${window.location.origin}/`)
+  const signInIframeUrl = getIframeSrc(
+    cloudBaseURL,
+    `sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`,
+  )
 
   const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
   const helloFromSignInRef = useRef(helloFromSignIn)
@@ -139,7 +147,7 @@ export const AppHeader = ({
         <IframeContainer>
           <iframe
             title="Sign In"
-            src={getIframeSrc(cloudBaseURL, "sign-in")}
+            src={signInIframeUrl}
             width="100%"
             height="40px"
             style={{ border: "none" }}
