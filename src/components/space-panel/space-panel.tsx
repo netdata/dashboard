@@ -60,8 +60,8 @@ export const SpacePanel = ({
   const panelIsActive = useSelector(selectSpacePanelIsActive)
 
   useEffect(() => {
-    dispatch(setSpacePanelStatusAction({ isActive: true }))
-  }, [dispatch])
+    dispatch(setSpacePanelStatusAction({ isActive: isSignedIn }))
+  }, [dispatch, isSignedIn])
 
   const streamedHostsData = getStreamedNodes(chartsMetadata)
   const hasStreamedHosts = streamedHostsData.streamedHosts.length > 0
