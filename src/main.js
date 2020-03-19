@@ -1066,16 +1066,39 @@ window.switchRegistryModalHandler = () => {
 };
 
 window.notifyForSwitchRegistry = () => {
-    var n = document.getElementById('switchRegistryPersonGUID').value;
+    // it's just old code, with minimal changes
+    const newPersonGuid = document.getElementById('switchRegistryPersonGUID').value;
 
-    if (n !== '' && n.length === 36) {
-        NETDATA.registry.switch(n, function (result) {
-            if (result !== null) {
-                $('#switchRegistryModal').modal('hide');
-                NETDATA.registry.init();
-            } else {
-                document.getElementById('switchRegistryResponse').innerHTML = "<b>Sorry! The registry rejected your request.</b>";
+    if (newPersonGuid !== '' && newPersonGuid.length === 36) {
+
+        $.ajax({
+            url: getFromRegistry("registryServer") + '/api/v1/registry?action=switch&machine='
+              + getFromRegistry("machineGuid") + '&name='
+              + encodeURIComponent(getFromRegistry("hostname")) + '&url='
+              + encodeURIComponent(serverDefault) + '&to=' + newPersonGuid,
+            async: true,
+            cache: false,
+            headers: {
+                'Cache-Control': 'no-cache, no-store',
+                'Pragma': 'no-cache'
+            },
+            xhrFields: {withCredentials: true} // required for the cookie
+        })
+        .done(function (data) {
+            data = NETDATA.xss.checkAlways('/api/v1/registry?action=switch', data);
+
+            if (typeof data.status !== 'string' || data.status !== 'ok') {
+                // NETDATA.error(413, NETDATA.registry.server + ' responded with: ' + JSON.stringify(data));
+                console.warn("Netdata registry server send invalid response to SWITCH", data)
+                data = null;
             }
+
+            $('#switchRegistryModal').modal('hide');
+        })
+        .fail(function () {
+            // NETDATA.error(414, NETDATA.registry.server);
+            console.warn("Netdata registry SWITCH failed")
+            document.getElementById('switchRegistryResponse').innerHTML = "<b>Sorry! The registry rejected your request.</b>";
         });
     } else {
         document.getElementById('switchRegistryResponse').innerHTML = "<b>The ID you have entered is not a GUID.</b>";
@@ -2883,7 +2906,7 @@ const loadDashboardInfo = memoizeWith(identity, () => (
       xhrFields: { withCredentials: true }, // required for the cookie
   })
   .fail(function () {
-      alert(`Cannot load required JS library: ${url}`);
+      alert(`Cannot load required JS library: dashboard_info.js`);
   })
 ))
 
@@ -5105,6 +5128,7 @@ function syncAgents(callback) {
 let isCloudSSOInitialized = false;
 
 function cloudSSOInit() {
+    return
     const iframeEl = document.getElementById("ssoifrm");
     const cloudBaseURL = getFromRegistry("cloudBaseURL")
     const machineGuid = getFromRegistry("machineGuid")
