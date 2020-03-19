@@ -1,7 +1,11 @@
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
-import { selectSpacePanelIsActive } from "domains/global/selectors"
+import {
+  selectIsUsingGlobalRegistry,
+  selectRegistry,
+  selectSpacePanelIsActive,
+} from "domains/global/selectors"
 import { setSpacePanelStatusAction } from "domains/global/actions"
 import { ChartsMetadata } from "domains/global/types"
 
@@ -10,9 +14,7 @@ import { SpacePanelIframe } from "components/space-panel/space-panel-iframe"
 import { VisitedNodes } from "./components/visited-nodes"
 import { ReplicatedNodes } from "./components/replicated-nodes"
 
-import {
-  PanelContainer, ScrollContainer, PanelSection,
-} from "./styled"
+import * as S from "./styled"
 
 const withPrivateRegistry = false
 
@@ -43,11 +45,15 @@ const getStreamedNodes = (chartsMetadata: ChartsMetadata) => {
 interface Props {
   chartsMetadata: ChartsMetadata
   cloudBaseURL: string
+  hasSignInHistory: boolean
+  isOffline: boolean
   isSignedIn: boolean
 }
 export const SpacePanel = ({
   chartsMetadata,
   cloudBaseURL,
+  hasSignInHistory,
+  isOffline,
   isSignedIn,
 }: Props) => {
   const dispatch = useDispatch()
@@ -58,26 +64,65 @@ export const SpacePanel = ({
   }, [dispatch])
 
   const streamedHostsData = getStreamedNodes(chartsMetadata)
-  const hasStreamedHosts = streamedHostsData.streamedHosts.length > 1
+  const hasStreamedHosts = streamedHostsData.streamedHosts.length > 0
+
+  const registry = useSelector(selectRegistry)
+  const isUsingGlobalRegistry = useSelector(selectIsUsingGlobalRegistry)
+
+  const name = encodeURIComponent(registry.hostname)
+  const origin = encodeURIComponent(`${window.location.origin}/`)
+  const cloudSignInUrl = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`
 
   return (
-    <PanelContainer isActive={panelIsActive}>
+    <S.PanelContainer isActive={panelIsActive}>
       {isSignedIn
         ? <SpacePanelIframe cloudBaseURL={cloudBaseURL} streamedHostsData={streamedHostsData} />
         : (
-          <ScrollContainer>
+          <S.ScrollContainer>
             {hasStreamedHosts && (
-              <PanelSection leading>
+              <S.PanelSection leading>
                 <ReplicatedNodes chartsMetadata={chartsMetadata} />
-              </PanelSection>
+              </S.PanelSection>
             )}
             {withPrivateRegistry && (
-              <PanelSection leading={!hasStreamedHosts}>
+              <S.PanelSection leading={!hasStreamedHosts}>
                 <VisitedNodes />
-              </PanelSection>
+              </S.PanelSection>
             )}
-          </ScrollContainer>
+
+            <S.BottomPanelContainer>
+              {isUsingGlobalRegistry && (
+                <S.SwitchIdentity>
+                  Switch Identity
+                </S.SwitchIdentity>
+              )}
+              {!hasSignInHistory && (
+                <S.BottomPanel>
+                  <S.BottomPanelHeader>
+                    Discover your monitoring superpowers
+                  </S.BottomPanelHeader>
+                  <S.BottomPanelText>
+                    Do you now that you can manage a lot of nodes with Netdata Cloud?
+                  </S.BottomPanelText>
+                  <S.SignInButton
+                    href={cloudSignInUrl}
+                  >
+                    Sign-in
+                  </S.SignInButton>
+
+                </S.BottomPanel>
+              )}
+              {isOffline && hasSignInHistory && (
+                <S.BottomPanel>
+                  <S.CantConnect>Can't connect to Netdata Cloud</S.CantConnect>
+                  <S.OfflineDescription>
+                    Maybe you are behind a firewall or you don’t have connection to the internet
+                  </S.OfflineDescription>
+                </S.BottomPanel>
+              )}
+            </S.BottomPanelContainer>
+          </S.ScrollContainer>
         )}
-    </PanelContainer>
+    </S.PanelContainer>
   )
 }

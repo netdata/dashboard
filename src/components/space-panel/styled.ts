@@ -47,3 +47,85 @@ export const PanelSection = styled.section<{ leading?: boolean }>`
     background: ${getColor(["borderColor"])};
   }
 `
+
+export const BottomPanelContainer = styled.div`
+  position: absolute;
+  bottom: 0;
+  background: #FFF;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+`
+
+export const SwitchIdentity = styled.div`
+  line-height: 40px;
+  border-top: 1px solid #AEB3B7;
+  background: #FFF;
+  width: 100%;
+`
+
+export const BottomPanel = styled.div`
+  border-top: 1px solid #AEB3B7;
+  background: #FFF;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  flex: 1 0 auto;
+  padding: 20px 30px;
+  height: 224px;
+`
+
+export const CantConnect = styled.div`
+  margin-top: 32p;
+  font-size: 12px;
+  font-weight: 600;
+  color: #35414A;
+  max-width: 150px;
+`
+
+export const BottomPanelHeader = styled.div`
+  font-weight: bold;
+  font-size: 12px;
+`
+
+export const BottomPanelText = styled.div`
+  line-height: 17px;
+  font-size: 13px;
+  max-width: 165px;
+`
+
+export const OfflineDescription = styled.div`
+  margin-top: 50px;
+  color: #AEB3B7;
+  font-size: 9px;
+  line-height: 12px;
+  max-width: 170px;
+`
+
+export const SignInButton = styled.a`
+  padding: 8px;
+  opacity: 1;
+  cursor: pointer;
+  background-color: #00AB44;
+  border-color: #00AB44;
+  border-style:solid;
+  border-radius: 3px;
+  border-width: 0;
+  width: 128px;
+  height: 40px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #FFF;
+  flex-flow: row nowrap;
+  align-items: center;
+  text-decoration: none;
+  user-select: none;
+  display: flex;
+  text-transform: uppercase;
+  justify-content: center;
+`
