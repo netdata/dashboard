@@ -16,8 +16,11 @@ export const requestCommonColorsAction = createAction<RequestCommonColors>(
   `${storeKey}/globalRequestCommonColors`,
 )
 
-export const setTimezoneAction = createAction<{ timezone: string }>(`${storeKey}/globalSetTmezone`)
-window.TEMPORARY_setTimezoneAction = setTimezoneAction
+interface SetCommonMinAction { chartUuid: string, commonMinKey: string, value: number }
+export const setCommonMinAction = createAction<SetCommonMinAction>(`${storeKey}/setCommonMin`)
+
+interface SetCommonMaxAction { chartUuid: string, commonMaxKey: string, value: number }
+export const setCommonMaxAction = createAction<SetCommonMaxAction>(`${storeKey}/setCommonMax`)
 
 interface SetGlobalSelectionAction {
   chartUuid: string | null
@@ -27,7 +30,7 @@ export const setGlobalSelectionAction = createAction<SetGlobalSelectionAction>(
   `${storeKey}/setGlobalSelection`,
 )
 
-interface SetGlobalPanAndZoomAction {
+export interface SetGlobalPanAndZoomAction {
   after: number
   before: number
   masterID?: string
@@ -39,7 +42,7 @@ export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
 
-interface SetGlobalChartUnderlayAction {
+export interface SetGlobalChartUnderlayAction {
   after: number
   before: number
   masterID: string
@@ -95,6 +98,8 @@ export interface SetOptionAction {
   value: unknown
 }
 export const setOptionAction = createAction<SetOptionAction>(`${storeKey}/setOptionAction`)
+
+export const resetOptionsAction = createAction(`${storeKey}/resetOptions`)
 
 export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
   `${storeKey}/loadSnapshotAction`,

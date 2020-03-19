@@ -12,6 +12,7 @@ import { Action } from "redux-act"
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
+import { isMainJs } from "utils/env"
 
 import { selectGlobalPanAndZoom, selectSnapshot } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
@@ -96,7 +97,9 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     return
   }
 
-  const url = `${alwaysEndWithSlash(host)}api/v1/data`
+  const url = isMainJs
+    ? `${alwaysEndWithSlash(host)}api/v1/data`
+    : host
 
   const params = {
     chart,

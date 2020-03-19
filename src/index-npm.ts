@@ -29,3 +29,5 @@ export { store as dashboardStore } from "store"
 export { ChartContainer } from "domains/chart/components/chart-container"
 
 export { NodeView } from "domains/dashboard/components/node-view"
+
+export { resetGlobalPanAndZoomAction, setGlobalPanAndZoomAction } from "domains/global/actions"

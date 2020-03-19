@@ -36,6 +36,7 @@ interface Props {
   chartHeight: number
   chartWidth: number
   dimensionsVisibility: boolean[]
+  hasEmptyData: boolean
   isRemotelyControlled: boolean
   legendFormatValue: ((v: number | string | null) => number | string)
   orderedColors: string[]
@@ -63,6 +64,7 @@ export const AbstractChart = ({
   chartHeight,
   chartWidth,
   dimensionsVisibility,
+  hasEmptyData,
   isRemotelyControlled,
   legendFormatValue,
   orderedColors,
@@ -124,6 +126,9 @@ export const AbstractChart = ({
         chartUuid={chartUuid}
         dimensionsVisibility={dimensionsVisibility}
         isRemotelyControlled={isRemotelyControlled}
+        // easyPieChart doesnt support resizing, so lets just create new one when
+        // container size changes
+        key={chartWidth}
         legendFormatValue={legendFormatValue}
         orderedColors={orderedColors}
         hoveredRow={hoveredRow}
@@ -258,6 +263,7 @@ export const AbstractChart = ({
       colors={colors}
       chartUuid={chartUuid}
       dimensionsVisibility={dimensionsVisibility}
+      hasEmptyData={hasEmptyData}
       isRemotelyControlled={isRemotelyControlled}
       legendFormatValue={legendFormatValue}
       orderedColors={orderedColors}

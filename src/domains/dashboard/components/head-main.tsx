@@ -6,12 +6,17 @@ import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 interface Props {
   charts: ChartsMetadata["charts"]
   duration: number
+  host: string
+  chartsMetadata: ChartsMetadata
 }
 export const HeadMain = ({
   charts,
   duration,
+  host,
+  chartsMetadata,
 }: Props) => {
   const commonAttributes = {
+    host,
     after: -duration,
     points: duration,
   }
@@ -37,6 +42,7 @@ export const HeadMain = ({
             colors: "DD4400",
           }}
           style={{ marginRight: 10 }}
+          chartMetadata={chartsMetadata.charts["system.swap"]}
         />
       )}
 
@@ -55,6 +61,7 @@ export const HeadMain = ({
               unitsCommon: "system.io.mainhead",
             }}
             style={{ marginRight: 10 }}
+            chartMetadata={chartsMetadata.charts["system.io"]}
           />
           <ChartWrapper
             attributes={{
@@ -68,6 +75,7 @@ export const HeadMain = ({
               unitsCommon: "system.io.mainhead",
             }}
             style={{ marginRight: 10 }}
+            chartMetadata={chartsMetadata.charts["system.io"]}
           />
         </>
       ) : (charts["system.pgpgio"] && (
@@ -84,6 +92,7 @@ export const HeadMain = ({
               unitsCommon: "system.pgpgio.mainhead",
             }}
             style={{ marginRight: 10 }}
+            chartMetadata={chartsMetadata.charts["system.pgpgio"]}
           />
           <ChartWrapper
             attributes={{
@@ -97,6 +106,7 @@ export const HeadMain = ({
               unitsCommon: "system.pgpgio.mainhead",
             }}
             style={{ marginRight: 10 }}
+            chartMetadata={chartsMetadata.charts["system.pgpgio"]}
           />
         </>
       ))}
@@ -115,6 +125,7 @@ export const HeadMain = ({
             unitsCommon: "system.pgpgio.mainhead",
           }}
           style={{ marginRight: 10 }}
+          chartMetadata={chartsMetadata.charts["system.cpu"]}
         />
       )}
 
@@ -134,6 +145,7 @@ export const HeadMain = ({
                 unitsCommon: "system.net.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.net"]}
             />
             <ChartWrapper
               attributes={{
@@ -147,6 +159,7 @@ export const HeadMain = ({
                 unitsCommon: "system.net.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.net"]}
             />
           </>
         )],
@@ -164,6 +177,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ip.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ip"]}
             />
             <ChartWrapper
               attributes={{
@@ -177,6 +191,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ip.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ip"]}
             />
           </>
         )],
@@ -194,6 +209,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ipv4.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ipv4"]}
             />
             <ChartWrapper
               attributes={{
@@ -207,6 +223,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ipv4.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ipv4"]}
             />
           </>
         )],
@@ -225,6 +242,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ipv6.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ipv6"]}
             />
             <ChartWrapper
               attributes={{
@@ -238,6 +256,7 @@ export const HeadMain = ({
                 unitsCommon: "system.ipv6.mainhead",
               }}
               style={{ marginRight: 10 }}
+              chartMetadata={chartsMetadata.charts["system.ipv6"]}
             />
           </>
         )],
@@ -259,6 +278,7 @@ export const HeadMain = ({
             colors: colors[7],
           }}
           style={{ marginRight: 10 }}
+          chartMetadata={chartsMetadata.charts["system.ram"]}
         />
       )}
     </>

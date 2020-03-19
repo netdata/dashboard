@@ -8,20 +8,6 @@ body {
     padding-top: 50px;
 }
 
-.loadOverlay {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    z-index: 2000;
-    font-size: 10vh;
-    font-family: sans-serif;
-    padding: 40vh 0 40vh 0;
-    font-weight: bold;
-    text-align: center;
-}
-
 .navbar-highlight {
     display: none;
     position: fixed;
@@ -583,10 +569,10 @@ body.modal-open {
 }
 
 .beta {
-    color:#FFCC00;    
+    color:#FFCC00;
 }
 
- 
+
 @media (min-width: 1400px) {
     #hostname {
         max-width: 600px !important;
@@ -605,11 +591,11 @@ body.modal-open {
     #hostname {
         max-width: 280px !important;
      }
- 
+
      #hostnametext {
         max-width: 220px !important;
      }
-    
+
     .charts-body {
         width: calc(100% - 263px) !important;
         padding-left: 1% !important;
@@ -633,7 +619,7 @@ body.modal-open {
     #hostname {
         max-width: 100px;
     }
- 
+
     #hostnametext {
         max-width: 40px;
     }
