@@ -55,7 +55,7 @@ export const AppHeader = ({
   const origin = encodeURIComponent(`${window.location.origin}/`)
   const signInIframeUrl = getIframeSrc(
     cloudBaseURL,
-    `sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`,
+    `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`,
   )
 
   const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
