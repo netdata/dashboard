@@ -1,8 +1,8 @@
 import { useEffect, useCallback, useState } from "react"
 
 type IframesMessageType = "spaces" | "workspaces"
-  | "hello-from-spaces-bar" | "hello-from-space-panel"
-  | "is-signed-in" | "streamed-hosts-data"
+  | "hello-from-spaces-bar" | "hello-from-space-panel" | "hello-from-sign-in"
+  | "is-signed-in" | "streamed-hosts-data" | "has-focus"
 
 interface IframesMessage<T = unknown> {
   type: IframesMessageType

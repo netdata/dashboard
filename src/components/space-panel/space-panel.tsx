@@ -96,7 +96,7 @@ export const SpacePanel = ({
                   Switch Identity
                 </S.SwitchIdentity>
               )}
-              {!hasSignInHistory && (
+              {!isOffline && !hasSignInHistory && (
                 <S.BottomPanel>
                   <S.BottomPanelHeader>
                     Discover your monitoring superpowers

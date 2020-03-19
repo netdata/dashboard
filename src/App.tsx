@@ -116,11 +116,29 @@ const App: React.FC = () => {
   }, [])
   const [isSignedIn] = useListenToPostMessage("is-signed-in", isSignedInCallback)
 
+  const [shouldRenderStatic, setShouldRenderStatic] = useState(false)
+  const handleEnoughWaitingForIframe = useCallback(() => {
+    setShouldRenderStatic(true)
+  }, [])
+
+  const [isOffline, setIsOffline] = useState(false)
+
+  // const dispatch = useDispatch()
+  // const [hasFocus] = useListenToPostMessage("has-focus", (newHasFocus) => {
+  //   dispatch(windowFocusChangeAction({ hasWindowFocus: newHasFocus })
+  // })
+
   return (
     <ThemeProvider theme={DefaultTheme}>
       {chartsMetadata && cloudBaseURL && (
         <>
-          {!isPrintMode && <SpacesBar isSignedIn={isSignedIn} cloudBaseURL={cloudBaseURL} /> }
+          {!isPrintMode && (
+            <SpacesBar
+              isSignedIn={isSignedIn}
+              cloudBaseURL={cloudBaseURL}
+              shouldRenderStatic={shouldRenderStatic}
+            />
+          )}
           {!isPrintMode && (
             <SpacePanel
               hasSignInHistory={hasSignInHistory}
@@ -133,6 +151,9 @@ const App: React.FC = () => {
           <AppHeader
             chartsMetadata={chartsMetadata}
             cloudBaseURL={cloudBaseURL}
+            isSignedIn={isSignedIn}
+            onEnoughWaitingForIframe={handleEnoughWaitingForIframe}
+            setIsOffline={setIsOffline}
           />
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
