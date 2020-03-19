@@ -71,6 +71,7 @@ export const SpacePanel = ({
 
   const name = encodeURIComponent(registry.hostname)
   const origin = encodeURIComponent(`${window.location.origin}/`)
+  // eslint-disable-next-line max-len
   const cloudSignInUrl = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`
 
   return (
@@ -92,7 +93,11 @@ export const SpacePanel = ({
 
             <S.BottomPanelContainer>
               {isUsingGlobalRegistry && (
-                <S.SwitchIdentity>
+                <S.SwitchIdentity
+                  onClick={() => {
+                    window.switchRegistryModalHandler()
+                  }}
+                >
                   Switch Identity
                 </S.SwitchIdentity>
               )}
@@ -114,6 +119,7 @@ export const SpacePanel = ({
               )}
               {isOffline && hasSignInHistory && (
                 <S.BottomPanel>
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
                   <S.CantConnect>Can't connect to Netdata Cloud</S.CantConnect>
                   <S.OfflineDescription>
                     Maybe you are behind a firewall or you don’t have connection to the internet

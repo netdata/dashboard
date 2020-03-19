@@ -65,6 +65,7 @@ export const SwitchIdentity = styled.div`
   border-top: 1px solid #AEB3B7;
   background: #FFF;
   width: 100%;
+  cursor: pointer;
 `
 
 export const BottomPanel = styled.div`
