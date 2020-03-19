@@ -8,6 +8,7 @@ import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
+import { useInfo } from "hooks/use-info"
 
 if (!window.netdataNoBootstrap) {
   // it needs to be imported indirectly, there's probably a bug in webpack
@@ -33,6 +34,9 @@ const CustomDashboardsApp: React.FC = () => { // eslint-disable-line arrow-body-
   // but window.netdataRegistry needed to be explicitly `true`
   const shouldUseAlarms = !!window.netdataShowAlarms
   useAlarms(shouldUseAlarms)
+
+  const shouldUseInfo = !!window.netdataShowNotifications
+  useInfo(shouldUseInfo)
 
   return (
     <div className="App">

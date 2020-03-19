@@ -23,6 +23,7 @@ import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
 
+import { useInfo } from "hooks/use-info"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -67,6 +68,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
 
   useRegistry(true)
   useAlarms(true)
+  useInfo(true)
 
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
