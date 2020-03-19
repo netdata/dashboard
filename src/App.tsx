@@ -105,6 +105,7 @@ const App: React.FC = () => {
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
 
+  const hasSignInHistory = localStorage.getItem(HAS_SIGN_IN_HISTORY) === "true"
   const isSignedInCallback = useCallback((newIsSignedIn) => {
     if (newIsSignedIn === true) {
       localStorage.setItem(HAS_SIGN_IN_HISTORY, "true")
@@ -122,6 +123,8 @@ const App: React.FC = () => {
           {!isPrintMode && <SpacesBar isSignedIn={isSignedIn} cloudBaseURL={cloudBaseURL} /> }
           {!isPrintMode && (
             <SpacePanel
+              hasSignInHistory={hasSignInHistory}
+              isOffline={isOffline}
               isSignedIn={isSignedIn}
               cloudBaseURL={cloudBaseURL}
               chartsMetadata={chartsMetadata}
