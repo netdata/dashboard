@@ -14,6 +14,7 @@ import {
     fetchAllAlarmsAction,
     loadSnapshotAction,
     resetGlobalPanAndZoomAction,
+    resetOptionsAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
@@ -961,7 +962,7 @@ function gotoServerValidateUrl(id, guid, url) {
     setTimeout(function () {
         document.getElementById('gotoServerList').innerHTML += '<tr><td style="padding-left: 20px;"><a href="' + verifyURL(finalURL) + '" target="_blank">' + escapeUserInputHTML(url) + '</a></td><td style="padding-left: 30px;"><code id="' + guid + '-' + id + '-status">checking...</code></td></tr>';
 
-        NETDATA.registry.hello(url, function (data) {
+        NETDATA.registryHello(url, function (data) {
             if (typeof data !== 'undefined' && data !== null && typeof data.machine_guid === 'string' && data.machine_guid === guid) {
                 // console.log('OK ' + id + ' URL: ' + url);
                 document.getElementById(guid + '-' + id + '-status').innerHTML = "OK";
@@ -972,7 +973,8 @@ function gotoServerValidateUrl(id, guid, url) {
                     if (gotoServerMiddleClick) {
                         window.open(verifyURL(finalURL), '_blank');
                         gotoServerMiddleClick = false;
-                        document.getElementById('gotoServerResponse').innerHTML = '<b>Opening new window to ' + NETDATA.registry.machines[guid].name + '<br/><a href="' + verifyURL(finalURL) + '">' + escapeUserInputHTML(url) + '</a></b><br/>(check your pop-up blocker if it fails)';
+                        const registryMachines = getFromRegistry("registryMachines");
+                        document.getElementById('gotoServerResponse').innerHTML = '<b>Opening new window to ' + registryMachines[guid].name + '<br/><a href="' + verifyURL(finalURL) + '">' + escapeUserInputHTML(url) + '</a></b><br/>(check your pop-up blocker if it fails)';
                     } else {
                         document.getElementById('gotoServerResponse').innerHTML += 'found it! It is at:<br/><small>' + escapeUserInputHTML(url) + '</small>';
                         document.location = verifyURL(finalURL);
@@ -2841,9 +2843,6 @@ function initializeDynamicDashboardWithData(data) {
         // update the dashboard title
         document.title = options.hostname + ' netdata dashboard';
 
-        // close the splash screen
-        $("#loadOverlay").css("display", "none");
-
         // create a chart_by_name index
         data.charts_by_name = {};
         var charts = data.charts;
@@ -2950,32 +2949,6 @@ function initializeDynamicDashboard(newReduxStore) {
         netdataPrepCallback()
 
         initializeConfig.url = serverDefault;
-
-        // subscribe some redux actions to subscribers (temporary, until the whole main.js will be
-        // refractored)
-        reduxStore.subscribe(() => {
-            const lastAction = reduxStore.getState().lastActionForMainJs
-            if (!lastAction) {
-                return
-            }
-            if (lastAction.type === setGlobalPanAndZoomAction.toString()) {
-                const { after, before } = lastAction.payload
-                // additional check to prevent loop, after setting initial state from url
-                if (urlOptions.after !== after || urlOptions.before !== before) {
-                    urlOptions.netdataPanAndZoomCallback(true, after, before)
-                }
-            } else if (lastAction.type === resetGlobalPanAndZoomAction.toString()) {
-                urlOptions.netdataPanAndZoomCallback(false, 0, 0)
-            } else if (lastAction.type === setGlobalChartUnderlayAction.toString()) {
-                const { after, before } = lastAction.payload
-                // additional check to prevent loop, after setting initial state from url
-                if (urlOptions.after !== after || urlOptions.before !== before) {
-                    urlOptions.netdataHighlightCallback(true, after, before)
-                }
-            } else if (lastAction.type === clearHighlightAction.toString()) {
-                urlOptions.netdataHighlightCallback(false, 0, 0)
-            }
-        })
     }
 
 
@@ -4015,20 +3988,28 @@ function dashboardSettingsSetup() {
     });
 }
 
+const CHART_DIV_ID_PREFIX = 'chart_'
+const CHART_DIV_OFFSET = -50
+
 function scrollDashboardTo() {
     if (window.netdataSnapshotData !== null && typeof window.netdataSnapshotData.hash !== 'undefined') {
         scrollToId(window.netdataSnapshotData.hash.replace('#', ''));
     } else {
         // check if we have to jump to a specific section
         scrollToId(urlOptions.hash.replace('#', ''));
+        if (urlOptions.chart !== null) {
+            const chartElement = document.getElementById(`${CHART_DIV_ID_PREFIX}${name2id(urlOptions.chart)}`)
+            if (chartElement) {
+                const offset = chartElement.offsetTop + CHART_DIV_OFFSET;
+                document.querySelector("html").scrollTop = offset
+            }
+        }
     }
 }
 
 var modalHiddenCallback = null;
 
 window.scrollToChartAfterHidingModal = (chart, alarmDate, alarmStatus) => {
-    const CHART_DIV_ID_PREFIX = 'chart_'
-    const CHART_DIV_OFFSET = -50
     modalHiddenCallback = function () {
 
         if (typeof chart === 'string') {
@@ -4535,17 +4516,16 @@ function finalizePage() {
     // console.log('start up time: ' + (netdataEnded - netdataStarted).toString() + ' ms');
 }
 
-function resetDashboardOptions() {
-    var help = NETDATA.options.current.show_help;
+window.resetDashboardOptions = () => {
+    reduxStore.dispatch(resetOptionsAction())
 
-    NETDATA.resetOptions();
-    if (setTheme('slate')) {
-        netdataReload();
-    }
+    // it's dirty, but this will be rewritten anyway
+    urlOptions.update_always = false;
+    urlOptions.help = false;
+    urlOptions.theme = "slate";
+    urlOptions.hashUpdate();
 
-    if (help !== NETDATA.options.current.show_help) {
-        netdataReload();
-    }
+    netdataReload()
 }
 
 // callback to add the dashboard info to the

@@ -552,4 +552,51 @@ NETDATA.chartRegistry = {
 };
 
 
+NETDATA.fixHost = function (host) {
+  while (host.slice(-1) === '/') {
+    host = host.substring(0, host.length - 1);
+  }
+
+  return host;
+};
+
+
+NETDATA.registryHello = function (host, callback) {
+  host = NETDATA.fixHost(host);
+
+  // send HELLO to a netdata server:
+  // 1. verifies the server is reachable
+  // 2. responds with the registry URL, the machine GUID of this netdata server and its hostname
+  $.ajax({
+    url: host + '/api/v1/registry?action=hello',
+    async: true,
+    cache: false,
+    headers: {
+      'Cache-Control': 'no-cache, no-store',
+      'Pragma': 'no-cache'
+    },
+    xhrFields: {withCredentials: true} // required for the cookie
+  })
+  .done(function (data) {
+    data = NETDATA.xss.checkOptional('/api/v1/registry?action=hello', data);
+
+    if (typeof data.status !== 'string' || data.status !== 'ok') {
+      NETDATA.error(408, host + ' response: ' + JSON.stringify(data));
+      data = null;
+    }
+
+    if (typeof callback === 'function') {
+      return callback(data);
+    }
+  })
+  .fail(function () {
+    NETDATA.error(407, host);
+
+    if (typeof callback === 'function') {
+      return callback(null);
+    }
+  });
+}
+
+
 // NETDATA.currentScript = document.currentScript

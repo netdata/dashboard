@@ -126,6 +126,9 @@ export const AbstractChart = ({
         chartUuid={chartUuid}
         dimensionsVisibility={dimensionsVisibility}
         isRemotelyControlled={isRemotelyControlled}
+        // easyPieChart doesnt support resizing, so lets just create new one when
+        // container size changes
+        key={chartWidth}
         legendFormatValue={legendFormatValue}
         orderedColors={orderedColors}
         hoveredRow={hoveredRow}
