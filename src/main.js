@@ -4859,6 +4859,7 @@ window.signInDidClick = (e) => {
 }
 
 function shouldShowSignInBanner() {
+    return false;
     if (isSignedIn()) {
         return false;
     }
