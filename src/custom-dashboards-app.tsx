@@ -35,9 +35,6 @@ const CustomDashboardsApp: React.FC = () => { // eslint-disable-line arrow-body-
   const shouldUseAlarms = !!window.netdataShowAlarms
   useAlarms(shouldUseAlarms)
 
-  const shouldUseInfo = !!window.netdataShowNotifications
-  useInfo(shouldUseInfo)
-
   return (
     <div className="App">
       <Portals />
