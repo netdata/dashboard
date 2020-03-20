@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getColor, getSizeBy, Text, Icon, TextNano } from "@netdata/netdata-ui"
+import {
+  getColor, getSizeBy, Text, Icon, TextNano,
+} from "@netdata/netdata-ui"
 
 export const StyledIcon = styled(Icon)`
   fill: ${getColor(["text"])};

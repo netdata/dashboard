@@ -17,21 +17,21 @@ const Node = ({ agent: { name, validURLs }, visitNode }: any) => {
   const urls = validURLs ? Object.keys(validURLs) : []
   return (
     <CollapsibleList
-      handle={
+      handle={(
         <SimpleListItem
-          text={
+          text={(
             <>
               <StyledIcon name="node" />
               <NodeName>{name}</NodeName>
             </>
-          }
+          )}
           metaIcon={urls.length && "chevron_right"}
         />
-      }
+      )}
     >
-      {urls.map((url: string, i: number) => (
+      {urls.map((url: string) => (
         <ListItem
-          key={i}
+          key={url}
           onClick={() => {
             visitNode(url)
           }}
@@ -58,14 +58,14 @@ export const VisitedNodes = () => {
     <NodesContainer>
       <CollapsibleList
         startOpen
-        handle={
+        handle={(
           <ListHeaderContainer>
             <SimpleListItem metaIcon="chevron_right" text="Visited Nodes" />
           </ListHeaderContainer>
-        }
+        )}
       >
-        {agents.map((agent: any, i: any) => (
-          <Node key={i} visitNode={visitNode} agent={agent} />
+        {agents.map((agent: any) => (
+          <Node key={agent.name} visitNode={visitNode} agent={agent} />
         ))}
       </CollapsibleList>
     </NodesContainer>

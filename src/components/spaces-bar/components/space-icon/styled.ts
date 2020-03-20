@@ -12,8 +12,9 @@ export const InitialsContainer = styled.div<{ active?: boolean }>`
   border-radius: ${getSizeBy()};
   border: 2px solid;
   cursor: pointer;
-  border-color: ${({ active }) =>
-    active ? getColor(["success"]) : getColor(["gray", "limedSpruce"])};
+  border-color: ${({ active }) => (
+    active ? getColor(["success"]) : getColor(["gray", "limedSpruce"])
+  )};
 `
 
 export const InitialLetter = styled(Text)<{ gray?: boolean }>`
