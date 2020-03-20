@@ -91,11 +91,14 @@ export const VersionControl = ({
     return null
   }
   const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
+  const currentVersionDisplay = currentVersion.split("-")
+    .slice(0, 2)
+    .join("-")
   return (
     <Container>
       <VersionIndicator>
         <CollapsableText>Agent Version</CollapsableText>
-        <VersionNumber>{currentVersion}</VersionNumber>
+        <VersionNumber>{currentVersionDisplay}</VersionNumber>
       </VersionIndicator>
       {isNewVersionAvailable && (
         <NewVersionIndicator
@@ -104,7 +107,7 @@ export const VersionControl = ({
           data-target="#updateModal"
         >
           <StyledIcon name="logo_s" />
-          <TextBold> New version avaliable </TextBold>
+          <TextBold> Update Now </TextBold>
         </NewVersionIndicator>
       )}
     </Container>
