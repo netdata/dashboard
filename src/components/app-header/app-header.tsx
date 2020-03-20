@@ -38,7 +38,7 @@ interface Props {
 export const AppHeader = ({
   cloudBaseURL,
   chartsMetadata,
-  isSignedIn,
+  // isSignedIn,
   onEnoughWaitingForIframe,
   setIsOffline,
 }: Props) => {
