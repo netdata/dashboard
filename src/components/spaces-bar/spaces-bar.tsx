@@ -8,12 +8,12 @@ import {
 interface Props {
   cloudBaseURL: string
   isSignedIn: boolean
-  shouldRenderStatic: boolean
+  enoughWaitingForIframe: boolean
 }
 export const SpacesBar = ({
   cloudBaseURL,
   isSignedIn,
-  shouldRenderStatic,
+  enoughWaitingForIframe,
 }: Props) => (
   <ListContainer>
     {isSignedIn ? (
@@ -24,7 +24,7 @@ export const SpacesBar = ({
         width="100%"
         style={{ border: "none" }}
       />
-    ) : (shouldRenderStatic && (
+    ) : (enoughWaitingForIframe && (
       <>
         <SpacesList>
           <SpacePlaceholder />
