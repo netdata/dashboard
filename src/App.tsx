@@ -26,6 +26,7 @@ import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { useRegistry } from "hooks/use-registry"
+import { useListenToFocusMessages } from "hooks/use-listen-to-focus-messages"
 import { useAlarms } from "hooks/use-alarms"
 import { AppHeader } from "components/app-header"
 import { SpacesBar } from "components/spaces-bar"
@@ -122,6 +123,8 @@ const App: React.FC = () => {
   }, [])
 
   const [isOffline, setIsOffline] = useState(false)
+
+  useListenToFocusMessages()
 
   // const dispatch = useDispatch()
   // const [hasFocus] = useListenToPostMessage("has-focus", (newHasFocus) => {
