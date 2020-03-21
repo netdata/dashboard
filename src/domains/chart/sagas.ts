@@ -240,17 +240,24 @@ function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
   try {
     const registry = yield select(selectRegistry)
     const wasCloudAvailable = registry?.isCloudAvailable || false
-
     const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
+
     const isCloudAvailable = data?.["cloud-available"] || false
     yield put(fetchInfoAction.success({
       isCloudAvailable,
     }))
-
     if (wasCloudAvailable && !isCloudAvailable) {
-      toast.error("Link dropped", { type: toast.TYPE.ERROR, autoClose: NOTIFICATIONS_TIMEOUT })
+      toast.error("Connection Problem", {
+        position: "bottom-right",
+        type: toast.TYPE.ERROR,
+        autoClose: NOTIFICATIONS_TIMEOUT,
+      })
     } else if (!wasCloudAvailable && isCloudAvailable) {
-      toast.success("Link established", { type: toast.TYPE.SUCCESS, autoClose: NOTIFICATIONS_TIMEOUT })
+      toast.success("Connected to the Cloud!", {
+        position: "bottom-right",
+        type: toast.TYPE.SUCCESS,
+        autoClose: NOTIFICATIONS_TIMEOUT,
+      })
     }
   } catch (e) {
     console.warn("fetch agent info failure") // eslint-disable-line no-console
