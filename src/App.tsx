@@ -20,7 +20,7 @@ import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { useListenToPostMessage } from "utils/post-message"
 import { useSelector } from "store/redux-separate-context"
-import { selectCloudBaseUrl } from "domains/global/selectors"
+import { selectCloudBaseUrl, selectSignInUrl } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
@@ -125,6 +125,7 @@ const App: React.FC = () => {
   const [isOffline, setIsOffline] = useState(false)
 
   useListenToFocusMessages()
+  const signInUrl = useSelector(selectSignInUrl)
 
   // const dispatch = useDispatch()
   // const [hasFocus] = useListenToPostMessage("has-focus", (newHasFocus) => {
@@ -140,6 +141,7 @@ const App: React.FC = () => {
               isSignedIn={isSignedIn}
               cloudBaseURL={cloudBaseURL}
               enoughWaitingForIframe={enoughWaitingForIframe}
+              signInUrl={signInUrl}
             />
           )}
           {!isPrintMode && (
