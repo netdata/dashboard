@@ -328,10 +328,15 @@ globalReducer.on(clearHighlightAction, (state) => ({
   globalPanAndZoom: initialState.globalPanAndZoom,
 }))
 
-globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
-  ...state,
-  hasWindowFocus,
-}))
+globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
+  // make additional check, because it's possible to get hasWindowFocus === false
+  // message from iframe, after main window makes the state change (race condition)
+  const hasFocusNow = document.hasFocus()
+  return {
+    ...state,
+    hasWindowFocus: hasFocusNow || hasWindowFocus,
+  }
+})
 
 globalReducer.on(fetchHelloAction.request, (state) => ({
   ...state,
