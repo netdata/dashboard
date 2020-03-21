@@ -23,22 +23,25 @@ import {
   IframeContainer,
   StyledHelpIcon,
   StyledGearContainer,
+  SignInButton,
 } from "./styled"
 
-const iframeTimeout = isDevelopmentEnv ? 2000 : 750
+const iframeTimeout = isDevelopmentEnv ? 3000 : 750
 const WAITING_FOR_HELLO_TIME = 500
 
 interface Props {
   cloudBaseURL: string
   chartsMetadata: ChartsMetadata
   isSignedIn: boolean
+  enoughWaitingForIframe: boolean
   onEnoughWaitingForIframe: () => void
   setIsOffline: (v: boolean) => void
 }
 export const AppHeader = ({
   cloudBaseURL,
   chartsMetadata,
-  // isSignedIn,
+  isSignedIn,
+  enoughWaitingForIframe,
   onEnoughWaitingForIframe,
   setIsOffline,
 }: Props) => {
@@ -58,6 +61,10 @@ export const AppHeader = ({
     `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`,
   )
 
+  const redirectURI = encodeURIComponent(window.location.href)
+  // eslint-disable-next-line max-len
+  const signInLinkHref = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}&redirect_uri=${redirectURI}`
+
   const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
   const helloFromSignInRef = useRef(helloFromSignIn)
   useEffect(() => {
@@ -70,6 +77,7 @@ export const AppHeader = ({
     hasIframeRendered.current = true
     setTimeout(() => {
       if (helloFromSignInRef.current === undefined) {
+        // it means it's definitely offline (probably load error)
         setIsOffline(true)
       }
     }, WAITING_FOR_HELLO_TIME)
@@ -78,10 +86,7 @@ export const AppHeader = ({
   // wait a litte bit before we start showing spinners, rendering offline stuff, etc.
   useEffectOnce(() => {
     const timeoutId = setTimeout(() => {
-      if (!hasIframeRendered.current) {
-        // time before we start showing spinners, etc.
-        onEnoughWaitingForIframe()
-      }
+      onEnoughWaitingForIframe()
     }, iframeTimeout)
     return () => {
       clearTimeout(timeoutId)
@@ -150,9 +155,19 @@ export const AppHeader = ({
             src={signInIframeUrl}
             width="100%"
             height="40px"
-            style={{ border: "none" }}
+            style={{
+              border: "none",
+              display: isSignedIn ? undefined : "none",
+            }}
             onLoad={handleIframeLoad}
           />
+          {!isSignedIn && enoughWaitingForIframe && (
+            <SignInButton
+              href={signInLinkHref}
+            >
+              Sign-in
+            </SignInButton>
+          )}
         </IframeContainer>
       </UtilitySection>
     </StyledHeader>

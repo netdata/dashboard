@@ -83,10 +83,39 @@ export const IconContainer = styled.div`
   margin: 0 5px;
 `
 export const IframeContainer = styled.div`
-  width: ${getSizeBy(9)};
+  width: 74px;
   height: 40px;
 `
 
 export const StyledHelpIcon = styled.a`
   font-size: 16px;
+`
+
+export const SignInButton = styled.a`
+  padding: 8px;
+  opacity: 1;
+  cursor: pointer;
+  background-color: #00AB44;
+  border-color: #00AB44;
+  border-style:solid;
+  border-radius: 3px;
+  border-width: 0;
+  width: 100%;
+  height: 40px;
+  font-weight: bold;
+  font-size: 12px;
+  color: #FFF;
+  flex-flow: row nowrap;
+  align-items: center;
+  text-decoration: none;
+  user-select: none;
+  display: flex;
+  text-transform: uppercase;
+  justify-content: center;
+  &:hover {
+    border-color: #00CB51;
+    border-width: 3px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
 `

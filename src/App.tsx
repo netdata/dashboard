@@ -116,9 +116,9 @@ const App: React.FC = () => {
   }, [])
   const [isSignedIn] = useListenToPostMessage("is-signed-in", isSignedInCallback)
 
-  const [shouldRenderStatic, setShouldRenderStatic] = useState(false)
+  const [enoughWaitingForIframe, setEnoughWaitingForIframe] = useState(false)
   const handleEnoughWaitingForIframe = useCallback(() => {
-    setShouldRenderStatic(true)
+    setEnoughWaitingForIframe(true)
   }, [])
 
   const [isOffline, setIsOffline] = useState(false)
@@ -136,7 +136,7 @@ const App: React.FC = () => {
             <SpacesBar
               isSignedIn={isSignedIn}
               cloudBaseURL={cloudBaseURL}
-              shouldRenderStatic={shouldRenderStatic}
+              enoughWaitingForIframe={enoughWaitingForIframe}
             />
           )}
           {!isPrintMode && (
@@ -152,6 +152,7 @@ const App: React.FC = () => {
             chartsMetadata={chartsMetadata}
             cloudBaseURL={cloudBaseURL}
             isSignedIn={isSignedIn}
+            enoughWaitingForIframe={enoughWaitingForIframe}
             onEnoughWaitingForIframe={handleEnoughWaitingForIframe}
             setIsOffline={setIsOffline}
           />
