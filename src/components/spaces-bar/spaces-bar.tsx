@@ -9,11 +9,13 @@ interface Props {
   cloudBaseURL: string
   isSignedIn: boolean
   enoughWaitingForIframe: boolean
+  signInUrl: string
 }
 export const SpacesBar = ({
   cloudBaseURL,
   isSignedIn,
   enoughWaitingForIframe,
+  signInUrl,
 }: Props) => (
   <ListContainer>
     {isSignedIn ? (
@@ -30,7 +32,12 @@ export const SpacesBar = ({
           <SpacePlaceholder />
         </SpacesList>
         <SeparatedSection>
-          <Button icon="plus" onClick={() => {}} />
+          <Button
+            icon="plus"
+            onClick={() => {
+              window.location.href = signInUrl
+            }}
+          />
         </SeparatedSection>
       </>
     ))}

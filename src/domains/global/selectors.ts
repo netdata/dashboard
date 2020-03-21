@@ -55,6 +55,17 @@ export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
 export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
 
+export const selectSignInUrl = createSelector(
+  selectRegistry,
+  selectCloudBaseUrl,
+  (registry, cloudBaseURL) => {
+    const name = encodeURIComponent(registry.hostname)
+    const origin = encodeURIComponent(`${window.location.origin}/`)
+    // not adding redirect_url - it needs to always be based on newest href
+    return `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`
+  },
+)
+
 export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
 export const selectIsUsingGlobalRegistry = createSelector(
   selectRegistry,
