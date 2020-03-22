@@ -1,5 +1,6 @@
 // needs to be included before bootstrap
 import "domains/chart/utils/jquery-loader"
+import Ps from "perfect-scrollbar"
 
 import "types/global"
 
@@ -16,6 +17,8 @@ import "vendor/fontawesome-all-5.0.1.min"
 
 // Cannot re-export a type when the --isolatedModules flag is provided
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
+
+window.Ps = Ps
 
 export type ChartAttributes = Attributes
 
