@@ -8,6 +8,7 @@ import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
+import { useInfo } from "hooks/use-info"
 
 if (!window.netdataNoBootstrap) {
   // it needs to be imported indirectly, there's probably a bug in webpack
