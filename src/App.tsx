@@ -2,6 +2,8 @@ import React, {
   useEffect, useLayoutEffect, useRef, useState,
 } from "react"
 import Ps from "perfect-scrollbar"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
@@ -23,6 +25,7 @@ import { useAlarms } from "hooks/use-alarms"
 
 import "./types/global"
 
+import { useInfo } from "hooks/use-info"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -76,6 +79,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
 
   useRegistry(true)
   useAlarms(true)
+  useInfo(true)
 
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
@@ -94,6 +98,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     <div className="App">
       {hasFetchDependencies && haveDOMReadyForParsing && (
         <>
+          <ToastContainer />
           <Portals key={refreshHelper} />
           {isPrintMode && <PrintModal />}
         </>

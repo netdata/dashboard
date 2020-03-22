@@ -214,7 +214,8 @@ export const useFormatters = ({
       setDecimals(newDecimals)
     }
   }, [
-    decimals, decimalDigits, min, max, uuid, units, unitsDesired, unitsCommon,
+    decimals, decimalDigits, min, max, uuid, temperatureSetting,
+    units, unitsDesired, unitsCommon, secondsAsTimeSetting,
     data.min, data.max, intlNumberFormat,
   ])
 

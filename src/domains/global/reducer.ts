@@ -3,6 +3,7 @@ import { createReducer } from "redux-act"
 
 import { RegistryMachine } from "domains/global/sagas"
 import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
+import { fetchInfoAction } from "domains/chart/actions"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -70,13 +71,16 @@ export type StateT = {
     hasFetchedHello: boolean
     hostname: string
     isCloudEnabled: boolean
+    isCloudAvailable: boolean
+    hasStartedInfo: boolean
     isFetchingHello: boolean
     machineGuid: string | null
     personGuid: string | null
-    registryMachines: {[key: string]: RegistryMachine} | null
+    registryMachines: { [key: string]: RegistryMachine } | null
     registryMachinesArray: RegistryMachine[] | null
     registryServer: string | null,
   }
+
   chartsMetadata: {
     isFetching: boolean
     isFetchingError: boolean
@@ -85,13 +89,11 @@ export type StateT = {
 
   alarms: {
     activeAlarms: null | ActiveAlarms
-    hasStarted: boolean
+    hasStartedAlarms: boolean
   }
 
   snapshot: Snapshot | null
-
   options: Options
-
 }
 
 export const initialState: StateT = {
@@ -109,6 +111,8 @@ export const initialState: StateT = {
     hasFetchedHello: false,
     hostname: "unknown",
     isCloudEnabled: false,
+    isCloudAvailable: false,
+    hasStartedInfo: false,
     isFetchingHello: false,
     machineGuid: null,
     personGuid: null,
@@ -120,7 +124,7 @@ export const initialState: StateT = {
   snapshot: null,
   alarms: {
     activeAlarms: null,
-    hasStarted: false,
+    hasStartedAlarms: false,
   },
 
   chartsMetadata: {
@@ -348,10 +352,32 @@ globalReducer.on(fetchHelloAction.success, (state, {
     registryServer,
   },
 }))
-
 globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
   isFetchingHello: true,
+}))
+
+globalReducer.on(fetchInfoAction, (state) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    hasStartedInfo: true,
+  },
+}))
+globalReducer.on(fetchInfoAction.success, (state, { isCloudAvailable }) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    isCloudAvailable,
+  },
+}))
+
+globalReducer.on(fetchInfoAction.failure, (state) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    isCloudAvailable: false,
+  },
 }))
 
 globalReducer.on(updatePersonUrlsAction, (state, {
@@ -370,7 +396,7 @@ globalReducer.on(startAlarmsAction, (state) => ({
   ...state,
   alarms: {
     ...state.alarms,
-    hasStarted: true,
+    hasStartedAlarms: true,
   },
 }))
 
@@ -447,7 +473,7 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
     ...state,
     snapshot: {
       ...snapshot,
-      data: parsedData as {[key: string]: unknown},
+      data: parsedData as { [key: string]: unknown },
     },
   }
 })
