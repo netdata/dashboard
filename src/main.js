@@ -36,6 +36,7 @@ import {
 import { serverDefault } from './utils/server-detection';
 import { name2id } from './utils/name-2-id';
 import { isProperTimezone } from './utils/date-time';
+import { NETDATA_REGISTRY_SERVER } from './utils';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -88,8 +89,6 @@ const getFromRegistry = (prop) => {
     const registry = selectRegistry(reduxStore.getState())
     return registry?.[prop]
 }
-
-export const NETDATA_REGISTRY_SERVER = "https://registry.my-netdata.io"
 
 const isUsingGlobalRegistry = () => (
   getFromRegistry("registryServer") === NETDATA_REGISTRY_SERVER
