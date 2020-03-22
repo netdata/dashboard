@@ -236,18 +236,22 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
 
 function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
   const { poll } = payload
+  let isCloudEnabled = false
+  let isCloudClaimed = false
 
   try {
     const registry = yield select(selectRegistry)
     const wasCloudAvailable = registry?.isCloudAvailable || false
     const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
-
     const isCloudAvailable = data?.["cloud-available"] || false
+    isCloudEnabled = data?.["cloud-enabled"] || false
+    isCloudClaimed = data?.["cloud-claimed"] || false
+
     yield put(fetchInfoAction.success({
       isCloudAvailable,
     }))
     if (wasCloudAvailable && !isCloudAvailable) {
-      toast.error("Connection Problem", {
+      toast.error("Cloud Connection Problem!", {
         position: "bottom-right",
         type: toast.TYPE.ERROR,
         autoClose: NOTIFICATIONS_TIMEOUT,
@@ -264,8 +268,8 @@ function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
     yield put(fetchInfoAction.failure())
   }
 
-  yield delay(INFO_POLLING_FREQUENCY)
-  if (poll) {
+  if (poll && isCloudEnabled && isCloudClaimed) {
+    yield delay(INFO_POLLING_FREQUENCY)
     yield put(fetchInfoAction({ poll: true }))
   }
 }
