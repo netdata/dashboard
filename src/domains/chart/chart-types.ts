@@ -85,6 +85,7 @@ export interface ChartEnriched extends ChartMetadata {
 
 export interface ChartState {
   chartData: ChartData | null
+  chartId: string | null
   chartMetadata: ChartMetadata | null
   chartPanAndZoom: null | {
     after: number

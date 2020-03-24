@@ -23,6 +23,7 @@ export const initialState = {
 }
 export const initialSingleState = {
   chartData: null,
+  chartId: null,
   chartMetadata: null,
   chartPanAndZoom: null,
   fetchDataParams: {
@@ -47,10 +48,11 @@ export const chartReducer = createReducer<StateT>(
 
 const getSubstate = (state: StateT, id: string) => state[id] || initialSingleState
 
-chartReducer.on(fetchDataAction.request, (state, { id }) => ({
+chartReducer.on(fetchDataAction.request, (state, { chart, id }) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
+    chartId: chart,
     isFetchingData: true,
   },
 }))
