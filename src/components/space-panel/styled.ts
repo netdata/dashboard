@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { getSizeBy, getColor, H4 } from "@netdata/netdata-ui"
 
-export const PanelContainer = styled.aside<{ isActive: boolean }>`
+export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: boolean }>`
   position: fixed;
   z-index: 3;
   left: 56px;
@@ -13,7 +13,9 @@ export const PanelContainer = styled.aside<{ isActive: boolean }>`
   flex-direction: column;
   overflow: hidden;
   color: ${getColor(["text"])};
-  padding: ${getSizeBy(3)} 0;
+  padding: ${({ isSignedIn, theme }) => (
+    isSignedIn ? 0 : getSizeBy(3)({ theme })
+  )} 0;
   background: #f1f2f3;
   transition: transform 0.2s ease-out;
   border-right: 1px solid ${getColor(["borderColor"])};
@@ -82,11 +84,10 @@ export const BottomPanel = styled.div`
 `
 
 export const CantConnect = styled.div`
-  margin-top: 32p;
   font-size: 12px;
   font-weight: 600;
   color: #35414A;
-  max-width: 150px;
+  max-width: 140px;
 `
 
 export const BottomPanelHeader = styled.div`
@@ -101,7 +102,6 @@ export const BottomPanelText = styled.div`
 `
 
 export const OfflineDescription = styled.div`
-  margin-top: 50px;
   color: #AEB3B7;
   font-size: 9px;
   line-height: 12px;
@@ -129,4 +129,8 @@ export const SignInButton = styled.a`
   display: flex;
   text-transform: uppercase;
   justify-content: center;
+`
+
+export const NoNetworkIcon = styled.svg`
+  height: 68px;
 `
