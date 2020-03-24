@@ -1,14 +1,16 @@
 import React from "react"
+
 import { useHttp } from "hooks/use-http"
+import { SvgIcon } from "components/svg-icon"
+
 import {
   Container,
-  VersionIndicator,
-  NewVersionIndicator,
-  StyledIcon,
+  NewVersionIndicator, NoUpdateCloud,
   TextBold,
-  VersionNumber,
-  CollapsableText,
 } from "./styled"
+
+import updateCloudIcon from "./update-cloud-icon.svg"
+import noUpdateCloudIcon from "./no-update-cloud-icon.svg"
 
 const NETDATA_LATEST_VERSION_URL = "https://api.github.com/repos/netdata/netdata/releases/latest"
 const NETDATA_LATEST_GCS_VERSION_URL = "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
@@ -90,25 +92,28 @@ export const VersionControl = ({
   if (!latestVersion) {
     return null
   }
-  const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
-  const currentVersionDisplay = currentVersion.split("-")
-    .slice(0, 2)
-    .join("-")
+  // const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
+  const isNewVersionAvailable = versionsMatch(currentVersion, latestVersion)
   return (
     <Container>
-      <VersionIndicator>
-        <CollapsableText>Agent Version</CollapsableText>
-        <VersionNumber>{currentVersionDisplay}</VersionNumber>
-      </VersionIndicator>
       {isNewVersionAvailable && (
         <NewVersionIndicator
           href="#"
           data-toggle="modal"
           data-target="#updateModal"
         >
-          <StyledIcon name="logo_s" />
+          <SvgIcon icon={updateCloudIcon} width={22} />
           <TextBold> Update Now </TextBold>
         </NewVersionIndicator>
+      )}
+      {!isNewVersionAvailable && (
+        <NoUpdateCloud
+          href=""
+          data-toggle="modal"
+          data-target="#updateModal"
+        >
+          <SvgIcon icon={noUpdateCloudIcon} width={24} />
+        </NoUpdateCloud>
       )}
     </Container>
   )

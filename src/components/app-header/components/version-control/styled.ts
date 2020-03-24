@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import {
-  getSizeBy, getColor, Icon, Text, breakpoints,
+  getSizeBy, getColor, Text, breakpoints,
 } from "@netdata/netdata-ui"
 
 export const Container = styled.div`
@@ -35,12 +35,8 @@ export const NewVersionIndicator = styled(VersionIndicatorLink)`
   cursor: pointer;
 `
 
-export const StyledIcon = styled(Icon)`
-  fill: ${getColor(["success"])};
-  margin-right: ${getSizeBy()};
-`
-
 export const TextBold = styled(Text)`
+  margin-left: 6px;
   font-weight: bold;
   @media ${breakpoints.mobileSmall} {
     display: none;
@@ -64,4 +60,8 @@ export const CollapsableText = styled(Text)`
   @media ${breakpoints.desktop} {
     display: block;
   }
+`
+
+export const NoUpdateCloud = styled.a`
+  cursor: pointer;
 `
