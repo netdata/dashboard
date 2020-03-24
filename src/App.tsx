@@ -160,8 +160,10 @@ const App: React.FC = () => {
           <AppHeader
             chartsMetadata={chartsMetadata}
             cloudBaseURL={cloudBaseURL}
+            isOffline={isOffline}
             isSignedIn={isSignedIn}
             enoughWaitingForIframe={enoughWaitingForIframe}
+            hasSignInHistory={hasSignInHistory}
             onEnoughWaitingForIframe={handleEnoughWaitingForIframe}
             setIsOffline={setIsOffline}
           />

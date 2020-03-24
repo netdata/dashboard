@@ -24,7 +24,9 @@ import {
   StyledHelpIcon,
   StyledGearContainer,
   SignInButton,
+  OfflineBlock,
 } from "./styled"
+import offlineBlock from "./offline-block.svg"
 
 const iframeTimeout = isDevelopmentEnv ? 3000 : 750
 const WAITING_FOR_HELLO_TIME = 500
@@ -32,16 +34,20 @@ const WAITING_FOR_HELLO_TIME = 500
 interface Props {
   cloudBaseURL: string
   chartsMetadata: ChartsMetadata
+  isOffline: boolean
   isSignedIn: boolean
   enoughWaitingForIframe: boolean
+  hasSignInHistory: boolean
   onEnoughWaitingForIframe: () => void
   setIsOffline: (v: boolean) => void
 }
 export const AppHeader = ({
   cloudBaseURL,
   chartsMetadata,
+  isOffline,
   isSignedIn,
   enoughWaitingForIframe,
+  hasSignInHistory,
   onEnoughWaitingForIframe,
   setIsOffline,
 }: Props) => {
@@ -161,7 +167,14 @@ export const AppHeader = ({
             }}
             onLoad={handleIframeLoad}
           />
-          {!isSignedIn && enoughWaitingForIframe && (
+          {hasSignInHistory && enoughWaitingForIframe && isOffline && (
+            <OfflineBlock>
+              <svg viewBox={offlineBlock.viewBox}>
+                <use xlinkHref={`#${offlineBlock.id}`} />
+              </svg>
+            </OfflineBlock>
+          )}
+          {!isSignedIn && enoughWaitingForIframe && !hasSignInHistory && (
             <SignInButton
               href={signInLinkHref}
             >
