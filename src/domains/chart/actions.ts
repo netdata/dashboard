@@ -94,3 +94,14 @@ export const resetChartPanAndZoomAction = createAction<{ id: string }>(
 export const clearChartStateAction = createAction<{ id: string }>(
   `${storeKey}/clearChartStateAction`,
 )
+
+export interface FetchInfoPayload {
+  poll?: boolean
+}
+export interface FetchInfoSuccessPayload {
+  isCloudAvailable: boolean
+}
+export const fetchInfoAction = createRequestAction<
+  FetchInfoPayload,
+  FetchInfoSuccessPayload
+>(`${storeKey}/fetchInfoAction`)

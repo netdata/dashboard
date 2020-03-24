@@ -2,7 +2,7 @@ import {
   cond, always, T,
 } from "ramda"
 import React, { useEffect, useState, useMemo } from "react"
-import { useThrottle } from "react-use"
+import { useThrottle, useUpdateEffect } from "react-use"
 
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
@@ -132,6 +132,12 @@ export const ChartWithLoader = ({
   useEffect(() => {
     setShouldFetch(true)
   }, [panAndZoomThrottled, setShouldFetch])
+
+  // when after/before changes, don't wait for next interval, just fetch immediately
+  useUpdateEffect(() => {
+    setShouldFetch(true)
+  }, [attributes.after, attributes.before])
+
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,

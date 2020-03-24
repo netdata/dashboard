@@ -5,26 +5,31 @@ import {
   select,
   spawn,
   take,
+  delay,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { Action } from "redux-act"
+import { toast } from "react-toastify"
 
 import { axiosInstance } from "utils/api"
-import { alwaysEndWithSlash } from "utils/server-detection"
+import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
 
-import { selectGlobalPanAndZoom, selectSnapshot } from "domains/global/selectors"
+import { selectGlobalPanAndZoom, selectSnapshot, selectRegistry } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
 import { stopSnapshotModeAction } from "domains/dashboard/actions"
+import { isPrintMode } from "domains/dashboard/utils/parse-url"
 
+import { INFO_POLLING_FREQUENCY, NOTIFICATIONS_TIMEOUT } from "domains/global/constants"
 import {
   fetchDataAction, FetchDataPayload,
   fetchChartAction, FetchChartPayload,
-  fetchDataForSnapshotAction, FetchDataForSnapshotPayload,
+  fetchDataForSnapshotAction, FetchDataForSnapshotPayload, fetchInfoAction, FetchInfoPayload,
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = 20
+const CONCURRENT_CALLS_LIMIT_PRINT = 2
 const CONCURRENT_CALLS_LIMIT_SNAPSHOTS = 1
 
 const fetchDataResponseChannel = channel()
@@ -67,7 +72,9 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
-const [fetchMetrics$] = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
+const [fetchMetrics$] = getFetchStream(
+  isPrintMode ? CONCURRENT_CALLS_LIMIT_PRINT : CONCURRENT_CALLS_LIMIT_METRICS,
+)
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
@@ -231,11 +238,52 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   }))
 }
 
+function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
+  const { poll } = payload
+  let isCloudEnabled = false
+  let isCloudClaimed = false
+
+  try {
+    const registry = yield select(selectRegistry)
+    const wasCloudAvailable = registry?.isCloudAvailable || false
+    const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
+    const isCloudAvailable = data?.["cloud-available"] || false
+    isCloudEnabled = data?.["cloud-enabled"] || false
+    isCloudClaimed = data?.["cloud-claimed"] || false
+
+    yield put(fetchInfoAction.success({
+      isCloudAvailable,
+    }))
+    if (wasCloudAvailable && !isCloudAvailable) {
+      toast.error("Cloud Connection Problem!", {
+        position: "bottom-right",
+        type: toast.TYPE.ERROR,
+        autoClose: NOTIFICATIONS_TIMEOUT,
+      })
+    } else if (!wasCloudAvailable && isCloudAvailable) {
+      toast.success("Connected to the Cloud!", {
+        position: "bottom-right",
+        type: toast.TYPE.SUCCESS,
+        autoClose: NOTIFICATIONS_TIMEOUT,
+      })
+    }
+  } catch (e) {
+    console.warn("fetch agent info failure") // eslint-disable-line no-console
+    yield put(fetchInfoAction.failure())
+  }
+
+  if (poll && isCloudEnabled && isCloudClaimed) {
+    yield delay(INFO_POLLING_FREQUENCY)
+    yield put(fetchInfoAction({ poll: true }))
+  }
+}
+
+
 export function* chartSagas() {
   yield takeEvery(fetchDataAction.request, fetchDataSaga)
   yield takeEvery(fetchChartAction.request, fetchChartSaga)
   yield takeEvery(fetchDataForSnapshotAction.request, fetchDataForSnapshotSaga)
   yield takeEvery(stopSnapshotModeAction, stopSnapshotModeSaga)
-
+  yield takeEvery(fetchInfoAction.request, fetchInfoSaga)
   yield spawn(watchFetchDataResponseChannel)
 }

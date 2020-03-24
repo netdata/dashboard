@@ -6,8 +6,8 @@ import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
 import { Action } from "redux-act"
 
+import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
-import { NETDATA_REGISTRY_SERVER } from "main"
 
 import {
   fetchHelloAction,

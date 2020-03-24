@@ -138,6 +138,7 @@ interface Window {
   netdataPrepCallback?: () => void
   netdataShowAlarms?: boolean
   netdataShowHelp?: boolean
+  netdataShowNotifications?: boolean
   netdataServer?: string
   netdataTheme: "white" | "slate"
   netdataAlarmsNotifCallback: ((x: any) => boolean) | undefined

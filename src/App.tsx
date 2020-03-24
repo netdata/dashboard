@@ -2,6 +2,8 @@ import React, {
   useEffect, useLayoutEffect, useRef, useState, useCallback,
 } from "react"
 import Ps from "perfect-scrollbar"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 import { ThemeProvider } from "styled-components"
 import { DefaultTheme } from "@netdata/netdata-ui"
 
@@ -34,6 +36,7 @@ import { SpacePanel } from "components/space-panel"
 
 import "./types/global"
 
+import { useInfo } from "hooks/use-info"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -89,6 +92,7 @@ const App: React.FC = () => {
 
   useRegistry(true)
   useAlarms(true)
+  useInfo(true)
 
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
@@ -164,6 +168,7 @@ const App: React.FC = () => {
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
+                <ToastContainer />
                 <Portals key={refreshHelper} />
                 {isPrintMode && <PrintModal />}
               </>
