@@ -3967,6 +3967,7 @@ function dashboardSettingsSetup() {
     });
     $('#sync_selection').change(function () {
         setOption('sync_selection', $(this).prop('checked'));
+        netdataReload();
     });
     $('#sync_pan_and_zoom').change(function () {
         setOption('sync_pan_and_zoom', $(this).prop('checked'));
