@@ -83,7 +83,7 @@ export const IconContainer = styled.div`
   margin: 0 5px;
 `
 export const IframeContainer = styled.div`
-  width: 74px;
+  width: 84px;
   height: 40px;
 `
 
@@ -119,3 +119,5 @@ export const SignInButton = styled.a`
     text-decoration: none;
   }
 `
+
+export const OfflineBlock = styled.div``
