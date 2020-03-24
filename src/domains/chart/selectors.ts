@@ -73,7 +73,7 @@ export const selectAmountOfCharts = createSelector(
 export const selectNameOfAnyFetchingChart = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
-    .find((chartState) => chartState.isFetchingData)?.chartMetadata?.id,
+    .find((chartState) => chartState.isFetchingData)?.chartId,
 )
 
 export const selectAmountOfSnapshotsFetched = createSelector(
