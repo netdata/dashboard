@@ -15,6 +15,7 @@ import { VisitedNodes } from "./components/visited-nodes"
 import { ReplicatedNodes } from "./components/replicated-nodes"
 
 import * as S from "./styled"
+import noNetwork from "./no-network.svg"
 
 const withPrivateRegistry = false
 
@@ -75,7 +76,7 @@ export const SpacePanel = ({
   const cloudSignInUrl = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`
 
   return (
-    <S.PanelContainer isActive={panelIsActive}>
+    <S.PanelContainer isActive={panelIsActive} isSignedIn={isSignedIn}>
       {isSignedIn
         ? <SpacePanelIframe cloudBaseURL={cloudBaseURL} streamedHostsData={streamedHostsData} />
         : (
@@ -121,6 +122,9 @@ export const SpacePanel = ({
                 <S.BottomPanel>
                   {/* eslint-disable-next-line react/no-unescaped-entities */}
                   <S.CantConnect>Can't connect to Netdata Cloud</S.CantConnect>
+                  <S.NoNetworkIcon viewBox={noNetwork.viewBox}>
+                    <use xlinkHref={`#${noNetwork.id}`} />
+                  </S.NoNetworkIcon>
                   <S.OfflineDescription>
                     Maybe you are behind a firewall or you don’t have connection to the internet
                   </S.OfflineDescription>
