@@ -9,6 +9,7 @@ import {
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { Action } from "redux-act"
+import { toast } from "react-toastify"
 
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
@@ -18,7 +19,7 @@ import { isMainJs } from "utils/env"
 import { selectGlobalPanAndZoom, selectSnapshot, selectRegistry } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
 import { stopSnapshotModeAction } from "domains/dashboard/actions"
-import { toast } from "react-toastify"
+import { isPrintMode } from "domains/dashboard/utils/parse-url"
 
 import { INFO_POLLING_FREQUENCY, NOTIFICATIONS_TIMEOUT } from "domains/global/constants"
 import {
@@ -28,6 +29,7 @@ import {
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = 20
+const CONCURRENT_CALLS_LIMIT_PRINT = 2
 const CONCURRENT_CALLS_LIMIT_SNAPSHOTS = 1
 
 const fetchDataResponseChannel = channel()
@@ -70,7 +72,9 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
-const [fetchMetrics$] = getFetchStream(CONCURRENT_CALLS_LIMIT_METRICS)
+const [fetchMetrics$] = getFetchStream(
+  isPrintMode ? CONCURRENT_CALLS_LIMIT_PRINT : CONCURRENT_CALLS_LIMIT_METRICS,
+)
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
