@@ -2,7 +2,7 @@ import { sortBy } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback, RefObject,
 } from "react"
-import { useUpdateEffect } from "react-use"
+import { useUpdateEffect, useUnmount } from "react-use"
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
 
@@ -944,6 +944,11 @@ export const DygraphChart = ({
     }
   }, [attributes, chartData.result, chartUuid, commonMinState, commonMaxState, dispatch])
 
+  useUnmount(() => {
+    if (dygraphInstance.current) {
+      dygraphInstance.current.destroy()
+    }
+  })
 
   return (
     <>
