@@ -2818,7 +2818,7 @@ function alarmsUpdateModal() {
     }))
 }
 
-function alarmsCallback(data) {
+window.alarmsCallback = (data) => {
     var count = 0, x;
     for (x in data.alarms) {
         if (!data.alarms.hasOwnProperty(x)) {

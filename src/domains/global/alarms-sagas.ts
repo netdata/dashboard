@@ -256,6 +256,10 @@ function* alarmsLoop(serverDefault: string) {
     const activeAlarms = (yield call(get, "active", serverDefault)) as ActiveAlarms
     // todo xss check
     if (activeAlarms) {
+      if (window.alarmsCallback) {
+        // connect to old main.js (update old header)
+        window.alarmsCallback(activeAlarms)
+      }
       yield put(updateActiveAlarmsAction({ activeAlarms }))
       if (
         hasGivenNotificationPermissions()
