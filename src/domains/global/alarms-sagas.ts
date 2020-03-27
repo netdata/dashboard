@@ -236,7 +236,7 @@ function* notifyAll(serverDefault: string, activeAlarms: ActiveAlarms) {
   lastNotificationId = (last(logsSorted) as AlarmLog).unique_id
 
   if (typeof window.netdataAlarmsRemember === "undefined" || window.netdataAlarmsRemember) {
-    localStorage.set("last_notification_id", lastNotificationId)
+    localStorage.setItem("last_notification_id", `${lastNotificationId}`)
   }
 }
 
