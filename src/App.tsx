@@ -26,6 +26,7 @@ import { useAlarms } from "hooks/use-alarms"
 import "./types/global"
 
 import { useInfo } from "hooks/use-info"
+import { serverStatic } from "utils/server-detection"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -84,8 +85,8 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
     Promise.all([
-      loadCss(window.NETDATA.themes.current.bootstrap_css),
-      loadCss(window.NETDATA.themes.current.dashboard_css),
+      loadCss(serverStatic + window.NETDATA.themes.current.bootstrap_css),
+      loadCss(serverStatic + window.NETDATA.themes.current.dashboard_css),
     ]).then(() => {
       setHasFetchDependencies(true)
     })
