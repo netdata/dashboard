@@ -1,13 +1,16 @@
 import React, { useCallback, useRef, useEffect } from "react"
 import { useEffectOnce } from "react-use"
 
-import { useSelector } from "store/redux-separate-context"
+import { useDispatch, useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
 import { selectSnapshot, selectActiveAlarms, selectRegistry } from "domains/global/selectors"
 
-import { getIframeSrc } from "utils"
+import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils"
 import { isDevelopmentEnv } from "utils/env"
-import { useListenToPostMessage } from "utils/post-message"
+import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
+import { SvgIcon } from "components/svg-icon"
+import { showSignInModalAction } from "domains/dashboard/actions"
+import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
 import { AlarmsControl } from "./components/alarms-control"
@@ -98,6 +101,38 @@ export const AppHeader = ({
       clearTimeout(timeoutId)
     }
   })
+
+  const isUsingGlobalRegistry = registry.registryServer === NETDATA_REGISTRY_SERVER
+  const dispatch = useDispatch()
+  const handleSignInClick = (event: React.MouseEvent) => {
+    if (isUsingGlobalRegistry) {
+      // just a link
+      return
+    }
+
+    event.preventDefault()
+    dispatch(showSignInModalAction({
+      signInLinkHref,
+    }))
+  }
+  const signInIframeRef = useRef<HTMLIFrameElement>(null)
+  useEffect(() => {
+    if (isSignedIn && !isUsingGlobalRegistry) {
+      const needsSync = localStorage.getItem(LOCAL_STORAGE_NEEDS_SYNC) === "true"
+      // that means we were signed in and going back to agent after that
+      if (needsSync && signInIframeRef.current) {
+        localStorage.removeItem(LOCAL_STORAGE_NEEDS_SYNC)
+        const { registryMachinesArray } = registry
+        if (registryMachinesArray && registryMachinesArray.length > 0) {
+          sendToChildIframe(signInIframeRef.current, {
+            type: "synced-private-registry",
+            payload: registryMachinesArray,
+          })
+        }
+      }
+    }
+  }, [isSignedIn, isUsingGlobalRegistry, registry])
+
   return (
     <StyledHeader>
       <CollapsableSection>
@@ -157,6 +192,7 @@ export const AppHeader = ({
         </IconContainer>
         <IframeContainer>
           <iframe
+            ref={signInIframeRef}
             title="Sign In"
             src={signInIframeUrl}
             width="100%"
@@ -169,14 +205,13 @@ export const AppHeader = ({
           />
           {hasSignInHistory && enoughWaitingForIframe && isOffline && (
             <OfflineBlock>
-              <svg viewBox={offlineBlock.viewBox}>
-                <use xlinkHref={`#${offlineBlock.id}`} />
-              </svg>
+              <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
           )}
           {!isSignedIn && enoughWaitingForIframe && !hasSignInHistory && (
             <SignInButton
-              href={signInLinkHref}
+              href={isUsingGlobalRegistry ? signInLinkHref : ""}
+              onClick={handleSignInClick}
             >
               Sign-in
             </SignInButton>

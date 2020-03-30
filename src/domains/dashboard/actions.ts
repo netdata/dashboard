@@ -12,3 +12,10 @@ export const startSnapshotModeAction = createAction<startSnapshotModeAction>(
 )
 
 export const stopSnapshotModeAction = createAction(`${storeKey}/stopSnapshotModeAction`)
+
+export interface ShowSignInModalAction { signInLinkHref: string }
+export const showSignInModalAction = createAction<ShowSignInModalAction>(
+  `${storeKey}/showSignInModal`,
+)
+
+export const explicitlySignInAction = createAction(`${storeKey}/explicitlySignIn`)
