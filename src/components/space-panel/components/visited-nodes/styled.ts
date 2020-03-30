@@ -32,6 +32,16 @@ export const ListItem = styled.div`
   flex-flow: row nowrap;
   align-items: center;
   cursor: pointer;
+  justify-content: space-between;
+`
+
+export const TrashIcon = styled(Icon)`
+  fill: #35414A;
+  margin-right: ${getSizeBy(2)};
+  transition: opacity .4s ease-in;
+  &:hover {
+    opacity: .6;
+  }
 `
 
 export const StyledIcon = styled(Icon)`
@@ -41,15 +51,23 @@ export const StyledIcon = styled(Icon)`
   fill: ${getColor(["text"])};
 `
 
-export const NodeUrl = styled(TextNano)`
+export const NodeUrl = styled(TextNano.withComponent("a"))`
+  text-decoration: none;
   margin-left: ${getSizeBy(5)};
   color: #aeb3b7;
+  max-width: 145px;
+  word-wrap: break-word;
+  &:hover {
+    color: inherit; // overwrite bootstrap
+    text-decoration: none;
+  }
 `
 
-export const NodeName = styled(Text)`
+export const NodeName = styled(Text.withComponent("a"))`
   flex: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
   white-space: nowrap;
+  color: inherit; // overwrite bootstrap
 `

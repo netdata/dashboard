@@ -3,6 +3,7 @@ import { useEffect, useCallback, useState } from "react"
 type IframesMessageType = "spaces" | "workspaces"
   | "hello-from-spaces-bar" | "hello-from-space-panel" | "hello-from-sign-in"
   | "is-signed-in" | "streamed-hosts-data" | "has-focus" | "iframe-focus-change"
+  | "synced-private-registry"
 
 interface IframesMessage<T = unknown> {
   type: IframesMessageType

@@ -17,8 +17,6 @@ import { ReplicatedNodes } from "./components/replicated-nodes"
 import * as S from "./styled"
 import noNetwork from "./no-network.svg"
 
-const withPrivateRegistry = false
-
 const getStreamedNodes = (chartsMetadata: ChartsMetadata) => {
   let base = document.location.origin.toString() + document.location.pathname.toString()
   if (base.endsWith(`/host/${chartsMetadata.hostname}/`)) {
@@ -75,6 +73,8 @@ export const SpacePanel = ({
   // eslint-disable-next-line max-len
   const cloudSignInUrl = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`
 
+  const machinesArray = registry?.registryMachinesArray || []
+
   return (
     <S.PanelContainer isActive={panelIsActive} isSignedIn={isSignedIn}>
       {isSignedIn
@@ -86,9 +86,9 @@ export const SpacePanel = ({
                 <ReplicatedNodes chartsMetadata={chartsMetadata} />
               </S.PanelSection>
             )}
-            {withPrivateRegistry && (
+            {(machinesArray.length > 0) && (
               <S.PanelSection leading={!hasStreamedHosts}>
-                <VisitedNodes />
+                <VisitedNodes machinesArray={machinesArray} />
               </S.PanelSection>
             )}
 
