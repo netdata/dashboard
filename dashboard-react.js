@@ -579,7 +579,7 @@ NETDATA.registryHello = function (host, callback) {
     data = NETDATA.xss.checkOptional('/api/v1/registry?action=hello', data);
 
     if (typeof data.status !== 'string' || data.status !== 'ok') {
-      NETDATA.error(408, host + ' response: ' + JSON.stringify(data));
+      // NETDATA.error(408, host + ' response: ' + JSON.stringify(data));
       data = null;
     }
 
@@ -588,7 +588,82 @@ NETDATA.registryHello = function (host, callback) {
     }
   })
   .fail(function () {
-    NETDATA.error(407, host);
+    // NETDATA.error(407, host);
+
+    if (typeof callback === 'function') {
+      return callback(null);
+    }
+  });
+}
+
+NETDATA.registrySearch = function (machine_guid, getFromRegistry, serverDefault, callback) {
+  // SEARCH for the URLs of a machine:
+  $.ajax({
+    url: getFromRegistry("registryServer") + '/api/v1/registry?action=search&machine='
+      + getFromRegistry("machineGuid") + '&name=' + encodeURIComponent(getFromRegistry("hostname"))
+      + '&url=' + encodeURIComponent(serverDefault) + '&for=' + machine_guid,
+    async: true,
+    cache: false,
+    headers: {
+      'Cache-Control': 'no-cache, no-store',
+      'Pragma': 'no-cache'
+    },
+    xhrFields: {withCredentials: true} // required for the cookie
+  })
+  .done(function (data) {
+    data = NETDATA.xss.checkAlways('/api/v1/registry?action=search', data);
+
+    if (typeof data.status !== 'string' || data.status !== 'ok') {
+      // NETDATA.error(417, getFromRegistry("registryServer") + ' responded with: ' + JSON.stringify(data));
+      console.warn(getFromRegistry("registryServer") + ' responded with: ' + JSON.stringify(data));
+      data = null;
+    }
+
+    if (typeof callback === 'function') {
+      return callback(data);
+    }
+  })
+  .fail(function () {
+    // NETDATA.error(418, getFromRegistry("registryServer"));
+    console.warn("registry search call failed", getFromRegistry("registryServer"))
+
+    if (typeof callback === 'function') {
+      return callback(null);
+    }
+  });
+}
+
+NETDATA.registryDelete = function (getFromRegistry, serverDefault, delete_url, callback) {
+  // send DELETE to a netdata registry:
+  $.ajax({
+    url: getFromRegistry("registryServer") + '/api/v1/registry?action=delete&machine='
+      + getFromRegistry("machineGuid") + '&name=' + encodeURIComponent(getFromRegistry("hostname"))
+      + '&url=' + encodeURIComponent(serverDefault) + '&delete_url=' + encodeURIComponent(delete_url),
+      // + '&url=' + encodeURIComponent("http://n5.katsuna.com:19999/") + '&delete_url=' + encodeURIComponent(delete_url),
+    async: true,
+    cache: false,
+    headers: {
+      'Cache-Control': 'no-cache, no-store',
+      'Pragma': 'no-cache'
+    },
+    xhrFields: {withCredentials: true} // required for the cookie
+  })
+  .done(function (data) {
+    // data = NETDATA.xss.checkAlways('/api/v1/registry?action=delete', data);
+
+    if (typeof data.status !== 'string' || data.status !== 'ok') {
+      // NETDATA.error(411, NETDATA.registry.server + ' responded with: ' + JSON.stringify(data));
+      console.warn(411, getFromRegistry("registryServer") + ' responded with: ' + JSON.stringify(data));
+      data = null;
+    }
+
+    if (typeof callback === 'function') {
+      return callback(data);
+    }
+  })
+  .fail(function () {
+    // NETDATA.error(412, NETDATA.registry.server);
+    console.warn(412, getFromRegistry("registryServer"));
 
     if (typeof callback === 'function') {
       return callback(null);
