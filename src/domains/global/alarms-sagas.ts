@@ -254,7 +254,6 @@ function* get(what: string, serverDefault: string) {
 function* alarmsLoop(serverDefault: string) {
   while (true) {
     const activeAlarms = (yield call(get, "active", serverDefault)) as ActiveAlarms
-    // todo xss check
     if (activeAlarms) {
       yield put(updateActiveAlarmsAction({ activeAlarms }))
       if (

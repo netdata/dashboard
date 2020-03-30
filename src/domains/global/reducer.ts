@@ -24,6 +24,7 @@ import {
   setCommonMinAction,
   resetOptionsAction,
   setSpacePanelStatusAction,
+  resetRegistry,
 } from "./actions"
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
@@ -366,6 +367,14 @@ globalReducer.on(fetchHelloAction.success, (state, {
 globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
   isFetchingHello: true,
+}))
+
+globalReducer.on(resetRegistry, (state) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    hasFetchedHello: initialState.registry.hasFetchedHello,
+  },
 }))
 
 globalReducer.on(fetchInfoAction, (state) => ({

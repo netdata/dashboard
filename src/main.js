@@ -15,6 +15,7 @@ import {
     loadSnapshotAction,
     resetGlobalPanAndZoomAction,
     resetOptionsAction,
+    resetRegistry,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
@@ -27,7 +28,11 @@ import {
 } from './domains/global/selectors';
 import { seconds4human } from './domains/chart/utils/seconds4human';
 import { zeropad } from './utils/units-conversion';
-import { startSnapshotModeAction, stopSnapshotModeAction } from './domains/dashboard/actions';
+import {
+    explicitlySignInAction,
+    startSnapshotModeAction,
+    stopSnapshotModeAction,
+} from './domains/dashboard/actions';
 import {
     selectAmountOfCharts,
     selectAmountOfSnapshotsFailed,
@@ -1024,7 +1029,7 @@ window.gotoServerModalHandler = function gotoServerModalHandler(guid) {
         setTimeout(function () {
             if (gotoServerStop === false) {
                 document.getElementById('gotoServerResponse').innerHTML = '<b>Added all the known URLs for this machine.</b>';
-                NETDATA.registry.search(guid, function (data) {
+                NETDATA.registrySearch(guid, getFromRegistry, function (data) {
                     // console.log(data);
                     len = data.urls.length;
                     while (len--) {
@@ -1130,22 +1135,24 @@ window.notifyForDeleteRegistry = () => {
                     responseEl.innerHTML = "<b>Sorry, this command was rejected by netdata.cloud!</b>";
                     return;
                 }
-                NETDATA.registry.delete(deleteRegistryUrl, function (result) {
+                NETDATA.registryDelete(getFromRegistry, serverDefault, deleteRegistryUrl, function (result) {
                     if (result === null) {
                         console.log("Received error from registry", result);
                     }
 
                     deleteRegistryUrl = null;
                     $('#deleteRegistryModal').modal('hide');
-                    NETDATA.registry.init();
+                    // NETDATA.registry.init();
+                    reduxStore.dispatch(resetRegistry())
                 });
             });
         } else {
-            NETDATA.registry.delete(deleteRegistryUrl, function (result) {
+            NETDATA.registryDelete(getFromRegistry, serverDefault, deleteRegistryUrl, function (result) {
                 if (result !== null) {
                     deleteRegistryUrl = null;
                     $('#deleteRegistryModal').modal('hide');
-                    NETDATA.registry.init();
+                    // NETDATA.registry.init();
+                    reduxStore.dispatch(resetRegistry())
                 } else {
                     responseEl.innerHTML = "<b>Sorry, this command was rejected by the registry server!</b>";
                 }
@@ -4859,7 +4866,6 @@ window.signInDidClick = (e) => {
 }
 
 function shouldShowSignInBanner() {
-    return false;
     if (isSignedIn()) {
         return false;
     }
@@ -5061,14 +5067,15 @@ function mergeAgents(cloud, local) {
     return null;
 }
 
-function showSignInModal() {
+window.showSignInModal = function() {
     document.getElementById("sim-registry").innerHTML = getFromRegistry("registryServer");
     $("#signInModal").modal("show");
 }
 
 window.explicitlySignIn = () => {
     $("#signInModal").modal("hide");
-    signIn();
+    reduxStore.dispatch(explicitlySignInAction())
+    // signIn();
 };
 
 window.showSyncModal = () => {

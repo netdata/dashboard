@@ -115,3 +115,5 @@ export interface SetSpacePanelStatusActionPayload {
 export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
   `${storeKey}/setSpacePanelStatusAction`,
 )
+
+export const resetRegistry = createAction(`${storeKey}/resetRegistry`)
