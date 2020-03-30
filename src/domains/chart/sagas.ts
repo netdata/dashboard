@@ -241,38 +241,53 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
 function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
   const { poll } = payload
   let isCloudEnabled = false
-  let isCloudClaimed = false
+  let isAgentClaimed = false
+  let isCloudAvailable = false
+  let isACLKAvailable = false
 
   try {
     const registry = yield select(selectRegistry)
     const wasCloudAvailable = registry?.isCloudAvailable || false
+    const wasACLKAvailable = registry?.isACLKAvailable || false
+
     const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
-    const isCloudAvailable = data?.["cloud-available"] || false
+    isCloudAvailable = data?.["cloud-available"] || false
     isCloudEnabled = data?.["cloud-enabled"] || false
-    isCloudClaimed = data?.["cloud-claimed"] || false
+    isAgentClaimed = data?.["agent-claimed"] || false
+    isACLKAvailable = data?.["aclk-available"] || false
 
     yield put(fetchInfoAction.success({
-      isCloudAvailable,
+      isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable,
     }))
-    if (wasCloudAvailable && !isCloudAvailable) {
+
+    if (isCloudEnabled && wasCloudAvailable && !isCloudAvailable) {
+      toast.error("Cloud Installation Problem!", {
+        position: "bottom-right",
+        type: toast.TYPE.ERROR,
+        autoClose: NOTIFICATIONS_TIMEOUT,
+      })
+    }
+    if (isCloudAvailable && isAgentClaimed && wasACLKAvailable && !isACLKAvailable) {
       toast.error("Cloud Connection Problem!", {
         position: "bottom-right",
         type: toast.TYPE.ERROR,
         autoClose: NOTIFICATIONS_TIMEOUT,
       })
-    } else if (!wasCloudAvailable && isCloudAvailable) {
-      toast.success("Connected to the Cloud!", {
-        position: "bottom-right",
-        type: toast.TYPE.SUCCESS,
-        autoClose: NOTIFICATIONS_TIMEOUT,
-      })
     }
+    // TODO: No success notification spec`ed?
+    // else if (!wasACLKAvailable && isACLKAvailable) {
+    //   toast.success("Connected to the Cloud!", {
+    //     position: "bottom-right",
+    //     type: toast.TYPE.SUCCESS,
+    //     autoClose: NOTIFICATIONS_TIMEOUT,
+    //   })
+    // }
   } catch (e) {
     console.warn("fetch agent info failure") // eslint-disable-line no-console
     yield put(fetchInfoAction.failure())
   }
 
-  if (poll && isCloudEnabled && isCloudClaimed) {
+  if (poll && isCloudEnabled && isAgentClaimed) {
     yield delay(INFO_POLLING_FREQUENCY)
     yield put(fetchInfoAction({ poll: true }))
   }
