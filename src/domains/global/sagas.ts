@@ -114,8 +114,8 @@ const accessRegistry: AccessRegistry = ({
     params: {
       action: "access",
       machine: machineGuid,
-      name: encodeURIComponent(name),
-      url: encodeURIComponent(url),
+      name,
+      url,
     },
     withCredentials: true, // required for the cookie
   })
