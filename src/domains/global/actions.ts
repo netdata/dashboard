@@ -110,3 +110,12 @@ export const loadSnapshotAction = createAction<{snapshot: Snapshot}>(
 export const chartsMetadataRequestSuccess = createAction<{ data: ChartsMetadata }>(
   `${storeKey}/chartsMetadataRequestSuccess`,
 )
+
+export interface SetSpacePanelStatusActionPayload {
+  isActive: boolean
+}
+export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
+  `${storeKey}/setSpacePanelStatusAction`,
+)
+
+export const resetRegistry = createAction(`${storeKey}/resetRegistry`)

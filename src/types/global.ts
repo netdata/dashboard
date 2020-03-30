@@ -146,6 +146,9 @@ interface Window {
   alarmsCallback?: (activeAlarms: unknown) => void
   switchRegistryModalHandler: () => void
   urlOptions?: {[key: string]: any}
+  gotoServerModalHandler: (guid: string) => void
+  deleteRegistryModalHandler: (machineGuid: string, name: string, url: string) => void
+  showSignInModal: () => void
 
   __REDUX_DEVTOOLS_EXTENSION__: (() => void | undefined)
 
