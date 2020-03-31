@@ -37,6 +37,7 @@ import { SpacePanel } from "components/space-panel"
 import "./types/global"
 
 import { useInfo } from "hooks/use-info"
+import { serverStatic } from "utils/server-detection"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -97,8 +98,8 @@ const App: React.FC = () => {
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
     Promise.all([
-      loadCss(window.NETDATA.themes.current.bootstrap_css),
-      loadCss(window.NETDATA.themes.current.dashboard_css),
+      loadCss(serverStatic + window.NETDATA.themes.current.bootstrap_css),
+      loadCss(serverStatic + window.NETDATA.themes.current.dashboard_css),
     ]).then(() => {
       setHasFetchDependencies(true)
     })

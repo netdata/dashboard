@@ -42,7 +42,7 @@ const getDefaultServer = () => {
   // Agent Dashboard does not need sophisticated server-detection, which is causing problems
   // when navigating through streamed nodes. Let's overwrite that setting
   if (isMainJs) {
-    return window.location.origin + window.location.pathname
+    return window.location.origin + window.location.pathname.replace("index.html", "")
   }
 
   const source = getScriptSource()
@@ -59,4 +59,6 @@ export const serverDefault: string = alwaysEndWithSlash(
   window.netdataServer || getDefaultServer(),
 )
 
-export const serverStatic: string = alwaysEndWithSlash(getDefaultServer())
+export const serverStatic: string = isDevelopmentEnv
+  ? "/" // for localhost:3000/css/...
+  : alwaysEndWithSlash(getDefaultServer()) // by default, load from netdata server

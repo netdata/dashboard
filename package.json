@@ -1,7 +1,8 @@
 {
   "name": "@netdata/dashboard",
-  "version": "0.4.5",
+  "version": "0.4.9",
   "main": "./lib/src/index-npm.js",
+  "homepage": ".",
   "files": [
     "/lib"
   ],
@@ -78,7 +79,7 @@
     "cpx": "^1.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^2.0.1",
-    "install-peers-cli": "^2.1.1",
+    "install-peers-cli": "^2.2.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
     "node-sass": "^4.13.0",
     "svg-sprite-loader": "^4.2.1",

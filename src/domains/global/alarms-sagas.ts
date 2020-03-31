@@ -199,8 +199,7 @@ const getNotification = (
   }
 }
 
-// eslint-disable-next-line no-shadow
-function* notifyAll(lastNotificationId: number, serverDefault: string, activeAlarms: ActiveAlarms) {
+function* notifyAll(serverDefault: string, activeAlarms: ActiveAlarms) {
   const alarmLogs: AlarmLogs = yield call(getLog, lastNotificationId, serverDefault)
   if (alarmLogs === null || typeof alarmLogs !== "object") {
     console.warn("invalid alarms log response") // eslint-disable-line no-console
@@ -234,11 +233,10 @@ function* notifyAll(lastNotificationId: number, serverDefault: string, activeAla
   }
 
   // todo put to redux store
-  const newLastNotificationId = (last(logsSorted) as AlarmLog).unique_id
+  lastNotificationId = (last(logsSorted) as AlarmLog).unique_id
 
-  if (window.netdataAlarmsRemember) {
-    // todo use localStorage service
-    localStorage.set("last_notification_id", newLastNotificationId)
+  if (typeof window.netdataAlarmsRemember === "undefined" || window.netdataAlarmsRemember) {
+    localStorage.setItem("last_notification_id", `${lastNotificationId}`)
   }
 }
 
@@ -255,12 +253,17 @@ function* alarmsLoop(serverDefault: string) {
   while (true) {
     const activeAlarms = (yield call(get, "active", serverDefault)) as ActiveAlarms
     if (activeAlarms) {
+      if (window.alarmsCallback) {
+        // connect to old main.js (update old header)
+        window.alarmsCallback(activeAlarms)
+      }
       yield put(updateActiveAlarmsAction({ activeAlarms }))
       if (
         hasGivenNotificationPermissions()
+        // timestamps in seconds
         && (activeAlarms.latest_alarm_log_unique_id > lastNotificationId)
       ) {
-        yield call(notifyAll, lastNotificationId, serverDefault, activeAlarms)
+        yield call(notifyAll, serverDefault, activeAlarms)
 
         if (activeAlarms.status === false) {
           // Health monitoring is disabled on this netdata
@@ -279,7 +282,6 @@ function* startAlarms() {
 
   yield delay(ALARMS_INITIALIZATION_DELAY)
 
-  // todo use localstorage service
   lastNotificationId = +(localStorage.getItem("last_notification_id") || lastNotificationId)
   requestPermissions()
   yield call(alarmsLoop, serverDefault)
