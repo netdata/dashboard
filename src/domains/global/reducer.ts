@@ -23,7 +23,6 @@ import {
   setCommonMaxAction,
   setCommonMinAction,
   resetOptionsAction,
-  setSpacePanelStatusAction,
   resetRegistry,
 } from "./actions"
 import {

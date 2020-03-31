@@ -154,6 +154,10 @@ body.modal-open {
     margin-bottom: 20px;
 }
 
+.dashboard-sidenav.affix {
+    position: static;
+}
+
 /* All levels of nav */
 .dashboard-sidebar .nav > li > a {
     display: block;
