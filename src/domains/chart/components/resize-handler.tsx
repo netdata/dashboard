@@ -96,8 +96,8 @@ export const ResizeHandler = ({
       onMouseDown={resizeStartHandler}
       onTouchStart={resizeStartHandler}
       iconType="resize"
-      popoverContent="Chart Resize"
-      popoverTitle="Drag this point with your mouse or your finger (on touch devices), to resize
+      popoverTitle="Chart Resize"
+      popoverContent="Drag this point with your mouse or your finger (on touch devices), to resize
        the chart vertically. You can also <b>double click it</b> or <b>double tap it</b> to reset
         between 2 states: the default and the one that fits all the values.<br/><small>Help
          can be disabled from the settings.</small>"
