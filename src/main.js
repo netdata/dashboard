@@ -5074,8 +5074,8 @@ window.showSignInModal = function() {
 
 window.explicitlySignIn = () => {
     $("#signInModal").modal("hide");
-    reduxStore.dispatch(explicitlySignInAction())
-    // signIn();
+    // reduxStore.dispatch(explicitlySignInAction())
+    signIn();
 };
 
 window.showSyncModal = () => {
