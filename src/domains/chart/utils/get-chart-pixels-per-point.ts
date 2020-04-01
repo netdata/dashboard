@@ -10,12 +10,14 @@ export const getChartPixelsPerPoint: GetChartPixelsPerPoint = ({
   attributes, chartSettings,
 }) => {
   const {
-    pixelsPerPoint: pixelsPerPointAttribute = 1,
+    pixelsPerPoint: pixelsPerPointAttribute,
   } = attributes
+  if (typeof pixelsPerPointAttribute === "number") {
+    return pixelsPerPointAttribute
+  }
   const pixelsPerPointSetting = chartSettings.pixelsPerPoint(attributes)
 
   return Math.max(...[
-    pixelsPerPointAttribute,
     pixelsPerPointSetting,
     window.NETDATA.options.current.pixels_per_point,
   ].filter((px) => typeof px === "number"))
