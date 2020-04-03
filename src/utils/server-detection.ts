@@ -42,7 +42,11 @@ const getDefaultServer = () => {
   // Agent Dashboard does not need sophisticated server-detection, which is causing problems
   // when navigating through streamed nodes. Let's overwrite that setting
   if (isMainJs) {
-    return window.location.origin + window.location.pathname.replace("index.html", "")
+    const pathname = window.location.pathname
+      .replace("index.html", "")
+      // todo consider .replace(/[^\/]*\.html/, "") (every .html file in the url)
+      .replace("default.html", "") // for netdata demo servers
+    return window.location.origin + pathname
   }
 
   const source = getScriptSource()
