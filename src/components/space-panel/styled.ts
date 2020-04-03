@@ -51,7 +51,7 @@ export const PanelSection = styled.section<{ leading?: boolean }>`
 `
 
 export const BottomPanelContainer = styled.div`
-  position: absolute;
+  flex: 0 1 auto;
   bottom: 0;
   background: #FFF;
   left: 0;
