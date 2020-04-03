@@ -80,18 +80,20 @@ export const SpacePanel = ({
       {isSignedIn
         ? <SpacePanelIframe cloudBaseURL={cloudBaseURL} streamedHostsData={streamedHostsData} />
         : (
-          <S.ScrollContainer>
-            {hasStreamedHosts && (
-              <S.PanelSection leading>
-                <ReplicatedNodes chartsMetadata={chartsMetadata} />
-              </S.PanelSection>
-            )}
-            {(machinesArray.length > 0) && (
-              <S.PanelSection leading={!hasStreamedHosts}>
-                <VisitedNodes machinesArray={machinesArray} />
-              </S.PanelSection>
-            )}
+          <>
+            <S.ScrollContainer>
+              {hasStreamedHosts && (
+                <S.PanelSection leading>
+                  <ReplicatedNodes chartsMetadata={chartsMetadata} />
+                </S.PanelSection>
+              )}
+              {(machinesArray.length > 0) && (
+                <S.PanelSection leading={!hasStreamedHosts}>
+                  <VisitedNodes machinesArray={machinesArray} />
+                </S.PanelSection>
+              )}
 
+            </S.ScrollContainer>
             <S.BottomPanelContainer>
               {isUsingGlobalRegistry && (
                 <S.SwitchIdentity
@@ -131,7 +133,7 @@ export const SpacePanel = ({
                 </S.BottomPanel>
               )}
             </S.BottomPanelContainer>
-          </S.ScrollContainer>
+          </>
         )}
     </S.PanelContainer>
   )
