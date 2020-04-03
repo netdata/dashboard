@@ -40,16 +40,16 @@ export const LegendToolbox = ({
       onClick={onToolboxRightClick}
       iconType="right"
       popoverTitle="Pan Right"
-      popoverContent="Pan the chart to the right. You can also <b>drag it</b> with your mouse or your
-       finger (on touch devices).<br/><small>Help can be disabled from the settings.</small>"
+      popoverContent="Pan the chart to the right. You can also <b>drag it</b> with your mouse or
+       your finger (on touch devices).<br/><small>Help can be disabled from the settings.</small>"
     />
     <ToolboxButton
       className="netdata-legend-toolbox-button"
       onClick={onToolboxZoomInClick}
       iconType="zoomIn"
       popoverTitle="Chart Zoom In"
-      popoverContent="Zoom in the chart. You can also press SHIFT and select an area of the chart, or
-       press SHIFT or ALT and use the mouse wheel or 2-finger touchpad scroll to zoom in or out.
+      popoverContent="Zoom in the chart. You can also press SHIFT and select an area of the chart,
+       or press SHIFT or ALT and use the mouse wheel or 2-finger touchpad scroll to zoom in or out.
        <br/><small>Help can be disabled from the settings.</small>"
     />
     <ToolboxButton
@@ -57,8 +57,8 @@ export const LegendToolbox = ({
       onClick={onToolboxZoomOutClick}
       iconType="zoomOut"
       popoverTitle="Chart Zoom Out"
-      popoverContent="Zoom out the chart. You can also press SHIFT or ALT and use the mouse wheel, or
-       2-finger touchpad scroll to zoom in or out.<br/><small>Help can be disabled from the
+      popoverContent="Zoom out the chart. You can also press SHIFT or ALT and use the mouse wheel,
+       or 2-finger touchpad scroll to zoom in or out.<br/><small>Help can be disabled from the
         settings.</small>"
     />
   </div>
