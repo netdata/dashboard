@@ -36,7 +36,7 @@ import { SpacePanel } from "components/space-panel"
 
 import "./types/global"
 
-import { useInfo } from "hooks/use-info"
+// import { useInfo } from "hooks/use-info"
 import { serverStatic } from "utils/server-detection"
 import {
   netdataCallback,
@@ -93,7 +93,7 @@ const App: React.FC = () => {
 
   useRegistry(true)
   useAlarms(true)
-  useInfo(true)
+  // useInfo(true)
 
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {

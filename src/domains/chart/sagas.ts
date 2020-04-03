@@ -28,7 +28,7 @@ import {
   fetchDataForSnapshotAction, FetchDataForSnapshotPayload, fetchInfoAction, FetchInfoPayload,
 } from "./actions"
 
-const CONCURRENT_CALLS_LIMIT_METRICS = 20
+const CONCURRENT_CALLS_LIMIT_METRICS = isMainJs ? 30 : 60
 const CONCURRENT_CALLS_LIMIT_PRINT = 2
 const CONCURRENT_CALLS_LIMIT_SNAPSHOTS = 1
 
