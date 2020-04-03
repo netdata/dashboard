@@ -16,6 +16,8 @@ interface FetchInputEvent {
   onSuccessCallback: (data: { [key: string]: unknown }) => void
 }
 
+const METRICS_TIMEOUT = 15_000
+
 export const getFetchStream = (concurrentCallsLimit: number) => {
   const fetch$ = new Subject<FetchInputEvent>()
   const resetFetch$ = new Subject()
@@ -23,7 +25,7 @@ export const getFetchStream = (concurrentCallsLimit: number) => {
   const handler = mergeMap(({
     url, params, onErrorCallback, onSuccessCallback,
   }: FetchInputEvent) => (
-    from(axiosInstance.get(url, { params })).pipe(
+    from(axiosInstance.get(url, { params, timeout: METRICS_TIMEOUT })).pipe(
       tap(({ data }) => { onSuccessCallback(data) }),
       catchError(() => {
         // todo implement error handling to support NETDATA.options.current.retries_on_data_failures
