@@ -111,12 +111,16 @@ const App: React.FC = () => {
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
 
-  const hasSignInHistory = localStorage.getItem(HAS_SIGN_IN_HISTORY) === "true"
+  const [hasSignInHistory, setHasSignInHistory] = useState(
+    localStorage.getItem(HAS_SIGN_IN_HISTORY) === "true",
+  )
   const isSignedInCallback = useCallback((newIsSignedIn) => {
     if (newIsSignedIn === true) {
+      setHasSignInHistory(true)
       localStorage.setItem(HAS_SIGN_IN_HISTORY, "true")
     } else if (newIsSignedIn === false) {
       // logout
+      setHasSignInHistory(false)
       localStorage.setItem(HAS_SIGN_IN_HISTORY, "false")
     }
   }, [])
@@ -131,11 +135,6 @@ const App: React.FC = () => {
 
   useListenToFocusMessages()
   const signInUrl = useSelector(selectSignInUrl)
-
-  // const dispatch = useDispatch()
-  // const [hasFocus] = useListenToPostMessage("has-focus", (newHasFocus) => {
-  //   dispatch(windowFocusChangeAction({ hasWindowFocus: newHasFocus })
-  // })
 
   return (
     <ThemeProvider theme={DefaultTheme}>
