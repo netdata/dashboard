@@ -92,8 +92,7 @@ export const VersionControl = ({
   if (!latestVersion) {
     return null
   }
-  // const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
-  const isNewVersionAvailable = versionsMatch(currentVersion, latestVersion)
+  const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
   return (
     <Container>
       {isNewVersionAvailable && (
