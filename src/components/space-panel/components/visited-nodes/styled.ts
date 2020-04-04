@@ -27,7 +27,7 @@ export const ListHeaderContainer = styled.div``
 
 export const ListItem = styled.div`
   width: 100%;
-  height: ${getSizeBy(3)};
+  min-height: ${getSizeBy(3)};
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
