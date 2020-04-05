@@ -69,5 +69,7 @@ export const NodeName = styled(Text.withComponent("a"))`
   text-overflow: ellipsis;
   min-width: 0;
   white-space: nowrap;
-  color: inherit; // overwrite bootstrap
+  &, &:hover {
+    color: inherit; // overwrite bootstrap
+  }
 `
