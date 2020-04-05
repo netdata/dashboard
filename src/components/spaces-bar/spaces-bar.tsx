@@ -1,18 +1,19 @@
 import React from "react"
-import { Button } from "@netdata/netdata-ui"
 import { getIframeSrc } from "utils"
 import {
-  ListContainer, SpacesList, SeparatedSection, SpacePlaceholder,
+  ListContainer, SpacesList, SeparatedSection, SpacePlaceholder, StyledSpaceBarPlus,
 } from "./styled"
 
 interface Props {
   cloudBaseURL: string
+  isOffline: boolean
   isSignedIn: boolean
   enoughWaitingForIframe: boolean
   signInUrl: string
 }
 export const SpacesBar = ({
   cloudBaseURL,
+  isOffline,
   isSignedIn,
   enoughWaitingForIframe,
   signInUrl,
@@ -32,7 +33,8 @@ export const SpacesBar = ({
           <SpacePlaceholder />
         </SpacesList>
         <SeparatedSection>
-          <Button
+          <StyledSpaceBarPlus
+            isDisabled={isOffline}
             icon="plus"
             onClick={() => {
               window.location.href = signInUrl

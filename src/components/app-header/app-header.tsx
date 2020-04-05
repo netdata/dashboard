@@ -203,14 +203,15 @@ export const AppHeader = ({
             }}
             onLoad={handleIframeLoad}
           />
-          {hasSignInHistory && enoughWaitingForIframe && isOffline && (
+          {enoughWaitingForIframe && hasSignInHistory && isOffline && (
             <OfflineBlock>
               <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
           )}
-          {!isSignedIn && enoughWaitingForIframe && !hasSignInHistory && (
+          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && (
             <SignInButton
               href={isUsingGlobalRegistry ? signInLinkHref : ""}
+              isDisabled={isOffline}
               onClick={handleSignInClick}
             >
               Sign-in
