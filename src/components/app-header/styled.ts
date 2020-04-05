@@ -91,11 +91,11 @@ export const StyledHelpIcon = styled.a`
   font-size: 16px;
 `
 
-export const SignInButton = styled.a`
+export const SignInButton = styled.a<{ isDisabled: boolean }>`
   padding: 8px;
-  opacity: 1;
   cursor: pointer;
-  background-color: #00AB44;
+  background-color: ${({ isDisabled }) => (isDisabled ? "rgba(0, 171, 68, 0.4);" : "#00AB44")};
+  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
   border-color: #00AB44;
   border-style:solid;
   border-radius: 3px;
