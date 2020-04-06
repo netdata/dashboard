@@ -30,7 +30,14 @@ const getForceTimeWindowCorrection = (
 
   const currentDuration = before - after
   const requestedDuration = requestedBefore - requestedAfter
-  const widthRatio = (currentDuration / requestedDuration)
+  // don't do overrides when current (available) duration is bigger or only slightly lower
+  // than requested duration
+  const DURATION_CHANGE_TOLERANCE = 1.03
+  if (currentDuration > requestedDuration / DURATION_CHANGE_TOLERANCE) {
+    return {}
+  }
+
+  const widthRatio = currentDuration / requestedDuration
 
   const visibleDuration = requestedBefore - requestedAfter
   const paddingLeftPercentage = `${100 * ((after - requestedAfter) / visibleDuration)}%`
