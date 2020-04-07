@@ -75,6 +75,7 @@ export type StateT = {
   registry: {
     cloudBaseURL: string | null
     hasFetchedHello: boolean
+    hasFetchedInfo: boolean
     hostname: string
     isCloudEnabled: boolean
     isCloudAvailable: boolean
@@ -117,6 +118,7 @@ export const initialState: StateT = {
 
   registry: {
     cloudBaseURL: null,
+    hasFetchedInfo: false,
     hasFetchedHello: false,
     hostname: "unknown",
     isCloudEnabled: false,
@@ -393,6 +395,7 @@ globalReducer.on(fetchInfoAction.success, (state, {
   ...state,
   registry: {
     ...state.registry,
+    hasFetchedInfo: true,
     isCloudAvailable,
     isCloudEnabled,
     isAgentClaimed,

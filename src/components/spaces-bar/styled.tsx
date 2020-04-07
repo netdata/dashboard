@@ -47,6 +47,7 @@ export const SpacePlaceholder = styled.div`
   margin-bottom: ${getSizeBy(2)};
 `
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const StyledSpaceBarPlus = styled(({ isDisabled, ...rest }: any) => (
   // eslint-disable-next-line react/jsx-props-no-spreading
   <Button {...rest} />

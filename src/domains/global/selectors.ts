@@ -72,6 +72,9 @@ export const selectIsUsingGlobalRegistry = createSelector(
   ({ registryServer }) => registryServer && (registryServer !== NETDATA_REGISTRY_SERVER),
 )
 
+export const selectIsCloudEnabled = createSelector(selectRegistry, prop("isCloudEnabled"))
+export const selectHasFetchedInfo = createSelector(selectRegistry, prop("hasFetchedInfo"))
+
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
   path(["alarms", "hasStartedAlarms"]),
