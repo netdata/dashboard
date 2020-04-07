@@ -1,6 +1,7 @@
 import styled from "styled-components"
 import { getSizeBy, getColor, H4 } from "@netdata/netdata-ui"
 
+const PANEL_CONTAINER_PADDING = 3
 export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: boolean }>`
   position: fixed;
   z-index: 3;
@@ -14,7 +15,7 @@ export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: bool
   overflow: hidden;
   color: ${getColor(["text"])};
   padding: ${({ isSignedIn, theme }) => (
-    isSignedIn ? 0 : getSizeBy(3)({ theme })
+    isSignedIn ? 0 : getSizeBy(PANEL_CONTAINER_PADDING)({ theme })
   )} 0;
   background: #f1f2f3;
   transition: transform 0.2s ease-out;
@@ -52,6 +53,7 @@ export const PanelSection = styled.section<{ leading?: boolean }>`
 
 export const BottomPanelContainer = styled.div`
   flex: 0 1 auto;
+  margin-bottom: ${getSizeBy(-PANEL_CONTAINER_PADDING)};
   bottom: 0;
   background: #FFF;
   left: 0;
