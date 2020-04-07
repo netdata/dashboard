@@ -354,7 +354,7 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
 }))
 
 globalReducer.on(fetchHelloAction.success, (state, {
-  cloudBaseURL, hostname, isCloudEnabled, machineGuid, registryServer,
+  cloudBaseURL, hostname, machineGuid, registryServer,
 }) => ({
   ...state,
   isFetchingHello: false,
@@ -363,7 +363,6 @@ globalReducer.on(fetchHelloAction.success, (state, {
     cloudBaseURL,
     hasFetchedHello: true,
     hostname,
-    isCloudEnabled,
     machineGuid,
     registryServer,
   },

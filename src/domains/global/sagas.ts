@@ -221,7 +221,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const registryServer = response.data.registry
 
   const cloudBaseURL = response.data.cloud_base_url
-  const isCloudEnabled = cloudBaseURL !== ""
 
   const machineGuid = response.data.machine_guid
   const { hostname } = response.data
@@ -247,7 +246,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   yield put(fetchHelloAction.success({
     cloudBaseURL,
     hostname,
-    isCloudEnabled,
     isUsingGlobalRegistry,
     machineGuid,
     registryServer: accessRegistryResponse?.registryServer || registryServer,
