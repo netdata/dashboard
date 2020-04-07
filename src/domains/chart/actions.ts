@@ -100,6 +100,9 @@ export interface FetchInfoPayload {
 }
 export interface FetchInfoSuccessPayload {
   isCloudAvailable: boolean
+  isCloudEnabled: boolean
+  isAgentClaimed: boolean
+  isACLKAvailable: boolean
 }
 export const fetchInfoAction = createRequestAction<
   FetchInfoPayload,
