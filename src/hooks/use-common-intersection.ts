@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import {
+  useEffect, useRef, useState, MutableRefObject,
+} from "react"
 
 const globalIntersectionOptions = {
   root: null,
@@ -44,6 +46,7 @@ const globalIntersectionObserver = createGlobalIntersectionObserver()
 //    https://github.com/thebuilder/react-intersection-observer does)
 export const useCommonIntersection = (
   element: HTMLElement,
+  clonedChildrenRef: MutableRefObject<HTMLElement | undefined>,
 ) => {
   const [isVisible, setIsVisible] = useState(false)
   const isVisibleRef = useRef(isVisible)
@@ -57,6 +60,12 @@ export const useCommonIntersection = (
         element,
         (newIsVisible) => {
           if (isVisibleRef.current !== newIsVisible) {
+            if (clonedChildrenRef.current) {
+              // @ts-ignore
+              // eslint-disable-next-line no-param-reassign
+              clonedChildrenRef.current.style.display = newIsVisible ? "block" : "none"
+            }
+
             isVisibleRef.current = newIsVisible
             // we need to mirror it in `use-state` to cause react update
             setIsVisible(newIsVisible)
@@ -67,7 +76,7 @@ export const useCommonIntersection = (
     return () => {
       globalIntersectionObserver.unsubscribe(element)
     }
-  }, [element])
+  }, [clonedChildrenRef, element])
 
   return isVisible
 }
