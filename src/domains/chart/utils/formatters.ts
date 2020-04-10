@@ -1,5 +1,7 @@
 import { identity } from "ramda"
-import { useCallback, useState, useMemo } from "react"
+import {
+  useCallback, useState, useMemo, useRef,
+} from "react"
 
 import { unitsConversionCreator } from "utils/units-conversion"
 import { safeEqualCheck } from "utils/safe-equal-check"
@@ -132,9 +134,26 @@ export const useFormatters = ({
     decimalDigits = -1,
   } = attributes
 
+
+  const legendFormatValue: LegendFormatValue = useMemo(() => (
+    getLegendFormatValue(
+      convertUnits, intlNumberFormat, decimalDigits,
+    )
+  ), [convertUnits, decimalDigits, intlNumberFormat])
+
+
+  const legendFormatValueRef = useRef(legendFormatValue)
+  const updateLegendFormatValueRef = (
+    newConvertUnits: Converter, newIntlNumberFormat: any, newDecimalDigits: any,
+  ) => {
+    legendFormatValueRef.current = getLegendFormatValue(
+      newConvertUnits, newIntlNumberFormat, newDecimalDigits,
+    )
+  }
+
   const legendFormatValueDecimalsFromMinMax = useCallback((newMin: number, newMax: number) => {
     if (safeEqualCheck(min, newMin) && safeEqualCheck(max, newMax)) {
-      return
+      return legendFormatValueRef.current
     }
     // we should call the convertUnits-creation only when original app was doing this
     // so we don't get new updates in improper places
@@ -158,7 +177,8 @@ export const useFormatters = ({
     const convertedMax = newConvertUnits(newMax)
 
     if (typeof convertedMin !== "number" || typeof convertedMax !== "number") {
-      return
+      updateLegendFormatValueRef(newConvertUnits, intlNumberFormat, decimalDigits)
+      return legendFormatValueRef.current
     }
 
     let newDecimals
@@ -213,17 +233,14 @@ export const useFormatters = ({
       setIntlNumberFormat(() => newIntlNumberFormat)
       setDecimals(newDecimals)
     }
+    updateLegendFormatValueRef(newConvertUnits, newIntlNumberFormat, newDecimals)
+    return legendFormatValueRef.current
   }, [
     decimals, decimalDigits, min, max, uuid, temperatureSetting,
     units, unitsDesired, unitsCommon, secondsAsTimeSetting,
     data.min, data.max, intlNumberFormat,
   ])
 
-  const legendFormatValue: LegendFormatValue = useMemo(() => (
-    getLegendFormatValue(
-      convertUnits, intlNumberFormat, decimalDigits,
-    )
-  ), [convertUnits, decimalDigits, intlNumberFormat])
 
   return {
     legendFormatValue,
