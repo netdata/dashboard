@@ -1,6 +1,6 @@
 import { sortBy } from "ramda"
 import React, {
-  useLayoutEffect, useRef, useCallback, RefObject,
+  useLayoutEffect, useRef, useCallback,
 } from "react"
 import { useUpdateEffect, useUnmount } from "react-use"
 import Dygraph from "dygraphs"
