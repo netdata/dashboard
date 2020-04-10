@@ -129,7 +129,7 @@ export const DisableOutOfView = ({
         .map((child) => cloneWithCanvas(child as HTMLElement))
 
       const clonedChildrenContainer = document.createElement("div")
-      clonedChildrenContainer.style.display = "none"
+      clonedChildrenContainer.style.visibility = "hidden"
 
       newClonedChildren.forEach((child) => {
         clonedChildrenContainer.appendChild(child)

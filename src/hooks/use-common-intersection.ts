@@ -61,9 +61,8 @@ export const useCommonIntersection = (
         (newIsVisible) => {
           if (isVisibleRef.current !== newIsVisible) {
             if (clonedChildrenRef.current) {
-              // @ts-ignore
               // eslint-disable-next-line no-param-reassign
-              clonedChildrenRef.current.style.display = newIsVisible ? "block" : "none"
+              clonedChildrenRef.current.style.visibility = newIsVisible ? "visible" : "hidden"
             }
 
             isVisibleRef.current = newIsVisible
