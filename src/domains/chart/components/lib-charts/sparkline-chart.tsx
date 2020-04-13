@@ -6,6 +6,47 @@ import React, {
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { colorLuminance } from "domains/chart/utils/color-luminance"
+import { MS_IN_SECOND } from "utils"
+import { TimeRange } from "types/common"
+
+const convertToTimestamp = (number: number) => {
+  if (number > 0) {
+    return number
+  }
+  return new Date().valueOf() + number // number is negative or zero
+}
+
+interface TimeWindowCorrection {
+  paddingLeftPercentage?: string
+  widthRatio?: number
+}
+const getForceTimeWindowCorrection = (
+  chartData: EasyPieChartData, requestedViewRange: TimeRange,
+): TimeWindowCorrection => {
+  const requestedAfter = convertToTimestamp(requestedViewRange[0])
+  const requestedBefore = convertToTimestamp(requestedViewRange[1])
+  const after = chartData.after * MS_IN_SECOND
+  const before = chartData.before * MS_IN_SECOND
+
+  const currentDuration = before - after
+  const requestedDuration = requestedBefore - requestedAfter
+  // don't do overrides when current (available) duration is bigger or only slightly lower
+  // than requested duration
+  const DURATION_CHANGE_TOLERANCE = 1.03
+  if (currentDuration > requestedDuration / DURATION_CHANGE_TOLERANCE) {
+    return {}
+  }
+
+  const widthRatio = currentDuration / requestedDuration
+
+  const visibleDuration = requestedBefore - requestedAfter
+  const paddingLeftPercentage = `${100 * ((after - requestedAfter) / visibleDuration)}%`
+
+  return {
+    paddingLeftPercentage,
+    widthRatio,
+  }
+}
 
 interface Props {
   attributes: Attributes
@@ -18,6 +59,7 @@ interface Props {
   isRemotelyControlled: boolean
   orderedColors: string[]
   unitsCurrent: string
+  requestedViewRange: TimeRange
 }
 export const SparklineChart = ({
   attributes,
@@ -28,12 +70,17 @@ export const SparklineChart = ({
   chartElementId,
   orderedColors,
   unitsCurrent,
+  requestedViewRange,
 }: Props) => {
   const chartElement = useRef<HTMLDivElement>(null)
 
   // update width, height automatically each time
   const [$chartElement, set$chartElement] = useState()
   const sparklineOptions = useRef<{[key: string]: any}>()
+
+  const { paddingLeftPercentage = undefined, widthRatio = 1 } = attributes.forceTimeWindow
+    ? getForceTimeWindowCorrection(chartData, requestedViewRange)
+    : {}
 
   // create chart
   useEffect(() => {
@@ -107,7 +154,7 @@ export const SparklineChart = ({
         numberDecimalMark: attributes.sparklineNumberDecimalMark,
         numberDigitGroupCount: attributes.sparklineNumberDigitGroupCount,
         animatedZooms: attributes.sparklineAnimatedZooms,
-        width: Math.floor(width),
+        width: Math.floor(width * widthRatio),
         height: Math.floor(height),
       }
 
@@ -117,7 +164,7 @@ export const SparklineChart = ({
       $element.sparkline(chartData.result, sparklineInitOptions)
     }
   }, [$chartElement, attributes, chartContainerElement, chartData.result, chartMetadata,
-    orderedColors, unitsCurrent])
+    orderedColors, unitsCurrent, widthRatio])
 
   // update chart
   useEffect(() => {
@@ -125,13 +172,18 @@ export const SparklineChart = ({
       const { width, height } = chartContainerElement.getBoundingClientRect()
       $chartElement.sparkline(chartData.result, {
         ...sparklineOptions.current,
-        width: Math.floor(width),
+        width: Math.floor(width * widthRatio),
         height: Math.floor(height),
       })
     }
   })
 
+  const style = paddingLeftPercentage ? {
+    textAlign: "initial" as "initial", // :) typescript
+    paddingLeft: paddingLeftPercentage,
+  } : undefined
+
   return (
-    <div ref={chartElement} id={chartElementId} className={chartElementClassName} />
+    <div ref={chartElement} id={chartElementId} className={chartElementClassName} style={style} />
   )
 }
