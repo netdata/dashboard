@@ -50,9 +50,6 @@ export const useCommonIntersection = (
   // the ref is just to prevent most updates on init - charts are not visible on first intersection
   // observer callback, but it still tries to set the state. UseState does not bail out when
   // state doesn't change
-  useEffect(() => {
-    isVisibleRef.current = isVisible
-  }, [isVisible])
 
   useEffect(() => {
     if (typeof IntersectionObserver === "function") {
@@ -60,6 +57,8 @@ export const useCommonIntersection = (
         element,
         (newIsVisible) => {
           if (isVisibleRef.current !== newIsVisible) {
+            isVisibleRef.current = newIsVisible
+            // we need to mirror it in `use-state` to cause react update
             setIsVisible(newIsVisible)
           }
         },
