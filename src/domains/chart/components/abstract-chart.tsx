@@ -187,6 +187,7 @@ export const AbstractChart = ({
         isRemotelyControlled={isRemotelyControlled}
         orderedColors={orderedColors}
         unitsCurrent={unitsCurrent}
+        requestedViewRange={requestedViewRange}
       />
     )
   }

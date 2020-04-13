@@ -90,6 +90,7 @@ export interface StaticAttributes {
   commonColors?: string
   decimalDigits?: number
   dimensions?: string
+  forceTimeWindow?: boolean
 
   appendOptions?: string | undefined
   gtime?: number
@@ -315,6 +316,7 @@ const getAttributesMap = (): AttributesMap => ({
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
   dimensions: { key: "dimensions" },
+  forceTimeWindow: { key: "force-time-window" },
 
   appendOptions: { key: "append-options" },
   gtime: { key: "gtime" },

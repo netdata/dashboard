@@ -73,6 +73,8 @@ export type StateT = {
     hostname: string
     isCloudEnabled: boolean
     isCloudAvailable: boolean
+    isAgentClaimed: boolean
+    isACLKAvailable: boolean
     hasStartedInfo: boolean
     isFetchingHello: boolean
     machineGuid: string | null
@@ -113,6 +115,8 @@ export const initialState: StateT = {
     hostname: "unknown",
     isCloudEnabled: false,
     isCloudAvailable: false,
+    isAgentClaimed: false,
+    isACLKAvailable: false,
     hasStartedInfo: false,
     isFetchingHello: false,
     machineGuid: null,
@@ -373,11 +377,16 @@ globalReducer.on(fetchInfoAction, (state) => ({
     hasStartedInfo: true,
   },
 }))
-globalReducer.on(fetchInfoAction.success, (state, { isCloudAvailable }) => ({
+globalReducer.on(fetchInfoAction.success, (state, {
+  isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable,
+}) => ({
   ...state,
   registry: {
     ...state.registry,
     isCloudAvailable,
+    isCloudEnabled,
+    isAgentClaimed,
+    isACLKAvailable,
   },
 }))
 
@@ -386,6 +395,9 @@ globalReducer.on(fetchInfoAction.failure, (state) => ({
   registry: {
     ...state.registry,
     isCloudAvailable: false,
+    isCloudEnabled: false,
+    isAgentClaimed: false,
+    isACLKAvailable: false,
   },
 }))
 
