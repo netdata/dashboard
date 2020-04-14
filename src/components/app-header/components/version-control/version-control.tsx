@@ -74,7 +74,7 @@ export const VersionControl = ({
     true,
   )
 
-  const [gcsVersionResponse] = useHttp<{mediaLink: string}>(
+  const [gcsVersionResponse] = useHttp<{ mediaLink: string }>(
     NETDATA_LATEST_GCS_VERSION_URL,
     !isStableReleaseChannel,
   )

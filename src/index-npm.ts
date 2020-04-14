@@ -34,3 +34,5 @@ export { ChartContainer } from "domains/chart/components/chart-container"
 export { NodeView } from "domains/dashboard/components/node-view"
 
 export { resetGlobalPanAndZoomAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+
+export { VersionControl } from "components/app-header/components/version-control"
