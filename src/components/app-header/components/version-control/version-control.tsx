@@ -2,15 +2,13 @@ import React from "react"
 
 import { useHttp } from "hooks/use-http"
 import { SvgIcon } from "components/svg-icon"
-
+import { iconsList } from "./icons-list"
 import {
   Container,
   NewVersionIndicator, NoUpdateCloud,
   TextBold,
 } from "./styled"
 
-import updateCloudIcon from "./update-cloud-icon.svg"
-import noUpdateCloudIcon from "./no-update-cloud-icon.svg"
 
 const NETDATA_LATEST_VERSION_URL = "https://api.github.com/repos/netdata/netdata/releases/latest"
 const NETDATA_LATEST_GCS_VERSION_URL = "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
@@ -101,7 +99,7 @@ export const VersionControl = ({
           data-toggle="modal"
           data-target="#updateModal"
         >
-          <SvgIcon icon={updateCloudIcon} width={22} />
+          <SvgIcon icon={iconsList.updateCloudIcon} width={22} />
           <TextBold> Update Now </TextBold>
         </NewVersionIndicator>
       )}
@@ -111,7 +109,7 @@ export const VersionControl = ({
           data-toggle="modal"
           data-target="#updateModal"
         >
-          <SvgIcon icon={noUpdateCloudIcon} width={24} />
+          <SvgIcon icon={iconsList.noUpdateCloudIcon} width={24} />
         </NoUpdateCloud>
       )}
     </Container>
