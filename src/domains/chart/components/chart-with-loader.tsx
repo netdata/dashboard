@@ -65,9 +65,7 @@ export const ChartWithLoader = ({
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
   const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
-  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) =>
-    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
-  )
+  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid }))
   const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
@@ -76,7 +74,7 @@ export const ChartWithLoader = ({
           chart: attributes.id,
           id: chartUuid,
           host,
-        })
+        }),
       )
     }
   }, [
@@ -91,22 +89,17 @@ export const ChartWithLoader = ({
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const chartPanAndZoom = useSelector((state: AppStateT) =>
-    selectChartPanAndZoom(state, { id: chartUuid })
-  )
+  const chartPanAndZoom = useSelector((state: AppStateT) => selectChartPanAndZoom(state, { id: chartUuid }))
   const panAndZoom = chartPanAndZoom || globalPanAndZoom
 
-  const isPanAndZoomMaster =
-    (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid) || Boolean(chartPanAndZoom)
+  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid) || Boolean(chartPanAndZoom)
   const shouldForceTimeRange = panAndZoom?.shouldForceTimeRange || false
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
   const isRemotelyControlled = !panAndZoom || !isPanAndZoomMaster || shouldForceTimeRange // used when zooming/shifting in toolbox
 
-  const fetchDataParams = useSelector((state: AppStateT) =>
-    selectChartFetchDataParams(state, { id: chartUuid })
-  )
+  const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(state, { id: chartUuid }))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
 
   const hoveredX = useSelector(selectGlobalSelection)
@@ -152,8 +145,7 @@ export const ChartWithLoader = ({
   const chartHeight = boundingClientRect.height
 
   const isShowingSnapshot = Boolean(useSelector(selectSnapshot))
-  const shouldEliminateZeroDimensions =
-    useSelector(selectShouldEliminateZeroDimensions) || isShowingSnapshot
+  const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions) || isShowingSnapshot
   const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
 
   const { CancelToken } = axios
@@ -203,9 +195,8 @@ export const ChartWithLoader = ({
 
       viewRange = (viewRange || [after, before]).map((x) => x * 1000) as [number, number]
 
-      const dataPoints =
-        attributes.points ||
-        Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
+      const dataPoints = attributes.points
+        || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
       const points = forceDataPoints || dataPoints * pointsMultiplier
 
       const group = attributes.method || window.NETDATA.chartDefaults.method
@@ -225,16 +216,16 @@ export const ChartWithLoader = ({
           before: before || null,
           dimensions: attributes.dimensions,
 
-        // properties for the reducer
-        fetchDataParams: {
-          // we store it here so it is only available when data is fetched
-          // those params should be synced with data
-          isRemotelyControlled,
-          viewRange,
-        },
-        id: chartUuid,
-        cancelTokenSource,
-      }))
+          // properties for the reducer
+          fetchDataParams: {
+            // we store it here so it is only available when data is fetched
+            // those params should be synced with data
+            isRemotelyControlled,
+            viewRange,
+          },
+          id: chartUuid,
+        }),
+      )
     }
   }, [attributes, actualChartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
     hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
@@ -243,9 +234,8 @@ export const ChartWithLoader = ({
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
-  const hasEmptyData =
-    (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0 ||
-    (chartData as EasyPieChartData | null)?.result.length === 0
+  const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
+    || (chartData as EasyPieChartData | null)?.result.length === 0
 
   if (!chartData || !actualChartMetadata) {
     return (
