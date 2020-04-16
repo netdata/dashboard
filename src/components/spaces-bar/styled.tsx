@@ -1,5 +1,6 @@
+import React from "react"
 import styled from "styled-components"
-import { getSizeBy, getColor } from "@netdata/netdata-ui"
+import { getSizeBy, getColor, Button } from "@netdata/netdata-ui"
 
 const spacesBarZIndex = 4
 
@@ -44,4 +45,13 @@ export const SpacePlaceholder = styled.div`
   border-radius: ${getSizeBy()};
   border: 2px dotted ${getColor(["white", "pure"])};
   margin-bottom: ${getSizeBy(2)};
+`
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const StyledSpaceBarPlus = styled(({ isDisabled, ...rest }: any) => (
+  // eslint-disable-next-line react/jsx-props-no-spreading
+  <Button {...rest} />
+))`
+  background: ${({ isDisabled }) => (isDisabled ? "rgba(0, 171, 68, 0.4);" : "#00AB44")};
+  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
 `

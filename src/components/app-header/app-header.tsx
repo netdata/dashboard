@@ -3,7 +3,12 @@ import { useEffectOnce } from "react-use"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
-import { selectSnapshot, selectActiveAlarms, selectRegistry } from "domains/global/selectors"
+import {
+  selectSnapshot,
+  selectActiveAlarms,
+  selectRegistry,
+  selectIsCloudEnabled,
+} from "domains/global/selectors"
 
 import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils"
 import { isDevelopmentEnv } from "utils/env"
@@ -57,6 +62,8 @@ export const AppHeader = ({
   const snapshot = useSelector(selectSnapshot)
   const hostname = snapshot ? snapshot.hostname : chartsMetadata.hostname
 
+  const isCloudEnabled = useSelector(selectIsCloudEnabled)
+
   const activeAlarms = useSelector(selectActiveAlarms)
   const alarms = activeAlarms ? Object.values(activeAlarms.alarms) : []
   const criticalAlarmsCount = alarms.filter((alarm) => alarm.status === "CRITICAL").length
@@ -65,9 +72,10 @@ export const AppHeader = ({
   const registry = useSelector(selectRegistry)
   const name = encodeURIComponent(registry.hostname)
   const origin = encodeURIComponent(`${window.location.origin}/`)
+  const iframeUrlSuffix = isCloudEnabled ? "" : "&disableCloud=true"
   const signInIframeUrl = getIframeSrc(
     cloudBaseURL,
-    `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`,
+    `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}${iframeUrlSuffix}`,
   )
 
   const redirectURI = encodeURIComponent(window.location.href)
@@ -203,14 +211,15 @@ export const AppHeader = ({
             }}
             onLoad={handleIframeLoad}
           />
-          {hasSignInHistory && enoughWaitingForIframe && isOffline && (
+          {enoughWaitingForIframe && hasSignInHistory && isOffline && (
             <OfflineBlock>
               <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
           )}
-          {!isSignedIn && enoughWaitingForIframe && !hasSignInHistory && (
+          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && (
             <SignInButton
               href={isUsingGlobalRegistry ? signInLinkHref : ""}
+              isDisabled={isOffline}
               onClick={handleSignInClick}
             >
               Sign-in

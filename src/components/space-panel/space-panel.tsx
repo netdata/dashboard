@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
 import {
+  selectIsCloudEnabled,
   selectIsUsingGlobalRegistry,
   selectRegistry,
   selectSpacePanelIsActive,
@@ -75,6 +76,7 @@ export const SpacePanel = ({
 
   const machinesArray = registry?.registryMachinesArray || []
 
+  const isCloudEnabled = useSelector(selectIsCloudEnabled)
   return (
     <S.PanelContainer isActive={panelIsActive} isSignedIn={isSignedIn}>
       {isSignedIn
@@ -104,7 +106,7 @@ export const SpacePanel = ({
                   Switch Identity
                 </S.SwitchIdentity>
               )}
-              {!isOffline && !hasSignInHistory && (
+              {!isOffline && !hasSignInHistory && isCloudEnabled && (
                 <S.BottomPanel>
                   <S.BottomPanelHeader>
                     Discover your monitoring superpowers

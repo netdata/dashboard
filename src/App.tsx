@@ -22,7 +22,7 @@ import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { useListenToPostMessage } from "utils/post-message"
 import { useSelector } from "store/redux-separate-context"
-import { selectCloudBaseUrl, selectSignInUrl } from "domains/global/selectors"
+import { selectCloudBaseUrl, selectHasFetchedInfo, selectSignInUrl } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
@@ -136,12 +136,15 @@ const App: React.FC = () => {
   useListenToFocusMessages()
   const signInUrl = useSelector(selectSignInUrl)
 
+  const hasFetchedInfo = useSelector(selectHasFetchedInfo)
+
   return (
     <ThemeProvider theme={DefaultTheme}>
-      {chartsMetadata && cloudBaseURL && (
+      {chartsMetadata && cloudBaseURL && hasFetchedInfo && (
         <>
           {!isPrintMode && (
             <SpacesBar
+              isOffline={isOffline}
               isSignedIn={isSignedIn}
               cloudBaseURL={cloudBaseURL}
               enoughWaitingForIframe={enoughWaitingForIframe}
