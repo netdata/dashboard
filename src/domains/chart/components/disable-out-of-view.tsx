@@ -1,5 +1,5 @@
 import React, {
-  useEffect, useLayoutEffect, useState,
+  useEffect, useLayoutEffect, useState, useRef,
 } from "react"
 import { useDebounce } from "react-use"
 import { forEachObjIndexed } from "ramda"
@@ -19,8 +19,8 @@ import { InvisibleSearchableText } from "./invisible-searchable-text"
 const SCROLL_DEBOUNCE_ASYNC = 750
 const SCROLL_DEBOUNCE_SYNC = 100
 
-const cloneWithCanvas = (element: Element) => {
-  const cloned = element.cloneNode(true) as Element
+const cloneWithCanvas = (element: HTMLElement) => {
+  const cloned = element.cloneNode(true) as HTMLElement
   const clonedCanvases = cloned.querySelectorAll("canvas")
 
   element.querySelectorAll("canvas")
@@ -82,7 +82,9 @@ export const DisableOutOfView = ({
 
 
   const destroyOnHide = useSelector(selectDestroyOnHide)
-  const isVisibleIntersection = useCommonIntersection(portalNode)
+
+  const clonedChildrenRef = useRef<HTMLElement>()
+  const isVisibleIntersection = useCommonIntersection(portalNode, clonedChildrenRef)
 
   // todo hook to scroll (observe on visible items) instead of changes in intersectionRatio
   // because intersectinnRatio maxes out on 1.0 when element is fully visible
@@ -101,7 +103,13 @@ export const DisableOutOfView = ({
   )
   const shouldHide = isVisibleIntersection ? shouldHideDebounced : true
 
-  const [clonedChildren, setClonedChildren] = useState<Element[]>()
+  const previousIsVisibleIntersection = useRef(isVisibleIntersection)
+  if (clonedChildrenRef.current
+    && previousIsVisibleIntersection.current !== isVisibleIntersection
+  ) {
+    previousIsVisibleIntersection.current = isVisibleIntersection
+  }
+
 
   if (isPrintMode) {
     // we should show everything in this case
@@ -116,10 +124,18 @@ export const DisableOutOfView = ({
       )
     }
 
-    if (!clonedChildren) {
+    if (!clonedChildrenRef.current) {
       const newClonedChildren = Array.from(portalNode.children)
-        .map((child) => cloneWithCanvas(child))
-      setClonedChildren(newClonedChildren)
+        .map((child) => cloneWithCanvas(child as HTMLElement))
+
+      const clonedChildrenContainer = document.createElement("div")
+      clonedChildrenContainer.style.visibility = "hidden"
+
+      newClonedChildren.forEach((child) => {
+        clonedChildrenContainer.appendChild(child)
+      })
+
+      clonedChildrenRef.current = clonedChildrenContainer
     }
 
     return (
@@ -127,10 +143,8 @@ export const DisableOutOfView = ({
         <InvisibleSearchableText attributes={attributes} />
         <div
           ref={(nodeElement) => {
-            if (nodeElement && clonedChildren) {
-              clonedChildren.forEach((child: Element) => {
-                nodeElement.appendChild(child)
-              })
+            if (nodeElement && clonedChildrenRef.current) {
+              nodeElement.appendChild(clonedChildrenRef.current)
             }
           }}
         />
@@ -138,8 +152,8 @@ export const DisableOutOfView = ({
     )
   }
 
-  if (!destroyOnHide && clonedChildren) {
-    setClonedChildren(undefined)
+  if (!destroyOnHide && clonedChildrenRef.current) {
+    clonedChildrenRef.current = undefined
   }
 
   return children

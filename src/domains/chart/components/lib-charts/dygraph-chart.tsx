@@ -1,6 +1,6 @@
 import { sortBy } from "ramda"
 import React, {
-  useLayoutEffect, useRef, useCallback, RefObject,
+  useLayoutEffect, useRef, useCallback,
 } from "react"
 import { useUpdateEffect, useUnmount } from "react-use"
 import Dygraph from "dygraphs"
@@ -50,7 +50,7 @@ interface GetInitialDygraphOptions {
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
   orderedColors: string[],
-  propsRef: RefObject<{ legendFormatValue: (v: number) => string | number }>
+  setMinMax: (minMax: TimeRange) => void
   shouldSmoothPlot: boolean,
   unitsCurrent: string,
   xAxisTimeString: (d: Date) => string,
@@ -63,7 +63,7 @@ const getInitialDygraphOptions = ({
   dimensionsVisibility,
   hiddenLabelsElementId,
   orderedColors,
-  propsRef,
+  setMinMax,
   shouldSmoothPlot,
   unitsCurrent,
   xAxisTimeString,
@@ -240,9 +240,17 @@ const getInitialDygraphOptions = ({
         axisLabelWidth: dygraphYAxisLabelWidth,
         drawAxis: isSparkline ? false : dygraphDrawYAxis,
         // axisLabelFormatter is added on the updates
-        axisLabelFormatter: (y: Date | number) => (
-          propsRef.current && propsRef.current.legendFormatValue(y as number)
-        ),
+        axisLabelFormatter(y: Date | number) {
+          const formatter = setMinMax([
+            // @ts-ignore
+            // eslint-disable-next-line no-underscore-dangle
+            this.axes_[0].extremeRange[0],
+            // @ts-ignore
+            // eslint-disable-next-line no-underscore-dangle
+            this.axes_[0].extremeRange[1],
+          ]) as unknown as ((value: Date | number) => string)
+          return formatter(y as number)
+        },
       },
     },
   }
@@ -262,7 +270,6 @@ interface Props {
   dimensionsVisibility: boolean[]
   hasEmptyData: boolean
   isRemotelyControlled: boolean
-  legendFormatValue: (v: number) => number | string
   onUpdateChartPanAndZoom: (arg: {
     after: number, before: number,
     callback: (after: number, before: number) => void,
@@ -293,7 +300,6 @@ export const DygraphChart = ({
   dimensionsVisibility,
   hasEmptyData,
   isRemotelyControlled,
-  legendFormatValue,
   onUpdateChartPanAndZoom,
   orderedColors,
 
@@ -374,7 +380,6 @@ export const DygraphChart = ({
     globalChartUnderlay,
     hoveredX,
     // put it to ref to prevent additional updateOptions() after creating dygraph
-    legendFormatValue,
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
     viewAfter,
@@ -384,12 +389,11 @@ export const DygraphChart = ({
     propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
     propsRef.current.globalChartUnderlay = globalChartUnderlay
-    propsRef.current.legendFormatValue = legendFormatValue
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [chartData, globalChartUnderlay, hoveredX, legendFormatValue, resetGlobalPanAndZoom,
+  }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom,
     setGlobalChartUnderlay, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
@@ -403,7 +407,7 @@ export const DygraphChart = ({
         dimensionsVisibility,
         hiddenLabelsElementId,
         orderedColors,
-        propsRef,
+        setMinMax,
         shouldSmoothPlot,
         unitsCurrent,
         xAxisTimeString,
@@ -781,9 +785,6 @@ export const DygraphChart = ({
       // updated with proper formatting (toggle visibility with css)
       const instance = new Dygraph((chartElement.current), chartData.result.data, dygraphOptions)
       dygraphInstance.current = instance
-
-      const extremes = (instance as NetdataDygraph).yAxisExtremes()[0]
-      setMinMax(extremes)
     }
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isMouseDown,

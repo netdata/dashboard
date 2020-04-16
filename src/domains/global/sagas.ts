@@ -60,7 +60,7 @@ const injectGTM = (machineGuid: string) => {
   }
   /* eslint-disable */
   // @ts-ignore
-  ;(function(w, d, s, l, i) {
+  ; (function (w, d, s, l, i) {
     // @ts-ignore
     w[l] = w[l] || []
     // @ts-ignore
@@ -105,53 +105,51 @@ type AccessRegistry = (args: {
 }) => Promise<AccessRegistryResponse>
 const accessRegistry: AccessRegistry = ({
   machineGuid, maxRedirects, name, registryServer, url,
-}) => axiosInstance
-  .get(`${registryServer}/api/v1/registry`, {
-    headers: {
-      "Cache-Control": "no-cache, no-store",
-      Pragma: "no-cache",
-    },
-    params: {
-      action: "access",
-      machine: machineGuid,
-      name,
-      url,
-    },
-    withCredentials: true, // required for the cookie
-  })
-  .then(({ data }) => {
-    // todo xss check
-    const isRedirect = typeof data.registry === "string"
+}) => axiosInstance.get(`${registryServer}/api/v1/registry`, {
+  headers: {
+    "Cache-Control": "no-cache, no-store",
+    Pragma: "no-cache",
+  },
+  params: {
+    action: "access",
+    machine: machineGuid,
+    name,
+    url,
+  },
+  withCredentials: true, // required for the cookie
+}).then(({ data }) => {
+  // todo xss check
+  const isRedirect = typeof data.registry === "string"
 
-    let returnData = data
-    if (typeof data.status !== "string" || data.status !== "ok") {
-      // todo throw error (409 in old dashboard)
-      returnData = null
-    }
+  let returnData = data
+  if (typeof data.status !== "string" || data.status !== "ok") {
+    // todo throw error (409 in old dashboard)
+    returnData = null
+  }
 
-    if (returnData === null) {
-      if (isRedirect && maxRedirects > 0) {
-        return accessRegistry({
-          maxRedirects: maxRedirects - 1,
-          machineGuid,
-          name,
-          registryServer: data.registry,
-          url,
-        })
-      }
-      return { registryServer }
+  if (returnData === null) {
+    if (isRedirect && maxRedirects > 0) {
+      return accessRegistry({
+        maxRedirects: maxRedirects - 1,
+        machineGuid,
+        name,
+        registryServer: data.registry,
+        url,
+      })
     }
-    const urls = data.urls.filter((u: [string, string]) => u[1] !== MASKED_DATA)
-    return {
-      personGuid: data.person_guid || null,
-      registryServer,
-      urls,
-    }
-  }).catch(() => {
-    // todo handle error in better way (410 in old dashboard)
-    console.warn("error calling registry:", registryServer) // eslint-disable-line no-console
-    return null
-  })
+    return { registryServer }
+  }
+  const urls = data.urls.filter((u: [string, string]) => u[1] !== MASKED_DATA)
+  return {
+    personGuid: data.person_guid || null,
+    registryServer,
+    urls,
+  }
+}).catch(() => {
+  // todo handle error in better way (410 in old dashboard)
+  console.warn("error calling registry:", registryServer) // eslint-disable-line no-console
+  return null
+})
 
 export interface RegistryMachine {
   guid: string

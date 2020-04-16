@@ -266,7 +266,6 @@ export const AbstractChart = ({
       dimensionsVisibility={dimensionsVisibility}
       hasEmptyData={hasEmptyData}
       isRemotelyControlled={isRemotelyControlled}
-      legendFormatValue={legendFormatValue}
       orderedColors={orderedColors}
       hoveredRow={hoveredRow}
       hoveredX={hoveredX}

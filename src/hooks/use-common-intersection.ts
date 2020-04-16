@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react"
+import {
+  useEffect, useRef, useState, MutableRefObject,
+} from "react"
 
 const globalIntersectionOptions = {
   root: null,
@@ -44,15 +46,13 @@ const globalIntersectionObserver = createGlobalIntersectionObserver()
 //    https://github.com/thebuilder/react-intersection-observer does)
 export const useCommonIntersection = (
   element: HTMLElement,
+  clonedChildrenRef: MutableRefObject<HTMLElement | undefined>,
 ) => {
   const [isVisible, setIsVisible] = useState(false)
   const isVisibleRef = useRef(isVisible)
   // the ref is just to prevent most updates on init - charts are not visible on first intersection
   // observer callback, but it still tries to set the state. UseState does not bail out when
   // state doesn't change
-  useEffect(() => {
-    isVisibleRef.current = isVisible
-  }, [isVisible])
 
   useEffect(() => {
     if (typeof IntersectionObserver === "function") {
@@ -60,6 +60,13 @@ export const useCommonIntersection = (
         element,
         (newIsVisible) => {
           if (isVisibleRef.current !== newIsVisible) {
+            if (clonedChildrenRef.current) {
+              // eslint-disable-next-line no-param-reassign
+              clonedChildrenRef.current.style.visibility = newIsVisible ? "visible" : "hidden"
+            }
+
+            isVisibleRef.current = newIsVisible
+            // we need to mirror it in `use-state` to cause react update
             setIsVisible(newIsVisible)
           }
         },
@@ -68,7 +75,7 @@ export const useCommonIntersection = (
     return () => {
       globalIntersectionObserver.unsubscribe(element)
     }
-  }, [element])
+  }, [clonedChildrenRef, element])
 
   return isVisible
 }

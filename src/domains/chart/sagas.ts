@@ -23,9 +23,14 @@ import { isPrintMode } from "domains/dashboard/utils/parse-url"
 
 import { INFO_POLLING_FREQUENCY, NOTIFICATIONS_TIMEOUT } from "domains/global/constants"
 import {
-  fetchDataAction, FetchDataPayload,
-  fetchChartAction, FetchChartPayload,
-  fetchDataForSnapshotAction, FetchDataForSnapshotPayload, fetchInfoAction, FetchInfoPayload,
+  fetchDataAction,
+  FetchDataPayload,
+  fetchChartAction,
+  FetchChartPayload,
+  fetchDataForSnapshotAction,
+  FetchDataForSnapshotPayload,
+  fetchInfoAction,
+  FetchInfoPayload,
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = isMainJs ? 30 : 60
@@ -80,7 +85,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     // props for api
     host, chart, format, points, group, gtime, options, after, before, dimensions,
     // props for the store
-    fetchDataParams, id,
+    fetchDataParams, id, cancelTokenSource,
   } = payload
 
   const snapshot = yield select(selectSnapshot)
@@ -140,6 +145,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     params,
     onErrorCallback,
     onSuccessCallback,
+    cancelTokenSource,
   })
 }
 

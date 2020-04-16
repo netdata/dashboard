@@ -1,8 +1,11 @@
 import {
   cond, always, T,
 } from "ramda"
-import React, { useEffect, useState, useMemo } from "react"
-import { useThrottle, useUpdateEffect } from "react-use"
+import axios from "axios"
+import React, {
+  useEffect, useState, useMemo,
+} from "react"
+import { useThrottle, useUpdateEffect, useUnmount } from "react-use"
 
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
@@ -15,6 +18,7 @@ import {
   selectSnapshot,
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
+import { CHART_UNMOUNTED } from "utils/netdata-sdk"
 
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../constants"
 import { getChartURLOptions } from "../utils/get-chart-url-options"
@@ -157,6 +161,14 @@ export const ChartWithLoader = ({
   const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions)
     || isShowingSnapshot
   const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
+
+  const { CancelToken } = axios
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const cancelTokenSource = useMemo(() => CancelToken.source(), [])
+  useUnmount(() => {
+    cancelTokenSource.cancel(CHART_UNMOUNTED)
+  })
+
   /**
    * fetch data
    */
@@ -225,12 +237,13 @@ export const ChartWithLoader = ({
           viewRange,
         },
         id: chartUuid,
+        cancelTokenSource,
       }))
     }
   }, [attributes, actualChartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
     hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
     isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
-    shouldUsePanAndZoomPadding, shouldFetch])
+    shouldUsePanAndZoomPadding, shouldFetch, cancelTokenSource])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 

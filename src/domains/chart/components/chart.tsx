@@ -349,7 +349,7 @@ export const Chart = memo(({
         hoveredX={hoveredX}
         hoveredRow={hoveredRow}
         setHoveredX={handleSetHoveredX}
-        setMinMax={([min, max]) => { legendFormatValueDecimalsFromMinMax(min, max) }}
+        setMinMax={([min, max]) => legendFormatValueDecimalsFromMinMax(min, max)}
         showLatestOnBlur={showLatestOnBlur}
         unitsCurrent={unitsCurrent}
         viewAfter={viewAfter}
