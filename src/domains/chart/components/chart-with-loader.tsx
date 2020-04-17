@@ -1,10 +1,6 @@
-import {
-  cond, always, T,
-} from "ramda"
+import { cond, always, T } from "ramda"
 import axios from "axios"
-import React, {
-  useEffect, useState, useMemo,
-} from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { useThrottle, useUpdateEffect, useUnmount } from "react-use"
 
 import { AppStateT } from "store/app-state"
@@ -224,13 +220,31 @@ export const ChartWithLoader = ({
             viewRange,
           },
           id: chartUuid,
+          cancelTokenSource,
         }),
       )
     }
-  }, [attributes, actualChartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
-    hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
-    isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
-    shouldUsePanAndZoomPadding, shouldFetch, cancelTokenSource])
+  }, [
+    attributes,
+    actualChartMetadata,
+    chartSettings,
+    chartUuid,
+    chartWidth,
+    dispatch,
+    hasLegend,
+    host,
+    initialAfter,
+    initialBefore,
+    isPanAndZoomMaster,
+    isRemotelyControlled,
+    panAndZoom,
+    portalNode,
+    setShouldFetch,
+    shouldEliminateZeroDimensions,
+    shouldUsePanAndZoomPadding,
+    shouldFetch,
+    cancelTokenSource,
+  ])
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
