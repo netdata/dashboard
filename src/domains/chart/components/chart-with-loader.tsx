@@ -93,7 +93,9 @@ export const ChartWithLoader = ({
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
-  const isRemotelyControlled = !panAndZoom || !isPanAndZoomMaster || shouldForceTimeRange // used when zooming/shifting in toolbox
+
+  // used when zooming/shifting in toolbox
+  const isRemotelyControlled = !panAndZoom || !isPanAndZoomMaster || shouldForceTimeRange
 
   const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(state, { id: chartUuid }))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
@@ -137,11 +139,14 @@ export const ChartWithLoader = ({
 
   // todo optimize by using resizeObserver (optionally)
   const boundingClientRect = portalNode.getBoundingClientRect()
-  const chartWidth = boundingClientRect.width - (hasLegend(attributes) ? 140 : 0) // from old dashboard
+
+  // from old dashboard
+  const chartWidth = boundingClientRect.width - (hasLegend(attributes) ? 140 : 0)
   const chartHeight = boundingClientRect.height
 
   const isShowingSnapshot = Boolean(useSelector(selectSnapshot))
   const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions) || isShowingSnapshot
+
   const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
 
   const { CancelToken } = axios
@@ -249,7 +254,7 @@ export const ChartWithLoader = ({
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
-    || (chartData as EasyPieChartData | null)?.result.length === 0
+    || (chartData as EasyPieChartData | null)?.result?.length === 0
 
   if (!chartData || !actualChartMetadata) {
     return (
