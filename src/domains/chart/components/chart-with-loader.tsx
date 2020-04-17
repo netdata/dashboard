@@ -61,7 +61,9 @@ export const ChartWithLoader = ({
   const host = attributes.host || serverDefault
   const dispatch = useDispatch()
   const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
-  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid }))
+  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
+    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
+  ))
   const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
@@ -85,19 +87,25 @@ export const ChartWithLoader = ({
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const chartPanAndZoom = useSelector((state: AppStateT) => selectChartPanAndZoom(state, { id: chartUuid }))
+  const chartPanAndZoom = useSelector((state: AppStateT) => (
+    selectChartPanAndZoom(state, { id: chartUuid })
+  ))
   const panAndZoom = chartPanAndZoom || globalPanAndZoom
 
-  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid) || Boolean(chartPanAndZoom)
+  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid)
+    || Boolean(chartPanAndZoom)
   const shouldForceTimeRange = panAndZoom?.shouldForceTimeRange || false
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
+  const isRemotelyControlled = !panAndZoom
+    || !isPanAndZoomMaster
+    || shouldForceTimeRange // used when zooming/shifting in toolbox
 
-  // used when zooming/shifting in toolbox
-  const isRemotelyControlled = !panAndZoom || !isPanAndZoomMaster || shouldForceTimeRange
 
-  const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(state, { id: chartUuid }))
+  const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(
+    state, { id: chartUuid },
+  ))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
 
   const hoveredX = useSelector(selectGlobalSelection)
@@ -145,8 +153,8 @@ export const ChartWithLoader = ({
   const chartHeight = boundingClientRect.height
 
   const isShowingSnapshot = Boolean(useSelector(selectSnapshot))
-  const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions) || isShowingSnapshot
-
+  const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions)
+    || isShowingSnapshot
   const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
 
   const { CancelToken } = axios
@@ -253,6 +261,7 @@ export const ChartWithLoader = ({
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
+  // eslint-disable-next-line max-len
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
     || (chartData as EasyPieChartData | null)?.result?.length === 0
 
