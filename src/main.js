@@ -5213,17 +5213,4 @@ window.netdataRegistryCallback = (machinesArray) => {
     }
 };
 
-
-function initializeApp() {
-    window.addEventListener("message", handleMessage, false);
-}
-
-if (document.readyState === "complete") {
-    initializeApp();
-} else {
-    document.addEventListener("readystatechange", () => {
-        if (document.readyState === "complete") {
-            initializeApp();
-        }
-    })
-}
+window.addEventListener("message", handleMessage, false);
