@@ -4186,14 +4186,6 @@ function runOnceOnDashboardWithjQuery() {
     // ------------------------------------------------------------------------
     // sidebar / affix
 
-    if (shouldShowSignInBanner()) {
-        const el = document.getElementById("sign-in-banner");
-        if (el) {
-            el.style.display = "initial";
-            el.classList.add(`theme-${netdataTheme}`);
-        }
-    }
-
     $('#sidebar')
         .affix({
             offset: {
@@ -4873,17 +4865,6 @@ function shouldShowSignInBanner() {
     return localStorage.getItem("signInBannerClosed") != "true";
 }
 
-function closeSignInBanner() {
-    localStorage.setItem("signInBannerClosed", "true");
-    const el = document.getElementById("sign-in-banner");
-    if (el) {
-        el.style.display = "none";
-    }
-}
-
-window.closeSignInBannerDidClick = () => {
-    closeSignInBanner();
-}
 
 window.signOutDidClick = (e) => {
     e.preventDefault();
@@ -5007,7 +4988,6 @@ function handleMessage(e) {
 }
 
 function handleSignInMessage(e) {
-    closeSignInBanner();
     localStorage.setItem("cloud.baseURL", getFromRegistry("cloudBaseURL"));
 
     cloudAccountID = e.data.accountID;
