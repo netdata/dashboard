@@ -5136,6 +5136,7 @@ function syncAgents(callback) {
 let isCloudSSOInitialized = false;
 
 function cloudSSOInit() {
+    return;
     const iframeEl = document.getElementById("ssoifrm");
     const cloudBaseURL = getFromRegistry("cloudBaseURL")
     const machineGuid = getFromRegistry("machineGuid")
