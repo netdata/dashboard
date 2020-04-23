@@ -12,6 +12,7 @@ import {
   selectShouldEliminateZeroDimensions,
   selectPanAndZoomDataPadding,
   selectSnapshot,
+  selectSpacePanelTransitionEndIsActive,
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
@@ -258,6 +259,8 @@ export const ChartWithLoader = ({
     shouldFetch,
     cancelTokenSource,
   ])
+
+  useSelector(selectSpacePanelTransitionEndIsActive)
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 

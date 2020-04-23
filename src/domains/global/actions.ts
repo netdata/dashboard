@@ -116,4 +116,11 @@ export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionP
   `${storeKey}/setSpacePanelStatusAction`,
 )
 
+export interface SetSpacePanelTransitionEndPayload {
+  isActive: boolean
+}
+export const setSpacePanelTransitionEndAction = createAction<SetSpacePanelTransitionEndPayload>(
+  `${storeKey}/setSpacePanelStatusAction`,
+)
+
 export const resetRegistry = createAction(`${storeKey}/resetRegistry`)
