@@ -1,6 +1,6 @@
 import { uniq } from "ramda"
 import {
-  spawn, take, put, takeEvery, call,
+  spawn, take, put, takeEvery, call, delay,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
@@ -8,6 +8,7 @@ import { Action } from "redux-act"
 
 import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
+import { sidePanelTransitionTimeInSeconds } from "components/space-panel/styled"
 
 import {
   fetchHelloAction,
@@ -18,6 +19,7 @@ import {
   setOptionAction,
   setSpacePanelStatusAction,
   SetSpacePanelStatusActionPayload,
+  setSpacePanelTransitionEndAction,
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
 import { MASKED_DATA } from "./constants"
@@ -274,12 +276,14 @@ function setOptonSaga({ payload }: Action<SetOptionAction>) {
   localStorage.setItem(constructOptionStorageKey(key), JSON.stringify(value))
 }
 
-function spacePanelSaga({ payload }: Action<SetSpacePanelStatusActionPayload>) {
+function* spacePanelSaga({ payload }: Action<SetSpacePanelStatusActionPayload>) {
   if (payload.isActive) {
     document.body.className = "with-panel"
   } else {
     document.body.className = ""
   }
+  yield delay(sidePanelTransitionTimeInSeconds * 1000)
+  yield put(setSpacePanelTransitionEndAction({ isActive: payload.isActive }))
 }
 
 export function* globalSagas() {

@@ -24,6 +24,7 @@ import {
   setCommonMinAction,
   resetOptionsAction,
   setSpacePanelStatusAction,
+  setSpacePanelTransitionEndAction,
   resetRegistry,
 } from "./actions"
 import {
@@ -71,6 +72,7 @@ export type StateT = {
   hasWindowFocus: boolean
 
   spacePanelIsActive: boolean
+  spacePanelTransitionEndIsActive: boolean
 
   registry: {
     cloudBaseURL: string | null
@@ -115,6 +117,8 @@ export const initialState: StateT = {
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
   spacePanelIsActive: false, // set to true only for testing layout
+  // the same as property above, just updated after transition ends
+  spacePanelTransitionEndIsActive: false,
 
   registry: {
     cloudBaseURL: null,
@@ -279,6 +283,11 @@ globalReducer.on(setCommonMaxAction, (state, { chartUuid, commonMaxKey, value })
 globalReducer.on(setSpacePanelStatusAction, (state, { isActive }) => ({
   ...state,
   spacePanelIsActive: isActive,
+}))
+
+globalReducer.on(setSpacePanelTransitionEndAction, (state, { isActive }) => ({
+  ...state,
+  spacePanelTransitionEndIsActive: isActive,
 }))
 
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({
