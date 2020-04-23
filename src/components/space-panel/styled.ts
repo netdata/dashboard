@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { getSizeBy, getColor, H4 } from "@netdata/netdata-ui"
 
-export const sidePanelTransitionTimeInSeconds = 0.2
+import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
 
 const PANEL_CONTAINER_PADDING = 3
 export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: boolean }>`

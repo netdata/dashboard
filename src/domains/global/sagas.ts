@@ -8,7 +8,7 @@ import { Action } from "redux-act"
 
 import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
-import { sidePanelTransitionTimeInSeconds } from "components/space-panel/styled"
+import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
 
 import {
   fetchHelloAction,
