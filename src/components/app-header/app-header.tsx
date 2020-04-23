@@ -220,7 +220,7 @@ export const AppHeader = ({
               <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
           )}
-          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && (
+          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && isCloudEnabled && (
             <SignInButton
               href={isUsingGlobalRegistry ? signInLinkHref : ""}
               isDisabled={isOffline}
