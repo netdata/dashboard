@@ -1,6 +1,8 @@
 import styled from "styled-components"
 import { getSizeBy, getColor, H4 } from "@netdata/netdata-ui"
 
+import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
+
 const PANEL_CONTAINER_PADDING = 3
 export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: boolean }>`
   position: fixed;
@@ -18,7 +20,7 @@ export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: bool
     isSignedIn ? 0 : getSizeBy(PANEL_CONTAINER_PADDING)({ theme })
   )} 0;
   background: #f1f2f3;
-  transition: transform 0.2s ease-out;
+  transition: transform ${sidePanelTransitionTimeInSeconds}s ease-out;
   border-right: 1px solid ${getColor(["borderColor"])};
 `
 

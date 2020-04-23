@@ -16,6 +16,8 @@ import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
 import { SvgIcon } from "components/svg-icon"
 import { showSignInModalAction } from "domains/dashboard/actions"
 import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
+import { alwaysEndWithSlash } from "utils/server-detection"
+
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
 import { AlarmsControl } from "./components/alarms-control"
@@ -71,7 +73,9 @@ export const AppHeader = ({
 
   const registry = useSelector(selectRegistry)
   const name = encodeURIComponent(registry.hostname)
-  const origin = encodeURIComponent(`${window.location.origin}/`)
+  const origin = encodeURIComponent(
+    alwaysEndWithSlash(window.location.origin + window.location.pathname),
+  )
   const iframeUrlSuffix = isCloudEnabled ? "" : "&disableCloud=true"
   const signInIframeUrl = getIframeSrc(
     cloudBaseURL,
@@ -216,7 +220,7 @@ export const AppHeader = ({
               <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
           )}
-          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && (
+          {enoughWaitingForIframe && !hasSignInHistory && !isSignedIn && isCloudEnabled && (
             <SignInButton
               href={isUsingGlobalRegistry ? signInLinkHref : ""}
               isDisabled={isOffline}
