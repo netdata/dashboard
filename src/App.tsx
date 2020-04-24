@@ -17,7 +17,9 @@ import "bootstrap-toggle"
 import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { useStore } from "react-redux"
+import "typeface-ibm-plex-sans"
 
+import "styles/fonts.css"
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { useListenToPostMessage } from "utils/post-message"
