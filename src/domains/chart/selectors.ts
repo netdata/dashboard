@@ -43,6 +43,11 @@ export const selectChartViewRange = createSelector(
   (chartState) => chartState.fetchDataParams.viewRange,
 )
 
+export const selectChartIsFetchingData = createSelector(
+  selectSingleChartState,
+  (chartState) => chartState.isFetchingData,
+)
+
 export const selectChartFetchDataParams = createSelector(
   selectSingleChartState,
   (chartState) => chartState.fetchDataParams,
