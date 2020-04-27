@@ -30,6 +30,7 @@ import {
   selectChartFetchDataParams,
   makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
+  selectChartIsFetchingData,
 } from "../selectors"
 import {
   ChartData,
@@ -108,6 +109,10 @@ export const ChartWithLoader = ({
     state, { id: chartUuid },
   ))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
+  const isFetchingData = useSelector((state: AppStateT) => selectChartIsFetchingData(
+    state,
+    { id: chartUuid },
+  ))
 
   const hoveredX = useSelector(selectGlobalSelection)
 
@@ -169,7 +174,7 @@ export const ChartWithLoader = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && actualChartMetadata) {
+    if (shouldFetch && actualChartMetadata && !isFetchingData) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -249,6 +254,7 @@ export const ChartWithLoader = ({
     host,
     initialAfter,
     initialBefore,
+    isFetchingData,
     isPanAndZoomMaster,
     isRemotelyControlled,
     panAndZoom,
