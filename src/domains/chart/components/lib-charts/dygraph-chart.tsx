@@ -18,6 +18,7 @@ import {
   selectGlobalSelectionMaster,
   selectSmoothPlot,
   selectSyncPanAndZoom,
+  selectSpacePanelTransitionEndIsActive,
 } from "domains/global/selectors"
 import {
   resetGlobalPanAndZoomAction, setCommonMaxAction, setCommonMinAction,
@@ -808,6 +809,16 @@ export const DygraphChart = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [globalChartUnderlay])
+
+  const spacePanelTransitionEndIsActive = useSelector(selectSpacePanelTransitionEndIsActive)
+  useUpdateEffect(() => {
+    if (dygraphInstance.current) {
+      // dygraph always resizes on browser width change, but doesn't resize when the container
+      // has different width.
+      // @ts-ignore
+      dygraphInstance.current.resize()
+    }
+  }, [spacePanelTransitionEndIsActive])
 
   // update data of the chart
   // first effect should only be made by new DygraphInstance()
