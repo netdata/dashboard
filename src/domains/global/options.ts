@@ -2,14 +2,16 @@ import { mergeAll, mergeRight } from "ramda"
 import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
 
 export const SYNC_PAN_AND_ZOOM = "sync_pan_and_zoom"
+export const STOP_UPDATES_WHEN_FOCUS_IS_LOST = "stop_updates_when_focus_is_lost"
+export const DESTROY_ON_HIDE = "destroy_on_hide"
 
 /* eslint-disable camelcase */
 
 export interface Options {
   // performance options
-  stop_updates_when_focus_is_lost: boolean
+  [STOP_UPDATES_WHEN_FOCUS_IS_LOST]: boolean
   eliminate_zero_dimensions: boolean
-  destroy_on_hide: boolean
+  [DESTROY_ON_HIDE]: boolean
   async_on_scroll: boolean
 
   // synchronization options
@@ -40,11 +42,11 @@ export const INITIAL_OPTIONS: Options = {
   // performance options
 
   // boolean - shall we stop auto-refreshes when document does not have user focus
-  stop_updates_when_focus_is_lost: true,
+  [STOP_UPDATES_WHEN_FOCUS_IS_LOST]: true,
   // do not show dimensions with just zeros
   eliminate_zero_dimensions: true,
   // destroy charts when they are not visible
-  destroy_on_hide: false, // eventually apply slow device detection
+  [DESTROY_ON_HIDE]: false, // eventually apply slow device detection
   async_on_scroll: false,
 
   // synchronization options
