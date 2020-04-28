@@ -33,6 +33,10 @@ export { ChartContainer } from "domains/chart/components/chart-container"
 
 export { NodeView } from "domains/dashboard/components/node-view"
 
-export { resetGlobalPanAndZoomAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+export {
+  resetGlobalPanAndZoomAction, setGlobalPanAndZoomAction, setOptionAction,
+} from "domains/global/actions"
+export { selectStopUpdatesWhenFocusIsLost, selectDestroyOnHide } from "domains/global/selectors"
+export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
 
 export { VersionControl } from "components/app-header/components/version-control"
