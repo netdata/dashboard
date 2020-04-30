@@ -4,10 +4,10 @@ import {
 import {
   mergeMap, tap, catchError, startWith, switchMap,
 } from "rxjs/operators"
+import { CancelTokenSource } from "axios"
 
 import { UnknownStringKeyT } from "types/common"
 
-import { CancelTokenSource } from "axios"
 import { axiosInstance } from "./axios-instance"
 
 export const CHART_UNMOUNTED = "Chart scrolled out of view"
@@ -34,11 +34,10 @@ export const getFetchStream = (concurrentCallsLimit: number) => {
     })).pipe(
       tap(({ data }) => { onSuccessCallback(data) }),
       catchError((error) => {
-        if (error?.message === CHART_UNMOUNTED) {
-          return empty()
-        }
         // todo implement error handling to support NETDATA.options.current.retries_on_data_failures
-        console.warn("fetch error", url) // eslint-disable-line
+        if (error?.message !== CHART_UNMOUNTED) {
+          console.warn("fetch error", url) // eslint-disable-line no-console
+        }
         onErrorCallback()
         return empty()
       }),
