@@ -79,10 +79,10 @@ export type StateT = {
     hasFetchedHello: boolean
     hasFetchedInfo: boolean
     hostname: string
-    isCloudEnabled: boolean
-    isCloudAvailable: boolean
-    isAgentClaimed: boolean
-    isACLKAvailable: boolean
+    isCloudEnabled: boolean | null
+    isCloudAvailable: boolean | null
+    isAgentClaimed: boolean | null
+    isACLKAvailable: boolean | null
     hasStartedInfo: boolean
     isFetchingHello: boolean
     machineGuid: string | null
@@ -125,10 +125,10 @@ export const initialState: StateT = {
     hasFetchedInfo: false,
     hasFetchedHello: false,
     hostname: "unknown",
-    isCloudEnabled: false,
-    isCloudAvailable: false,
-    isAgentClaimed: false,
-    isACLKAvailable: false,
+    isCloudEnabled: null,
+    isCloudAvailable: null,
+    isAgentClaimed: null,
+    isACLKAvailable: null,
     hasStartedInfo: false,
     isFetchingHello: false,
     machineGuid: null,
