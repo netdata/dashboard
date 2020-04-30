@@ -2,8 +2,6 @@ import React, {
   useEffect, useLayoutEffect, useRef, useState, useCallback,
 } from "react"
 import Ps from "perfect-scrollbar"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
 import { ThemeProvider } from "styled-components"
 import { DefaultTheme } from "@netdata/netdata-ui"
 
@@ -35,6 +33,7 @@ import { useAlarms } from "hooks/use-alarms"
 import { AppHeader } from "components/app-header"
 import { SpacesBar } from "components/spaces-bar"
 import { SpacePanel } from "components/space-panel"
+import { NotificationsContainer } from "components/notifications-container"
 
 import "./types/global"
 
@@ -142,6 +141,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={DefaultTheme}>
+      <NotificationsContainer />
       {chartsMetadata && cloudBaseURL && hasFetchedInfo && (
         <>
           {!isPrintMode && (
@@ -175,7 +175,6 @@ const App: React.FC = () => {
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
-                <ToastContainer />
                 <Portals key={refreshHelper} />
                 {isPrintMode && <PrintModal />}
               </>
