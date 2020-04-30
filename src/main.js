@@ -1905,7 +1905,14 @@ function renderPage(menus, data) {
           '<a href="https://docs.netdata.cloud/docs/configuration-guide/#increase-the-metrics-retention-period" target=_blank>configuring Netdata\'s <strong>history</strong></a> or using the <a href="https://docs.netdata.cloud/database/engine/" target=_blank>DB engine.</a>'
     }
 
-    sidebar += '<br/>&nbsp;<br/><strong>netdata</strong><br/>' + data.version.toString() + '</small></li>';
+    sidebar += '<br/>&nbsp;<br/><strong>netdata</strong><br/>' + data.version.toString() + '</small>';
+
+    sidebar += '<div class="terms-and-privacy">'
+        sidebar += '<a href="https://www.netdata.cloud/terms/" target="_blank">Terms and conditions</a><br/>'
+        sidebar += '<a href="https://www.netdata.cloud/privacy/" target="_blank">Privacy Policy</a><br/>'
+    sidebar += '</div>'
+
+    sidebar += '</li>'
 
     sidebar += '</ul>';
     div.innerHTML = html;
