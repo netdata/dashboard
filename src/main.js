@@ -3369,10 +3369,10 @@ window.loadSnapshot = () => {
 
             tmpSnapshotData.uncompress = snapshotOptions.compressions[tmpSnapshotData.compression].uncompress;
 
+            window.NETDATA.parseDom()
             reduxStore.dispatch(loadSnapshotAction({
                 snapshot: tmpSnapshotData,
             }))
-            window.NETDATA.parseDom()
 
             window.netdataSnapshotData = tmpSnapshotData;
 
