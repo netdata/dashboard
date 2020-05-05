@@ -104,6 +104,29 @@ export const AppHeader = ({
     }, WAITING_FOR_HELLO_TIME)
   }, [setIsOffline])
 
+
+  useEffectOnce(() => {
+    // alternative way to catch iframe load (error or success) - firefox doesn't work with onLoad
+    // attribute when src is unreachable. In Chrome DOMFrameContentLoaded doesn't fire, but it's ok
+    // because it's handled by onLoad
+    const handler = (event: Event) => {
+      if (!event?.target) {
+        return
+      }
+      const iframeSrc = (event.target as HTMLIFrameElement).src
+      if (iframeSrc === signInIframeUrl) {
+        if (hasIframeRendered.current === false) {
+          handleIframeLoad()
+        }
+      }
+    }
+    window.addEventListener("DOMFrameContentLoaded", handler)
+    return () => {
+      window.removeEventListener("DOMFrameContentLoaded", handler)
+    }
+  })
+
+
   // wait a litte bit before we start showing spinners, rendering offline stuff, etc.
   useEffectOnce(() => {
     const timeoutId = setTimeout(() => {
