@@ -141,7 +141,11 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={DefaultTheme}>
-      <NotificationsContainer />
+      {hasFetchDependencies && (
+        // this needs to render after dynamic css files are loaded, otherwise netdata-ui
+        // styling will have smaller priority than bootstrap css
+        <NotificationsContainer />
+      )}
       {chartsMetadata && cloudBaseURL && hasFetchedInfo && (
         <>
           {!isPrintMode && (
