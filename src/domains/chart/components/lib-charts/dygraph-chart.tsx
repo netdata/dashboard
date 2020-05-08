@@ -815,8 +815,11 @@ export const DygraphChart = ({
     if (dygraphInstance.current) {
       // dygraph always resizes on browser width change, but doesn't resize when the container
       // has different width.
-      // @ts-ignore
-      dygraphInstance.current.resize()
+      window.requestAnimationFrame(() => {
+        if (dygraphInstance.current) {
+          (dygraphInstance.current as NetdataDygraph).resize()
+        }
+      })
     }
   }, [spacePanelTransitionEndIsActive])
 
