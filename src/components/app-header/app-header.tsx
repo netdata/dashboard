@@ -35,11 +35,18 @@ import {
   StyledGearContainer,
   SignInButton,
   OfflineBlock,
+  SignInIframe,
 } from "./styled"
 import offlineBlock from "./offline-block.svg"
 
 const iframeTimeout = isDevelopmentEnv ? 3000 : 750
 const WAITING_FOR_HELLO_TIME = 500
+
+type HelloFromSignInPayload = {
+  dropdownHeight: string
+  dropdownWidth: string
+  hasActiveCookie: boolean
+}
 
 interface Props {
   cloudBaseURL: string
@@ -76,7 +83,7 @@ export const AppHeader = ({
   const origin = encodeURIComponent(
     alwaysEndWithSlash(window.location.origin + window.location.pathname),
   )
-  const iframeUrlSuffix = isCloudEnabled ? "" : "&disableCloud=true"
+  const iframeUrlSuffix = `${isCloudEnabled ? "" : "&disableCloud=true"}&logoutDropdown=true`
   const signInIframeUrl = getIframeSrc(
     cloudBaseURL,
     `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}${iframeUrlSuffix}`,
@@ -86,11 +93,15 @@ export const AppHeader = ({
   // eslint-disable-next-line max-len
   const signInLinkHref = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}&redirect_uri=${redirectURI}`
 
-  const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
+  const [helloFromSignIn] = useListenToPostMessage<HelloFromSignInPayload>("hello-from-sign-in")
   const helloFromSignInRef = useRef(helloFromSignIn)
   useEffect(() => {
     helloFromSignInRef.current = helloFromSignIn
   }, [helloFromSignIn])
+  const dropdownHeight = helloFromSignIn?.dropdownHeight
+  const dropdownWidth = helloFromSignIn?.dropdownWidth
+
+  const [isLogoutDropdownOpened] = useListenToPostMessage<boolean>("set-is-logout-dropdown-opened")
 
   const hasIframeRendered = useRef(false)
   const handleIframeLoad = useCallback(() => {
@@ -203,16 +214,13 @@ export const AppHeader = ({
           </StyledGearContainer>
         </IconContainer>
         <IframeContainer>
-          <iframe
+          <SignInIframe
             ref={signInIframeRef}
             title="Sign In"
             src={signInIframeUrl}
-            width="100%"
-            height="40px"
-            style={{
-              border: "none",
-              display: isSignedIn ? undefined : "none",
-            }}
+            width={isLogoutDropdownOpened ? dropdownWidth : "100%"}
+            height={isLogoutDropdownOpened ? dropdownHeight : "40px"}
+            isShown={isSignedIn}
             onLoad={handleIframeLoad}
           />
           {enoughWaitingForIframe && hasSignInHistory && isOffline && (
