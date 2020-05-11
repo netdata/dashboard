@@ -33,6 +33,7 @@ import {
   FetchDataForSnapshotPayload,
   fetchInfoAction,
   FetchInfoPayload,
+  fetchDataCancelAction,
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = isMainJs ? 30 : 60
@@ -49,7 +50,8 @@ export function* watchFetchDataResponseChannel() {
     // to absolute global-pan-and-zoom, cancel the store update
     // todo do xss check of data
     if (action.type === fetchDataAction.success.toString()) {
-      const { viewRange } = action.payload.fetchDataParams
+      const payload = (action.payload as FetchDataPayload)
+      const { viewRange } = payload.fetchDataParams
       const [start, end] = viewRange
       const globalPanAndZoom = (yield select(
         selectGlobalPanAndZoom,
@@ -58,6 +60,9 @@ export function* watchFetchDataResponseChannel() {
       if (globalPanAndZoom
         && (start <= 0 || end <= 0) // check if they are not timestamps
       ) {
+        yield put(fetchDataCancelAction({
+          id: payload.id,
+        }))
         // eslint-disable-next-line no-continue
         continue
       }
