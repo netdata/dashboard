@@ -12,6 +12,7 @@ import {
   fetchDataForSnapshotAction,
   setChartPanAndZoomAction,
   resetChartPanAndZoomAction,
+  fetchDataCancelAction,
 } from "./actions"
 import { ChartState } from "./chart-types"
 
@@ -54,6 +55,14 @@ chartReducer.on(fetchDataAction.request, (state, { chart, id }) => ({
     ...getSubstate(state, id),
     chartId: chart,
     isFetchingData: true,
+  },
+}))
+
+chartReducer.on(fetchDataCancelAction, (state, { id }) => ({
+  ...state,
+  [id]: {
+    ...getSubstate(state, id),
+    isFetchingData: false,
   },
 }))
 

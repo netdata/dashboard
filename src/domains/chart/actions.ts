@@ -50,6 +50,11 @@ export const fetchDataAction = createRequestAction<
 >(`${storeKey}/fetchDataAction`)
 
 
+export interface FetchDataCancelAction { id: string }
+export const fetchDataCancelAction = createAction<FetchDataCancelAction>(
+  `${storeKey}/fetchDataCancelAction`,
+)
+
 export interface FetchDataForSnapshotPayload extends FetchDataUrlParams {
   chartLibrary: string
   id: string
