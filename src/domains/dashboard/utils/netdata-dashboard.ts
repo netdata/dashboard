@@ -142,7 +142,7 @@ export const netdataDashboard = {
     if (typeof chart.menu_pattern !== "undefined") {
       return (`${this.anyAttribute(this.menu, "title", chart.menu_pattern, chart.menu_pattern)
         .toString()
-      }&nbsp;${chart.type.slice(-(chart.type.length - chart.menu_pattern.length - 1)).toString()}`)
+      } ${chart.type.slice(-(chart.type.length - chart.menu_pattern.length - 1)).toString()}`)
         .replace(/_/g, " ")
     }
 
