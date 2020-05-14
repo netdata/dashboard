@@ -209,14 +209,20 @@ export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
 function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const { serverDefault } = payload
   const helloCallUrl = `${serverDefault}api/v1/registry?action=hello`
-  const response: AxiosResponse<HelloResponse> = yield call(axiosInstance.get, helloCallUrl, {
-    headers: {
-      "Cache-Control": "no-cache, no-store",
-      Pragma: "no-cache",
-    },
-    withCredentials: true,
-  })
-  // todo xss
+  let response: AxiosResponse<HelloResponse>
+  try {
+    response = yield call(axiosInstance.get, helloCallUrl, {
+      headers: {
+        "Cache-Control": "no-cache, no-store",
+        Pragma: "no-cache",
+      },
+      withCredentials: true,
+    })
+  } catch (error) {
+    console.warn("error accessing registry or Do-Not-Track is enabled") // eslint-disable-line
+    yield put(fetchHelloAction.failure())
+    return
+  }
 
   const registryServer = response.data.registry
 

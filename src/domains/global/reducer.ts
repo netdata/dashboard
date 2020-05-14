@@ -30,6 +30,7 @@ import {
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
 } from "./options"
+import { CLOUD_BASE_URL_DISABLED } from "./constants"
 
 interface CommonMinMax {
   [commonKey: string]: {
@@ -77,6 +78,7 @@ export type StateT = {
   registry: {
     cloudBaseURL: string | null
     hasFetchedHello: boolean
+    isHelloCallError: boolean | null
     hasFetchedInfo: boolean
     hostname: string
     isCloudEnabled: boolean | null
@@ -124,6 +126,7 @@ export const initialState: StateT = {
     cloudBaseURL: null,
     hasFetchedInfo: false,
     hasFetchedHello: false,
+    isHelloCallError: null,
     hostname: "unknown",
     isCloudEnabled: null,
     isCloudAvailable: null,
@@ -381,6 +384,11 @@ globalReducer.on(fetchHelloAction.success, (state, {
 globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
   isFetchingHello: true,
+  registry: {
+    ...state.registry,
+    cloudBaseURL: CLOUD_BASE_URL_DISABLED,
+    isHelloCallError: true,
+  },
 }))
 
 globalReducer.on(resetRegistry, (state) => ({

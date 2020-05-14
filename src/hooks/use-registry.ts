@@ -10,7 +10,9 @@ export const useRegistry = (shouldUseRegistry: boolean) => {
 
   const dispatch = useDispatch()
   useEffect(() => {
-    if (shouldUseRegistry && !registry.isFetchingHello && !registry.hasFetchedHello) {
+    if (shouldUseRegistry && !registry.isFetchingHello && !registry.hasFetchedHello
+      && !registry.isHelloCallError
+    ) {
       dispatch(fetchHelloAction.request({
         serverDefault,
       }))
