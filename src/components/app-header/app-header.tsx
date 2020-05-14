@@ -17,6 +17,7 @@ import { SvgIcon } from "components/svg-icon"
 import { showSignInModalAction } from "domains/dashboard/actions"
 import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
 import { alwaysEndWithSlash } from "utils/server-detection"
+import { CLOUD_BASE_URL_DISABLED } from "domains/global/constants"
 
 import { PanelControl } from "./components/panel-control"
 import { NodeInfo } from "./components/node-info"
@@ -237,15 +238,17 @@ export const AppHeader = ({
           </StyledGearContainer>
         </IconContainer>
         <IframeContainer>
-          <SignInIframe
-            ref={signInIframeRef}
-            title="Sign In"
-            src={signInIframeUrl}
-            width={isLogoutDropdownOpened ? dropdownWidth : "100%"}
-            height={isLogoutDropdownOpened ? dropdownHeight : "40px"}
-            isShown={isSignedIn}
-            onLoad={handleIframeLoad}
-          />
+          {cloudBaseURL !== CLOUD_BASE_URL_DISABLED && (
+            <SignInIframe
+              ref={signInIframeRef}
+              title="Sign In"
+              src={signInIframeUrl}
+              width={isLogoutDropdownOpened ? dropdownWidth : "100%"}
+              height={isLogoutDropdownOpened ? dropdownHeight : "40px"}
+              isShown={isSignedIn}
+              onLoad={handleIframeLoad}
+            />
+          )}
           {enoughWaitingForIframe && hasSignInHistory && isOffline && (
             <OfflineBlock>
               <SvgIcon icon={offlineBlock} height={40} />
