@@ -19,7 +19,10 @@ import * as S from "./styled"
 import noNetwork from "./no-network.svg"
 
 const getStreamedNodes = (chartsMetadata: ChartsMetadata) => {
-  let base = document.location.origin.toString() + document.location.pathname.toString()
+  // decodeURI, because pathname (which is hostname) can contain white-spaces
+  // or other characters which are URIencoded when user clicks the link
+  // and we need to match it with `chartsMetadata.hostname`
+  let base = document.location.origin.toString() + decodeURI(document.location.pathname.toString())
   if (base.endsWith(`/host/${chartsMetadata.hostname}/`)) {
     base = base.substring(0, base.length - (`/host/${chartsMetadata.hostname}/`).toString().length)
   }
