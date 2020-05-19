@@ -33,7 +33,7 @@ const getStreamedNodes = (chartsMetadata: ChartsMetadata) => {
 
   const masterNodeName = chartsMetadata.hosts[0].hostname
   const masterNodeUrl = `${base}/`
-  const getUrl = (hostname: string) => `${base}/host/${hostname}`
+  const getUrl = (hostname: string) => `${base}/host/${hostname}/`
   const streamedHosts = chartsMetadata.hosts.slice(1)
     .sort((a, b) => naturalSortCompare(a.hostname, b.hostname))
     .map(({ hostname }) => ({ hostname, url: getUrl(hostname) }))
