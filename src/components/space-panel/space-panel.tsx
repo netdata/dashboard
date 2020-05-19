@@ -86,7 +86,9 @@ export const SpacePanel = ({
             <S.ScrollContainer>
               {hasStreamedHosts && (
                 <S.PanelSection leading>
-                  <ReplicatedNodes chartsMetadata={chartsMetadata} />
+                  <ReplicatedNodes
+                    streamedHostsData={streamedHostsData}
+                  />
                 </S.PanelSection>
               )}
               {(machinesArray.length > 0) && (
