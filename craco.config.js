@@ -1,7 +1,11 @@
+const path = require("path")
+
 // eslint-disable-next-line import/no-extraneous-dependencies
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 
-const { HTML_FILE_NAME } = process.env
+const { APP_NAME, HTML_FILE_NAME } = process.env
+
+const appFileName = APP_NAME || "App.tsx"
 
 module.exports = {
   babel: {
@@ -41,6 +45,7 @@ module.exports = {
             ...rules,
           ],
         },
+
         plugins: HTML_FILE_NAME
           ? webpackConfig.plugins.map((plugin) => {
             if (plugin.constructor.name === "HtmlWebpackPlugin") {
@@ -71,6 +76,14 @@ module.exports = {
             return plugin
           })
           : webpackConfig.plugins,
+
+        resolve: {
+          ...webpackConfig.resolve,
+          alias: {
+            ...webpackConfig.resolve.alias,
+            App: path.resolve(__dirname, `src/${appFileName}`),
+          },
+        },
       }
     },
   },
