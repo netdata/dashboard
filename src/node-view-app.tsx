@@ -9,7 +9,6 @@ import "./dashboard-react"
 import "./types/global"
 import { NodeView } from "domains/dashboard/components/node-view"
 
-import chartsMetadata from "domains/dashboard/__mocks__/charts.mock"
 import { ChartsMetadata } from "domains/global/types"
 
 import { axiosInstance } from "utils/api"
@@ -60,7 +59,7 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
 
   return (
     <div className="App" style={AppStyle}>
-      {chartsMetadata && realMetadata && (
+      {realMetadata && (
         <NodeView
           chartsMetadata={realMetadata as unknown as ChartsMetadata}
           currentChart={currentRoute}
