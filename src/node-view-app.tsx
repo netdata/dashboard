@@ -43,6 +43,8 @@ if (window.netdataPrepCallback) {
 
 const getCurrentRouteFromHash = () => document.location.hash.split(";")[0].replace("#", "")
 
+const AppStyle = { height: "100vh" }
+
 const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   const [realMetadata, setRealMetadata] = useState()
   useEffect(() => {
@@ -57,7 +59,7 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   const [currentRoute, setCurrentRoute] = useState(getCurrentRouteFromHash)
 
   return (
-    <div className="App" style={{ height: "100vh" }}>
+    <div className="App" style={AppStyle}>
       {chartsMetadata && realMetadata && (
         <NodeView
           chartsMetadata={realMetadata as unknown as ChartsMetadata}
