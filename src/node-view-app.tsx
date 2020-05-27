@@ -54,7 +54,7 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
       })
   }, [])
 
-  const [currentRoute, setCurrentRoute] = useState(() => getCurrentRouteFromHash())
+  const [currentRoute, setCurrentRoute] = useState(getCurrentRouteFromHash)
 
   return (
     <div className="App" style={{ height: "100vh" }}>
