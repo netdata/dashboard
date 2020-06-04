@@ -1905,7 +1905,14 @@ function renderPage(menus, data) {
           '<a href="https://docs.netdata.cloud/docs/configuration-guide/#increase-the-metrics-retention-period" target=_blank>configuring Netdata\'s <strong>history</strong></a> or using the <a href="https://docs.netdata.cloud/database/engine/" target=_blank>DB engine.</a>'
     }
 
-    sidebar += '<br/>&nbsp;<br/><strong>netdata</strong><br/>' + data.version.toString() + '</small></li>';
+    sidebar += '<br/>&nbsp;<br/><strong>netdata</strong><br/>' + data.version.toString() + '</small>';
+
+    sidebar += '<div class="terms-and-privacy">'
+        sidebar += '<a href="https://www.netdata.cloud/terms/" target="_blank">Terms and conditions</a><br/>'
+        sidebar += '<a href="https://www.netdata.cloud/privacy/" target="_blank">Privacy Policy</a><br/>'
+    sidebar += '</div>'
+
+    sidebar += '</li>'
 
     sidebar += '</ul>';
     div.innerHTML = html;
@@ -3362,10 +3369,10 @@ window.loadSnapshot = () => {
 
             tmpSnapshotData.uncompress = snapshotOptions.compressions[tmpSnapshotData.compression].uncompress;
 
+            window.NETDATA.parseDom()
             reduxStore.dispatch(loadSnapshotAction({
                 snapshot: tmpSnapshotData,
             }))
-            window.NETDATA.parseDom()
 
             window.netdataSnapshotData = tmpSnapshotData;
 
@@ -4186,14 +4193,6 @@ function runOnceOnDashboardWithjQuery() {
     // ------------------------------------------------------------------------
     // sidebar / affix
 
-    if (shouldShowSignInBanner()) {
-        const el = document.getElementById("sign-in-banner");
-        if (el) {
-            el.style.display = "initial";
-            el.classList.add(`theme-${netdataTheme}`);
-        }
-    }
-
     $('#sidebar')
         .affix({
             offset: {
@@ -4873,17 +4872,6 @@ function shouldShowSignInBanner() {
     return localStorage.getItem("signInBannerClosed") != "true";
 }
 
-function closeSignInBanner() {
-    localStorage.setItem("signInBannerClosed", "true");
-    const el = document.getElementById("sign-in-banner");
-    if (el) {
-        el.style.display = "none";
-    }
-}
-
-window.closeSignInBannerDidClick = () => {
-    closeSignInBanner();
-}
 
 window.signOutDidClick = (e) => {
     e.preventDefault();
@@ -5007,7 +4995,6 @@ function handleMessage(e) {
 }
 
 function handleSignInMessage(e) {
-    closeSignInBanner();
     localStorage.setItem("cloud.baseURL", getFromRegistry("cloudBaseURL"));
 
     cloudAccountID = e.data.accountID;
@@ -5074,8 +5061,8 @@ window.showSignInModal = function() {
 
 window.explicitlySignIn = () => {
     $("#signInModal").modal("hide");
-    // reduxStore.dispatch(explicitlySignInAction())
-    signIn();
+    reduxStore.dispatch(explicitlySignInAction())
+    // signIn();
 };
 
 window.showSyncModal = () => {
@@ -5136,6 +5123,7 @@ function syncAgents(callback) {
 let isCloudSSOInitialized = false;
 
 function cloudSSOInit() {
+    return;
     const iframeEl = document.getElementById("ssoifrm");
     const cloudBaseURL = getFromRegistry("cloudBaseURL")
     const machineGuid = getFromRegistry("machineGuid")

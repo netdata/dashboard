@@ -75,8 +75,8 @@ const SubSection = memo(({
   )
 })
 
-const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as string).startsWith("menu")
-  && node.getBoundingClientRect().top > 0
+const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as string)
+  .startsWith("menu") && node.getBoundingClientRect().top > 0
 
 interface Props {
   chartsMetadata: ChartsMetadata

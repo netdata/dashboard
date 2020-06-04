@@ -6,3 +6,5 @@ export const isTimestamp = (x: number) => x > 0
 export const NETDATA_REGISTRY_SERVER = "https://registry.my-netdata.io"
 
 export const MS_IN_SECOND = 1000
+
+export const getIframeSrc = (cloudBaseURL: string, path: string) => `${cloudBaseURL}/sso/${path}`

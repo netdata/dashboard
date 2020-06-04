@@ -1,4 +1,4 @@
-import { takeEvery } from "redux-saga/effects"
+import { take, takeEvery } from "redux-saga/effects"
 import { Action } from "redux-act"
 
 import {
@@ -9,6 +9,11 @@ import {
   SetGlobalPanAndZoomAction,
   setGlobalPanAndZoomAction,
 } from "domains/global/actions"
+import {
+  explicitlySignInAction, showSignInModalAction, ShowSignInModalAction,
+} from "domains/dashboard/actions"
+
+export const LOCAL_STORAGE_NEEDS_SYNC = "LOCAL-STORAGE-NEEDS-SYNC"
 
 function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>) {
   if (window.urlOptions) {
@@ -43,9 +48,21 @@ function clearHighlightSaga() {
   }
 }
 
+function* showSignInSaga({ payload }: Action<ShowSignInModalAction>) {
+  if (window.showSignInModal) {
+    window.showSignInModal()
+
+    yield take(explicitlySignInAction)
+    const { signInLinkHref } = payload
+    window.localStorage.setItem(LOCAL_STORAGE_NEEDS_SYNC, "true")
+    window.location.href = signInLinkHref
+  }
+}
+
 export function* mainJsSagas() {
   yield takeEvery(setGlobalPanAndZoomAction, setGlobalPanAndZoomSaga)
   yield takeEvery(resetGlobalPanAndZoomAction, resetGlobalPanAndZoomSaga)
   yield takeEvery(setGlobalChartUnderlayAction, setGlobalChartUnderlaySaga)
   yield takeEvery(clearHighlightAction, clearHighlightSaga)
+  yield takeEvery(showSignInModalAction, showSignInSaga)
 }

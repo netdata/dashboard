@@ -1,10 +1,6 @@
-import {
-  cond, always, T,
-} from "ramda"
+import { cond, always, T } from "ramda"
 import axios from "axios"
-import React, {
-  useEffect, useState, useMemo,
-} from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { useThrottle, useUpdateEffect, useUnmount } from "react-use"
 
 import { AppStateT } from "store/app-state"
@@ -16,6 +12,7 @@ import {
   selectShouldEliminateZeroDimensions,
   selectPanAndZoomDataPadding,
   selectSnapshot,
+  selectSpacePanelTransitionEndIsActive,
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
@@ -33,6 +30,7 @@ import {
   selectChartFetchDataParams,
   makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
+  selectChartIsFetchingData,
 } from "../selectors"
 import {
   ChartData,
@@ -45,7 +43,6 @@ import {
 import { Loader } from "./loader"
 import { Chart } from "./chart"
 import "./chart-with-loader.css"
-
 
 export type Props = {
   attributes: Attributes
@@ -72,14 +69,15 @@ export const ChartWithLoader = ({
   const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
-      dispatch(fetchChartAction.request({
-        chart: attributes.id,
-        id: chartUuid,
-        host,
-      }))
+      dispatch(
+        fetchChartAction.request({
+          chart: attributes.id,
+          id: chartUuid,
+          host,
+        }),
+      )
     }
-  },
-  [
+  }, [
     attributes.id,
     chartUuid,
     dispatch,
@@ -88,7 +86,6 @@ export const ChartWithLoader = ({
     chartMetadata,
     externalChartMetadata,
   ])
-
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
@@ -112,6 +109,10 @@ export const ChartWithLoader = ({
     state, { id: chartUuid },
   ))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
+  const isFetchingData = useSelector((state: AppStateT) => selectChartIsFetchingData(
+    state,
+    { id: chartUuid },
+  ))
 
   const hoveredX = useSelector(selectGlobalSelection)
 
@@ -142,7 +143,6 @@ export const ChartWithLoader = ({
     setShouldFetch(true)
   }, [attributes.after, attributes.before])
 
-
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
     before: initialBefore = window.NETDATA.chartDefaults.before,
@@ -153,8 +153,9 @@ export const ChartWithLoader = ({
 
   // todo optimize by using resizeObserver (optionally)
   const boundingClientRect = portalNode.getBoundingClientRect()
-  const chartWidth = boundingClientRect.width
-    - (hasLegend(attributes) ? 140 : 0) // from old dashboard
+
+  // from old dashboard
+  const chartWidth = boundingClientRect.width - (hasLegend(attributes) ? 140 : 0)
   const chartHeight = boundingClientRect.height
 
   const isShowingSnapshot = Boolean(useSelector(selectSnapshot))
@@ -173,7 +174,7 @@ export const ChartWithLoader = ({
    * fetch data
    */
   useEffect(() => {
-    if (shouldFetch && actualChartMetadata) {
+    if (shouldFetch && actualChartMetadata && !isFetchingData) {
       // todo can be overriden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
@@ -207,48 +208,71 @@ export const ChartWithLoader = ({
         pointsMultiplier = 1
       }
 
-      viewRange = ((viewRange || [after, before]).map((x) => x * 1000)) as [number, number]
+      viewRange = (viewRange || [after, before]).map((x) => x * 1000) as [number, number]
 
       const dataPoints = attributes.points
-        || (Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings })))
-      const points = forceDataPoints || (dataPoints * pointsMultiplier)
+        || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
+      const points = forceDataPoints || dataPoints * pointsMultiplier
 
       const group = attributes.method || window.NETDATA.chartDefaults.method
 
       setShouldFetch(false)
-      dispatch(fetchDataAction.request({
-        // properties to be passed to API
-        host,
-        chart: actualChartMetadata.id,
-        format: chartSettings.format,
-        points,
-        group,
-        gtime: attributes.gtime || 0,
-        options: getChartURLOptions(attributes, shouldEliminateZeroDimensions),
-        after: after || null,
-        before: before || null,
-        dimensions: attributes.dimensions,
+      dispatch(
+        fetchDataAction.request({
+          // properties to be passed to API
+          host,
+          chart: actualChartMetadata.id,
+          format: chartSettings.format,
+          points,
+          group,
+          gtime: attributes.gtime || 0,
+          options: getChartURLOptions(attributes, shouldEliminateZeroDimensions),
+          after: after || null,
+          before: before || null,
+          dimensions: attributes.dimensions,
 
-        // properties for the reducer
-        fetchDataParams: {
-          // we store it here so it is only available when data is fetched
-          // those params should be synced with data
-          isRemotelyControlled,
-          viewRange,
-        },
-        id: chartUuid,
-        cancelTokenSource,
-      }))
+          // properties for the reducer
+          fetchDataParams: {
+            // we store it here so it is only available when data is fetched
+            // those params should be synced with data
+            isRemotelyControlled,
+            viewRange,
+          },
+          id: chartUuid,
+          cancelTokenSource,
+        }),
+      )
     }
-  }, [attributes, actualChartMetadata, chartSettings, chartUuid, chartWidth, dispatch,
-    hasLegend, host, initialAfter, initialBefore, isPanAndZoomMaster,
-    isRemotelyControlled, panAndZoom, portalNode, setShouldFetch, shouldEliminateZeroDimensions,
-    shouldUsePanAndZoomPadding, shouldFetch, cancelTokenSource])
+  }, [
+    attributes,
+    actualChartMetadata,
+    chartSettings,
+    chartUuid,
+    chartWidth,
+    dispatch,
+    hasLegend,
+    host,
+    initialAfter,
+    initialBefore,
+    isFetchingData,
+    isPanAndZoomMaster,
+    isRemotelyControlled,
+    panAndZoom,
+    portalNode,
+    setShouldFetch,
+    shouldEliminateZeroDimensions,
+    shouldUsePanAndZoomPadding,
+    shouldFetch,
+    cancelTokenSource,
+  ])
+
+  useSelector(selectSpacePanelTransitionEndIsActive)
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
-  const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result.data?.length === 0
-    || (chartData as EasyPieChartData | null)?.result.length === 0
+  // eslint-disable-next-line max-len
+  const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
+    || (chartData as EasyPieChartData | null)?.result?.length === 0
 
   if (!chartData || !actualChartMetadata) {
     return (
@@ -265,11 +289,7 @@ export const ChartWithLoader = ({
   return (
     <>
       {hasEmptyData && (
-        <Loader
-          key={`${hasEmptyData}`}
-          hasEmptyData={hasEmptyData}
-          containerNode={portalNode}
-        />
+        <Loader key={`${hasEmptyData}`} hasEmptyData={hasEmptyData} containerNode={portalNode} />
       )}
       <Chart
         attributes={attributes}

@@ -9,19 +9,21 @@ import {
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { Action } from "redux-act"
-import { toast } from "react-toastify"
 
 import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
 
+import {
+  showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
+} from "components/notifications"
 import { selectGlobalPanAndZoom, selectSnapshot, selectRegistry } from "domains/global/selectors"
 import { StateT as GlobalStateT } from "domains/global/reducer"
 import { stopSnapshotModeAction } from "domains/dashboard/actions"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
+import { INFO_POLLING_FREQUENCY } from "domains/global/constants"
 
-import { INFO_POLLING_FREQUENCY, NOTIFICATIONS_TIMEOUT } from "domains/global/constants"
 import {
   fetchDataAction,
   FetchDataPayload,
@@ -31,6 +33,7 @@ import {
   FetchDataForSnapshotPayload,
   fetchInfoAction,
   FetchInfoPayload,
+  fetchDataCancelAction,
 } from "./actions"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = isMainJs ? 30 : 60
@@ -47,7 +50,8 @@ export function* watchFetchDataResponseChannel() {
     // to absolute global-pan-and-zoom, cancel the store update
     // todo do xss check of data
     if (action.type === fetchDataAction.success.toString()) {
-      const { viewRange } = action.payload.fetchDataParams
+      const payload = (action.payload as FetchDataPayload)
+      const { viewRange } = payload.fetchDataParams
       const [start, end] = viewRange
       const globalPanAndZoom = (yield select(
         selectGlobalPanAndZoom,
@@ -56,6 +60,9 @@ export function* watchFetchDataResponseChannel() {
       if (globalPanAndZoom
         && (start <= 0 || end <= 0) // check if they are not timestamps
       ) {
+        yield put(fetchDataCancelAction({
+          id: payload.id,
+        }))
         // eslint-disable-next-line no-continue
         continue
       }
@@ -252,9 +259,9 @@ function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
   let isACLKAvailable = false
 
   try {
-    const registry = yield select(selectRegistry)
-    const wasCloudAvailable = registry?.isCloudAvailable || false
-    const wasACLKAvailable = registry?.isACLKAvailable || false
+    const registry: GlobalStateT["registry"] = yield select(selectRegistry)
+    const wasCloudAvailable = registry?.isCloudAvailable
+    const wasACLKAvailable = registry?.isACLKAvailable
 
     const { data } = yield call(axiosInstance.get, `${serverDefault}/api/v1/info`)
     isCloudAvailable = data?.["cloud-available"] || false
@@ -266,19 +273,13 @@ function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
       isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable,
     }))
 
-    if (isCloudEnabled && wasCloudAvailable && !isCloudAvailable) {
-      toast.error("Cloud Installation Problem!", {
-        position: "bottom-right",
-        type: toast.TYPE.ERROR,
-        autoClose: NOTIFICATIONS_TIMEOUT,
-      })
+    if (isCloudEnabled && (wasCloudAvailable === null) && !isCloudAvailable) {
+      // show only once per session
+      showCloudInstallationProblemNotification()
     }
-    if (isCloudAvailable && isAgentClaimed && wasACLKAvailable && !isACLKAvailable) {
-      toast.error("Cloud Connection Problem!", {
-        position: "bottom-right",
-        type: toast.TYPE.ERROR,
-        autoClose: NOTIFICATIONS_TIMEOUT,
-      })
+    if (isCloudAvailable && isAgentClaimed && (wasACLKAvailable !== false) && !isACLKAvailable) {
+      // show at session-init and if we see a change of isACLKAvailable from true to false
+      showCloudConnectionProblemNotification()
     }
     // TODO: No success notification spec`ed?
     // else if (!wasACLKAvailable && isACLKAvailable) {

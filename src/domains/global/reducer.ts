@@ -23,11 +23,14 @@ import {
   setCommonMaxAction,
   setCommonMinAction,
   resetOptionsAction,
+  setSpacePanelStatusAction,
+  setSpacePanelTransitionEndAction,
   resetRegistry,
 } from "./actions"
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
 } from "./options"
+import { CLOUD_BASE_URL_DISABLED } from "./constants"
 
 interface CommonMinMax {
   [commonKey: string]: {
@@ -40,8 +43,10 @@ interface CommonMinMax {
 
 export type StateT = {
   commonColorsKeys: {
-    [key: string]: { // key can be uuid, chart's context or commonColors attribute
-      assigned: { // name-value of dimensions and their colors
+    [key: string]: {
+      // key can be uuid, chart's context or commonColors attribute
+      assigned: {
+        // name-value of dimensions and their colors
         [dimensionName: string]: string
       }
       available: string[] // an array of colors available to be used
@@ -67,14 +72,19 @@ export type StateT = {
   hoveredX: number | null
   hasWindowFocus: boolean
 
+  spacePanelIsActive: boolean
+  spacePanelTransitionEndIsActive: boolean
+
   registry: {
     cloudBaseURL: string | null
     hasFetchedHello: boolean
+    isHelloCallError: boolean | null
+    hasFetchedInfo: boolean
     hostname: string
-    isCloudEnabled: boolean
-    isCloudAvailable: boolean
-    isAgentClaimed: boolean
-    isACLKAvailable: boolean
+    isCloudEnabled: boolean | null
+    isCloudAvailable: boolean | null
+    isAgentClaimed: boolean | null
+    isACLKAvailable: boolean | null
     hasStartedInfo: boolean
     isFetchingHello: boolean
     machineGuid: string | null
@@ -108,15 +118,20 @@ export const initialState: StateT = {
   globalChartUnderlay: null,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
+  spacePanelIsActive: false, // set to true only for testing layout
+  // the same as property above, just updated after transition ends
+  spacePanelTransitionEndIsActive: false,
 
   registry: {
     cloudBaseURL: null,
+    hasFetchedInfo: false,
     hasFetchedHello: false,
+    isHelloCallError: null,
     hostname: "unknown",
-    isCloudEnabled: false,
-    isCloudAvailable: false,
-    isAgentClaimed: false,
-    isACLKAvailable: false,
+    isCloudEnabled: null,
+    isCloudAvailable: null,
+    isAgentClaimed: null,
+    isACLKAvailable: null,
     hasStartedInfo: false,
     isFetchingHello: false,
     machineGuid: null,
@@ -141,17 +156,13 @@ export const initialState: StateT = {
   options: optionsMergedWithLocalStorage,
 }
 
-export const globalReducer = createReducer<StateT>(
-  {},
-  initialState,
-)
-
+export const globalReducer = createReducer<StateT>({}, initialState)
 
 export interface GetKeyArguments {
-  colorsAttribute: string | undefined,
-  commonColorsAttribute: string | undefined,
-  chartUuid: string,
-  chartContext: string,
+  colorsAttribute: string | undefined
+  commonColorsAttribute: string | undefined
+  chartUuid: string
+  chartContext: string
 }
 export const getKeyForCommonColorsState = ({
   colorsAttribute,
@@ -164,8 +175,7 @@ export const getKeyForCommonColorsState = ({
   // when there's commonColors attribute, share the state between all charts with that attribute
   // if not, when there are custom colors, make each chart independent
   // if not, share the same state between charts with the same context
-  return commonColorsAttribute
-    || (hasCustomColors ? chartUuid : chartContext)
+  return commonColorsAttribute || (hasCustomColors ? chartUuid : chartContext)
 }
 
 const hasLastOnly = (array: string[]) => last(array) === "ONLY"
@@ -174,19 +184,14 @@ const createCommonColorsKeysSubstate = (
   colorsAttribute: string | undefined,
   hasCustomColors: boolean,
 ) => {
-  const custom = hasCustomColors
-    ? removeLastOnly(
-      (colorsAttribute as string)
-        .split(" "),
-    )
-    : []
+  const custom = hasCustomColors ? removeLastOnly((colorsAttribute as string).split(" ")) : []
   const shouldCopyTheme = hasCustomColors
     // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
     ? !hasLastOnly((colorsAttribute as string).split(" "))
     : true
   const available = [
     ...custom,
-    ...(shouldCopyTheme || custom.length === 0) ? window.NETDATA.themes.current.colors : [],
+    ...(shouldCopyTheme || custom.length === 0 ? window.NETDATA.themes.current.colors : []),
   ]
   return {
     assigned: {},
@@ -195,46 +200,49 @@ const createCommonColorsKeysSubstate = (
   }
 }
 
-globalReducer.on(requestCommonColorsAction, (state, {
-  chartContext,
-  chartUuid,
-  colorsAttribute,
-  commonColorsAttribute,
-  dimensionNames,
-}) => {
-  const keyName = getKeyForCommonColorsState({
-    colorsAttribute, commonColorsAttribute, chartUuid, chartContext,
-  })
+globalReducer.on(
+  requestCommonColorsAction,
+  (state, {
+    chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames,
+  }) => {
+    const keyName = getKeyForCommonColorsState({
+      colorsAttribute,
+      commonColorsAttribute,
+      chartUuid,
+      chartContext,
+    })
 
-  const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
-  const subState = state.commonColorsKeys[keyName]
-    || createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
+    const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
+    const subState = state.commonColorsKeys[keyName]
+      || createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
 
-  const currentlyAssignedNr = Object.keys(subState.assigned).length
-  const requestedDimensionsAssigned = mergeAll(
-    dimensionNames
-      // dont assign already assigned dimensions
-      .filter((dimensionName) => !subState.assigned[dimensionName])
-      .map((dimensionName, i) => ({
-        [dimensionName]: subState.available[(i + currentlyAssignedNr) % subState.available.length],
-      })),
-  )
-  const assigned = {
-    ...subState.assigned,
-    ...requestedDimensionsAssigned,
-  }
+    const currentlyAssignedNr = Object.keys(subState.assigned).length
+    const requestedDimensionsAssigned = mergeAll(
+      dimensionNames
+        // dont assign already assigned dimensions
+        .filter((dimensionName) => !subState.assigned[dimensionName])
+        .map((dimensionName, i) => ({
+          [dimensionName]:
+            subState.available[(i + currentlyAssignedNr) % subState.available.length],
+        })),
+    )
+    const assigned = {
+      ...subState.assigned,
+      ...requestedDimensionsAssigned,
+    }
 
-  return {
-    ...state,
-    commonColorsKeys: {
-      ...state.commonColorsKeys,
-      [keyName]: {
-        ...subState,
-        assigned,
+    return {
+      ...state,
+      commonColorsKeys: {
+        ...state.commonColorsKeys,
+        [keyName]: {
+          ...subState,
+          assigned,
+        },
       },
-    },
-  }
-})
+    }
+  },
+)
 
 
 globalReducer.on(setCommonMinAction, (state, { chartUuid, commonMinKey, value }) => {
@@ -275,23 +283,36 @@ globalReducer.on(setCommonMaxAction, (state, { chartUuid, commonMaxKey, value })
   }
 })
 
+globalReducer.on(setSpacePanelStatusAction, (state, { isActive }) => ({
+  ...state,
+  spacePanelIsActive: isActive,
+}))
+
+globalReducer.on(setSpacePanelTransitionEndAction, (state, { isActive }) => ({
+  ...state,
+  spacePanelTransitionEndIsActive: isActive,
+}))
+
 globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => ({
   ...state,
   hoveredX,
   currentSelectionMasterId: chartUuid,
 }))
 
-globalReducer.on(setGlobalPanAndZoomAction, (state, {
-  after, before, masterID, shouldForceTimeRange,
-}) => ({
-  ...state,
-  globalPanAndZoom: {
-    after,
-    before,
-    masterID,
-    shouldForceTimeRange,
-  },
-}))
+globalReducer.on(
+  setGlobalPanAndZoomAction,
+  (state, {
+    after, before, masterID, shouldForceTimeRange,
+  }) => ({
+    ...state,
+    globalPanAndZoom: {
+      after,
+      before,
+      masterID,
+      shouldForceTimeRange,
+    },
+  }),
+)
 
 globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
   ...state,
@@ -331,11 +352,15 @@ globalReducer.on(clearHighlightAction, (state) => ({
   globalPanAndZoom: initialState.globalPanAndZoom,
 }))
 
-globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => ({
-  ...state,
-  hasWindowFocus,
-}))
-
+globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
+  // make additional check, because it's possible to get hasWindowFocus === false
+  // message from iframe, after main window makes the state change (race condition)
+  const hasFocusNow = document.hasFocus()
+  return {
+    ...state,
+    hasWindowFocus: hasFocusNow || hasWindowFocus,
+  }
+})
 
 globalReducer.on(fetchHelloAction.request, (state) => ({
   ...state,
@@ -343,7 +368,7 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
 }))
 
 globalReducer.on(fetchHelloAction.success, (state, {
-  cloudBaseURL, hostname, isCloudEnabled, machineGuid, registryServer,
+  cloudBaseURL, hostname, machineGuid, registryServer,
 }) => ({
   ...state,
   isFetchingHello: false,
@@ -352,7 +377,6 @@ globalReducer.on(fetchHelloAction.success, (state, {
     cloudBaseURL,
     hasFetchedHello: true,
     hostname,
-    isCloudEnabled,
     machineGuid,
     registryServer,
   },
@@ -360,6 +384,11 @@ globalReducer.on(fetchHelloAction.success, (state, {
 globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
   isFetchingHello: true,
+  registry: {
+    ...state.registry,
+    cloudBaseURL: CLOUD_BASE_URL_DISABLED,
+    isHelloCallError: true,
+  },
 }))
 
 globalReducer.on(resetRegistry, (state) => ({
@@ -383,6 +412,7 @@ globalReducer.on(fetchInfoAction.success, (state, {
   ...state,
   registry: {
     ...state.registry,
+    hasFetchedInfo: true,
     isCloudAvailable,
     isCloudEnabled,
     isAgentClaimed,
@@ -486,7 +516,7 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
         return {}
       }
 
-      return ({ [dataKey]: data })
+      return { [dataKey]: data }
     })
     .reduce((acc, obj) => ({ ...acc, ...obj }), {})
 

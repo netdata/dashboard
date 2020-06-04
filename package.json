@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "0.4.18",
+  "version": "0.4.22",
   "main": "./lib/src/index-npm.js",
   "homepage": ".",
   "files": [
@@ -9,9 +9,15 @@
   "private": false,
   "peerDependencies": {
     "react": "~16.12.0",
-    "react-dom": "~16.12.0"
+    "react-dom": "~16.12.0",
+    "styled-components": "^5.0.1"
   },
   "dependencies": {
+    "@material/list": "^4.0.0",
+    "@netdata/netdata-ui": "^0.7.18",
+    "@rmwc/icon": "^5.7.2",
+    "@rmwc/list": "^5.7.2",
+    "@rmwc/tooltip": "^5.7.2",
     "axios": "^0.19.0",
     "bootstrap": "^3.4.1",
     "bootstrap-slider": "^10.6.2",
@@ -35,6 +41,7 @@
     "ramda-adjunct": "^2.24.0",
     "react-redux": "^7.1.1",
     "react-scripts": "^3.3.0",
+    "react-toastify": "^5.5.0",
     "react-use": "^12.5.0",
     "redux": "^4.0.4",
     "redux-act": "^1.7.7",
@@ -42,11 +49,12 @@
     "reselect": "^4.0.0",
     "rxjs": "^6.5.4",
     "tableexport.jquery.plugin": "^1.6.7",
+    "typeface-ibm-plex-sans": "0.0.75",
     "typescript": "^3.7.3",
-    "uuid": "^3.4.0",
-    "react-toastify": "^5.5.0"
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@craco/craco": "^5.6.3",
     "@testing-library/jest-dom": "^4.1.0",
     "@testing-library/react": "^9.2.0",
     "@types/bootstrap": "^3",
@@ -63,23 +71,29 @@
     "@types/react-dom": "16.9.0",
     "@types/react-redux": "^7.1.2",
     "@types/redux-saga": "^0.10.5",
+    "@types/styled-components": "^4.4.3",
     "@types/uuid": "^3.4.7",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
+    "babel-plugin-styled-components": "^1.10.7",
     "canvas": "^2.6.0",
     "cpx": "^1.5.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-react-hooks": "^2.0.1",
     "install-peers-cli": "^2.2.0",
     "jest-environment-jsdom-fourteen": "^0.1.0",
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.13.0",
+    "svg-sprite-loader": "^4.2.1",
+    "svgo": "^1.3.2",
+    "svgo-loader": "^2.2.1"
   },
   "scripts": {
-    "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts start",
+    "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco start",
     "start:console": "cp ../console.html public/index.html && npm run start",
+    "start:node-view": "APP_NAME='node-view-app.tsx' HTML_FILE_NAME='index-node-view.html' npm run start",
     "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && npm run start",
     "start:dashboard": "REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
-    "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts build",
+    "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco build",
     "test": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts test --env=jest-environment-jsdom-fourteen --watchAll=false",
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
     "clean": "./node_modules/rimraf/bin.js ./lib",

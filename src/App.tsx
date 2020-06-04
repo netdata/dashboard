@@ -1,9 +1,9 @@
 import React, {
-  useEffect, useLayoutEffect, useRef, useState,
+  useEffect, useLayoutEffect, useRef, useState, useCallback,
 } from "react"
 import Ps from "perfect-scrollbar"
-import { ToastContainer } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { ThemeProvider } from "styled-components"
+import { DefaultTheme } from "@netdata/netdata-ui"
 
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
@@ -15,17 +15,29 @@ import "bootstrap-toggle"
 import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { useStore } from "react-redux"
+import "typeface-ibm-plex-sans"
+
+import "styles/fonts.css"
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
+import { useListenToPostMessage } from "utils/post-message"
+import { useSelector } from "store/redux-separate-context"
+import { selectCloudBaseUrl, selectHasFetchedInfo, selectSignInUrl } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
+import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { useRegistry } from "hooks/use-registry"
+import { useListenToFocusMessages } from "hooks/use-listen-to-focus-messages"
 import { useAlarms } from "hooks/use-alarms"
+import { AppHeader } from "components/app-header"
+import { SpacesBar } from "components/spaces-bar"
+import { SpacePanel } from "components/space-panel"
+import { NotificationsContainer } from "components/notifications-container"
 
 import "./types/global"
 
-// import { useInfo } from "hooks/use-info"
+import { useInfo } from "hooks/use-info"
 import { serverStatic } from "utils/server-detection"
 import {
   netdataCallback,
@@ -40,7 +52,9 @@ if (!window.netdataNoFontAwesome) {
 // support legacy code
 window.Ps = Ps
 
-const App: React.FC = () => { // eslint-disable-line arrow-body-style
+const HAS_SIGN_IN_HISTORY = "has-sign-in-history"
+
+const App: React.FC = () => {
   const store = useStore()
   useEffect(() => {
     // todo
@@ -80,7 +94,7 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
 
   useRegistry(true)
   useAlarms(true)
-  // useInfo(true)
+  useInfo(true)
 
   const [hasFetchDependencies, setHasFetchDependencies] = useState(false)
   useLayoutEffect(() => {
@@ -92,19 +106,87 @@ const App: React.FC = () => { // eslint-disable-line arrow-body-style
     })
   }, [])
 
+  const chartsMetadata = useChartsMetadata()
+  const cloudBaseURL = useSelector(selectCloudBaseUrl)
+
   // @ts-ignore
   window.NETDATA.parseDom = parseDom.current
 
+  const [hasSignInHistory, setHasSignInHistory] = useState(
+    localStorage.getItem(HAS_SIGN_IN_HISTORY) === "true",
+  )
+  const isSignedInCallback = useCallback((newIsSignedIn) => {
+    if (newIsSignedIn === true) {
+      setHasSignInHistory(true)
+      localStorage.setItem(HAS_SIGN_IN_HISTORY, "true")
+    } else if (newIsSignedIn === false) {
+      // logout
+      setHasSignInHistory(false)
+      localStorage.setItem(HAS_SIGN_IN_HISTORY, "false")
+    }
+  }, [])
+  const [isSignedIn] = useListenToPostMessage("is-signed-in", isSignedInCallback)
+
+  const [enoughWaitingForIframe, setEnoughWaitingForIframe] = useState(false)
+  const handleEnoughWaitingForIframe = useCallback(() => {
+    setEnoughWaitingForIframe(true)
+  }, [])
+
+  const [isOffline, setIsOffline] = useState(false)
+
+  useListenToFocusMessages()
+  const signInUrl = useSelector(selectSignInUrl)
+
+  const hasFetchedInfo = useSelector(selectHasFetchedInfo)
+
   return (
-    <div className="App">
-      {hasFetchDependencies && haveDOMReadyForParsing && (
+    <ThemeProvider theme={DefaultTheme}>
+      {hasFetchDependencies && (
+        // this needs to render after dynamic css files are loaded, otherwise netdata-ui
+        // styling will have smaller priority than bootstrap css
+        <NotificationsContainer />
+      )}
+      {chartsMetadata && cloudBaseURL && hasFetchedInfo && (
         <>
-          <ToastContainer />
-          <Portals key={refreshHelper} />
-          {isPrintMode && <PrintModal />}
+          {!isPrintMode && (
+            <SpacesBar
+              isOffline={isOffline}
+              isSignedIn={isSignedIn}
+              cloudBaseURL={cloudBaseURL}
+              enoughWaitingForIframe={enoughWaitingForIframe}
+              signInUrl={signInUrl}
+            />
+          )}
+          {!isPrintMode && (
+            <SpacePanel
+              hasSignInHistory={hasSignInHistory}
+              isOffline={isOffline}
+              isSignedIn={isSignedIn}
+              cloudBaseURL={cloudBaseURL}
+              chartsMetadata={chartsMetadata}
+            />
+          )}
+          <AppHeader
+            chartsMetadata={chartsMetadata}
+            cloudBaseURL={cloudBaseURL}
+            isOffline={isOffline}
+            isSignedIn={isSignedIn}
+            enoughWaitingForIframe={enoughWaitingForIframe}
+            hasSignInHistory={hasSignInHistory}
+            onEnoughWaitingForIframe={handleEnoughWaitingForIframe}
+            setIsOffline={setIsOffline}
+          />
+          <div className="App">
+            {hasFetchDependencies && haveDOMReadyForParsing && (
+              <>
+                <Portals key={refreshHelper} />
+                {isPrintMode && <PrintModal />}
+              </>
+            )}
+          </div>
         </>
       )}
-    </div>
+    </ThemeProvider>
   )
 }
 

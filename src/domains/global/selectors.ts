@@ -7,6 +7,8 @@ import { GetKeyArguments, getKeyForCommonColorsState } from "./reducer"
 import { storeKey } from "./constants"
 import { OptionsKey } from "./options"
 
+const NETDATA_REGISTRY_SERVER = "https://registry.my-netdata.io"
+
 export const createSelectAssignedColors = (args: GetKeyArguments) => (state: AppStateT) => {
   const keyName = getKeyForCommonColorsState(args)
   const substate = state[storeKey].commonColorsKeys[keyName]
@@ -31,30 +33,18 @@ export const selectCommonMax = createSelector(
   ),
 )
 
-export const selectGlobalSelection = createSelector(
-  selectGlobal,
-  prop("hoveredX"),
-)
+export const selectGlobalSelection = createSelector(selectGlobal, prop("hoveredX"))
 
 export const selectGlobalSelectionMaster = createSelector(
   selectGlobal,
   prop("currentSelectionMasterId"),
 )
 
-export const selectGlobalPanAndZoom = createSelector(
-  selectGlobal,
-  prop("globalPanAndZoom"),
-)
+export const selectGlobalPanAndZoom = createSelector(selectGlobal, prop("globalPanAndZoom"))
 
-export const selectGlobalChartUnderlay = createSelector(
-  selectGlobal,
-  prop("globalChartUnderlay"),
-)
+export const selectGlobalChartUnderlay = createSelector(selectGlobal, prop("globalChartUnderlay"))
 
-export const selectHasWindowFocus = createSelector(
-  selectGlobal,
-  prop("hasWindowFocus"),
-)
+export const selectHasWindowFocus = createSelector(selectGlobal, prop("hasWindowFocus"))
 
 export const selectSnapshot = createSelector(
   selectGlobal,
@@ -63,7 +53,32 @@ export const selectSnapshot = createSelector(
 
 export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
+export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
+
+export const selectSignInUrl = createSelector(
+  selectRegistry,
+  selectCloudBaseUrl,
+  (registry, cloudBaseURL) => {
+    const name = encodeURIComponent(registry.hostname)
+    const origin = encodeURIComponent(`${window.location.origin}/`)
+    // not adding redirect_url - it needs to always be based on newest href
+    return `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`
+  },
+)
+
 export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
+export const selectIsUsingGlobalRegistry = createSelector(
+  selectRegistry,
+  ({ registryServer }) => registryServer && (registryServer !== NETDATA_REGISTRY_SERVER),
+)
+
+// currently cloud-base-url is taken from registry?action=hello call, which returns error
+// if Agent+browser are configured to respect do-not-track
+export const selectIsCloudEnabled = createSelector(
+  selectRegistry,
+  (registry) => registry.isCloudEnabled && !registry.isHelloCallError,
+)
+export const selectHasFetchedInfo = createSelector(selectRegistry, prop("hasFetchedInfo"))
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
@@ -74,23 +89,22 @@ export const selectActiveAlarms = createSelector(
   (global) => global.alarms.activeAlarms,
 )
 
-export const selectOptions = createSelector(
-  selectGlobal,
-  (global) => global.options,
+export const selectSpacePanelIsActive = createSelector(selectGlobal, prop("spacePanelIsActive"))
+export const selectSpacePanelTransitionEndIsActive = createSelector(
+  selectGlobal, prop("spacePanelTransitionEndIsActive"),
 )
 
-export const createSelectOption = <T extends OptionsKey>(optionName: T) => createSelector(
-  selectOptions,
-  (options) => options[optionName],
+export const selectOptions = createSelector(selectGlobal, global => global.options)
+
+export const createSelectOption = <T extends OptionsKey>(optionName: T) => (
+  createSelector(selectOptions, (options) => options[optionName])
 )
 
 export const selectDestroyOnHide = createSelectOption("destroy_on_hide")
 export const selectStopUpdatesWhenFocusIsLost = createSelectOption(
   "stop_updates_when_focus_is_lost",
 )
-export const selectShouldEliminateZeroDimensions = createSelectOption(
-  "eliminate_zero_dimensions",
-)
+export const selectShouldEliminateZeroDimensions = createSelectOption("eliminate_zero_dimensions")
 export const selectIsAsyncOnScroll = createSelectOption("async_on_scroll")
 
 export const selectParallelRefresher = createSelectOption("parallel_refresher")

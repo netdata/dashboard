@@ -1,6 +1,6 @@
 import { uniq } from "ramda"
 import {
-  spawn, take, put, takeEvery, call,
+  spawn, take, put, takeEvery, call, delay,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
@@ -8,6 +8,7 @@ import { Action } from "redux-act"
 
 import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
+import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
 
 import {
   fetchHelloAction,
@@ -16,6 +17,9 @@ import {
   updatePersonUrlsAction,
   SetOptionAction,
   setOptionAction,
+  setSpacePanelStatusAction,
+  SetSpacePanelStatusActionPayload,
+  setSpacePanelTransitionEndAction,
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
 import { MASKED_DATA } from "./constants"
@@ -58,16 +62,25 @@ const injectGTM = (machineGuid: string) => {
   }
   /* eslint-disable */
   // @ts-ignore
-  ;(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+  ; (function (w, d, s, l, i) {
     // @ts-ignore
-    j.async=false;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+    w[l] = w[l] || []
     // @ts-ignore
-    f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-N6CBMJD');
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      // @ts-ignore
+      dl = l != "dataLayer" ? "&l=" + l : ""
+    // @ts-ignore
+    j.async = false
+
+    // @ts-ignore
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl
+    // @ts-ignore
+    f.parentNode.insertBefore(j, f)
+  })(window, document, "script", "dataLayer", "GTM-N6CBMJD")
   // @ts-ignore
-  dataLayer.push({"anonymous_statistics" : "true", "machine_guid" : machineGuid});
+  dataLayer.push({ anonymous_statistics: "true", machine_guid: machineGuid })
   /* eslint-enable */
 }
 
@@ -76,7 +89,7 @@ export type PersonUrl = [
   string, // url
   number, // last timestamp (ms)
   number, // accesses
-  string, // name
+  string // name
 ]
 
 type AccessRegistryResponse = null | {
@@ -86,11 +99,11 @@ type AccessRegistryResponse = null | {
 }
 
 type AccessRegistry = (args: {
-  machineGuid: string,
-  maxRedirects: number,
-  name: string,
-  registryServer: string,
-  url: string,
+  machineGuid: string
+  maxRedirects: number
+  name: string
+  registryServer: string
+  url: string
 }) => Promise<AccessRegistryResponse>
 const accessRegistry: AccessRegistry = ({
   machineGuid, maxRedirects, name, registryServer, url,
@@ -140,7 +153,6 @@ const accessRegistry: AccessRegistry = ({
   return null
 })
 
-
 export interface RegistryMachine {
   guid: string
   url: string
@@ -150,15 +162,19 @@ export interface RegistryMachine {
   alternateUrls: string[]
 }
 
-type ParsePersonUrls = (personUrls: PersonUrl[]) => {
-  registryMachines: {[key: string]: RegistryMachine},
-  registryMachinesArray: RegistryMachine[],
+type ParsePersonUrls = (
+  personUrls: PersonUrl[]
+) => {
+  registryMachines: { [key: string]: RegistryMachine }
+  registryMachinesArray: RegistryMachine[]
 }
 export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
   // todo main.js is using registryMachines, but should use only the array
-  const registryMachines: {[key: string]: RegistryMachine} = {}
+  const registryMachines: { [key: string]: RegistryMachine } = {}
 
-  personUrls.slice().reverse()
+  personUrls
+    .slice()
+    .reverse()
     .forEach(([guid, url, lastTimestamp, accesses, name]: PersonUrl) => {
       const existingObj = registryMachines[guid] || {
         lastTimestamp: 0,
@@ -179,7 +195,10 @@ export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
 
   const registryMachinesArray = uniq(
     // not sure if reverse is needed, but it was in old dashboard
-    personUrls.slice().reverse().map(([guid]: PersonUrl) => guid),
+    personUrls
+      .slice()
+      .reverse()
+      .map(([guid]: PersonUrl) => guid),
   ).map((guid) => registryMachines[guid])
   return {
     registryMachines,
@@ -190,19 +209,24 @@ export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
 function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const { serverDefault } = payload
   const helloCallUrl = `${serverDefault}api/v1/registry?action=hello`
-  const response: AxiosResponse<HelloResponse> = yield call(axiosInstance.get, helloCallUrl, {
-    headers: {
-      "Cache-Control": "no-cache, no-store",
-      Pragma: "no-cache",
-    },
-    withCredentials: true,
-  })
-  // todo xss
+  let response: AxiosResponse<HelloResponse>
+  try {
+    response = yield call(axiosInstance.get, helloCallUrl, {
+      headers: {
+        "Cache-Control": "no-cache, no-store",
+        Pragma: "no-cache",
+      },
+      withCredentials: true,
+    })
+  } catch (error) {
+    console.warn("error accessing registry or Do-Not-Track is enabled") // eslint-disable-line
+    yield put(fetchHelloAction.failure())
+    return
+  }
 
   const registryServer = response.data.registry
 
   const cloudBaseURL = response.data.cloud_base_url
-  const isCloudEnabled = cloudBaseURL !== ""
 
   const machineGuid = response.data.machine_guid
   const { hostname } = response.data
@@ -228,7 +252,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   yield put(fetchHelloAction.success({
     cloudBaseURL,
     hostname,
-    isCloudEnabled,
     isUsingGlobalRegistry,
     machineGuid,
     registryServer: accessRegistryResponse?.registryServer || registryServer,
@@ -259,10 +282,21 @@ function setOptonSaga({ payload }: Action<SetOptionAction>) {
   localStorage.setItem(constructOptionStorageKey(key), JSON.stringify(value))
 }
 
+function* spacePanelSaga({ payload }: Action<SetSpacePanelStatusActionPayload>) {
+  if (payload.isActive) {
+    document.body.className = "with-panel"
+  } else {
+    document.body.className = ""
+  }
+  yield delay(sidePanelTransitionTimeInSeconds * 1000)
+  yield put(setSpacePanelTransitionEndAction({ isActive: payload.isActive }))
+}
+
 export function* globalSagas() {
   yield spawn(listenToWindowFocus)
   yield spawn(watchWindowFocusChannel)
   yield takeEvery(fetchHelloAction.request, fetchHelloSaga)
   yield spawn(alarmsSagas)
   yield takeEvery(setOptionAction, setOptonSaga)
+  yield takeEvery(setSpacePanelStatusAction, spacePanelSaga)
 }

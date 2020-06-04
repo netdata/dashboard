@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 
 import { axiosInstance } from "utils/api"
 
-export const useHtpp = <T = unknown>(
+export const useHttp = <T = unknown>(
   url: string | undefined,
   shouldMakeCall : boolean = true,
   isExternal?: boolean,
