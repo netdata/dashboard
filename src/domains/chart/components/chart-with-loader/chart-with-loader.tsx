@@ -17,32 +17,32 @@ import {
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
 
-import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../constants"
-import { getChartURLOptions } from "../utils/get-chart-url-options"
-import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
-import { Attributes } from "../utils/transformDataAttributes"
-import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
-import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
+import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../../constants"
+import { getChartURLOptions } from "../../utils/get-chart-url-options"
+import { chartLibrariesSettings } from "../../utils/chartLibrariesSettings"
+import { Attributes } from "../../utils/transformDataAttributes"
+import { getChartPixelsPerPoint } from "../../utils/get-chart-pixels-per-point"
+import { useFetchNewDataClock } from "../../hooks/use-fetch-new-data-clock"
 
-import { fetchChartAction, fetchDataAction } from "../actions"
+import { fetchChartAction, fetchDataAction } from "../../actions"
 import {
   selectChartData,
   selectChartFetchDataParams,
   makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
   selectChartIsFetchingData,
-} from "../selectors"
+} from "../../selectors"
 import {
   ChartData,
   ChartMetadata,
   D3pieChartData,
   DygraphData,
   EasyPieChartData,
-} from "../chart-types"
+} from "../../chart-types"
 
-import { Loader } from "./loader"
-import { Chart } from "./chart"
-import "./chart-with-loader.css"
+import { Loader } from "../loader"
+import { Chart } from "../chart"
+import "../chart-with-loader.css"
 
 export type Props = {
   attributes: Attributes
