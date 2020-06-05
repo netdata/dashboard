@@ -42,11 +42,15 @@ import {
 
 import { Loader } from "../loader"
 import { Chart } from "../chart"
-import "../chart-with-loader.css"
+import {ChartDropdown, DropdownMenu} from "../chart-dropdown"
+
+import * as S from "./styled"
+import "./chart-with-loader.css"
 
 export type Props = {
   attributes: Attributes
   chartUuid: string
+  dropdownMenu?: DropdownMenu
   portalNode: HTMLElement
   externalChartMetadata?: ChartMetadata
 }
@@ -54,6 +58,7 @@ export type Props = {
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
+  dropdownMenu,
   portalNode,
   externalChartMetadata,
 }: Props) => {
@@ -306,6 +311,11 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
+      {dropdownMenu && (
+        <S.ChartDropdownContainer>
+          <ChartDropdown dropdownMenu={dropdownMenu} chartID={attributes.id} />
+        </S.ChartDropdownContainer>
+      )}
     </>
   )
 }
