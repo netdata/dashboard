@@ -1,9 +1,10 @@
 import React from "react"
-import { ChartWithLoader } from "domains/chart/components/chart-with-loader"
-import { Attributes } from "../utils/transformDataAttributes"
-import { DisableOutOfView } from "./disable-out-of-view"
-import { ChartMetadata } from "../chart-types"
 
+import { Attributes } from "../../utils/transformDataAttributes"
+import { ChartMetadata } from "../../chart-types"
+import { ChartWithLoader } from "domains/chart/components/chart-with-loader/chart-with-loader"
+import { DisableOutOfView } from "../disable-out-of-view"
+import { DropdownMenu } from "../chart-dropdown"
 
 export type Props = {
   attributes: Attributes
