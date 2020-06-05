@@ -25,7 +25,6 @@ export const ChartDropdown = ({
   return (
     <>
       <S.DotsBtn
-        type="borderless"
         name="dots_2x3"
         onClick={() => {
           setIsOpen(true)
