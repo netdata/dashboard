@@ -13,6 +13,8 @@ import { ChartWrapper } from "../chart-wrapper"
 
 import { generateHeadCharts } from "./generate-head-charts"
 
+const NODE_VIEW_DYGRAPH_TITLE_HEIGHt = 30
+
 const chartCommonMin = (family: string, context: string, units: string) => (
   netdataDashboard.anyAttribute(
     netdataDashboard.context, "commonMin", context, undefined,
@@ -110,6 +112,7 @@ export const renderSubmenuName = ({
                 dygraphValueRange: netdataDashboard.contextValueRange(
                   chart.context,
                 ),
+                dygraphTitleHeight: NODE_VIEW_DYGRAPH_TITLE_HEIGHt,
                 before: 0,
                 after: -duration,
                 heightId: `${name2id(`${options.hostname}/${chart.id}`)}`,
