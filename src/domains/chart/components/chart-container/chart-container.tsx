@@ -13,6 +13,7 @@ export type Props = {
   chartUuid: string
   portalNode: HTMLElement
   chartMetadata?: ChartMetadata
+  dropdownMenu?: DropdownMenu
 }
 
 export const ChartContainer = ({
@@ -20,6 +21,7 @@ export const ChartContainer = ({
   chartUuid,
   portalNode,
   chartMetadata,
+  dropdownMenu,
 }: Props) => (
   <DisableOutOfView
     attributes={attributes}
@@ -29,6 +31,7 @@ export const ChartContainer = ({
     <ChartWithLoader
       attributes={attributes}
       chartUuid={chartUuid}
+      dropdownMenu={dropdownMenu}
       portalNode={portalNode}
       externalChartMetadata={chartMetadata}
     />

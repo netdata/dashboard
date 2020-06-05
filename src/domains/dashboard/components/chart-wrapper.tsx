@@ -4,6 +4,7 @@ import React, {
 import uuid from "uuid"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartContainer } from "domains/chart/components/chart-container"
+import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { ChartMetadata } from "domains/chart/chart-types"
 
 interface Props {
@@ -12,11 +13,15 @@ interface Props {
   id?: string
   style?: React.CSSProperties
   chartMetadata: ChartMetadata
+  dropdownMenu?: DropdownMenu
 }
 
 export const ChartWrapper = ({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
-  attributes, height, id, style: styleOverride, chartMetadata,
+  attributes,
+  dropdownMenu,
+  id,
+  style: styleOverride,
+  chartMetadata,
 }: Props) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const [chartContainerElement, setChartContainerElement] = useState<HTMLDivElement>()
@@ -43,9 +48,10 @@ export const ChartWrapper = ({
       {chartContainerElement && (
         <ChartContainer
           attributes={attributes}
-          chartUuid={chartUuid}
-          portalNode={chartContainerElement}
           chartMetadata={chartMetadata}
+          chartUuid={chartUuid}
+          dropdownMenu={dropdownMenu}
+          portalNode={chartContainerElement}
         />
       )}
     </div>
