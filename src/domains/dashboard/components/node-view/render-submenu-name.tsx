@@ -2,7 +2,9 @@ import React from "react"
 
 import { name2id } from "utils/name-2-id"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { ChartsMetadata } from "domains/global/types"
+
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
 import { netdataDashboard, options, Menu } from "../../utils/netdata-dashboard"
@@ -29,6 +31,7 @@ const chartCommonMax = (family: string, context: string, units: string) => (
 
 interface RenderSubmenuNameArg {
   duration: number
+  dropdownMenu: DropdownMenu
   menu: Menu
   menuName: string
   pcentWidth: number
@@ -37,6 +40,7 @@ interface RenderSubmenuNameArg {
 }
 export const renderSubmenuName = ({
   duration,
+  dropdownMenu,
   menu,
   menuName,
   pcentWidth,
@@ -120,6 +124,7 @@ export const renderSubmenuName = ({
                 ...(commonMax ? { commonMax } : {}),
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
+              dropdownMenu={dropdownMenu}
             />
           </div>
         )
