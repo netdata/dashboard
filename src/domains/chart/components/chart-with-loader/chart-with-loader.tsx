@@ -42,7 +42,7 @@ import {
 
 import { Loader } from "../loader"
 import { Chart } from "../chart"
-import {ChartDropdown, DropdownMenu} from "../chart-dropdown"
+import { ChartDropdown, DropdownMenu } from "../chart-dropdown"
 
 import * as S from "./styled"
 import "./chart-with-loader.css"

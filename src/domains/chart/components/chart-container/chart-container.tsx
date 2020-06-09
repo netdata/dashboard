@@ -2,7 +2,7 @@ import React from "react"
 
 import { Attributes } from "../../utils/transformDataAttributes"
 import { ChartMetadata } from "../../chart-types"
-import { ChartWithLoader } from "domains/chart/components/chart-with-loader/chart-with-loader"
+import { ChartWithLoader } from "../chart-with-loader"
 import { DisableOutOfView } from "../disable-out-of-view"
 import { DropdownMenu } from "../chart-dropdown"
 
