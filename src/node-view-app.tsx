@@ -71,6 +71,7 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
             chartsMetadata={realMetadata as unknown as ChartsMetadata}
             currentChart={currentRoute}
             host="http://localhost:19999/api/v1/data"
+            dropdownMenu={[]}
             setCurrentChart={(chart: string) => {
               if (currentRoute !== chart) {
                 setCurrentRoute(chart)
