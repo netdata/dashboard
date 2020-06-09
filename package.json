@@ -105,6 +105,11 @@
     "eject": "react-scripts eject",
     "prepare": "install-peers && npm run ts-bundle"
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!@netdata/netdata-ui)/"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
