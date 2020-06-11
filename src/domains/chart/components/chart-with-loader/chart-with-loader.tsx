@@ -311,7 +311,7 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {dropdownMenu && (
+      {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown dropdownMenu={dropdownMenu} chartID={attributes.id} />
         </S.ChartDropdownContainer>
