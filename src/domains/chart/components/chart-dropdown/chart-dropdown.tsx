@@ -8,7 +8,7 @@ import * as S from "./styled"
 export type DropdownMenu = {
   icon: ReactNode,
   label: string,
-  onClick: (chartID: string) => void ,
+  onClick: (chartID: string) => void,
 }[]
 
 interface Props {
