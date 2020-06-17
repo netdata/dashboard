@@ -1,11 +1,15 @@
-import React, { useState } from "react"
+import React, { useState, ReactNode } from "react"
 
 import { List, SimpleListItem } from "@rmwc/list"
 import { MenuSurface, MenuSurfaceAnchor } from "@rmwc/menu"
 
 import * as S from "./styled"
 
-export type DropdownMenu = { icon: string, label: string, onClick: (chartID: string) => void }[]
+export type DropdownMenu = {
+  icon: ReactNode,
+  label: string,
+  onClick: (chartID: string) => void,
+}[]
 
 interface Props {
   chartID: string
