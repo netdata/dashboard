@@ -129,7 +129,6 @@ export const NodeView = ({
   const duration = timeWindow || Math.round(
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
-  console.log("duration", duration)
 
   const menus = useMemo(() => renderChartsAndMenu(chartsMetadata), [chartsMetadata])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
