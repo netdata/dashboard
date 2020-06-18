@@ -89,6 +89,7 @@ interface Props {
   dropdownMenu: DropdownMenu
   setCurrentChart: (currentChart: string) => void
   host?: string
+  timeWindow?: number
 }
 export const NodeView = ({
   chartsMetadata,
@@ -96,6 +97,7 @@ export const NodeView = ({
   dropdownMenu,
   setCurrentChart,
   host = "http://localhost:19999",
+  timeWindow,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
@@ -124,7 +126,7 @@ export const NodeView = ({
 
   // todo support print mode when it will be used in main.js
   const pcentWidth = Math.floor(100 / chartsPerRow())
-  const duration = Math.round(
+  const duration = timeWindow || Math.round(
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
 
