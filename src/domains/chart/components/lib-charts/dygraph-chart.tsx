@@ -837,7 +837,7 @@ export const DygraphChart = ({
         // eslint-disable-next-line max-len
         hasChangedTimeframe = Math.abs((viewBefore - viewAfter) - (dygraphOptionInEffect[1] - dygraphOptionInEffect[0])) > 5000
       }
-      
+
       // in old dashboard, when chart needed to reset internal dateWindow state,
       // dateWindow was set to null, and new dygraph got the new dateWindow from results.
       // this caused small unsync between dateWindow of parent (master) and child charts
