@@ -832,7 +832,7 @@ export const DygraphChart = ({
       const forceDateWindow = [viewAfter, viewBefore]
 
       const dygraphOptionInEffect = dygraphInstance.current.getOption("dateWindow")
-      let hasChangedTimeframe = true
+      let hasChangedTimeframe = false
       if (dygraphOptionInEffect.length > 0) {
         // eslint-disable-next-line max-len
         hasChangedTimeframe = Math.abs((viewBefore - viewAfter) - (dygraphOptionInEffect[1] - dygraphOptionInEffect[0])) > 5000
