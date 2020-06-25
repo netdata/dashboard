@@ -831,13 +831,6 @@ export const DygraphChart = ({
       // todo support state.tmp.dygraph_force_zoom
       const forceDateWindow = [viewAfter, viewBefore]
 
-      const dygraphOptionInEffect = dygraphInstance.current.getOption("dateWindow")
-      let hasChangedTimeframe = false
-      if (dygraphOptionInEffect.length > 0) {
-        // eslint-disable-next-line max-len
-        hasChangedTimeframe = Math.abs((viewBefore - viewAfter) - (dygraphOptionInEffect[1] - dygraphOptionInEffect[0])) > 5000
-      }
-
       // in old dashboard, when chart needed to reset internal dateWindow state,
       // dateWindow was set to null, and new dygraph got the new dateWindow from results.
       // this caused small unsync between dateWindow of parent (master) and child charts
@@ -845,12 +838,13 @@ export const DygraphChart = ({
       // so if the chart needs to change local dateWindow, we'll always use timestamps instead of
       // null.
 
-      const xAxisRange = dygraphInstance.current?.xAxisRange()
+      const xAxisRange = dygraphInstance.current.xAxisRange()
       // check if the time is relative
       const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
       && (xAxisRange[1] > viewBefore)
       // if viewAfter is bigger than current dateWindow start, just reset dateWindow
       && (xAxisRange[0] > viewAfter)
+      const hasChangedTimeframe = Math.abs((viewBefore - viewAfter) - (xAxisRange[1] - xAxisRange[0])) > 5000
 
       // eslint-disable-next-line max-len
       const optionsDateWindow = hasChangedTimeframe || (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
