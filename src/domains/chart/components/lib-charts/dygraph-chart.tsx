@@ -847,9 +847,10 @@ export const DygraphChart = ({
       && (xAxisRange[1] > viewBefore)
       // if viewAfter is bigger than current dateWindow start, just reset dateWindow
       && (xAxisRange[0] > viewAfter)
+      && !hasChangedDuration
 
-      // eslint-disable-next-line max-len
-      const optionsDateWindow = hasChangedDuration || (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
+      const optionsDateWindow = hasChangedDuration
+      || (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
         ? { dateWindow: forceDateWindow }
         : {}
 
