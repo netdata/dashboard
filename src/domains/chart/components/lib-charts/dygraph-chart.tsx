@@ -844,6 +844,7 @@ export const DygraphChart = ({
       && (xAxisRange[1] > viewBefore)
       // if viewAfter is bigger than current dateWindow start, just reset dateWindow
       && (xAxisRange[0] > viewAfter)
+      // eslint-disable-next-line max-len
       const hasChangedTimeframe = Math.abs((viewBefore - viewAfter) - (xAxisRange[1] - xAxisRange[0])) > 5000
 
       // eslint-disable-next-line max-len
