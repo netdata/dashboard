@@ -849,8 +849,7 @@ export const DygraphChart = ({
       && (xAxisRange[0] > viewAfter)
       && !hasChangedDuration
 
-      const optionsDateWindow = hasChangedDuration
-      || (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
+      const optionsDateWindow = isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode
         ? { dateWindow: forceDateWindow }
         : {}
 
