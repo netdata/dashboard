@@ -37,9 +37,10 @@ export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global
 export { VersionControl } from "components/app-header/components/version-control"
 
 /**
- types
-**/
+ * types
+ */
 
+/* eslint-disable import/first,import/newline-after-import */
 // Cannot re-export a type when the --isolatedModules flag is provided
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 export type ChartAttributes = Attributes
@@ -49,3 +50,4 @@ export type ChartMetadata = ChartMetadata_
 
 import { ChartsMetadata as ChartsMetadata_ } from "domains/global/types"
 export type ChartsMetadata = ChartsMetadata_
+/* eslint-enable import/first,import/newline-after-import */
