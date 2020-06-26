@@ -233,7 +233,9 @@ function* fetchChartSaga({ payload }: Action<FetchChartPayload>) {
   }
 
   let response
-  const url = `${alwaysEndWithSlash(host)}api/v1/chart`
+  const url = isMainJs
+    ? `${alwaysEndWithSlash(host)}api/v1/chart`
+    : host.replace("/data", "/chart")
   try {
     response = yield call(axiosInstance.get, url, {
       params: {
