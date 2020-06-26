@@ -12,7 +12,7 @@ export type Props = {
   // here, the chartID must be unique across all agents
   chartUuid: string
   portalNode: HTMLElement
-  chartMetadata?: ChartMetadata
+  chartMetadata?: ChartMetadata | undefined
   dropdownMenu?: DropdownMenu
 }
 
