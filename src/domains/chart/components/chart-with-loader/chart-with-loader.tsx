@@ -17,36 +17,40 @@ import {
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
 
-import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../constants"
-import { getChartURLOptions } from "../utils/get-chart-url-options"
-import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
-import { Attributes } from "../utils/transformDataAttributes"
-import { getChartPixelsPerPoint } from "../utils/get-chart-pixels-per-point"
-import { useFetchNewDataClock } from "../hooks/use-fetch-new-data-clock"
+import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../../constants"
+import { getChartURLOptions } from "../../utils/get-chart-url-options"
+import { chartLibrariesSettings } from "../../utils/chartLibrariesSettings"
+import { Attributes } from "../../utils/transformDataAttributes"
+import { getChartPixelsPerPoint } from "../../utils/get-chart-pixels-per-point"
+import { useFetchNewDataClock } from "../../hooks/use-fetch-new-data-clock"
 
-import { fetchChartAction, fetchDataAction } from "../actions"
+import { fetchChartAction, fetchDataAction } from "../../actions"
 import {
   selectChartData,
   selectChartFetchDataParams,
   makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
   selectChartIsFetchingData,
-} from "../selectors"
+} from "../../selectors"
 import {
   ChartData,
   ChartMetadata,
   D3pieChartData,
   DygraphData,
   EasyPieChartData,
-} from "../chart-types"
+} from "../../chart-types"
 
-import { Loader } from "./loader"
-import { Chart } from "./chart"
+import { Loader } from "../loader"
+import { Chart } from "../chart"
+import { ChartDropdown, DropdownMenu } from "../chart-dropdown"
+
+import * as S from "./styled"
 import "./chart-with-loader.css"
 
 export type Props = {
   attributes: Attributes
   chartUuid: string
+  dropdownMenu?: DropdownMenu
   portalNode: HTMLElement
   externalChartMetadata?: ChartMetadata
 }
@@ -54,6 +58,7 @@ export type Props = {
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
+  dropdownMenu,
   portalNode,
   externalChartMetadata,
 }: Props) => {
@@ -306,6 +311,16 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
+      {dropdownMenu && (dropdownMenu.length > 0) && (
+        <S.ChartDropdownContainer>
+          <ChartDropdown
+            dropdownMenu={dropdownMenu}
+            chartID={attributes.id}
+            attributes={attributes}
+            chartMetadata={actualChartMetadata}
+          />
+        </S.ChartDropdownContainer>
+      )}
     </>
   )
 }

@@ -1,9 +1,10 @@
 import React from "react"
-import { ChartWithLoader } from "domains/chart/components/chart-with-loader"
-import { Attributes } from "../utils/transformDataAttributes"
-import { DisableOutOfView } from "./disable-out-of-view"
-import { ChartMetadata } from "../chart-types"
 
+import { Attributes } from "../../utils/transformDataAttributes"
+import { ChartMetadata } from "../../chart-types"
+import { ChartWithLoader } from "../chart-with-loader"
+import { DisableOutOfView } from "../disable-out-of-view"
+import { DropdownMenu } from "../chart-dropdown"
 
 export type Props = {
   attributes: Attributes
@@ -11,7 +12,8 @@ export type Props = {
   // here, the chartID must be unique across all agents
   chartUuid: string
   portalNode: HTMLElement
-  chartMetadata?: ChartMetadata
+  chartMetadata?: ChartMetadata | undefined
+  dropdownMenu?: DropdownMenu
 }
 
 export const ChartContainer = ({
@@ -19,6 +21,7 @@ export const ChartContainer = ({
   chartUuid,
   portalNode,
   chartMetadata,
+  dropdownMenu,
 }: Props) => (
   <DisableOutOfView
     attributes={attributes}
@@ -28,6 +31,7 @@ export const ChartContainer = ({
     <ChartWithLoader
       attributes={attributes}
       chartUuid={chartUuid}
+      dropdownMenu={dropdownMenu}
       portalNode={portalNode}
       externalChartMetadata={chartMetadata}
     />

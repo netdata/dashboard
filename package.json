@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "0.4.21",
+  "version": "1.0.21",
   "main": "./lib/src/index-npm.js",
   "homepage": ".",
   "files": [
@@ -14,9 +14,12 @@
   },
   "dependencies": {
     "@material/list": "^4.0.0",
-    "@netdata/netdata-ui": "^0.7.18",
+    "@material/menu": "^2.3.0",
+    "@material/menu-surface": "^1.0.0",
+    "@netdata/netdata-ui": "^0.8.6",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
+    "@rmwc/menu": "^5.7.2",
     "@rmwc/tooltip": "^5.7.2",
     "axios": "^0.19.0",
     "bootstrap": "^3.4.1",
@@ -90,6 +93,7 @@
   "scripts": {
     "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco start",
     "start:console": "cp ../console.html public/index.html && npm run start",
+    "start:node-view": "APP_NAME='node-view-app.tsx' HTML_FILE_NAME='index-node-view.html' npm run start",
     "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && npm run start",
     "start:dashboard": "REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco build",
@@ -100,6 +104,11 @@
     "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts",
     "eject": "react-scripts eject",
     "prepare": "install-peers && npm run ts-bundle"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!@netdata/netdata-ui)/"
+    ]
   },
   "browserslist": {
     "production": [

@@ -72,7 +72,12 @@ export const selectIsUsingGlobalRegistry = createSelector(
   ({ registryServer }) => registryServer && (registryServer !== NETDATA_REGISTRY_SERVER),
 )
 
-export const selectIsCloudEnabled = createSelector(selectRegistry, prop("isCloudEnabled"))
+// currently cloud-base-url is taken from registry?action=hello call, which returns error
+// if Agent+browser are configured to respect do-not-track
+export const selectIsCloudEnabled = createSelector(
+  selectRegistry,
+  (registry) => registry.isCloudEnabled && !registry.isHelloCallError,
+)
 export const selectHasFetchedInfo = createSelector(selectRegistry, prop("hasFetchedInfo"))
 
 export const selectHasStartedAlarms = createSelector(

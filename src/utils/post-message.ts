@@ -3,7 +3,7 @@ import { useEffect, useCallback, useState } from "react"
 type IframesMessageType = "spaces" | "workspaces"
   | "hello-from-spaces-bar" | "hello-from-space-panel" | "hello-from-sign-in"
   | "is-signed-in" | "streamed-hosts-data" | "has-focus" | "iframe-focus-change"
-  | "synced-private-registry"
+  | "synced-private-registry" | "set-is-logout-dropdown-opened"
 
 interface IframesMessage<T = unknown> {
   type: IframesMessageType
@@ -22,9 +22,9 @@ export const sendToChildIframe = (
 export const useListenToPostMessage = <T>(
   messageType: IframesMessageType,
   callback?: (newMessage: T) => void,
-  defaultState?: T,
-) => {
-  const [lastMessage, setLastMessage] = useState<T>(defaultState as T)
+  defaultState?: T | (() => T),
+): [T | undefined, () => void] => {
+  const [lastMessage, setLastMessage] = useState<T | undefined>(defaultState)
   const handleMessage = useCallback((message) => {
     const data = message.data as IframesMessage<T>
     if (data.type === messageType) {

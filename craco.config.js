@@ -1,3 +1,12 @@
+const path = require("path")
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+
+const { APP_NAME, HTML_FILE_NAME } = process.env
+
+const appFileName = APP_NAME || "App.tsx"
+
 module.exports = {
   babel: {
     plugins: ["babel-plugin-styled-components"],
@@ -35,6 +44,45 @@ module.exports = {
             },
             ...rules,
           ],
+        },
+
+        plugins: HTML_FILE_NAME
+          ? webpackConfig.plugins.map((plugin) => {
+            if (plugin.constructor.name === "HtmlWebpackPlugin") {
+              if (env === "development") {
+                return new HtmlWebpackPlugin({
+                  template: `./public/${HTML_FILE_NAME}`,
+                })
+              }
+              // non-development environments generally don't use HTML_FILE_NAME
+              // but i'm leaving the proper syntax in case we'll need it
+              return new HtmlWebpackPlugin({
+                inject: true,
+                template: `./public/${HTML_FILE_NAME}`,
+                minify: {
+                  removeComments: true,
+                  collapseWhitespace: true,
+                  removeRedundantAttributes: true,
+                  useShortDoctype: true,
+                  removeEmptyAttributes: true,
+                  removeStyleLinkTypeAttributes: true,
+                  keepClosingSlash: true,
+                  minifyJS: true,
+                  minifyCSS: true,
+                  minifyURLs: true,
+                },
+              })
+            }
+            return plugin
+          })
+          : webpackConfig.plugins,
+
+        resolve: {
+          ...webpackConfig.resolve,
+          alias: {
+            ...webpackConfig.resolve.alias,
+            App: path.resolve(__dirname, `src/${appFileName}`),
+          },
         },
       }
     },

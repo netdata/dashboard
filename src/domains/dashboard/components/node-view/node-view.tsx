@@ -2,9 +2,12 @@ import React, {
   memo, useRef, useState, useEffect, useMemo,
 } from "react"
 import { useWindowScroll } from "react-use"
+
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import { DropdownMenu } from "domains/chart/components/chart-dropdown"
+
 import { renderChartsAndMenu } from "../../utils/render-charts-and-menu"
 import { Menu, options } from "../../utils/netdata-dashboard"
 import { parseChartString } from "../../utils/parse-chart-string"
@@ -24,6 +27,7 @@ const chartsPerRow = () => (
 
 interface SubSectionProps {
   duration: number
+  dropdownMenu: DropdownMenu
   menu: Menu
   menuName: string
   pcentWidth: number
@@ -33,6 +37,7 @@ interface SubSectionProps {
 }
 const SubSection = memo(({
   duration,
+  dropdownMenu,
   menu,
   menuName,
   pcentWidth,
@@ -69,7 +74,7 @@ const SubSection = memo(({
         )}
       </div>
       {submenuNames.map(renderSubmenuName({
-        duration, menu, menuName, pcentWidth, host, chartsMetadata,
+        duration, dropdownMenu, menu, menuName, pcentWidth, host, chartsMetadata,
       }))}
     </div>
   )
@@ -81,14 +86,18 @@ const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as stri
 interface Props {
   chartsMetadata: ChartsMetadata
   currentChart: string
+  dropdownMenu: DropdownMenu
   setCurrentChart: (currentChart: string) => void
   host?: string
+  timeWindow?: number
 }
 export const NodeView = ({
   chartsMetadata,
   currentChart,
+  dropdownMenu,
   setCurrentChart,
   host = "http://localhost:19999",
+  timeWindow,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
@@ -117,7 +126,7 @@ export const NodeView = ({
 
   // todo support print mode when it will be used in main.js
   const pcentWidth = Math.floor(100 / chartsPerRow())
-  const duration = Math.round(
+  const duration = timeWindow || Math.round(
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
 
@@ -142,6 +151,7 @@ export const NodeView = ({
                 </div>
                 <SubSection
                   duration={duration}
+                  dropdownMenu={dropdownMenu}
                   menu={menu}
                   menuName={menuName}
                   pcentWidth={pcentWidth}

@@ -83,6 +83,7 @@ export const IconContainer = styled.div`
   margin: 0 5px;
 `
 export const IframeContainer = styled.div`
+  position: relative;
   width: 84px;
   height: 40px;
 `
@@ -121,3 +122,10 @@ export const SignInButton = styled.a<{ isDisabled: boolean }>`
 `
 
 export const OfflineBlock = styled.div``
+
+export const SignInIframe = styled.iframe<{ isShown: boolean }>`
+  position: absolute;
+  right: 0;
+  border: none;
+  display: ${({ isShown }) => (isShown ? undefined : "none")};
+`

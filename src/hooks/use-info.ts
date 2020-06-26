@@ -10,7 +10,7 @@ export const useInfo = (shouldUseInfo: boolean) => {
   useEffect(() => {
     if (shouldUseInfo && !hasStartedInfo) {
       dispatch(fetchInfoAction.request({
-        poll: true,
+        poll: false,
       }))
     }
   }, [dispatch, hasStartedInfo, shouldUseInfo])

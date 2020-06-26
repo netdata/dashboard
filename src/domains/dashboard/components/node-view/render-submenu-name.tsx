@@ -2,7 +2,9 @@ import React from "react"
 
 import { name2id } from "utils/name-2-id"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { ChartsMetadata } from "domains/global/types"
+
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
 import { netdataDashboard, options, Menu } from "../../utils/netdata-dashboard"
@@ -10,6 +12,8 @@ import { ChartWrapper } from "../chart-wrapper"
 
 
 import { generateHeadCharts } from "./generate-head-charts"
+
+const NODE_VIEW_DYGRAPH_TITLE_HEIGHT = 30
 
 const chartCommonMin = (family: string, context: string, units: string) => (
   netdataDashboard.anyAttribute(
@@ -29,6 +33,7 @@ const chartCommonMax = (family: string, context: string, units: string) => (
 
 interface RenderSubmenuNameArg {
   duration: number
+  dropdownMenu: DropdownMenu
   menu: Menu
   menuName: string
   pcentWidth: number
@@ -37,6 +42,7 @@ interface RenderSubmenuNameArg {
 }
 export const renderSubmenuName = ({
   duration,
+  dropdownMenu,
   menu,
   menuName,
   pcentWidth,
@@ -106,6 +112,7 @@ export const renderSubmenuName = ({
                 dygraphValueRange: netdataDashboard.contextValueRange(
                   chart.context,
                 ),
+                dygraphTitleHeight: NODE_VIEW_DYGRAPH_TITLE_HEIGHT,
                 before: 0,
                 after: -duration,
                 heightId: `${name2id(`${options.hostname}/${chart.id}`)}`,
@@ -120,6 +127,7 @@ export const renderSubmenuName = ({
                 ...(commonMax ? { commonMax } : {}),
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
+              dropdownMenu={dropdownMenu}
             />
           </div>
         )
