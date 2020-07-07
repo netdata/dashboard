@@ -7,6 +7,7 @@ import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
+import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 
 import { renderChartsAndMenu } from "../../utils/render-charts-and-menu"
 import { Menu, options } from "../../utils/netdata-dashboard"
@@ -26,24 +27,26 @@ const chartsPerRow = () => (
 
 
 interface SubSectionProps {
+  chartsMetadata: ChartsMetadata
+  dropdownMenu?: DropdownMenu
   duration: number
-  dropdownMenu: DropdownMenu
+  host: string
   menu: Menu
   menuName: string
   pcentWidth: number
+  renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
-  host: string
-  chartsMetadata: ChartsMetadata
 }
 const SubSection = memo(({
-  duration,
+  chartsMetadata,
   dropdownMenu,
+  duration,
+  host,
   menu,
   menuName,
   pcentWidth,
+  renderCustomElementForDygraph,
   shouldDisplayHeadMain,
-  host,
-  chartsMetadata,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
   return (
@@ -74,7 +77,14 @@ const SubSection = memo(({
         )}
       </div>
       {submenuNames.map(renderSubmenuName({
-        duration, dropdownMenu, menu, menuName, pcentWidth, host, chartsMetadata,
+        chartsMetadata,
+        renderCustomElementForDygraph,
+        dropdownMenu,
+        duration,
+        host,
+        menu,
+        menuName,
+        pcentWidth,
       }))}
     </div>
   )
@@ -86,17 +96,19 @@ const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as stri
 interface Props {
   chartsMetadata: ChartsMetadata
   currentChart: string
-  dropdownMenu: DropdownMenu
-  setCurrentChart: (currentChart: string) => void
+  dropdownMenu?: DropdownMenu
   host?: string
+  renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  setCurrentChart: (currentChart: string) => void
   timeWindow?: number
 }
 export const NodeView = ({
   chartsMetadata,
   currentChart,
   dropdownMenu,
-  setCurrentChart,
   host = "http://localhost:19999",
+  renderCustomElementForDygraph,
+  setCurrentChart,
   timeWindow,
 }: Props) => {
   const [width, setWidth] = useState(0)
@@ -150,6 +162,7 @@ export const NodeView = ({
                   </h1>
                 </div>
                 <SubSection
+                  renderCustomElementForDygraph={renderCustomElementForDygraph}
                   duration={duration}
                   dropdownMenu={dropdownMenu}
                   menu={menu}
