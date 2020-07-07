@@ -47,20 +47,28 @@ import { ChartDropdown, DropdownMenu } from "../chart-dropdown"
 import * as S from "./styled"
 import "./chart-with-loader.css"
 
+export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
+  attributes: Attributes,
+  chartMetadata: ChartMetadata,
+  chartID: string,
+}) => JSX.Element
+
 export type Props = {
   attributes: Attributes
   chartUuid: string
   dropdownMenu?: DropdownMenu
-  portalNode: HTMLElement
   externalChartMetadata?: ChartMetadata
+  portalNode: HTMLElement
+  renderCustomElementForDygraph?: RenderCustomElementForDygraph
 }
 
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
   dropdownMenu,
-  portalNode,
   externalChartMetadata,
+  portalNode,
+  renderCustomElementForDygraph,
 }: Props) => {
   /**
    * fetch chart details
@@ -275,6 +283,13 @@ export const ChartWithLoader = ({
 
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
 
+  const customElementForDygraph = useMemo(
+    () => renderCustomElementForDygraph && renderCustomElementForDygraph({
+      attributes,
+      chartMetadata: actualChartMetadata as ChartMetadata,
+      chartID: attributes.id,
+    }), [renderCustomElementForDygraph, attributes, actualChartMetadata])
+
   // eslint-disable-next-line max-len
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
     || (chartData as EasyPieChartData | null)?.result?.length === 0
@@ -321,6 +336,7 @@ export const ChartWithLoader = ({
           />
         </S.ChartDropdownContainer>
       )}
+      {customElementForDygraph}
     </>
   )
 }
