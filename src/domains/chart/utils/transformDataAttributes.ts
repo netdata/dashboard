@@ -99,6 +99,7 @@ export interface StaticAttributes {
   pixelsPerPoint?: number
   points?: number
   heightId?: string
+  hideResizeHandler?: boolean
   commonMin?: string
   commonMax?: string
 
@@ -325,6 +326,7 @@ const getAttributesMap = (): AttributesMap => ({
   pixelsPerPoint: { key: "pixels-per-point" },
   points: { key: "points" },
   heightId: { key: "id" },
+  hideResizeHandler: { key: "hide-resize-handler" },
   commonMin: { key: "common-min" },
   commonMax: { key: "common-max" },
 
