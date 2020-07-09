@@ -288,7 +288,8 @@ export const ChartWithLoader = ({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartID: attributes.id,
-    }), [renderCustomElementForDygraph, attributes, actualChartMetadata])
+    }), [renderCustomElementForDygraph, attributes, actualChartMetadata],
+  )
 
   // eslint-disable-next-line max-len
   const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0

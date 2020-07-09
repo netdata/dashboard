@@ -2,7 +2,6 @@ import React, {
   useState, useLayoutEffect, useMemo, useRef,
 } from "react"
 import uuid from "uuid"
-import { pick } from "ramda"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartContainer } from "domains/chart/components/chart-container"
