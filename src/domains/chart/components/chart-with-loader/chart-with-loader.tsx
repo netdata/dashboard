@@ -313,7 +313,12 @@ export const ChartWithLoader = ({
       />
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
-          <ChartDropdown dropdownMenu={dropdownMenu} chartID={attributes.id} />
+          <ChartDropdown
+            dropdownMenu={dropdownMenu}
+            chartID={attributes.id}
+            attributes={attributes}
+            chartMetadata={actualChartMetadata}
+          />
         </S.ChartDropdownContainer>
       )}
     </>

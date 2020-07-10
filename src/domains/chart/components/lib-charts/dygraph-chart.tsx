@@ -36,6 +36,9 @@ import { selectResizeHeight } from "../../selectors"
 
 import "./dygraph-chart.css"
 
+// This is the threshold above which we assume chart shown duration has changed
+const timeframeThreshold = 5000
+
 type IsInRangeOfAvailableData = (props: {
   after: number, before: number, chartData: DygraphData,
 }) => boolean
@@ -839,11 +842,15 @@ export const DygraphChart = ({
       // null.
 
       const xAxisRange = dygraphInstance.current.xAxisRange()
+      // eslint-disable-next-line max-len
+      const hasChangedDuration = Math.abs((viewBefore - viewAfter) - (xAxisRange[1] - xAxisRange[0])) > timeframeThreshold
+
       // check if the time is relative
       const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
-        && (xAxisRange[1] > viewBefore)
-        // if viewAfter is bigger than current dateWindow start, just reset dateWindow
-        && (xAxisRange[0] > viewAfter)
+      && (xAxisRange[1] > viewBefore)
+      // if viewAfter is bigger than current dateWindow start, just reset dateWindow
+      && (xAxisRange[0] > viewAfter)
+      && !hasChangedDuration
 
       const optionsDateWindow = (isRemotelyControlled && !hasScrolledToTheFutureDuringPlayMode)
         ? { dateWindow: forceDateWindow }

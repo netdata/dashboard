@@ -91,6 +91,10 @@ export const Chart = memo(({
   const shouldDisplayToolbox = hasLegend(attributes)
     && window.NETDATA.options.current.legend_toolbox
 
+  const shouldDisplayResizeHandler = shouldDisplayToolbox
+    && window.NETDATA.options.current.resize_charts // legacy way of turning off for print mode
+    && !attributes.hideResizeHandler
+
   const dispatch = useDispatch()
   const allDimensionNames = useMemo(
     () => Object.values(chartMetadata.dimensions).map((x) => x.name),
@@ -382,7 +386,7 @@ export const Chart = memo(({
           onToolboxZoomOutClick={handleToolboxZoomOutClick}
         />
       )}
-      {shouldDisplayToolbox && window.NETDATA.options.current.resize_charts && (
+      {shouldDisplayResizeHandler && (
         <ResizeHandler
           chartContainerElement={chartContainerElement}
           chartUuid={chartUuid}
