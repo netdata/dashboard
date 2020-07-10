@@ -117,7 +117,7 @@ export const SpacePanel = ({
                     Discover your monitoring superpowers
                   </S.BottomPanelHeader>
                   <S.BottomPanelText>
-                    Do you now that you can manage a lot of nodes with Netdata Cloud?
+                    Do you know that you can manage a lot of nodes with Netdata Cloud?
                   </S.BottomPanelText>
                   <S.SignInButton
                     href={cloudSignInUrl}
