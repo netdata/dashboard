@@ -2,7 +2,7 @@ import React from "react"
 
 import { Attributes } from "../../utils/transformDataAttributes"
 import { ChartMetadata } from "../../chart-types"
-import { ChartWithLoader } from "../chart-with-loader"
+import { ChartWithLoader, RenderCustomElementForDygraph } from "../chart-with-loader"
 import { DisableOutOfView } from "../disable-out-of-view"
 import { DropdownMenu } from "../chart-dropdown"
 
@@ -14,14 +14,16 @@ export type Props = {
   portalNode: HTMLElement
   chartMetadata?: ChartMetadata | undefined
   dropdownMenu?: DropdownMenu
+  renderCustomElementForDygraph?: RenderCustomElementForDygraph
 }
 
 export const ChartContainer = ({
   attributes,
-  chartUuid,
-  portalNode,
   chartMetadata,
+  chartUuid,
   dropdownMenu,
+  portalNode,
+  renderCustomElementForDygraph,
 }: Props) => (
   <DisableOutOfView
     attributes={attributes}
@@ -31,9 +33,10 @@ export const ChartContainer = ({
     <ChartWithLoader
       attributes={attributes}
       chartUuid={chartUuid}
+      renderCustomElementForDygraph={renderCustomElementForDygraph}
       dropdownMenu={dropdownMenu}
-      portalNode={portalNode}
       externalChartMetadata={chartMetadata}
+      portalNode={portalNode}
     />
   </DisableOutOfView>
 )

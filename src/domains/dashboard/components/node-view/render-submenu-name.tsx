@@ -3,6 +3,7 @@ import React from "react"
 import { name2id } from "utils/name-2-id"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
+import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 import { ChartsMetadata } from "domains/global/types"
 
 import { prioritySort } from "../../utils/sorting"
@@ -32,22 +33,24 @@ const chartCommonMax = (family: string, context: string, units: string) => (
 )
 
 interface RenderSubmenuNameArg {
+  chartsMetadata: ChartsMetadata
   duration: number
-  dropdownMenu: DropdownMenu
+  dropdownMenu?: DropdownMenu
+  host: string
   menu: Menu
   menuName: string
   pcentWidth: number
-  host: string
-  chartsMetadata: ChartsMetadata
+  renderCustomElementForDygraph?: RenderCustomElementForDygraph
 }
 export const renderSubmenuName = ({
-  duration,
+  chartsMetadata,
   dropdownMenu,
+  duration,
+  host,
   menu,
   menuName,
   pcentWidth,
-  host,
-  chartsMetadata,
+  renderCustomElementForDygraph,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -128,6 +131,7 @@ export const renderSubmenuName = ({
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}
+              renderCustomElementForDygraph={renderCustomElementForDygraph}
             />
           </div>
         )
