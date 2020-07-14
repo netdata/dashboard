@@ -22,21 +22,21 @@ export interface ChartDataBase {
   view_update_every: number
 }
 
-export interface DygraphData extends ChartDataBase{
+export interface DygraphData extends ChartDataBase {
   result: {
-    data: (number[])[]
+    data: number[][]
     labels: string[]
   }
 }
 
-export interface D3pieChartData extends ChartDataBase{
+export interface D3pieChartData extends ChartDataBase {
   result: {
-    data: {[label: string]: number}[]
+    data: { [label: string]: number }[]
     labels: string[]
   }
 }
 
-export interface EasyPieChartData extends ChartDataBase{
+export interface EasyPieChartData extends ChartDataBase {
   result: number[]
 }
 
@@ -61,19 +61,19 @@ export interface ChartMetadata {
   enabled: boolean
   family: string
   first_entry: number
-  green: string | null
+  green: string | number | null
   id: string
   last_entry: number
   module?: string
   name: string
   plugin?: string
   priority: number
-  red: string | null
+  red: string | number | null
   title: string
   type: string
   units: string
   update_every: number
-  url: string
+  url?: string
 }
 
 // type created temporarly during old main.js enrichChartData function
@@ -103,9 +103,9 @@ export interface ChartState {
   isFetchDetailsFailure: boolean
   isFetchingDetails: boolean
 
-  snapshotDataIsFetching: boolean,
-  snapshotDataIsError: boolean,
-  snapshotData: ChartData | null,
+  snapshotDataIsFetching: boolean
+  snapshotDataIsError: boolean
+  snapshotData: ChartData | null
 
   resizeHeight: number | null
 }
