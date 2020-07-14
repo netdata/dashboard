@@ -60,7 +60,7 @@ export interface ChartsMetadata {
   hostname: string
   hosts: { hostname: string }[]
   hosts_count: number
-  labels: {
+  labels?: {
     _is_master: string
     _container: string
     _virtualization: string
@@ -97,7 +97,7 @@ export interface Snapshot {
 
   charts: ChartsMetadata
   comments: string
-  data: {[ chartUniqueId: string ]: unknown}
+  data: { [chartUniqueId: string]: unknown }
   data_points: number
   hash: string
   hostname: string
