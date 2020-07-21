@@ -1,10 +1,11 @@
+/* eslint-disable comma-dangle */
 /* eslint-disable implicit-arrow-linebreak */
 import { omit, pipe, mergeDeepLeft } from "ramda"
 
 type HashParams = { [param: string]: string }
 
 export const getHashParams = (
-  hash = decodeURIComponent(window.location.hash.substr(1)),
+  hash = decodeURIComponent(window.location.hash.substr(1))
 ): HashParams => {
   if (hash.length === 0) {
     return {}
@@ -27,8 +28,11 @@ export const makeHashFromObject = (params: { [paramKey: string]: string }) => {
   return entries.map((entry) => entry.join("=")).join("&")
 }
 
-export const getFilteredHash = (excludedParams: string[]) => {
-  const filteredParams = omit(excludedParams, getHashParams())
+export const getFilteredHash = (
+  excludedParams: string[],
+  hash = decodeURIComponent(window.location.hash.substr(1))
+) => {
+  const filteredParams = omit(excludedParams, getHashParams(hash))
   return makeHashFromObject(filteredParams)
 }
 
