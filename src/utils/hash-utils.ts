@@ -4,7 +4,7 @@ import { omit, pipe, mergeDeepLeft } from "ramda"
 type HashParams = { [param: string]: string }
 
 export const getHashParams = (
-  hash = decodeURIComponent(window.location.hash.substr(1))
+  hash = decodeURIComponent(window.location.hash.substr(1)),
 ): HashParams => {
   if (hash.length === 0) {
     return {}
