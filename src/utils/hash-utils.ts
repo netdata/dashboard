@@ -3,12 +3,13 @@ import { omit, pipe, mergeDeepLeft } from "ramda"
 
 type HashParams = { [param: string]: string }
 
-export const getHashParams = (hash?: string): HashParams => {
-  const safeHash = hash || decodeURIComponent(window.location.hash.substr(1))
-  if (safeHash.length === 0) {
+export const getHashParams = (
+  hash = decodeURIComponent(window.location.hash.substr(1))
+): HashParams => {
+  if (hash.length === 0) {
     return {}
   }
-  const params = safeHash.split("&")
+  const params = hash.split("&")
   const response = params.reduce((acc: HashParams, current) => {
     const parts = current.split("=")
     const [param, value] = parts
