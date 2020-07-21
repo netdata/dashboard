@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import { take, takeEvery } from "redux-saga/effects"
 import { Action } from "redux-act"
 
@@ -10,8 +11,11 @@ import {
   setGlobalPanAndZoomAction,
 } from "domains/global/actions"
 import {
-  explicitlySignInAction, showSignInModalAction, ShowSignInModalAction,
+  explicitlySignInAction,
+  showSignInModalAction,
+  ShowSignInModalAction,
 } from "domains/dashboard/actions"
+import { setHashParams, getHashParams } from "utils/hash-utils"
 
 export const LOCAL_STORAGE_NEEDS_SYNC = "LOCAL-STORAGE-NEEDS-SYNC"
 
@@ -32,15 +36,25 @@ function resetGlobalPanAndZoomSaga() {
 }
 
 function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAction>) {
+  const { after, before } = payload
   if (window.urlOptions) {
-    const { after, before } = payload
     // additional check to prevent loop, after setting initial state from url
     if (window.urlOptions.after !== after || window.urlOptions.before !== before) {
       window.urlOptions.netdataHighlightCallback(true, after, before)
     }
+  } else {
+    // TODO: Consider a setting to control wether the component sets these hash params
+    const hashParams = getHashParams()
+    const highlightAfter = new Date(after).toJSON()
+    const highlightBefore = new Date(before).toJSON()
+    if (
+      hashParams.highlightAfter !== highlightAfter ||
+      hashParams.highlightBefore !== highlightBefore
+    ) {
+      setHashParams({ highlightAfter, highlightBefore })
+    }
   }
 }
-
 
 function clearHighlightSaga() {
   if (window.urlOptions) {
