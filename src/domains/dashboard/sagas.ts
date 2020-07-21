@@ -45,8 +45,8 @@ function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAc
   } else {
     // TODO: Consider a setting to control wether the component sets these hash params
     const hashParams = getHashParams()
-    const highlightAfter = new Date(after).toJSON()
-    const highlightBefore = new Date(before).toJSON()
+    const highlightAfter = new Date(Math.round(after)).toJSON()
+    const highlightBefore = new Date(Math.round(before)).toJSON()
     if (
       hashParams.highlightAfter !== highlightAfter ||
       hashParams.highlightBefore !== highlightBefore
