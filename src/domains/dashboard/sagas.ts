@@ -15,7 +15,7 @@ import {
   showSignInModalAction,
   ShowSignInModalAction,
 } from "domains/dashboard/actions"
-import { setHashParams, getHashParams } from "utils/hash-utils"
+import { setHashParams, getHashParams, removeHashParams } from "utils/hash-utils"
 
 export const LOCAL_STORAGE_NEEDS_SYNC = "LOCAL-STORAGE-NEEDS-SYNC"
 
@@ -59,6 +59,8 @@ function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAc
 function clearHighlightSaga() {
   if (window.urlOptions) {
     window.urlOptions.netdataHighlightCallback(false, 0, 0)
+  } else {
+    removeHashParams(["highlightAfter", "highlightBefore"])
   }
 }
 
