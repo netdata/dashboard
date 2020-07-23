@@ -45,7 +45,7 @@ export const setHashParams = (params: { [paramKey: string]: string }) => {
   window.location.hash = `${makeHashFromObject(allParamsResult)}`
 }
 
-export const getHashParam = (param: string): string => getHashParams()[param] || ""
+export const getHashParam = (param: string): string => getHashParams()[param]
 
 export const removeHashParams = (params: string[]) => {
   window.location.hash = `${getFilteredHash(params)}`
