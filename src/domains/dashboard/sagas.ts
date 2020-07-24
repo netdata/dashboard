@@ -21,11 +21,18 @@ import { setHashParams, getHashParams, removeHashParams } from "utils/hash-utils
 export const LOCAL_STORAGE_NEEDS_SYNC = "LOCAL-STORAGE-NEEDS-SYNC"
 
 function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>) {
+  const { after, before } = payload
   if (window.urlOptions) {
-    const { after, before } = payload
     // additional check to prevent loop, after setting initial state from url
     if (window.urlOptions.after !== after || window.urlOptions.before !== before) {
       window.urlOptions.netdataPanAndZoomCallback(true, after, before)
+    }
+  } else {
+    const hashParams = getHashParams()
+    const afterString = Math.round(after).toString()
+    const beforeString = Math.round(before).toString()
+    if (hashParams.after !== afterString || hashParams.before !== beforeString) {
+      setHashParams({ afterString, beforeString })
     }
   }
 }
@@ -33,6 +40,8 @@ function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>)
 function resetGlobalPanAndZoomSaga() {
   if (window.urlOptions) {
     window.urlOptions.netdataPanAndZoomCallback(false, 0, 0)
+  } else {
+    removeHashParams(["after", "before"])
   }
 }
 
