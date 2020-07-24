@@ -3,6 +3,8 @@
 import { omit, pipe, mergeDeepLeft } from "ramda"
 
 type HashParams = { [param: string]: string }
+const fragmentParamsSeparatorRegEx = /[\s&;]/
+const fragmentParamsSeparator = ";"
 
 export const getHashParams = (
   hash = decodeURIComponent(window.location.hash.substr(1))
@@ -10,7 +12,7 @@ export const getHashParams = (
   if (hash.length === 0) {
     return {}
   }
-  const params = hash.split("&")
+  const params = hash.split(fragmentParamsSeparatorRegEx)
   const response = params.reduce((acc: HashParams, current) => {
     const parts = current.split("=")
     const [param, value] = parts
@@ -25,7 +27,7 @@ export const makeHashFromObject = (params: { [paramKey: string]: string }) => {
   if (entries.length === 0) {
     return ""
   }
-  return entries.map((entry) => entry.join("=")).join("&")
+  return entries.map((entry) => entry.join("=")).join(fragmentParamsSeparator)
 }
 
 export const getFilteredHash = (
@@ -45,7 +47,10 @@ export const setHashParams = (params: { [paramKey: string]: string }) => {
   window.location.hash = `${makeHashFromObject(allParamsResult)}`
 }
 
-export const getHashParam = (param: string): string => getHashParams()[param]
+export const getHashParam = (
+  param: string,
+  hash = decodeURIComponent(window.location.hash.substr(1))
+): string => getHashParams(hash)[param]
 
 export const removeHashParams = (params: string[]) => {
   window.location.hash = `${getFilteredHash(params)}`

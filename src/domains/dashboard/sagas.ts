@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable operator-linebreak */
 import { take, takeEvery } from "redux-saga/effects"
 import { Action } from "redux-act"
@@ -45,13 +46,13 @@ function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAc
   } else {
     // TODO: Consider a setting to control wether the component sets these hash params
     const hashParams = getHashParams()
-    const highlightAfter = new Date(Math.round(after)).toJSON()
-    const highlightBefore = new Date(Math.round(before)).toJSON()
+    const highlight_after = Math.round(after).toString()
+    const highlight_before = Math.round(before).toString()
     if (
-      hashParams.highlightAfter !== highlightAfter ||
-      hashParams.highlightBefore !== highlightBefore
+      hashParams.highlight_after !== highlight_after ||
+      hashParams.highlight_before !== highlight_before
     ) {
-      setHashParams({ highlightAfter, highlightBefore })
+      setHashParams({ highlight_after, highlight_before })
     }
   }
 }
@@ -60,7 +61,7 @@ function clearHighlightSaga() {
   if (window.urlOptions) {
     window.urlOptions.netdataHighlightCallback(false, 0, 0)
   } else {
-    removeHashParams(["highlightAfter", "highlightBefore"])
+    removeHashParams(["highlight_after", "highlight_before"])
   }
 }
 
