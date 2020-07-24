@@ -32,7 +32,7 @@ function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>)
     const afterString = Math.round(after).toString()
     const beforeString = Math.round(before).toString()
     if (hashParams.after !== afterString || hashParams.before !== beforeString) {
-      setHashParams({ afterString, beforeString })
+      setHashParams({ after: afterString, before: beforeString })
     }
   }
 }
