@@ -52,6 +52,11 @@ export const getHashParam = (
   hash = decodeURIComponent(window.location.hash.substr(1))
 ): string => getHashParams(hash)[param]
 
+export const hasHashParam = (
+  param: string,
+  hash = decodeURIComponent(window.location.hash.substr(1))
+): boolean => getHashParams(hash)[param] !== undefined
+
 export const removeHashParams = (params: string[]) => {
   window.location.hash = `${getFilteredHash(params)}`
 }
