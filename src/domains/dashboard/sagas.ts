@@ -27,22 +27,26 @@ function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>)
     if (window.urlOptions.after !== after || window.urlOptions.before !== before) {
       window.urlOptions.netdataPanAndZoomCallback(true, after, before)
     }
-  } else {
-    const hashParams = getHashParams()
-    const afterString = Math.round(after).toString()
-    const beforeString = Math.round(before).toString()
-    if (hashParams.after !== afterString || hashParams.before !== beforeString) {
-      setHashParams({ after: afterString, before: beforeString })
-    }
   }
+  // TODO: Set hash params also for window?
+  // else {
+  //   const hashParams = getHashParams()
+  //   const afterString = Math.round(after).toString()
+  //   const beforeString = Math.round(before).toString()
+  //   if (hashParams.after !== afterString || hashParams.before !== beforeString) {
+  //     setHashParams({ after: afterString, before: beforeString })
+  //   }
+  // }
 }
 
 function resetGlobalPanAndZoomSaga() {
   if (window.urlOptions) {
     window.urlOptions.netdataPanAndZoomCallback(false, 0, 0)
-  } else {
-    removeHashParams(["after", "before"])
   }
+  // TODO: Set hash params also for window?
+  // else {
+  //   removeHashParams(["after", "before"])
+  // }
 }
 
 function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAction>) {
