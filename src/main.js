@@ -336,7 +336,7 @@ window.urlOptions = {
               + '<span class="navbar-highlight-button-right highlight-tooltip" onclick="urlOptions.clearHighlight();" title="clear the highlighted time-frame" data-toggle="tooltip" data-placement="bottom"><i class="fas fa-times"></i></span>';
 
             $('.navbar-highlight').show();
-
+            $('.navbar-highlight').width("80%");
             $('.highlight-tooltip').tooltip({
                 html: true,
                 delay: { show: 500, hide: 0 },
@@ -344,6 +344,7 @@ window.urlOptions = {
             });
         } else {
             $('.navbar-highlight').hide();
+            $('.navbar-highlight').width("100%");
         }
     },
 
