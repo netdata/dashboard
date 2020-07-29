@@ -27,6 +27,7 @@ export { store as dashboardStore } from "store"
 export { ChartContainer } from "domains/chart/components/chart-container"
 
 export { NodeView } from "domains/dashboard/components/node-view"
+export { getNodeChartAttributes } from "utils/get-node-chart-attributes"
 
 export {
   resetGlobalPanAndZoomAction,
