@@ -827,6 +827,13 @@ NETDATA.unitsConversion = {
             'GiB/s': 1024 * 1024,
             'TiB/s': 1024 * 1024 * 1024
         },
+        'bytes': {
+            'bytes': 1,
+            'kilobytes': 1024,
+            'megabytes': 1024 * 1024,
+            'gigabytes': 1024 * 1024 * 1024,
+            'terabytes': 1024 * 1024 * 1024 * 1024
+        },
         'B': {
             'B': 1,
             'KiB': 1024,
@@ -889,7 +896,17 @@ NETDATA.unitsConversion = {
             'num (M)': 1000000,
             'num (G)': 1000000000,
             'num (T)': 1000000000000
-        }
+        },
+        'Hz': {
+            'Hz': 1,
+            'kHz': 10 ** 3,
+            'MHz': 10 ** 6,
+            'GHz': 10 ** 9,
+            'THz': 10 ** 12,
+            'PHz': 10 ** 15,
+            'EHz': 10 ** 18,
+            'ZHz': 10 ** 21,
+        },
         /*
         'milliseconds': {
             'seconds': 1000
@@ -3459,7 +3476,7 @@ NETDATA.gaugeChartCreate = function (state, data) {
         colorStart: startColor,     // Colors
         colorStop: stopColor,       // just experiment with them
         strokeColor: strokeColor,   // to see which ones work best for you
-        generateGradient: (generateGradient === true), // gmosx: 
+        generateGradient: (generateGradient === true), // gmosx:
         gradientType: 0,
         highDpiSupport: true        // High resolution support
     };
@@ -9967,7 +9984,7 @@ NETDATA.registry = {
                 }
                 NETDATA.registry.access(2, function (person_urls) {
                     NETDATA.registry.parsePersonUrls(person_urls);
-                });    
+                });
             }
         });
     },
@@ -10018,7 +10035,7 @@ NETDATA.registry = {
             // data.
             name = NETDATA.registry.hostname;
             url = NETDATA.serverDefault;
-        } 
+        }
 
         console.log("ACCESS", name, url);
 
