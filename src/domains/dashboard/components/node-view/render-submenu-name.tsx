@@ -5,6 +5,7 @@ import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 import { ChartsMetadata } from "domains/global/types"
+import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT } from "utils"
 
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
@@ -14,9 +15,7 @@ import { ChartWrapper } from "../chart-wrapper"
 
 import { generateHeadCharts } from "./generate-head-charts"
 
-const NODE_VIEW_DYGRAPH_TITLE_HEIGHT = 30
-
-const chartCommonMin = (family: string, context: string, units: string) => (
+export const chartCommonMin = (family: string, context: string, units: string) => (
   netdataDashboard.anyAttribute(
     netdataDashboard.context, "commonMin", context, undefined,
   ) === undefined
@@ -24,7 +23,7 @@ const chartCommonMin = (family: string, context: string, units: string) => (
     : `${family}/${context}/${units}`
 )
 
-const chartCommonMax = (family: string, context: string, units: string) => (
+export const chartCommonMax = (family: string, context: string, units: string) => (
   netdataDashboard.anyAttribute(
     netdataDashboard.context, "commonMax", context, undefined,
   ) === undefined
