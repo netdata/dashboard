@@ -42,8 +42,9 @@ export interface EasyPieChartData extends ChartDataBase {
 
 export type ChartData = DygraphData | EasyPieChartData | D3pieChartData
 
-interface Dimension {
+export interface Dimension {
   name: string
+  correlationScore?: Number
 }
 
 export interface ChartMetadata {

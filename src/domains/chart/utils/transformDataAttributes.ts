@@ -1,6 +1,7 @@
 import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
 
 import { ChartLibraryName } from "./chartLibrariesSettings"
+import { Dimension } from "../chart-types"
 
 type OutputValue = string | boolean | number | null | undefined | any[]
 // almost the same as in old dashboard to ensure readers that it works the same way
@@ -289,6 +290,7 @@ export interface Attributes extends StaticAttributes {
   // changed structure compared to original dashboard.js (not flat list, but dynamic objects stored
   // in "showValueOf" property
   showValueOf?: { [key: string]: string }
+  selectedDimensions?: Dimension[]
 }
 
 export type AttributePropKeys = keyof StaticAttributes
