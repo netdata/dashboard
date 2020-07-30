@@ -64,22 +64,22 @@ const scalableUnits: ScalableUnits = {
     "GiB/s": 1024 * 1024,
     "TiB/s": 1024 * 1024 * 1024,
   },
-  'bytes': {
-    'bytes': 1,
-    'kilobytes': 1024,
-    'megabytes': 1024 * 1024,
-    'gigabytes': 1024 * 1024 * 1024,
-    'terabytes': 1024 * 1024 * 1024 * 1024
+  "bytes": {
+    "bytes": 1,
+    "kilobytes": 1024,
+    "megabytes": 1024 * 1024,
+    "gigabytes": 1024 * 1024 * 1024,
+    "terabytes": 1024 * 1024 * 1024 * 1024
   },
-  'Hz': {
-    'Hz': 1,
-    'kHz': 10 ** 3,
-    'MHz': 10 ** 6,
-    'GHz': 10 ** 9,
-    'THz': 10 ** 12,
-    'PHz': 10 ** 15,
-    'EHz': 10 ** 18,
-    'ZHz': 10 ** 21,
+  "Hz": {
+    "Hz": 1,
+    "kHz": 10 ** 3,
+    "MHz": 10 ** 6,
+    "GHz": 10 ** 9,
+    "THz": 10 ** 12,
+    "PHz": 10 ** 15,
+    "EHz": 10 ** 18,
+    "ZHz": 10 ** 21,
   },
   B: {
     B: 1,
