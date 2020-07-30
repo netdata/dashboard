@@ -282,8 +282,8 @@ export const ChartWithLoader = ({
   useSelector(selectSpacePanelTransitionEndIsActive)
 
   // Will require to show score somewhere in the chart legend
-  const selecteddimensionsMapped = attributes?.selectedDimensions?.map((dim) => dim.name) || []
-  const [selectedDimensions, setSelectedDimensions] = useState<string[]>(selecteddimensionsMapped)
+  const selectedDimensionsMapped = attributes?.selectedDimensions?.map((dim) => dim.name) || []
+  const [selectedDimensions, setSelectedDimensions] = useState<string[]>(selectedDimensionsMapped)
 
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
