@@ -124,9 +124,10 @@ export const renderSubmenuName = ({
                 decimalDigits: netdataDashboard.contextDecimalDigits(
                   chart.context, -1,
                 ),
+                // TODO: pass in selected dimension only in case of correlation score
                 selectedDimensions: Object.values(
                   chartsMetadata.charts[chart.id]?.dimensions || {},
-                ),
+                ).filter((dim) => dim.correlationScore !== undefined),
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),

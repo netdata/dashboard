@@ -281,8 +281,8 @@ export const ChartWithLoader = ({
 
   useSelector(selectSpacePanelTransitionEndIsActive)
 
-  // eslint-disable-next-line max-len
-  const selecteddimensionsMapped = attributes?.selectedDimensions?.filter((dim) => dim.correlationScore !== undefined).map((dim) => dim.name) || []
+  // Will require to show score somewhere in the chart legend
+  const selecteddimensionsMapped = attributes?.selectedDimensions?.map((dim) => dim.name) || []
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>(selecteddimensionsMapped)
 
   const customElementForDygraph = useMemo(
