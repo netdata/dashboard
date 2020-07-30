@@ -124,7 +124,9 @@ export const renderSubmenuName = ({
                 decimalDigits: netdataDashboard.contextDecimalDigits(
                   chart.context, -1,
                 ),
-                selectedDimensions: Object.values(chartsMetadata.charts[chart.id]?.dimensions || {}),
+                selectedDimensions: Object.values(
+                  chartsMetadata.charts[chart.id]?.dimensions || {},
+                ),
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
