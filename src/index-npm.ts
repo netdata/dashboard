@@ -48,8 +48,12 @@ export { VersionControl } from "components/app-header/components/version-control
 
 /* eslint-disable import/first,import/newline-after-import */
 // Cannot re-export a type when the --isolatedModules flag is provided
-import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import {
+  Attributes,
+  ChartsAttributes as ChartsAttributes_,
+} from "domains/chart/utils/transformDataAttributes"
 export type ChartAttributes = Attributes
+export type ChartsAttributes = ChartsAttributes_
 
 import { ChartMetadata as ChartMetadata_ } from "domains/chart/chart-types"
 export type ChartMetadata = ChartMetadata_
