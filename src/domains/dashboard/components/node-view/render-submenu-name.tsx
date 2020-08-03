@@ -40,6 +40,7 @@ interface RenderSubmenuNameArg {
   menuName: string
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  attributesOverrides?: Attributes
 }
 export const renderSubmenuName = ({
   chartsMetadata,
@@ -50,6 +51,7 @@ export const renderSubmenuName = ({
   menuName,
   pcentWidth,
   renderCustomElementForDygraph,
+  attributesOverrides,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -124,13 +126,10 @@ export const renderSubmenuName = ({
                 decimalDigits: netdataDashboard.contextDecimalDigits(
                   chart.context, -1,
                 ),
-                // TODO: pass in selected dimension only in case of correlation score
-                selectedDimensions: Object.values(
-                  chartsMetadata.charts[chart.id]?.dimensions || {},
-                ).filter((dim) => dim.correlationScore !== undefined),
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
+                ...attributesOverrides,
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}

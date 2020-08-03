@@ -36,6 +36,7 @@ interface SubSectionProps {
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
+  attributesOverrides?: Attributes
 }
 const SubSection = memo(({
   chartsMetadata,
@@ -47,6 +48,7 @@ const SubSection = memo(({
   pcentWidth,
   renderCustomElementForDygraph,
   shouldDisplayHeadMain,
+  attributesOverrides,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
   return (
@@ -69,7 +71,7 @@ const SubSection = memo(({
             .map(parseChartString)
             .map((attributes: Attributes | null) => attributes && (
               <ChartWrapper
-                attributes={{ ...attributes, host }}
+                attributes={{ ...attributes, host, ...attributesOverrides }}
                 key={`${attributes.id}-${attributes.dimensions}`}
                 chartMetadata={chartsMetadata.charts[attributes.id]}
               />
@@ -101,6 +103,7 @@ interface Props {
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   setCurrentChart: (currentChart: string) => void
   timeWindow?: number
+  attributes?: Attributes
 }
 export const NodeView = ({
   chartsMetadata,
@@ -110,6 +113,7 @@ export const NodeView = ({
   renderCustomElementForDygraph,
   setCurrentChart,
   timeWindow,
+  attributes,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const ref = useRef<HTMLDivElement>(null)
@@ -171,6 +175,7 @@ export const NodeView = ({
                   shouldDisplayHeadMain={menuIndex === 0}
                   host={host}
                   chartsMetadata={chartsMetadata}
+                  attributesOverrides={attributes}
                 />
               </div>
             )

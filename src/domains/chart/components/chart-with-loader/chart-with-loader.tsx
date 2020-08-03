@@ -281,7 +281,7 @@ export const ChartWithLoader = ({
 
   useSelector(selectSpacePanelTransitionEndIsActive)
 
-  // Will require to show score somewhere in the chart legend
+  // Will require to show Score somewhere in the chart legend
   const selectedDimensionsMapped = attributes?.selectedDimensions?.map((dim) => dim.name) || []
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>(selectedDimensionsMapped)
 
