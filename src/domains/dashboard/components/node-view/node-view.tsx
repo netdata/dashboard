@@ -5,7 +5,7 @@ import { useWindowScroll } from "react-use"
 
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
-import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 
@@ -36,7 +36,7 @@ interface SubSectionProps {
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
-  attributesOverrides?: Attributes
+  attributesOverrides?: ChartsAttributes
 }
 const SubSection = memo(({
   chartsMetadata,
@@ -71,7 +71,13 @@ const SubSection = memo(({
             .map(parseChartString)
             .map((attributes: Attributes | null) => attributes && (
               <ChartWrapper
-                attributes={{ ...attributes, host, ...attributesOverrides }}
+                attributes={
+                  {
+                    ...attributes,
+                    host,
+                    ...(attributesOverrides ? attributesOverrides[attributes.id] : {}),
+                  }
+                }
                 key={`${attributes.id}-${attributes.dimensions}`}
                 chartMetadata={chartsMetadata.charts[attributes.id]}
               />
@@ -103,7 +109,7 @@ interface Props {
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   setCurrentChart: (currentChart: string) => void
   timeWindow?: number
-  attributes?: Attributes
+  attributes?: ChartsAttributes
 }
 export const NodeView = ({
   chartsMetadata,

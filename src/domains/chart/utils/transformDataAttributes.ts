@@ -293,6 +293,10 @@ export interface Attributes extends StaticAttributes {
   selectedDimensions?: Dimension[]
 }
 
+export interface ChartsAttributes {
+  [chartID:string]: Attributes
+}
+
 export type AttributePropKeys = keyof StaticAttributes
 
 type AttributesMap = {
