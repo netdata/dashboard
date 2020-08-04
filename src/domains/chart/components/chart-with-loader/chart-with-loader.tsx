@@ -281,7 +281,6 @@ export const ChartWithLoader = ({
 
   useSelector(selectSpacePanelTransitionEndIsActive)
 
-  // Will require to show Score somewhere in the chart legend
   const externalSelectedDimensions = attributes?.selectedDimensions
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
   const customElementForDygraph = useMemo(
