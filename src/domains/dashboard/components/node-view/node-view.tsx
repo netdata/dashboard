@@ -93,6 +93,7 @@ const SubSection = memo(({
         menu,
         menuName,
         pcentWidth,
+        attributesOverrides,
       }))}
     </div>
   )

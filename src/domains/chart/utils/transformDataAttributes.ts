@@ -91,6 +91,7 @@ export interface StaticAttributes {
   commonColors?: string
   decimalDigits?: number
   dimensions?: string
+  selectedDimensions?: string[]
   forceTimeWindow?: boolean
 
   appendOptions?: string | undefined
@@ -290,7 +291,6 @@ export interface Attributes extends StaticAttributes {
   // changed structure compared to original dashboard.js (not flat list, but dynamic objects stored
   // in "showValueOf" property
   showValueOf?: { [key: string]: string }
-  selectedDimensions?: Dimension[]
 }
 
 export interface ChartsAttributes {
@@ -323,6 +323,7 @@ const getAttributesMap = (): AttributesMap => ({
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
   dimensions: { key: "dimensions" },
+  selectedDimensions: { key: "selected-dimensions" },
   forceTimeWindow: { key: "force-time-window" },
 
   appendOptions: { key: "append-options" },
