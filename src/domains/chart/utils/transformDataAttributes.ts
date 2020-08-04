@@ -1,7 +1,5 @@
 import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
-
 import { ChartLibraryName } from "./chartLibrariesSettings"
-import { Dimension } from "../chart-types"
 
 type OutputValue = string | boolean | number | null | undefined | any[]
 // almost the same as in old dashboard to ensure readers that it works the same way
