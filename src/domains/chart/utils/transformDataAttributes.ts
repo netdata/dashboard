@@ -1,5 +1,4 @@
 import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
-
 import { ChartLibraryName } from "./chartLibrariesSettings"
 
 type OutputValue = string | boolean | number | null | undefined | any[]
@@ -90,6 +89,7 @@ export interface StaticAttributes {
   commonColors?: string
   decimalDigits?: number
   dimensions?: string
+  selectedDimensions?: string[]
   forceTimeWindow?: boolean
 
   appendOptions?: string | undefined
@@ -291,6 +291,10 @@ export interface Attributes extends StaticAttributes {
   showValueOf?: { [key: string]: string }
 }
 
+export interface ChartsAttributes {
+  [chartID:string]: Attributes
+}
+
 export type AttributePropKeys = keyof StaticAttributes
 
 type AttributesMap = {
@@ -317,6 +321,7 @@ const getAttributesMap = (): AttributesMap => ({
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
   dimensions: { key: "dimensions" },
+  selectedDimensions: { key: "selected-dimensions" },
   forceTimeWindow: { key: "force-time-window" },
 
   appendOptions: { key: "append-options" },

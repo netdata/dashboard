@@ -1,7 +1,7 @@
 import React from "react"
 
 import { name2id } from "utils/name-2-id"
-import { Attributes } from "domains/chart/utils/transformDataAttributes"
+import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 import { ChartsMetadata } from "domains/global/types"
@@ -40,6 +40,7 @@ interface RenderSubmenuNameArg {
   menuName: string
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  attributesOverrides?: ChartsAttributes
 }
 export const renderSubmenuName = ({
   chartsMetadata,
@@ -50,6 +51,7 @@ export const renderSubmenuName = ({
   menuName,
   pcentWidth,
   renderCustomElementForDygraph,
+  attributesOverrides,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -127,6 +129,7 @@ export const renderSubmenuName = ({
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
+                ...(attributesOverrides ? attributesOverrides[chart.id] : {}),
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}
