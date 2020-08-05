@@ -1,7 +1,7 @@
 import React, {
   memo, useRef, useState, useEffect, useMemo,
 } from "react"
-import { useWindowScroll } from "react-use"
+import { useScroll } from "react-use"
 
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
@@ -104,25 +104,24 @@ const isSectionNodeVisible = (node: Element) => (node.getAttribute("id") as stri
 
 interface Props {
   chartsMetadata: ChartsMetadata
-  currentChart: string
   dropdownMenu?: DropdownMenu
   host?: string
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
-  setCurrentChart: (currentChart: string) => void
+  scrollableContainerRef: React.RefObject<HTMLDivElement>
   timeWindow?: number
   attributes?: ChartsAttributes
 }
 export const NodeView = ({
   chartsMetadata,
-  currentChart,
   dropdownMenu,
   host = "http://localhost:19999",
   renderCustomElementForDygraph,
-  setCurrentChart,
+  scrollableContainerRef,
   timeWindow,
   attributes,
 }: Props) => {
   const [width, setWidth] = useState(0)
+  const [currentChart, setCurrentChart] = useState("")
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!width && ref.current) {
@@ -131,7 +130,7 @@ export const NodeView = ({
   }, [width])
 
 
-  const { y } = useWindowScroll()
+  const { y } = useScroll(scrollableContainerRef)
   useEffect(() => {
     if (ref.current) {
       const currentNode = Array.from(ref.current.querySelectorAll("[id]"))
