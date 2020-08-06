@@ -27,6 +27,12 @@
 }
 /* end copy from main.css */
 
+
+// todo temporary,
+// we need to solve it differently when node-view will be used in the dashboard too
+$CLOUD_HEADER_HEIGHT: 56px;
+$CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
+
 .node-view {
   &__container {
     display: flex;
@@ -53,7 +59,7 @@
   &__sidebar {
     position: sticky;
     top: 0;
-    max-height: 100vh;
+    max-height: calc(100vh - #{$CLOUD_HEADER_HEIGHT} - #{$CLOUD_SECONDARY_HEADER_HEIGHT});
     overflow: auto;
     flex: 0 1 auto;
   }
