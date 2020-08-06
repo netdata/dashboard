@@ -46,12 +46,12 @@ if (window.netdataPrepCallback) {
   window.netdataPrepCallback()
 }
 
-const getCurrentRouteFromHash = () => document.location.hash.split(";")[0].replace("#", "")
-
 const AppStyle = { height: "100vh" }
 
 const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   const [realMetadata, setRealMetadata] = useState()
+  const scrollableContainerRef = React.createRef<HTMLDivElement>()
+
   useEffect(() => {
     axiosInstance.get("http://localhost:19999/api/v1/charts")
       .then((response) => {
@@ -61,23 +61,15 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
       })
   }, [])
 
-  const [currentRoute, setCurrentRoute] = useState(getCurrentRouteFromHash)
-
   return (
     <ThemeProvider theme={DefaultTheme}>
-      <div className="App" style={AppStyle}>
+      <div className="App" style={AppStyle} ref={scrollableContainerRef}>
         {realMetadata && (
           <NodeView
             chartsMetadata={realMetadata as unknown as ChartsMetadata}
-            currentChart={currentRoute}
             host="http://localhost:19999/api/v1/data"
             dropdownMenu={[]}
-            setCurrentChart={(chart: string) => {
-              if (currentRoute !== chart) {
-                setCurrentRoute(chart)
-                window.history.replaceState(null, "", `#${chart}`)
-              }
-            }}
+            scrollableContainerRef={scrollableContainerRef}
           />
         )}
       </div>
