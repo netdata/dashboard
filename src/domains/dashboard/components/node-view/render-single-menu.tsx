@@ -20,7 +20,10 @@ export const renderSingleMenu = ({
   const menu = menus[menuName]
   const menuID = name2id(`menu_${menuName}`)
   const submenuNames = sortObjectByPriority(menu.submenus)
-  const isMenuActive = currentChart.startsWith(menuID)
+
+  // currentChart could be either just menu name "menu_ipv4"
+  // or menu + submenu - "menu_ipv4_submenu_sockets"
+  const isMenuActive = currentChart.startsWith(`${menuID}_submenu_`) || currentChart === menuID
   return (
     <li
       key={menuName}
