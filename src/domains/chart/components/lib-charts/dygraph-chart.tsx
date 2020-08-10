@@ -2,15 +2,18 @@ import { sortBy } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback,
 } from "react"
-import { useUpdateEffect, useUnmount } from "react-use"
+import { useUpdateEffect, useUnmount, useMount } from "react-use"
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
+import ResizeObserver from 'resize-observer-polyfill';
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { AppStateT } from "store/app-state"
 import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
+import { debounce } from "utils/debounce"
+
 import {
   selectCommonMin,
   selectCommonMax,
@@ -38,6 +41,7 @@ import "./dygraph-chart.css"
 
 // This is the threshold above which we assume chart shown duration has changed
 const timeframeThreshold = 5000
+const dygraphResizeDebounceTime = 500
 
 type IsInRangeOfAvailableData = (props: {
   after: number, before: number, chartData: DygraphData,
@@ -969,6 +973,41 @@ export const DygraphChart = ({
   useUnmount(() => {
     if (dygraphInstance.current) {
       dygraphInstance.current.destroy()
+    }
+  })
+
+  /**
+   * resize with ResizeObserver
+   */
+  const resizeObserver = useRef<ResizeObserver>()
+  useMount(() => {
+    if (!attributes.detectResize) {
+      return
+    }
+    let hasOmitedFirstCallback = false
+    const callbackDebounced = debounce(() => {
+      if (!hasOmitedFirstCallback) {
+        hasOmitedFirstCallback = true
+        return
+      }
+
+      if (dygraphInstance.current) {
+        (dygraphInstance.current as NetdataDygraph).resize()
+      }
+    }, dygraphResizeDebounceTime)
+
+    resizeObserver.current = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        callbackDebounced()
+      }
+    })
+    resizeObserver.current.observe(chartElement.current as HTMLDivElement)
+  })
+
+  useUnmount(() => {
+    dygraphInstance.current = null // clear it for debounce purposes
+    if (resizeObserver.current) {
+      resizeObserver.current.disconnect()
     }
   })
 

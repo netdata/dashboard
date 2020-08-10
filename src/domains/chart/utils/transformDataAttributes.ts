@@ -100,6 +100,7 @@ export interface StaticAttributes {
   points?: number
   heightId?: string
   hideResizeHandler?: boolean
+  detectResize?: boolean
   commonMin?: string
   commonMax?: string
 
@@ -332,6 +333,7 @@ const getAttributesMap = (): AttributesMap => ({
   points: { key: "points" },
   heightId: { key: "id" },
   hideResizeHandler: { key: "hide-resize-handler" },
+  detectResize: { key: "detect-resize" },
   commonMin: { key: "common-min" },
   commonMax: { key: "common-max" },
 
