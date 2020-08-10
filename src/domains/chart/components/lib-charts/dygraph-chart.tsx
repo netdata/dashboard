@@ -984,6 +984,7 @@ export const DygraphChart = ({
     if (!attributes.detectResize) {
       return
     }
+    // flag used to prevent first callback (and resize) on dygraph initial draw
     let hasOmitedFirstCallback = false
     const callbackDebounced = debounce(() => {
       if (!hasOmitedFirstCallback) {
