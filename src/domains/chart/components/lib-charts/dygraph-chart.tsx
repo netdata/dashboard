@@ -5,7 +5,7 @@ import React, {
 import { useUpdateEffect, useUnmount, useMount } from "react-use"
 import Dygraph from "dygraphs"
 import "dygraphs/src-es5/extras/smooth-plotter"
-import ResizeObserver from 'resize-observer-polyfill';
+import ResizeObserver from "resize-observer-polyfill"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { AppStateT } from "store/app-state"
@@ -997,10 +997,8 @@ export const DygraphChart = ({
       }
     }, dygraphResizeDebounceTime)
 
-    resizeObserver.current = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        callbackDebounced()
-      }
+    resizeObserver.current = new ResizeObserver(() => {
+      callbackDebounced()
     })
     resizeObserver.current.observe(chartElement.current as HTMLDivElement)
   })
