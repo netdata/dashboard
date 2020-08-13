@@ -206,6 +206,7 @@ NETDATA.options = {
 
     color_fill_opacity_line: 1.0,
     color_fill_opacity_area: 0.2,
+    color_fill_opacity_fake_stacked: 1,
     color_fill_opacity_stacked: 0.8,
 
     pan_and_zoom_factor: 0.25,      // the increment when panning and zooming with the toolbox

@@ -37,7 +37,9 @@ import {
 import { ChartMetadata, DygraphData } from "../../chart-types"
 import { selectResizeHeight } from "../../selectors"
 
-import { getDygraphChartType, getDataForFakeStacked } from "./dygraph/utils"
+import {
+  getDygraphChartType, getDataForFakeStacked, transformColors, getDygraphFillAlpha,
+} from "./dygraph/utils"
 import "./dygraph-chart.css"
 
 // This is the threshold above which we assume chart shown duration has changed
@@ -124,9 +126,7 @@ const getInitialDygraphOptions = ({
     dygraphStrokeBorderColor = window.NETDATA.themes.current.background,
     dygraphStrokeBorderWidth = 0,
     dygraphFillGraph = (dygraphChartType === "area" || dygraphChartType === "stacked"),
-    dygraphFillAlpha = dygraphChartType === "stacked"
-      ? window.NETDATA.options.current.color_fill_opacity_stacked
-      : window.NETDATA.options.current.color_fill_opacity_area,
+    dygraphFillAlpha = getDygraphFillAlpha(isFakeStacked, dygraphChartType),
     dygraphStackedGraph = dygraphChartType === "stacked" && !isFakeStacked,
     dygraphStackedGraphNanFill = "none",
     dygraphAxisLabelFontSize = 10,
@@ -151,7 +151,7 @@ const getInitialDygraphOptions = ({
     dygraphDrawYAxis = dygraphDrawAxis,
   } = attributes
   return {
-    colors: isFakeStacked ? reverse(dygraphColors) : dygraphColors,
+    colors: isFakeStacked ? transformColors(reverse(dygraphColors)) : dygraphColors,
 
     // leave a few pixels empty on the right of the chart
     rightGap: isSparkline ? 0 : dygraphRightGap,
@@ -328,6 +328,7 @@ export const DygraphChart = ({
   // because first values need to be "on top" (at least for positive values), the dimension order
   // needs to be reversed (in getDataForFakeStacked function and when assigning dimension colors)
   const isFakeStacked = chartData.min < 0 && dygraphChartType === "stacked"
+  const dygraphFillAlpha = getDygraphFillAlpha(isFakeStacked, dygraphChartType)
 
   const chartElement = useRef<HTMLDivElement>(null)
 
@@ -871,15 +872,17 @@ export const DygraphChart = ({
 
       dygraphInstance.current.updateOptions({
         ...optionsDateWindow,
-        colors: isFakeStacked ? reverse(dygraphColors) : dygraphColors,
+        colors: isFakeStacked ? transformColors(reverse(dygraphColors)) : dygraphColors,
         file,
         labels: chartData.result.labels,
+        fillAlpha: dygraphFillAlpha,
         stackedGraph: dygraphChartType === "stacked" && !isFakeStacked,
         visibility: dimensionsVisibility,
       })
     }
-  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, hasEmptyData, isFakeStacked,
-    isRemotelyControlled, orderedColors, requestedViewRange, viewAfter, viewBefore])
+  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphChartType,
+    dygraphFillAlpha, hasEmptyData, isFakeStacked, isRemotelyControlled, orderedColors,
+    requestedViewRange, viewAfter, viewBefore])
 
 
   // set selection
