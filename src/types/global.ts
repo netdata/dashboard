@@ -95,6 +95,7 @@ interface NETDATA {
       color_fill_opacity_line: number
       color_fill_opacity_area: number
       color_fill_opacity_stacked: number
+      color_fill_opacity_fake_stacked: number
 
       pan_and_zoom_factor: number
       pan_and_zoom_factor_multiplier_control: number
