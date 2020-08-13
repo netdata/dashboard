@@ -1,4 +1,4 @@
-import { sortBy } from "ramda"
+import { sortBy, reverse } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback,
 } from "react"
@@ -37,6 +37,7 @@ import {
 import { ChartMetadata, DygraphData } from "../../chart-types"
 import { selectResizeHeight } from "../../selectors"
 
+import { getDygraphChartType, getDataForFakeStacked } from "./dygraph/utils"
 import "./dygraph-chart.css"
 
 // This is the threshold above which we assume chart shown duration has changed
@@ -57,6 +58,7 @@ interface GetInitialDygraphOptions {
   chartSettings: ChartLibraryConfig,
   dimensionsVisibility: boolean[]
   hiddenLabelsElementId: string,
+  isFakeStacked: boolean,
   orderedColors: string[],
   setMinMax: (minMax: TimeRange) => void
   shouldSmoothPlot: boolean,
@@ -70,6 +72,7 @@ const getInitialDygraphOptions = ({
   chartSettings,
   dimensionsVisibility,
   hiddenLabelsElementId,
+  isFakeStacked,
   orderedColors,
   setMinMax,
   shouldSmoothPlot,
@@ -80,17 +83,7 @@ const getInitialDygraphOptions = ({
   const highlightCircleSize = isSparkline ? 3 : 4
 
   const isLogScale = (chartSettings.isLogScale as ((a: Attributes) => boolean))(attributes)
-  const {
-    dygraphType: dygraphRequestedType = chartMetadata.chart_type,
-  } = attributes
-  // corresponds to state.tmp.dygraph_chart_type in old app
-  let dygraphChartType = dygraphRequestedType
-  if (dygraphChartType === "stacked" && chartData.dimensions === 1) {
-    dygraphChartType = "area"
-  }
-  if (dygraphChartType === "stacked" && isLogScale) {
-    dygraphChartType = "area"
-  }
+  const dygraphChartType = getDygraphChartType(attributes, chartData, chartMetadata, chartSettings)
   const {
     dygraphSmooth = dygraphChartType === "line"
       && !isSparkline,
@@ -134,7 +127,7 @@ const getInitialDygraphOptions = ({
     dygraphFillAlpha = dygraphChartType === "stacked"
       ? window.NETDATA.options.current.color_fill_opacity_stacked
       : window.NETDATA.options.current.color_fill_opacity_area,
-    dygraphStackedGraph = dygraphChartType === "stacked",
+    dygraphStackedGraph = dygraphChartType === "stacked" && !isFakeStacked,
     dygraphStackedGraphNanFill = "none",
     dygraphAxisLabelFontSize = 10,
     dygraphAxisLineColor = window.NETDATA.themes.current.axis,
@@ -158,7 +151,7 @@ const getInitialDygraphOptions = ({
     dygraphDrawYAxis = dygraphDrawAxis,
   } = attributes
   return {
-    colors: dygraphColors,
+    colors: isFakeStacked ? reverse(dygraphColors) : dygraphColors,
 
     // leave a few pixels empty on the right of the chart
     rightGap: isSparkline ? 0 : dygraphRightGap,
@@ -327,6 +320,15 @@ export const DygraphChart = ({
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const hiddenLabelsElementId = `${chartUuid}-hidden-labels-id`
 
+  const dygraphChartType = getDygraphChartType(attributes, chartData, chartMetadata, chartSettings)
+  // isFakeStacked - is a special mode for displaying stacked charts with both positive and negative
+  // values. Dygraph.js doesn't support it so in this case we need to sum the values manually
+  // and display the chart as "area" type, but with keeping all styling (fill etc.) properties
+  // as in "stacked" type
+  // because first values need to be "on top" (at least for positive values), the dimension order
+  // needs to be reversed (in getDataForFakeStacked function and when assigning dimension colors)
+  const isFakeStacked = chartData.min < 0 && dygraphChartType === "stacked"
+
   const chartElement = useRef<HTMLDivElement>(null)
 
   const updateChartPanOrZoom = useCallback(({
@@ -414,6 +416,7 @@ export const DygraphChart = ({
         chartSettings,
         dimensionsVisibility,
         hiddenLabelsElementId,
+        isFakeStacked,
         orderedColors,
         setMinMax,
         shouldSmoothPlot,
@@ -789,13 +792,14 @@ export const DygraphChart = ({
         },
       }
 
-      // todo if any flickering will happen, show the dygraph chart only when it's
-      // updated with proper formatting (toggle visibility with css)
-      const instance = new Dygraph((chartElement.current), chartData.result.data, dygraphOptions)
+      const data = isFakeStacked
+        ? getDataForFakeStacked(chartData.result.data, dimensionsVisibility)
+        : chartData.result.data
+      const instance = new Dygraph((chartElement.current), data, dygraphOptions)
       dygraphInstance.current = instance
     }
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
-    globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isMouseDown,
+    globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isFakeStacked, isMouseDown,
     orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
     updateChartPanOrZoom, xAxisTimeString])
 
@@ -861,16 +865,20 @@ export const DygraphChart = ({
         : {}
 
       const { dygraphColors = orderedColors } = attributes
+      const file = isFakeStacked
+        ? getDataForFakeStacked(chartData.result.data, dimensionsVisibility)
+        : chartData.result.data
 
       dygraphInstance.current.updateOptions({
         ...optionsDateWindow,
-        colors: dygraphColors,
-        file: chartData.result.data,
+        colors: isFakeStacked ? reverse(dygraphColors) : dygraphColors,
+        file,
         labels: chartData.result.labels,
+        stackedGraph: dygraphChartType === "stacked" && !isFakeStacked,
         visibility: dimensionsVisibility,
       })
     }
-  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, hasEmptyData,
+  }, [attributes, chartData.result, chartUuid, dimensionsVisibility, hasEmptyData, isFakeStacked,
     isRemotelyControlled, orderedColors, requestedViewRange, viewAfter, viewBefore])
 
 
