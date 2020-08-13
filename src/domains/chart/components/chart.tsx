@@ -97,8 +97,18 @@ export const Chart = memo(({
 
   const dispatch = useDispatch()
   const allDimensionNames = useMemo(
-    () => Object.values(chartMetadata.dimensions).map((x) => x.name),
-    [chartMetadata.dimensions],
+    () => {
+      // metadata and chartData dimensions match each other, but we need to first parse
+      // dimensions from metadata, to keep the same order (when browser parsers dimensions object,
+      // it sorts them in *some* way which is hard to reproduce). And people can get used to colors
+      // so let's keep them as they were before
+      const dimensionNamesFromMetadata = Object.values(chartMetadata.dimensions).map((x) => x.name)
+      const additionalDimensionNamesFromData = chartData.dimension_names.filter(
+        (x) => !dimensionNamesFromMetadata.includes(x),
+      )
+      return dimensionNamesFromMetadata.concat(additionalDimensionNamesFromData)
+    },
+    [chartData.dimension_names, chartMetadata.dimensions],
   )
   useEffect(() => {
     dispatch(requestCommonColorsAction({
