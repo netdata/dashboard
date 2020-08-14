@@ -365,17 +365,20 @@ globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
 
 globalReducer.on(fetchHelloAction.request, (state) => ({
   ...state,
-  isFetchingHello: true,
+  registry: {
+    ...state.registry,
+    isFetchingHello: true,
+  },
 }))
 
 globalReducer.on(fetchHelloAction.success, (state, {
   cloudBaseURL, hostname, machineGuid,
 }) => ({
   ...state,
-  isFetchingHello: false,
   registry: {
     ...state.registry,
     cloudBaseURL,
+    isFetchingHello: false,
     hasFetchedHello: true,
     hostname,
     machineGuid,
@@ -383,10 +386,10 @@ globalReducer.on(fetchHelloAction.success, (state, {
 }))
 globalReducer.on(fetchHelloAction.failure, (state) => ({
   ...state,
-  isFetchingHello: true,
   registry: {
     ...state.registry,
     cloudBaseURL: CLOUD_BASE_URL_DISABLED,
+    isFetchingHello: false,
     isHelloCallError: true,
   },
 }))
