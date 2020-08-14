@@ -20,6 +20,8 @@ import {
   setSpacePanelStatusAction,
   SetSpacePanelStatusActionPayload,
   setSpacePanelTransitionEndAction,
+  HelloResponse,
+  accessRegistrySuccessAction,
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
 import { MASKED_DATA } from "./constants"
@@ -41,18 +43,6 @@ export function* watchWindowFocusChannel() {
     yield put(action)
   }
 }
-
-/* eslint-disable camelcase */
-interface HelloResponse {
-  action: "hello"
-  anonymous_statistics: boolean
-  cloud_base_url: string
-  hostname: string
-  machine_guid: string
-  registry: string
-  status: string
-}
-/* eslint-enable camelcase */
 
 const injectGTM = (machineGuid: string) => {
   // @ts-ignore
@@ -223,15 +213,18 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     yield put(fetchHelloAction.failure())
     return
   }
-
-  const registryServer = response.data.registry
-
   const cloudBaseURL = response.data.cloud_base_url
-
-  const machineGuid = response.data.machine_guid
   const { hostname } = response.data
-
+  const machineGuid = response.data.machine_guid
+  const registryServer = response.data.registry
   const isUsingGlobalRegistry = registryServer === NETDATA_REGISTRY_SERVER
+
+  yield put(fetchHelloAction.success({
+    cloudBaseURL,
+    hostname,
+    isUsingGlobalRegistry,
+    machineGuid,
+  }))
 
   const name = isUsingGlobalRegistry ? MASKED_DATA : hostname
   const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
@@ -249,14 +242,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     url,
   })
 
-  yield put(fetchHelloAction.success({
-    cloudBaseURL,
-    hostname,
-    isUsingGlobalRegistry,
-    machineGuid,
-    registryServer: accessRegistryResponse?.registryServer || registryServer,
-  }))
-
   if (accessRegistryResponse?.urls && accessRegistryResponse?.personGuid) {
     const personUrls = parsePersonUrls(accessRegistryResponse.urls)
     const { registryMachines, registryMachinesArray } = personUrls
@@ -269,6 +254,11 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   } else {
     window.netdataRegistryCallback()
   }
+
+  yield put(accessRegistrySuccessAction({
+    registryServer: accessRegistryResponse?.registryServer || registryServer,
+  }))
+
 }
 
 const constructOptionStorageKey = (key: string) => `options.${key}`

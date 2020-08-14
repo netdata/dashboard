@@ -26,6 +26,7 @@ import {
   setSpacePanelStatusAction,
   setSpacePanelTransitionEndAction,
   resetRegistry,
+  accessRegistrySuccessAction,
 } from "./actions"
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
@@ -368,7 +369,7 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
 }))
 
 globalReducer.on(fetchHelloAction.success, (state, {
-  cloudBaseURL, hostname, machineGuid, registryServer,
+  cloudBaseURL, hostname, machineGuid,
 }) => ({
   ...state,
   isFetchingHello: false,
@@ -378,7 +379,6 @@ globalReducer.on(fetchHelloAction.success, (state, {
     hasFetchedHello: true,
     hostname,
     machineGuid,
-    registryServer,
   },
 }))
 globalReducer.on(fetchHelloAction.failure, (state) => ({
@@ -388,6 +388,13 @@ globalReducer.on(fetchHelloAction.failure, (state) => ({
     ...state.registry,
     cloudBaseURL: CLOUD_BASE_URL_DISABLED,
     isHelloCallError: true,
+  },
+}))
+globalReducer.on(accessRegistrySuccessAction, (state, { registryServer }) => ({
+  ...state,
+  registry: {
+    ...state.registry,
+    registryServer,
   },
 }))
 

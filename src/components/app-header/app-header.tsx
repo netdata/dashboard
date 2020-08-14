@@ -164,7 +164,7 @@ export const AppHeader = ({
   }
   const signInIframeRef = useRef<HTMLIFrameElement>(null)
   useEffect(() => {
-    if (isSignedIn && !isUsingGlobalRegistry) {
+    if (isSignedIn && registry.registryServer && !isUsingGlobalRegistry) {
       const needsSync = localStorage.getItem(LOCAL_STORAGE_NEEDS_SYNC) === "true"
       // that means we were signed in and going back to agent after that
       if (needsSync && signInIframeRef.current) {
