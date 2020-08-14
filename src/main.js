@@ -2422,21 +2422,12 @@ function alarmsUpdateModal() {
                 exportOptions: {
                     fileName: 'netdata_alarm_log'
                 },
-                onClickRow: function (row, $element,field) {
-                    void (field);
-                    void ($element);
-                    let main_url;
-                    let common_url = "&host=" + encodeURIComponent(row['hostname']) + "&chart=" + encodeURIComponent(row['chart']) + "&family=" + encodeURIComponent(row['family']) + "&alarm=" + encodeURIComponent(row['name']) + "&alarm_unique_id=" + row['unique_id'] + "&alarm_id=" + row['alarm_id'] + "&alarm_event_id=" +  row['alarm_event_id'] + "&alarm_when=" + row['when'];
-                    if (isUsingGlobalRegistry() && getFromRegistry("machineGuid") != null) {
-                        main_url = "https://netdata.cloud/alarms/redirect?agentID=" + getFromRegistry("machineGuid") + common_url;
-                    } else {
-                        main_url = getFromRegistry("registryServer") + "/goto-host-from-alarm.html?" + common_url ;
-                    }
-                    window.open(main_url,"_blank");
+                onClickRow: function (row) {
+                    scrollToChartAfterHidingModal(row.chart, row.when * 1000, row.status);
+                    $('#alarmsModal').modal('hide');
+                    return false;
                 },
-                rowStyle: function (row, index) {
-                    void (index);
-
+                rowStyle: function (row) {
                     switch (row.status) {
                         case 'CRITICAL':
                             return { classes: 'danger' };
