@@ -64,11 +64,21 @@ export const windowFocusChangeAction = createAction<WindowFocusChangeAction>(
 export interface FetchHelloPayload {
   serverDefault: string
 }
+/* eslint-disable camelcase */
+export interface HelloResponse {
+  action: "hello"
+  anonymous_statistics: boolean
+  cloud_base_url: string
+  hostname: string
+  machine_guid: string
+  registry: string
+  status: string
+}
+/* eslint-enable camelcase */
 
 export const fetchHelloAction = createRequestAction<
   FetchHelloPayload,
-  { cloudBaseURL: string, hostname: string, isCloudEnabled: boolean, machineGuid: string,
-    registryServer: string }
+  { cloudBaseURL: string, hostname: string, isCloudEnabled: boolean, machineGuid: string }
   >(`${storeKey}/fetchHelloAction`)
 
 
@@ -79,6 +89,13 @@ interface UpdatePersonUrlsAction {
 }
 export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
   `${storeKey}/updatePersonUrlsAction`,
+)
+
+export interface AccessRegistrySuccessAction {
+  registryServer: string
+}
+export const accessRegistrySuccessAction = createAction<AccessRegistrySuccessAction>(
+  `${storeKey}/accessRegistrySuccessAction`,
 )
 
 export interface StartAlarmsPayload {
