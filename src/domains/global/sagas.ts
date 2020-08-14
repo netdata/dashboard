@@ -258,7 +258,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   yield put(accessRegistrySuccessAction({
     registryServer: accessRegistryResponse?.registryServer || registryServer,
   }))
-
 }
 
 const constructOptionStorageKey = (key: string) => `options.${key}`
