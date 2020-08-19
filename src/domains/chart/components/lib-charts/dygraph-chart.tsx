@@ -877,7 +877,8 @@ export const DygraphChart = ({
         labels: chartData.result.labels,
         fillAlpha: dygraphFillAlpha,
         stackedGraph: dygraphChartType === "stacked" && !isFakeStacked,
-        visibility: dimensionsVisibility,
+        // see explanation about reversing before isFakeStacked assignment
+        visibility: isFakeStacked ? reverse(dimensionsVisibility) : dimensionsVisibility,
       })
     }
   }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphChartType,
