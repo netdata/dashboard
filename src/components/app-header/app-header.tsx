@@ -84,7 +84,7 @@ export const AppHeader = ({
   const origin = encodeURIComponent(
     alwaysEndWithSlash(window.location.origin + window.location.pathname),
   )
-  const iframeUrlSuffix = `${isCloudEnabled ? "" : "&disableCloud=true"}&logoutDropdown=true`
+  const iframeUrlSuffix = "&logoutDropdown=true"
   const signInIframeUrl = getIframeSrc(
     cloudBaseURL,
     `sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}${iframeUrlSuffix}`,
@@ -238,7 +238,7 @@ export const AppHeader = ({
           </StyledGearContainer>
         </IconContainer>
         <IframeContainer>
-          {cloudBaseURL !== CLOUD_BASE_URL_DISABLED && (
+          {cloudBaseURL !== CLOUD_BASE_URL_DISABLED && isCloudEnabled && (
             <SignInIframe
               ref={signInIframeRef}
               title="Sign In"
@@ -249,7 +249,7 @@ export const AppHeader = ({
               onLoad={handleIframeLoad}
             />
           )}
-          {enoughWaitingForIframe && hasSignInHistory && isOffline && (
+          {enoughWaitingForIframe && hasSignInHistory && isOffline && isCloudEnabled && (
             <OfflineBlock>
               <SvgIcon icon={offlineBlock} height={40} />
             </OfflineBlock>
