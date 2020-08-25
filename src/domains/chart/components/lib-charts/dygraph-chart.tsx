@@ -3,7 +3,9 @@ import React, {
   useLayoutEffect, useRef, useCallback,
 } from "react"
 import { useUpdateEffect, useUnmount, useMount } from "react-use"
-import Dygraph from "dygraphs"
+// this version is needed because it contains a fix for handling constant value in the chart
+// ie. https://github.com/danvk/dygraphs/pull/909
+import Dygraph from "vendor/dygraph-c91c859.min"
 import "dygraphs/src-es5/extras/smooth-plotter"
 import ResizeObserver from "resize-observer-polyfill"
 
