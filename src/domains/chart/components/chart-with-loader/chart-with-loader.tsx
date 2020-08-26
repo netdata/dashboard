@@ -282,7 +282,15 @@ export const ChartWithLoader = ({
   useSelector(selectSpacePanelTransitionEndIsActive)
 
   const externalSelectedDimensions = attributes?.selectedDimensions
-  const [selectedDimensions, setSelectedDimensions] = useState<string[]>([])
+  const [selectedDimensions, setSelectedDimensions] = useState<string[]>(externalSelectedDimensions
+    || [])
+
+  useEffect(() => {
+    if (externalSelectedDimensions) {
+      setSelectedDimensions(externalSelectedDimensions)
+    }
+  }, [externalSelectedDimensions])
+
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
       attributes,
@@ -323,7 +331,7 @@ export const ChartWithLoader = ({
         hasEmptyData={hasEmptyData}
         isRemotelyControlled={fetchDataParams.isRemotelyControlled}
         requestedViewRange={fetchDataParams.viewRange}
-        selectedDimensions={externalSelectedDimensions || selectedDimensions}
+        selectedDimensions={selectedDimensions}
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
