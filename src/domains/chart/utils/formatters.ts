@@ -71,7 +71,7 @@ const getLegendFormatValue = (
     dmax = valueDecimalDetail
   } else {
     dmin = 0
-    const abs = (value < 0) ? -value : value
+    const abs = (convertedValue < 0) ? -convertedValue : convertedValue
     if (abs > 1000) {
       dmax = 0
     } else if (abs > 10) {
@@ -91,7 +91,7 @@ const getLegendFormatValue = (
     }
   }
 
-  return fastNumberFormat(dmin, dmax).format(value)
+  return fastNumberFormat(dmin, dmax).format(convertedValue)
 }
 
 type LegendFormatValue = (value: string | number | null) => string | number
