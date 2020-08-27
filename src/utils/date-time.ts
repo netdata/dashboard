@@ -10,7 +10,7 @@ const zeropad = (x: number) => {
   return x.toString()
 }
 
-export const isSupportingDateTimeFormat = !!(Intl && Intl.DateTimeFormat)
+export const isSupportingDateTimeFormat = !!(Intl && Intl.DateTimeFormat && navigator.language)
 
 const narrowToDate = (d: Date | number) => (typeof d === "number"
   ? new Date(d)
