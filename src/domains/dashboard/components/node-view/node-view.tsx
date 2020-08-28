@@ -154,9 +154,11 @@ export const NodeView = ({
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
 
-  const menus = useMemo(() => renderChartsAndMenu(metricsCorrelationMetadata
-    || chartsMetadata, metricsCorrelationMetadata
-    && chartsMetadata), [metricsCorrelationMetadata, chartsMetadata])
+  const menuPartialMetadata = metricsCorrelationMetadata || chartsMetadata
+  // This is used to generate and show some statistics VS the full dataset
+  const fullMetadata = metricsCorrelationMetadata && chartsMetadata
+  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata), 
+    [menuPartialMetadata, fullMetadata])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
   return (
