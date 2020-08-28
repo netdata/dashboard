@@ -84,6 +84,9 @@ export const D3pieChart = ({
 }: Props) => {
   const chartElement = useRef<HTMLDivElement>(null)
 
+  const legendFormatValueRef = useRef(legendFormatValue)
+  legendFormatValueRef.current = legendFormatValue
+
   const [d3pieInstance, setD3pieInstance] = useState()
   const d3pieOptions = useRef<{[key: string]: any}>()
 
@@ -274,7 +277,7 @@ export const D3pieChart = ({
           },
           formatter(context: any) {
             if (context.part === "value") {
-              return legendFormatValue(context.value)
+              return legendFormatValueRef.current(context.value)
             }
             if (context.part === "percentage") {
               return `${context.label}%`
