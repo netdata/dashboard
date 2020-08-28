@@ -134,8 +134,7 @@ function enrichChartData(chart: ChartMetadata) {
   return chartEnriched
 }
 
-
-export const renderChartsAndMenu = (data: ChartsMetadata) => {
+export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsMetadata) => {
   options.menus = {}
   options.submenu_names = {}
 
@@ -167,6 +166,13 @@ export const renderChartsAndMenu = (data: ChartsMetadata) => {
       if (chart.priority < menus[m].priority) {
         menus[m].priority = chart.priority
       }
+      if (fullMetadata) {
+        if (!menus[m].correlationsMetadata) {
+          menus[m].correlationsMetadata = { scoredCount: 1, totalCount: 1, averageScore: 0 }
+        }
+        menus[m].correlationsMetadata!.scoredCount = menus[m].correlationsMetadata!.scoredCount!
+          + 1 // Object.keys(chart.dimensions).length
+      }
     }
 
     const menuKey = (typeof (menus[m].menu_pattern) !== "undefined") ? menus[m].menu_pattern : m
@@ -188,6 +194,21 @@ export const renderChartsAndMenu = (data: ChartsMetadata) => {
     menus[m].submenus[chart.submenu].charts.push(chart)
   })
 
+  if (fullMetadata) {
+    const correlationCharts = fullMetadata.charts
+    Object.keys(correlationCharts).forEach((chartName) => {
+      const chart = enrichChartData(correlationCharts[chartName] as ChartEnriched)
+      const m = chart.menu
+      if (!menus[m]) {
+        return
+      }
+      if (!menus[m].correlationsMetadata) {
+        menus[m].correlationsMetadata = { scoredCount: 1, totalCount: 1, averageScore: 0 }
+      }
+      menus[m].correlationsMetadata!.totalCount = menus[m].correlationsMetadata!.totalCount!
+        + 1 // Object.keys(chart.dimensions).length
+    })
+  }
 
   // propagate the descriptive subname given to QoS
   // to all the other submenus with the same name

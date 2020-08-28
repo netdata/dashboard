@@ -41,6 +41,9 @@ export const renderSingleMenu = ({
         <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
         {" "}
         {menu.title}
+        {menu.correlationsMetadata && (
+          ` (${menu.correlationsMetadata.scoredCount}/${menu.correlationsMetadata.totalCount})`
+        )}
       </a>
       <ul
         className={classNames(
