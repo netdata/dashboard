@@ -157,7 +157,7 @@ export const NodeView = ({
   const menuPartialMetadata = metricsCorrelationMetadata || chartsMetadata
   // This is used to generate and show some statistics VS the full dataset
   const fullMetadata = metricsCorrelationMetadata && chartsMetadata
-  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata), 
+  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata),
     [menuPartialMetadata, fullMetadata])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
