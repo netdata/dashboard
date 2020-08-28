@@ -110,6 +110,7 @@ interface Props {
   scrollableContainerRef: React.RefObject<HTMLDivElement>
   timeWindow?: number
   attributes?: ChartsAttributes
+  metricsCorrelationMetadata?: ChartsMetadata
 }
 export const NodeView = ({
   chartsMetadata,
@@ -119,6 +120,7 @@ export const NodeView = ({
   scrollableContainerRef,
   timeWindow,
   attributes,
+  metricsCorrelationMetadata,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState("")
@@ -152,7 +154,9 @@ export const NodeView = ({
     ((((width * pcentWidth) / 100) * chartsMetadata.update_every) / 3) / 60,
   ) * 60
 
-  const menus = useMemo(() => renderChartsAndMenu(chartsMetadata), [chartsMetadata])
+  const menus = useMemo(() => renderChartsAndMenu(metricsCorrelationMetadata
+    || chartsMetadata, metricsCorrelationMetadata
+    && chartsMetadata), [metricsCorrelationMetadata, chartsMetadata])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
   return (
@@ -180,7 +184,7 @@ export const NodeView = ({
                   pcentWidth={pcentWidth}
                   shouldDisplayHeadMain={menuIndex === 0}
                   host={host}
-                  chartsMetadata={chartsMetadata}
+                  chartsMetadata={metricsCorrelationMetadata || chartsMetadata}
                   attributesOverrides={attributes}
                 />
               </div>

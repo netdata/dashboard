@@ -13,6 +13,12 @@ export interface Submenus {
   }
 }
 
+export interface CorrelationMetadata {
+    scoredCount?: number
+    totalCount?: number
+    averageScore?: number
+}
+
 export interface Menu {
   // eslint-disable-next-line camelcase
   menu_pattern: string
@@ -22,6 +28,7 @@ export interface Menu {
   icon: string
   info: string
   height: number
+  correlationsMetadata?: CorrelationMetadata
 }
 
 export interface Menus {
