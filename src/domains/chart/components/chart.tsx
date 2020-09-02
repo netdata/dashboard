@@ -295,11 +295,17 @@ export const Chart = memo(({
   }, [handleToolBoxPanAndZoom, netdataLast, viewAfter, viewBefore])
 
   const handleToolboxZoomInClick = useCallback((event: React.MouseEvent) => {
+    // if visible time range is much bigger than available time range in history, first zoom-in
+    // should just fit to available range
+    if ((viewBefore - viewAfter) > (netdataLast - netdataFirst) * 1.2) {
+      handleToolBoxPanAndZoom(netdataFirst, netdataLast)
+      return
+    }
     const dt = ((viewBefore - viewAfter) * getPanAndZoomStep(event) * 0.8) / 2
     const newAfter = viewAfter + dt
     const newBefore = viewBefore - dt
     handleToolBoxPanAndZoom(newAfter, newBefore)
-  }, [handleToolBoxPanAndZoom, viewAfter, viewBefore])
+  }, [handleToolBoxPanAndZoom, netdataFirst, netdataLast, viewAfter, viewBefore])
 
   const handleToolboxZoomOutClick = useCallback((event: React.MouseEvent) => {
     const dt = ((viewBefore - viewAfter) / (1.0 - (getPanAndZoomStep(event) * 0.8))
