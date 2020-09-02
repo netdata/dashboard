@@ -16,6 +16,7 @@ import {
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
+import { getCorrectedPoints } from "utils/fill-missing-data"
 
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../../constants"
 import { getChartURLOptions } from "../../utils/get-chart-url-options"
@@ -227,6 +228,13 @@ export const ChartWithLoader = ({
         || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
       const points = forceDataPoints || dataPoints * pointsMultiplier
 
+      // if we want to add fake points, we need first need to request less
+      // to have the desired frequency
+      // this will be removed when Agents will support forcing time-window between points
+      const correctedPoints = attributes.forceTimeWindow ? getCorrectedPoints({
+        after, before, firstEntry: actualChartMetadata.first_entry, points,
+      }) : null
+
       const group = attributes.method || window.NETDATA.chartDefaults.method
 
       setShouldFetch(false)
@@ -236,7 +244,7 @@ export const ChartWithLoader = ({
           host,
           chart: actualChartMetadata.id,
           format: chartSettings.format,
-          points,
+          points: correctedPoints || points,
           group,
           gtime: attributes.gtime || 0,
           options: getChartURLOptions(attributes, shouldEliminateZeroDimensions),
@@ -248,6 +256,7 @@ export const ChartWithLoader = ({
           fetchDataParams: {
             // we store it here so it is only available when data is fetched
             // those params should be synced with data
+            fillMissingPoints: correctedPoints ? (points - correctedPoints) : undefined,
             isRemotelyControlled,
             viewRange,
           },

@@ -23,6 +23,7 @@ export const updateChartMetadataAction = createAction<UpdateChartMetadataAction>
 )
 
 export interface FetchDataParams {
+  fillMissingPoints?: number
   isRemotelyControlled: boolean
   viewRange: [number, number]
 }

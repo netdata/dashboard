@@ -18,6 +18,7 @@ export const HeadMain = ({
   const commonAttributes = {
     host,
     after: -duration,
+    forceTimeWindow: true,
     points: duration,
   }
 

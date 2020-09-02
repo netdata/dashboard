@@ -14,6 +14,7 @@ import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
+import { fillMissingData } from "utils/fill-missing-data"
 
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
@@ -35,6 +36,7 @@ import {
   FetchInfoPayload,
   fetchDataCancelAction,
 } from "./actions"
+import { ChartData } from "./chart-types"
 
 const CONCURRENT_CALLS_LIMIT_METRICS = isMainJs ? 30 : 60
 const CONCURRENT_CALLS_LIMIT_PRINT = 2
@@ -134,8 +136,9 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   }
 
   const onSuccessCallback = (data: unknown) => {
+    const { fillMissingPoints } = fetchDataParams
     fetchDataResponseChannel.put(fetchDataAction.success({
-      chartData: data,
+      chartData: fillMissingPoints ? fillMissingData(data as ChartData, fillMissingPoints) : data,
       fetchDataParams,
       id,
     }))
