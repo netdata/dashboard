@@ -74,6 +74,7 @@ const SubSection = memo(({
                 attributes={
                   {
                     ...attributes,
+                    forceTimeWindow: true, // respect timeWindow
                     host,
                     ...(attributesOverrides ? attributesOverrides[attributes.id] : {}),
                   }

@@ -126,6 +126,7 @@ export const renderSubmenuName = ({
                 decimalDigits: netdataDashboard.contextDecimalDigits(
                   chart.context, -1,
                 ),
+                forceTimeWindow: true,
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
