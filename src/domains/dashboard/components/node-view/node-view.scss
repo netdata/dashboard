@@ -1,3 +1,11 @@
+:root {
+  --color-primary: #00ab44;
+  --color-accent: #00cb51;
+  --color-attention: #563d7c;
+  --color-text: #333;
+  --color-textFocus: #767676;
+}
+
 /* copied from main.css */
 .charts-body {
   width: 100%;
@@ -27,7 +35,6 @@
 }
 /* end copy from main.css */
 
-
 // todo temporary,
 // we need to solve it differently when node-view will be used in the dashboard too
 $CLOUD_HEADER_HEIGHT: 56px;
@@ -42,8 +49,8 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.42857143;
-    color: #333;
-    background-color: #fff;
+    color: var(--color-text);
+    background-color: var(--color-mainBackground);
     & a {
       text-decoration: none;
     }
@@ -64,7 +71,8 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     flex: 0 1 auto;
   }
 
-  &__sidebar-menu-li, &__sidebar-submenu-li {
+  &__sidebar-menu-li,
+  &__sidebar-submenu-li {
     display: block;
   }
 
@@ -73,7 +81,7 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     padding: 4px 20px;
     font-size: 13px;
     font-weight: 500;
-    color: #767676;
+    color: var(--color-textFocus);
     & .svg-inline--fa {
       width: 20px;
       text-align: center;
@@ -81,37 +89,36 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
   }
 
   &__sidebar-link {
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       padding-left: 19px;
-      color: #563d7c;
+      color: var(--color-attention);
       text-decoration: none;
       background-color: transparent;
-      border-left: 1px solid #563d7c;
+      border-left: 1px solid var(--color-attention);
     }
   }
 
-  &__sidebar-menu-li--active, &__sidebar-submenu-li--active {
+  &__sidebar-menu-li--active,
+  &__sidebar-submenu-li--active {
     .node-view__sidebar-link {
-
     }
-
   }
-
 
   /* active menu */
-  &__sidebar-menu-li--active, &__sidebar-submenu-li--active {
+  &__sidebar-menu-li--active,
+  &__sidebar-submenu-li--active {
     & > .node-view__sidebar-link {
       padding-left: 18px;
       font-weight: bold;
-      color: #563d7c;
+      color: var(--color-attention);
       background-color: transparent;
-      border-left: 2px solid #563d7c;
+      border-left: 2px solid var(--color-attention);
     }
     & .node-view__sidebar-submenu {
       display: block;
     }
   }
-
 
   /* Nav: second level (shown on .active) */
   &__sidebar-submenu {
@@ -126,17 +133,17 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       padding-left: 30px;
       font-size: 12px;
       font-weight: normal;
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         padding-left: 29px;
       }
     }
   }
 
   &__sidebar-submenu &__sidebar-link:hover,
-  &__sidebar-submenu &__sidebar-link:focus  {
+  &__sidebar-submenu &__sidebar-link:focus {
     padding-left: 29px;
   }
-
 
   &__sidebar-submenu-li--active {
     .node-view__sidebar-link {
