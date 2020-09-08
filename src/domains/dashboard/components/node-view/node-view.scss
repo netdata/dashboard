@@ -74,34 +74,34 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
   &__sidebar-menu-li,
   &__sidebar-submenu-li {
     display: block;
-  }
 
-  &__sidebar-link {
-    display: block;
-    padding: 4px 20px;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--color-textFocus);
-    & .svg-inline--fa {
-      width: 20px;
-      text-align: center;
+    &__sidebar-link {
+      display: block;
+      padding: 4px 20px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-textFocus);
+      & .svg-inline--fa {
+        width: 20px;
+        text-align: center;
+      }
     }
-  }
 
-  &__sidebar-link {
-    &:hover,
-    &:focus {
-      padding-left: 19px;
-      color: var(--color-attention);
-      text-decoration: none;
-      background-color: transparent;
-      border-left: 1px solid var(--color-attention);
+    &__sidebar-link {
+      &:hover,
+      &:focus {
+        padding-left: 19px;
+        color: var(--color-attention);
+        text-decoration: none;
+        background-color: transparent;
+        border-left: 1px solid var(--color-attention);
+      }
     }
-  }
 
-  &__sidebar-menu-li--active,
-  &__sidebar-submenu-li--active {
-    .node-view__sidebar-link {
+    &__sidebar-menu-li--active,
+    &__sidebar-submenu-li--active {
+      .node-view__sidebar-link {
+      }
     }
   }
 

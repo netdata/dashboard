@@ -1,6 +1,6 @@
 import styled from "styled-components"
 import {
-  getColor, getSizeBy, Button, breakpoints,
+  getColor, getSizeBy, breakpoints,
 } from "@netdata/netdata-ui"
 
 const appHeaderZIndex = 5
@@ -12,7 +12,7 @@ export const StyledHeader = styled.header`
   position: fixed;
   height: 56px;
   width: 100%;
-  background: ${getColor(["gray", "limedSpruce"])};
+  background: ${getColor("tooltip")};
   display: flex;
   flex-flow: row nowrap;
 
@@ -23,7 +23,7 @@ export const StyledHeader = styled.header`
   @media ${breakpoints.laptopLarge} {
     padding-right: ${getSizeBy(3)};
   }
-  
+
   @media print {
     display: none;
   }
@@ -66,14 +66,6 @@ export const UtilitySection = styled.section`
   @media ${breakpoints.laptopLarge} {
     padding-left: ${getSizeBy(2)};
   }
-`
-
-export const StyledGear = styled(Button)`
-  fill: ${getColor(["white", "pure"])};
-`
-
-export const StyledGearContainer = styled.a`
-  padding: 0;
 `
 
 export const IconContainer = styled.div`

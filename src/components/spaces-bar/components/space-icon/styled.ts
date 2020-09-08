@@ -13,12 +13,12 @@ export const InitialsContainer = styled.div<{ active?: boolean }>`
   border: 2px solid;
   cursor: pointer;
   border-color: ${({ active }) => (
-    active ? getColor(["success"]) : getColor(["gray", "limedSpruce"])
+    active ? getColor("success") : getColor(["gray", "limedSpruce"])
   )};
 `
 
 export const InitialLetter = styled(Text)<{ gray?: boolean }>`
   font-weight: bold;
   text-transform: uppercase;
-  color: ${({ gray }) => (gray ? getColor(["gray", "bombay"]) : getColor(["text"]))};
+  color: ${({ gray }) => (gray ? getColor(["gray", "bombay"]) : getColor("text"))};
 `

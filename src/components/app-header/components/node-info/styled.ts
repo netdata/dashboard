@@ -21,18 +21,18 @@ export const NavigationItem = styled.div`
 `
 
 export const StyledIcon = styled(Icon)`
-  fill: ${getColor(["white", "pure"])};
+  fill: ${getColor("bright")};
 `
 
 export const Hostname = styled(Text)`
-  color: ${getColor(["white", "pure"])};
+  color: ${getColor("bright")};
   font-weight: bold;
   padding: 0 12px;
 `
 
 const alarmColors = {
-  critical: getColor(["error"]),
-  warning: getColor(["warning"]),
+  critical: getColor("error"),
+  warning: getColor("warning"),
 }
 
 type AlarmType = "critical" | "warning"
@@ -40,7 +40,7 @@ type AlarmType = "critical" | "warning"
 export const AlarmIndicator = styled.div<{ alarmType: AlarmType }>`
   width: ${getSizeBy(2)};
   height: ${getSizeBy(2)};
-  color: ${getColor(["white", "pure"])};
+  color: ${getColor("bright")};
   border-radius: 2px;
   background: ${({ alarmType, ...props }) => {
     const getBackgroundColor = alarmColors[alarmType]

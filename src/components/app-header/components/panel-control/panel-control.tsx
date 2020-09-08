@@ -1,8 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Button } from "@netdata/netdata-ui"
 import NetdataLogo from "./assets/netdata-logo.svg"
-import { LogoSection, LogoContainer } from "./styled"
+import { LogoSection, LogoContainer, StyledButton } from "./styled"
 import { setSpacePanelStatusAction } from "../../../../domains/global/actions"
 import { selectSpacePanelIsActive } from "../../../../domains/global/selectors"
 
@@ -17,12 +16,14 @@ export const PanelControl = () => {
           <use xlinkHref={`#${NetdataLogo.id}`} />
         </svg>
       </LogoContainer>
-      <Button
-        type="borderless"
+      <StyledButton
+        neutral
+        flavour="borderless"
         icon="hamburger"
         onClick={() => {
           dispatch(setSpacePanelStatusAction({ isActive: !spacePanelIsActive }))
         }}
+        themeType="dark"
       />
     </LogoSection>
   )

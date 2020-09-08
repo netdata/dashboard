@@ -1,5 +1,7 @@
 import styled from "styled-components"
-import { getSizeBy, getColor, breakpoints } from "@netdata/netdata-ui"
+import {
+  getSizeBy, getColor, breakpoints, Button,
+} from "@netdata/netdata-ui"
 
 export const LogoSection = styled.section`
   position: relative;
@@ -29,11 +31,28 @@ export const LogoSection = styled.section`
     height: ${getSizeBy(5)};
     top: ${getSizeBy()};
     right: 1px;
-    background: ${getColor(["borderColor"])};
+    background: ${getColor("border")};
   }
 `
 
 export const LogoContainer = styled.div`
   height: ${getSizeBy(3)};
   width: ${getSizeBy(15)};
+
+  @media ${breakpoints.mobileSmall} {
+    display: none;
+  }
+
+  @media ${breakpoints.desktop} {
+    display: block;
+  }
+`
+
+export const StyledButton = styled(Button)`
+  && {
+    .button-icon {
+      height: 24px;
+      width: 24px;
+    }
+  }
 `
