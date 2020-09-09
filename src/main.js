@@ -1915,6 +1915,9 @@ function renderPage(menus, data) {
 
     sidebar += '</li>'
 
+    sidebar += '<li id="sidebar-end-portal-container"></li>'
+
+
     sidebar += '</ul>';
     div.innerHTML = html;
     document.getElementById('sidebar').innerHTML = sidebar;

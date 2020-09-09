@@ -26,6 +26,8 @@ import { selectCloudBaseUrl, selectHasFetchedInfo, selectSignInUrl } from "domai
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
+import { SidebarSocialMedia } from "domains/dashboard/components/sidebar-social-media"
+import { SidebarSocialMediaPortal } from "domains/dashboard/components/sidebar-social-media-portal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
 import { useRegistry } from "hooks/use-registry"
 import { useListenToFocusMessages } from "hooks/use-listen-to-focus-messages"
@@ -180,6 +182,9 @@ const App: React.FC = () => {
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
                 <Portals key={refreshHelper} />
+                <SidebarSocialMediaPortal>
+                  <SidebarSocialMedia />
+                </SidebarSocialMediaPortal>
                 {isPrintMode && <PrintModal />}
               </>
             )}
