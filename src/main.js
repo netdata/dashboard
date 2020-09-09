@@ -1908,11 +1908,6 @@ function renderPage(menus, data) {
 
     sidebar += '<br/>&nbsp;<br/><strong>netdata</strong><br/>' + data.version.toString() + '</small>';
 
-    sidebar += '<div class="terms-and-privacy">'
-        sidebar += '<a href="https://www.netdata.cloud/terms/" target="_blank">Terms and conditions</a><br/>'
-        sidebar += '<a href="https://www.netdata.cloud/privacy/" target="_blank">Privacy Policy</a><br/>'
-    sidebar += '</div>'
-
     sidebar += '</li>'
 
     sidebar += '<li id="sidebar-end-portal-container"></li>'
