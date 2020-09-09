@@ -61,3 +61,5 @@ export type ChartMetadata = ChartMetadata_
 import { ChartsMetadata as ChartsMetadata_ } from "domains/global/types"
 export type ChartsMetadata = ChartsMetadata_
 /* eslint-enable import/first,import/newline-after-import */
+
+export { DashboardThemeProvider } from "./theme-provider"

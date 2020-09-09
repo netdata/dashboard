@@ -75,7 +75,7 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
   &__sidebar-submenu-li {
     display: block;
 
-    &__sidebar-link {
+    .node-view__sidebar-link {
       display: block;
       padding: 4px 20px;
       font-size: 13px;
@@ -87,7 +87,7 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       }
     }
 
-    &__sidebar-link {
+    .node-view__sidebar-link {
       &:hover,
       &:focus {
         padding-left: 19px;

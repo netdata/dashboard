@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react"
 import Ps from "perfect-scrollbar"
-import { ThemeProvider } from "styled-components"
-import { DefaultTheme } from "@netdata/netdata-ui"
 
 // this is for developing purposes only. Normally, cloud-FE already has those stylesheets
 import "@material/menu-surface/dist/mdc.menu-surface.css"
@@ -62,18 +60,16 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   }, [])
 
   return (
-    <ThemeProvider theme={DefaultTheme}>
-      <div className="App" style={AppStyle} ref={scrollableContainerRef}>
-        {realMetadata && (
-          <NodeView
-            chartsMetadata={realMetadata as unknown as ChartsMetadata}
-            host="http://localhost:19999/api/v1/data"
-            dropdownMenu={[]}
-            scrollableContainerRef={scrollableContainerRef}
-          />
-        )}
-      </div>
-    </ThemeProvider>
+    <div className="App" style={AppStyle} ref={scrollableContainerRef}>
+      {realMetadata && (
+        <NodeView
+          chartsMetadata={realMetadata as unknown as ChartsMetadata}
+          host="http://localhost:19999/api/v1/data"
+          dropdownMenu={[]}
+          scrollableContainerRef={scrollableContainerRef}
+        />
+      )}
+    </div>
   )
 }
 

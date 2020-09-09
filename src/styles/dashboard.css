@@ -8,17 +8,17 @@ body {
 }
 
 .morelink {
-    color: #765d9c;
+    color: var(--color-attention, #765d9c);
     text-decoration: none;
 }
 
 .morelink:hover {
-    color: #563d7c;
+    color: var(--color-attentionSecondary, #563d7c);
     text-decoration: none;
 }
 
 .morelink:focus {
-    color: #765d9c;
+    color: var(--color-attention, #765d9c);
     text-decoration: none;
 }
 
@@ -118,12 +118,12 @@ body {
     right: 0px;
     height: 15px;
     width: 20px;
-    background-color: White;
+    background-color: var(--color-mainBackground, #fff);
     font-size: 15px;
     vertical-align: middle;
     line-height: 15px;
     cursor: ns-resize;
-    color: #DDDDDD;
+    color: var(--color-placeholder, #DDDDDD);
     text-align: center;
     overflow: hidden;
     z-index: 20;
@@ -138,11 +138,11 @@ body {
     right: 30px;
     height: 15px;
     width: 110px;
-    background-color: White;
+    background-color: var(--color-mainBackground, #fff);
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
-    color: #DDDDDD;
+    color: var(--color-placeholder, #DDDDDD);
     text-align: center;
     overflow: hidden;
     z-index: 20;
@@ -161,11 +161,11 @@ body {
     position: relative;
     height: 15px;
     width: 18px;
-    background-color: White;
+    background-color: var(--color-mainBackground, #fff);
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
-    color: #CDCDCD;
+    color: var(--color-border, #CDCDCD);
     text-align: center;
     overflow: hidden;
     z-index: 21;
@@ -201,7 +201,7 @@ body {
 }
 
 .netdata-message.icon {
-    color: #F8F8F8;
+    color: var(--color-elementBackground, #F8F8F8);
     text-align: center;
     vertical-align: middle;
 }
@@ -328,7 +328,7 @@ body {
     font-size: 11px; /* legend: dimension value size */
     font-weight: bold;
     vertical-align: bottom;
-    background-color: White;
+    background-color: var(--color-mainBackground, #fff);
     margin-top: 0px;
     z-index: 10;
     padding: 0px;
@@ -468,9 +468,9 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: #666;
+    color: var(--color-border, #666);
     font-weight: normal;
-    text-shadow: #BBB 0px 0px 1px;
+    text-shadow: var(--color-elementBackground, #BBB) 0px 0px 1px;
     /* -webkit-font-smoothing: none; */
 }
 
@@ -482,7 +482,7 @@ body {
     width: 64%;
     margin-left: 18% !important;
     text-align: center;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: bold;
 }
 
@@ -494,7 +494,7 @@ body {
     width: 60%;
     margin-left: 20% !important;
     text-align: center;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: normal;
 }
 
@@ -519,10 +519,10 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: #FFFFFF;
+    color: var(--color-mainBackground, #FFFFFF);
     font-weight: bold;
     z-index: 1;
-    text-shadow: #777 0px 0px 1px;
+    text-shadow: var(--color-elementBackground, #777) 0px 0px 1px;
     /* text-shadow: #CCC 1px 1px 0px, #CCC -1px -1px 0px, #CCC 1px -1px 0px, #CCC -1px 1px 0px; */
     /* -webkit-text-stroke: 1px #777; */
     /* -webkit-font-smoothing: none; */
@@ -535,7 +535,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: bold;
 }
 
@@ -548,7 +548,7 @@ body {
     width: 100%;
     text-align: left;
     margin-left: 5%;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: normal;
 }
 
@@ -561,7 +561,7 @@ body {
     width: 92%;
     margin-left: 8%;
     text-align: left;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: normal;
 }
 
@@ -574,7 +574,7 @@ body {
     width: 95%;
     margin-right: 5%;
     text-align: right;
-    color: #999999;
+    color: var(--color-separator, #999999);
     font-weight: normal;
 }
 
@@ -653,7 +653,7 @@ body {
 .ps-container > .ps-scrollbar-x-rail > .ps-scrollbar-x {
     position: absolute;
     /* please don't change 'position' */
-    background-color: #666; /* #aaa; the color on content hover */
+    background-color: var(--color-elementBackground, #666); /* #aaa; the color on content hover */
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
@@ -689,7 +689,7 @@ body {
 .ps-container > .ps-scrollbar-y-rail > .ps-scrollbar-y {
     position: absolute;
     /* please don't change 'position' */
-    background-color: #666; /* #aaa; the color on content hover */
+    background-color: var(--color-elementBackground, #666); /* #aaa; the color on content hover */
     -webkit-border-radius: 6px;
     -moz-border-radius: 6px;
     border-radius: 6px;
