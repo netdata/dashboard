@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useEffect } from "react"
 import { useEffectOnce } from "react-use"
-import {Button} from "@netdata/netdata-ui"
+import { Button } from "@netdata/netdata-ui"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
@@ -199,7 +199,16 @@ export const AppHeader = ({
           />
         )}
         <IconContainer>
-          <Button flavour="borderless" neutral themeType="dark" className="btn" data-toggle="modal" data-target="#helpModal" icon="question" title="Need help?" />
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#helpModal"
+            icon="question"
+            title="Need help?"
+          />
         </IconContainer>
         <IconContainer>
           <Button
