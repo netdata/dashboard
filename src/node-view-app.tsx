@@ -17,6 +17,8 @@ import { ChartsMetadata } from "domains/global/types"
 
 import { axiosInstance } from "utils/api"
 
+import { DashboardThemeProvider } from "./theme-provider"
+
 // import "./styles/main.css"
 
 if (!window.netdataNoBootstrap) {
@@ -62,12 +64,14 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   return (
     <div className="App" style={AppStyle} ref={scrollableContainerRef}>
       {realMetadata && (
-        <NodeView
-          chartsMetadata={realMetadata as unknown as ChartsMetadata}
-          host="http://localhost:19999/api/v1/data"
-          dropdownMenu={[]}
-          scrollableContainerRef={scrollableContainerRef}
-        />
+        <DashboardThemeProvider theme="light">
+          <NodeView
+            chartsMetadata={realMetadata as unknown as ChartsMetadata}
+            host="http://localhost:19999/api/v1/data"
+            dropdownMenu={[]}
+            scrollableContainerRef={scrollableContainerRef}
+          />
+        </DashboardThemeProvider>
       )}
     </div>
   )
