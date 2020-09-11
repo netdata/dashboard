@@ -1,8 +1,7 @@
 import React from "react"
+import { Button } from "@netdata/netdata-ui"
 import { IconContainer } from "../../styled"
-import {
-  StyledButton, IndicatorsContainer, AlarmIndicator, StyledButtonContainer,
-} from "./styled"
+import { IndicatorsContainer, AlarmIndicator } from "./styled"
 
 interface Props {
   criticalAlarmsCount: number
@@ -17,13 +16,16 @@ export const AlarmsControl = ({
       {criticalAlarmsCount > 0 && <AlarmIndicator alarmType="critical" />}
       {warningAlarmsCount > 0 && <AlarmIndicator alarmType="warning" />}
     </IndicatorsContainer>
-    <StyledButtonContainer
-      href="#"
+
+    <Button
+      flavour="borderless"
+      neutral
+      themeType="dark"
       className="btn"
       data-toggle="modal"
       data-target="#alarmsModal"
-    >
-      <StyledButton type="borderless" icon="alarm" />
-    </StyledButtonContainer>
+      icon="alarm"
+      title="Alarms"
+    />
   </IconContainer>
 )

@@ -17,7 +17,7 @@ export const RoomAddSection = styled.section`
 
 export const StyledAnnotation = styled(H5)`
   text-shadow: unset;
-  color: ${getColor(["borderColor"])};
+  color: ${getColor("border")};
 `
 
 // TODO - we should have Button Small on UI Kit level probably

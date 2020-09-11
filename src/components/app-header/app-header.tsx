@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useEffect } from "react"
 import { useEffectOnce } from "react-use"
+import { Button } from "@netdata/netdata-ui"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
@@ -28,12 +29,9 @@ import {
   NavigationSection,
   UtilitySection,
   CollapsableSection,
-  StyledGear,
   WhiteSpaceSection,
   IconContainer,
   IframeContainer,
-  StyledHelpIcon,
-  StyledGearContainer,
   SignInButton,
   OfflineBlock,
   SignInIframe,
@@ -201,41 +199,68 @@ export const AppHeader = ({
           />
         )}
         <IconContainer>
-          <StyledHelpIcon href="#" className="btn" data-toggle="modal" data-target="#helpModal">
-            <i className="fas fa-question-circle" />
-          </StyledHelpIcon>
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#helpModal"
+            icon="question"
+            title="Need help?"
+          />
         </IconContainer>
         <IconContainer>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="btn" data-toggle="modal" data-target="#loadSnapshotModal">
-            <i className="fas fa-download" />
-          </a>
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#loadSnapshotModal"
+            icon="upload"
+            title="Import a snapshot"
+          />
         </IconContainer>
         <IconContainer>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="btn" data-toggle="modal" data-target="#saveSnapshotModal">
-            <i className="fas fa-upload" />
-          </a>
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#saveSnapshotModal"
+            icon="download"
+            title="Export a snapshot"
+          />
         </IconContainer>
         <IconContainer>
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          <a href="#" className="btn" data-toggle="modal" data-target="#printPreflightModal">
-            <i className="fas fa-print" />
-          </a>
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#printPreflightModal"
+            icon="print"
+            title="Print dashboard"
+          />
         </IconContainer>
         <AlarmsControl
           criticalAlarmsCount={criticalAlarmsCount}
           warningAlarmsCount={warningAlarmsCount}
         />
         <IconContainer>
-          <StyledGearContainer
-            href="#"
+          <Button
+            flavour="borderless"
+            neutral
+            themeType="dark"
             className="btn"
             data-toggle="modal"
             data-target="#optionsModal"
-          >
-            <StyledGear type="borderless" icon="gear" />
-          </StyledGearContainer>
+            icon="gear"
+            title="Settings"
+          />
         </IconContainer>
         <IframeContainer>
           {cloudBaseURL !== CLOUD_BASE_URL_DISABLED && isCloudEnabled && (

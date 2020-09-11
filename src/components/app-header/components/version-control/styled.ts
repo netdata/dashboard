@@ -21,6 +21,19 @@ export const Container = styled.div`
   }
 `
 
+export const TextBold = styled(Text)`
+  margin-left: 6px;
+  font-weight: bold;
+  color: ${getColor("primary")};
+  @media ${breakpoints.mobileSmall} {
+    display: none;
+  }
+
+  @media ${breakpoints.laptopLarge} {
+    display: block;
+  }
+`
+
 export const VersionIndicator = styled.div`
   display: flex;
   flex-flow: row nowrap;
@@ -31,25 +44,21 @@ const VersionIndicatorLink = VersionIndicator.withComponent("a")
 
 export const NewVersionIndicator = styled(VersionIndicatorLink)`
   margin-left: ${getSizeBy(2)};
-  color: ${getColor(["success"])};
+  color: ${getColor("primary")};
   cursor: pointer;
-`
 
-export const TextBold = styled(Text)`
-  margin-left: 6px;
-  font-weight: bold;
-  @media ${breakpoints.mobileSmall} {
-    display: none;
-  }
+  &:hover {
+    color: ${getColor("bright")};
 
-  @media ${breakpoints.laptopLarge} {
-    display: block;
+    ${TextBold} {
+      color: ${getColor("bright")};
+    }
   }
 `
 
 export const VersionNumber = styled(Text)`
   margin-left: 4px;
-  color: ${getColor(["white", "pure"])};
+  color: ${getColor("bright")};
 `
 
 export const CollapsableText = styled(Text)`

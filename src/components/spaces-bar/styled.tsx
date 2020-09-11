@@ -1,6 +1,5 @@
-import React from "react"
 import styled from "styled-components"
-import { getSizeBy, getColor, Button } from "@netdata/netdata-ui"
+import { getSizeBy, getColor } from "@netdata/netdata-ui"
 
 const spacesBarZIndex = 4
 
@@ -11,7 +10,7 @@ export const ListContainer = styled.div`
   top: 56px;
   height: calc(100vh - 56px);
   width: ${getSizeBy(7)};
-  background: ${getColor(["gray", "limedSpruce"])};
+  background: ${getColor("tooltip")};
   padding-top: ${getSizeBy(2)};
   display: flex;
   flex-direction: column;
@@ -35,7 +34,7 @@ export const SeparatedSection = styled.div`
     height: 1px;
     top: 0;
     left: ${getSizeBy(2)};
-    background: ${getColor(["borderColor"])};
+    background: ${getColor("border")};
   }
 `
 
@@ -45,13 +44,4 @@ export const SpacePlaceholder = styled.div`
   border-radius: ${getSizeBy()};
   border: 2px dotted ${getColor(["white", "pure"])};
   margin-bottom: ${getSizeBy(2)};
-`
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const StyledSpaceBarPlus = styled(({ isDisabled, ...rest }: any) => (
-  // eslint-disable-next-line react/jsx-props-no-spreading
-  <Button {...rest} />
-))`
-  background: ${({ isDisabled }) => (isDisabled ? "rgba(0, 171, 68, 0.4);" : "#00AB44")};
-  pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
 `

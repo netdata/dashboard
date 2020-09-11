@@ -4,7 +4,7 @@ import {
 } from "@netdata/netdata-ui"
 
 export const StyledIcon = styled(Icon)`
-  fill: ${getColor(["text"])};
+  fill: ${getColor("text")};
   margin-right: ${getSizeBy()};
 `
 
@@ -43,21 +43,21 @@ export const ErrorIndicator = styled.div`
   height: 12px;
   margin-right: 4px;
   border-radius: 50%;
-  background: ${getColor(["error"])};
+  background: ${getColor("error")};
   display: flex;
   justify-content: center;
   align-items: center;
 `
 
 export const WarningIndicator = styled(ErrorIndicator)`
-  background: ${getColor(["warning"])};
+  background: ${getColor("warning")};
 `
 export const UnreachableIndicator = styled(ErrorIndicator)`
   background: ${getColor(["gray", "bombay"])};
 `
 
 export const StyledCount = styled(TextNano)`
-  color: ${getColor(["white", "pure"])};
+  color: ${getColor("bright")};
 `
 
 export const UnreachableCount = styled(TextNano)``

@@ -1,11 +1,11 @@
 import React from "react"
-
+import { Button } from "@netdata/netdata-ui"
 import { getIframeSrc } from "utils"
 import { useSelector } from "store/redux-separate-context"
 import { selectIsCloudEnabled } from "domains/global/selectors"
 
 import {
-  ListContainer, SpacesList, SeparatedSection, SpacePlaceholder, StyledSpaceBarPlus,
+  ListContainer, SpacesList, SeparatedSection, SpacePlaceholder,
 } from "./styled"
 
 interface Props {
@@ -42,8 +42,8 @@ export const SpacesBar = ({
             <SpacePlaceholder />
           </SpacesList>
           <SeparatedSection>
-            <StyledSpaceBarPlus
-              isDisabled={isOffline}
+            <Button
+              disabled={isOffline}
               icon="plus"
               onClick={() => {
                 window.location.href = signInUrl

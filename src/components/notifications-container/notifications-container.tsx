@@ -24,7 +24,7 @@ export const NotificationsContainer = styled(WrappedToastContainer)<ToastContain
     min-width: 400px;
     max-width: 500px;
     ${notificationsZIndex};
-    color: ${getColor(["text"])};
+    color: ${getColor("text")};
   }
   .Toastify__toast {
     padding: 0;
@@ -32,13 +32,13 @@ export const NotificationsContainer = styled(WrappedToastContainer)<ToastContain
   }
   .Toastify__toast--error {
     background: ${getColor(["red", "roseWhite"])};
-    border: 1px solid ${getColor(["error"])};
+    border: 1px solid ${getColor("error")};
   }
   .Toastify__toast--warning {
   }
   .Toastify__toast--success {
     background: ${getColor(["green", "clearDay"])};
-    border: 1px solid ${getColor(["success"])};
+    border: 1px solid ${getColor("success")};
   }
   .Toastify__toast-body {
   }
@@ -47,9 +47,9 @@ export const NotificationsContainer = styled(WrappedToastContainer)<ToastContain
     top: 0;
   }
   .Toastify__progress-bar--success {
-    background-color: ${getColor(["success"])};
+    background-color: ${getColor("success")};
   }
   .Toastify__progress-bar--error {
-    background-color: ${getColor(["error"])};
+    background-color: ${getColor("error")};
   }
 `

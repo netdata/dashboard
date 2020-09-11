@@ -22,8 +22,8 @@ export const SideContent = styled.div<{ right?: boolean }>`
 export const ContentContainer = styled.div``
 
 export const HeaderText = styled(Text)<{ error?: boolean; success?: boolean }>`
-  color: ${({ error, success }) => (success && getColor(["success"]))
-    || (error && getColor(["error"]))};
+  color: ${({ error, success }) => (success && getColor("success"))
+    || (error && getColor("error"))};
   font-weight: bold;
   display: block;
   margin-bottom: ${getSizeBy()};
@@ -31,6 +31,6 @@ export const HeaderText = styled(Text)<{ error?: boolean; success?: boolean }>`
 
 export const ContentText = styled(TextSmall)<{ error?: boolean; success?: boolean }>`
   display: block;
-  color: ${({ error }) => (error && getColor(["error"])) || getColor(["text"])};
+  color: ${({ error }) => (error && getColor("error")) || getColor("text")};
   font-weight: ${({ error }) => error && "bold"};
 `

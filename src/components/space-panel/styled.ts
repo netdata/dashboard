@@ -15,13 +15,13 @@ export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: bool
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: ${getColor(["text"])};
+  color: ${getColor("text")};
   padding: ${({ isSignedIn, theme }) => (
     isSignedIn ? 0 : getSizeBy(PANEL_CONTAINER_PADDING)({ theme })
   )} 0;
   background: #f1f2f3;
   transition: transform ${sidePanelTransitionTimeInSeconds}s ease-out;
-  border-right: 1px solid ${getColor(["borderColor"])};
+  border-right: 1px solid ${getColor("border")};
 `
 
 export const ScrollContainer = styled.div`
@@ -49,7 +49,7 @@ export const PanelSection = styled.section<{ leading?: boolean }>`
     height: 1px;
     top: 0;
     left: calc(50% - ${getSizeBy(10)} / 2);
-    background: ${getColor(["borderColor"])};
+    background: ${getColor("border")};
   }
 `
 

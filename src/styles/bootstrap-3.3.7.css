@@ -1088,8 +1088,8 @@ body {
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
-  color: #333;
-  background-color: #fff;
+  color: var(--color-text, #333);
+  background-color: var(--color-mainBackground, #fff);
 }
 input,
 button,
@@ -1136,8 +1136,8 @@ img {
   height: auto;
   padding: 4px;
   line-height: 1.42857143;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--color-mainBackground, #fff);
+  border: 1px solid var(--color-border, #ddd);
   border-radius: 4px;
   -webkit-transition: all .2s ease-in-out;
        -o-transition: all .2s ease-in-out;

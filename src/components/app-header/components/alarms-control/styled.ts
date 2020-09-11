@@ -1,20 +1,13 @@
 import styled from "styled-components"
-import { Button, getColor } from "@netdata/netdata-ui"
+import { getColor } from "@netdata/netdata-ui"
 
 export const Container = styled.div`
   position: relative;
 `
 
-export const StyledButton = styled(Button)``
-
-export const StyledButtonContainer = styled.a`
-  padding: 0;
-`
-
-
 const alarmColors = {
-  critical: getColor(["error"]),
-  warning: getColor(["warning"]),
+  critical: getColor("error"),
+  warning: getColor("warning"),
 }
 
 type AlarmType = "critical" | "warning"
