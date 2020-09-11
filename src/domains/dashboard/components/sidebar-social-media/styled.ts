@@ -1,11 +1,10 @@
 import styled from "styled-components"
 import { getSizeBy, getColor } from "@netdata/netdata-ui"
-import { grayBombay, grayLimedSpruce } from "styles/layout-constants"
 
 export const SocialMediaContainer = styled.div`
   width: 185px;
   padding: ${getSizeBy(2)};
-  background: ${getColor(grayLimedSpruce)};
+  background: ${getColor("mainBackground")};
   font-size: 12px;
   margin-bottom: ${getSizeBy(3)};
 `
@@ -16,11 +15,11 @@ export const FirstRow = styled.div`
 `
 
 export const GithubCopy = styled.div`
-  
+
 `
 
 export const GithubCopyLine = styled.div`
-  
+
 `
 
 export const GithubStarQuestion = styled.a`
@@ -40,8 +39,8 @@ export const FacebookIcon = styled.a`
 
 export const Separator = styled.div`
   margin-top: ${getSizeBy(2)};
-  border-top: 1px solid ${getColor(grayBombay)};
-  
+  border-top: 1px solid ${getColor("disabled")};
+
 `
 export const SecondRow = styled.div`
   margin-top: ${getSizeBy(2)};
