@@ -135,10 +135,12 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     dimensions,
   }
 
-  const onSuccessCallback = (data: unknown) => {
+  const onSuccessCallback = (data: {}) => {
     const { fillMissingPoints } = fetchDataParams
     fetchDataResponseChannel.put(fetchDataAction.success({
-      chartData: fillMissingPoints ? fillMissingData(data as ChartData, fillMissingPoints) : data,
+      chartData: fillMissingPoints
+        ? fillMissingData(data as ChartData, fillMissingPoints)
+        : data,
       fetchDataParams,
       id,
     }))
@@ -148,7 +150,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     console.warn("fetch chart data failure") // eslint-disable-line no-console
     fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
   }
-
 
   fetchMetrics$.next({
     url,
