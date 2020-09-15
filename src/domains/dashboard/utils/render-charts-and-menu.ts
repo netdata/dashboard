@@ -9,11 +9,13 @@ import { netdataDashboard, options } from "./netdata-dashboard"
 // to reflect our menu system and content
 // TODO: this is a shame - we should fix charts naming (issue #807)
 // ^^ (original comment from gsmox, still valid!)
-function enrichChartData(chart: ChartMetadata) {
-  const parts = chart.type.split("_")
+function enrichChartData(chartName: string, chart: ChartMetadata) {
+  const [type] = chartName.split(".") as string[]
+  const parts = type.split("_")
   const tmp = parts[0]
 
   const chartEnriched = clone(chart) as ChartEnriched
+  chartEnriched.menu = type
 
   switch (tmp) {
     case "ap":
@@ -25,7 +27,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "apache":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 2 && parts[1] === "cache") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -34,7 +35,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "bind":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 2 && parts[1] === "rndc") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -43,7 +43,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "cgroup":
-      chartEnriched.menu = chartEnriched.type
       if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
         || chartEnriched.id.match(/.*[._/-:]kvm[._/-:]*/)
       ) {
@@ -54,7 +53,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "go":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 2 && parts[1] === "expvar") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -63,7 +61,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "isc":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 2 && parts[1] === "dhcpd") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -72,7 +69,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     case "ovpn":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 3 && parts[1] === "status" && parts[2] === "log") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -82,7 +78,6 @@ function enrichChartData(chart: ChartMetadata) {
 
     case "smartd":
     case "web":
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 2 && parts[1] === "log") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
       } else if (parts.length > 1) {
@@ -123,7 +118,6 @@ function enrichChartData(chart: ChartMetadata) {
       break
 
     default:
-      chartEnriched.menu = chartEnriched.type
       if (parts.length > 1) {
         chartEnriched.menu_pattern = tmp
       }
@@ -141,12 +135,12 @@ export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsM
   const { menus } = options
   const { charts } = data
 
-  Object.keys(charts).forEach((chartName) => {
-    const chart = enrichChartData(charts[chartName] as ChartEnriched)
+  Object.keys(charts).forEach((chartName: string) => {
+    const chart = enrichChartData(chartName, charts[chartName] as ChartEnriched)
     const m = chart.menu
 
     // create the menu
-    // j: when multiple charts have the same menu (chart.type in /charts response)
+    // j: when multiple charts have the same menu (type in /charts response)
     // j: then we set the smallest priority from them
     if (typeof menus[m] === "undefined") {
       menus[m] = {
@@ -196,8 +190,8 @@ export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsM
 
   if (fullMetadata) {
     const correlationCharts = fullMetadata.charts
-    Object.keys(correlationCharts).forEach((chartName) => {
-      const chart = enrichChartData(correlationCharts[chartName] as ChartEnriched)
+    Object.keys(correlationCharts).forEach((chartName: string) => {
+      const chart = enrichChartData(chartName, correlationCharts[chartName] as ChartEnriched)
       const m = chart.menu
       if (!menus[m]) {
         return
