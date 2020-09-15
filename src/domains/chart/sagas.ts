@@ -15,6 +15,7 @@ import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
 import { fillMissingData } from "utils/fill-missing-data"
+import { underscoredKeys } from "utils/object-transform"
 
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
@@ -135,10 +136,13 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     dimensions,
   }
 
-  const onSuccessCallback = (data: unknown) => {
+  const onSuccessCallback = (data: {}) => {
     const { fillMissingPoints } = fetchDataParams
+    const chartData = underscoredKeys(data)
     fetchDataResponseChannel.put(fetchDataAction.success({
-      chartData: fillMissingPoints ? fillMissingData(data as ChartData, fillMissingPoints) : data,
+      chartData: fillMissingPoints
+        ? fillMissingData(chartData as ChartData, fillMissingPoints)
+        : chartData,
       fetchDataParams,
       id,
     }))
@@ -148,7 +152,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     console.warn("fetch chart data failure") // eslint-disable-line no-console
     fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
   }
-
 
   fetchMetrics$.next({
     url,
