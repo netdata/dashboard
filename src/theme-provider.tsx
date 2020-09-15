@@ -1,4 +1,4 @@
-import React, { useEffect, PropsWithChildren } from "react"
+import React, { PropsWithChildren } from "react"
 import { ThemeProvider } from "styled-components"
 import { DefaultTheme, DarkTheme, BlueTheme } from "@netdata/netdata-ui"
 
@@ -24,10 +24,8 @@ export const DashboardThemeProvider = ({
   theme = "unspecified",
   children,
 }: PropsWithChildren<{ theme: string }>) => {
-  useEffect(() => {
-    window.netdataTheme = dashboardThemes[theme]
-    window.NETDATA.updateTheme()
-  }, [theme])
+  window.netdataTheme = dashboardThemes[theme]
+  window.NETDATA.updateTheme()
 
   return (
     <ThemeProvider theme={uiKitThemes[theme]}>
