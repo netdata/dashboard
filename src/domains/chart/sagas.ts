@@ -15,8 +15,6 @@ import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
 import { fillMissingData } from "utils/fill-missing-data"
-import { underscoredKeys } from "utils/object-transform"
-
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
 } from "components/notifications"
@@ -93,7 +91,8 @@ const [fetchMetrics$] = getFetchStream(
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
+    // eslint-disable-next-line camelcase
+    host, chart, format, points, group, gtime, options, after, before, dimensions, aggr_method,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -134,7 +133,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     after,
     before,
     dimensions,
-    aggrMethod,
+    aggr_method,
   }
 
   const onSuccessCallback = (data: {}) => {
@@ -165,7 +164,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
+    // eslint-disable-next-line camelcase
+    host, chart, format, points, group, gtime, options, after, before, dimensions, aggr_method,
     chartLibrary, id,
   } = payload
 
@@ -188,7 +188,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     after,
     before,
     dimensions,
-    aggrMethod,
+    aggr_method,
   }
 
   const onSuccessCallback = (data: unknown) => {

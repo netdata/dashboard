@@ -251,6 +251,7 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
+          aggr_method: attributes.aggrMethod,
 
           // properties for the reducer
           fetchDataParams: {
@@ -262,7 +263,6 @@ export const ChartWithLoader = ({
           },
           id: chartUuid,
           cancelTokenSource,
-          aggrMethod: attributes.aggrMethod,
         }),
       )
     }
