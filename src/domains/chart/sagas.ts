@@ -164,7 +164,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
-    // eslint-disable-next-line camelcase
     host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
     chartLibrary, id,
   } = payload
