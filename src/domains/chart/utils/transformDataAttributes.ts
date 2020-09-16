@@ -95,8 +95,7 @@ export interface StaticAttributes {
   appendOptions?: string | undefined
   gtime?: number
   method?: string
-  // eslint-disable-next-line camelcase
-  aggr_method?: string
+  aggrMethod?: string
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
@@ -320,7 +319,7 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
-  aggr_method: { key: "aggr-method", defaultValue: "avg" },
+  aggrMethod: { key: "aggr-method", defaultValue: "avg" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },

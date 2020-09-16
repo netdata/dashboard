@@ -38,8 +38,7 @@ export interface FetchDataUrlParams {
   after: number | null,
   before?: number | null,
   dimensions?: string,
-  // eslint-disable-next-line camelcase
-  aggr_method?: string,
+  aggrMethod?: string,
 }
 export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,

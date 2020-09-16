@@ -91,8 +91,7 @@ const [fetchMetrics$] = getFetchStream(
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
-    // eslint-disable-next-line camelcase
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggr_method,
+    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -134,7 +133,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     before,
     dimensions,
     context: chart,
-    aggr_method,
+    aggr_method: aggrMethod,
   }
 
   const onSuccessCallback = (data: {}) => {
@@ -166,7 +165,7 @@ const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CA
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
     // eslint-disable-next-line camelcase
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggr_method,
+    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
     chartLibrary, id,
   } = payload
 
@@ -189,7 +188,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     after,
     before,
     dimensions,
-    aggr_method,
+    aggr_method: aggrMethod,
   }
 
   const onSuccessCallback = (data: unknown) => {
