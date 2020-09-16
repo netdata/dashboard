@@ -147,9 +147,10 @@ export const netdataDashboard = {
 
   menuTitle(chart: ChartEnriched) {
     if (typeof chart.menu_pattern !== "undefined") {
+      const type = chart.type || chart.id.split(".")[0]
       return (`${this.anyAttribute(this.menu, "title", chart.menu_pattern, chart.menu_pattern)
         .toString()
-      } ${chart.type.slice(-(chart.type.length - chart.menu_pattern.length - 1)).toString()}`)
+      } ${type.slice(-(type.length - chart.menu_pattern.length - 1)).toString()}`)
         .replace(/_/g, " ")
     }
 

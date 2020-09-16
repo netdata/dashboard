@@ -133,7 +133,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     after,
     before,
     dimensions,
-    aggr_method,
+    context: chart,
+    aggr_method: "avg",
   }
 
   const onSuccessCallback = (data: {}) => {
