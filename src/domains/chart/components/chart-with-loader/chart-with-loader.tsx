@@ -262,6 +262,7 @@ export const ChartWithLoader = ({
           },
           id: chartUuid,
           cancelTokenSource,
+          aggrMethod: attributes.aggrMethod,
         }),
       )
     }
