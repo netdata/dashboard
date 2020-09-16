@@ -139,11 +139,10 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 
   const onSuccessCallback = (data: {}) => {
     const { fillMissingPoints } = fetchDataParams
-    const chartData = underscoredKeys(data)
     fetchDataResponseChannel.put(fetchDataAction.success({
       chartData: fillMissingPoints
-        ? fillMissingData(chartData as ChartData, fillMissingPoints)
-        : chartData,
+        ? fillMissingData(data as ChartData, fillMissingPoints)
+        : data,
       fetchDataParams,
       id,
     }))
