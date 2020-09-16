@@ -95,7 +95,6 @@ export interface StaticAttributes {
   appendOptions?: string | undefined
   gtime?: number
   method?: string
-  aggrMethod?: string
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
@@ -319,7 +318,6 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
-  aggrMethod: { key: "aggr-method", defaultValue: "avg" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
@@ -542,7 +540,23 @@ export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
   getAttributesMap(),
 ) as Attributes // need to override because of broken Ramda typings
 
-const mapDefaultAggrMethod = (unit: string): string => {
+export const getAttributesDynamic = (node: Element) => {
+  const showValueOfAttribues = Array.from(node.attributes)
+    .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
+    .map((attribute) => ({
+      [attribute.name.replace("data-", "")]: attribute.value,
+    }))
+  const merged = mergeAll(showValueOfAttribues)
+  return isEmpty(merged) ? undefined : merged
+}
+
+export const getAttributes = (node: Element): Attributes => {
+  const attributesStatic = getAttributesStatic(node)
+  const showValueOf = getAttributesDynamic(node)
+  return { ...attributesStatic, showValueOf }
+}
+
+export const mapDefaultAggrMethod = (unit: string): string => {
   const avgUnits = [
     "percentage",
     "percent",
@@ -582,20 +596,4 @@ const mapDefaultAggrMethod = (unit: string): string => {
     return "avg"
   }
   return "sum"
-}
-
-export const getAttributesDynamic = (node: Element) => {
-  const showValueOfAttribues = Array.from(node.attributes)
-    .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
-    .map((attribute) => ({
-      [attribute.name.replace("data-", "")]: attribute.value,
-    }))
-  const merged = mergeAll(showValueOfAttribues)
-  return isEmpty(merged) ? undefined : merged
-}
-
-export const getAttributes = (node: Element): Attributes => {
-  const attributesStatic = getAttributesStatic(node)
-  const showValueOf = getAttributesDynamic(node)
-  return { ...attributesStatic, showValueOf }
 }

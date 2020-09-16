@@ -17,7 +17,7 @@ export interface CorrelationMetadata {
     scoredCount?: number
     totalCount?: number
     averageScore?: number
-}
+} 
 
 export interface Menu {
   // eslint-disable-next-line camelcase
