@@ -95,6 +95,7 @@ export interface StaticAttributes {
   appendOptions?: string | undefined
   gtime?: number
   method?: string
+  aggrMethod?: string
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
@@ -318,6 +319,7 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
+  aggrMethod: { key: "aggr-method", type: "string", defaultValue: "avg" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
@@ -540,10 +542,55 @@ export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
   getAttributesMap(),
 ) as Attributes // need to override because of broken Ramda typings
 
+const mapDefaultAggrMethod = (unit: string): string => {
+  const avgUnits = [
+    "percentage",
+    "percent",
+    "operation",
+    "run",
+    "request",
+    "Rotations",
+    "ratio",
+    "seconds",
+    "milliseconds",
+    "millisec",
+    "ms",
+    "log2",
+    "minute",
+    "hour",
+    "interval",
+    "tick",
+    "celsius",
+    "C",
+    "MHz",
+    "Hz",
+    "Volt",
+    "kWh",
+    "Ampere",
+    "Amps",
+    "dBm",
+    "value",
+    "stratum",
+    "units",
+    "Watt",
+    "temprature",
+    "RPM",
+    "Quadro",
+    "adv",
+  ]
+  if (avgUnits.some((avgUnit) => unit.includes(avgUnit))) {
+    return "avg"
+  }
+  return "sum"
+}
+
 export const getAttributesDynamic = (node: Element) => {
   const showValueOfAttribues = Array.from(node.attributes)
     .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
-    .map((attribute) => ({ [attribute.name.replace("data-", "")]: attribute.value }))
+    .map((attribute) => ({
+      [attribute.name.replace("data-", "")]: attribute.value,
+      [attribute.aggrMethod]: mapDefaultAggrMethod(attribute.units),
+    }))
   const merged = mergeAll(showValueOfAttribues)
   return isEmpty(merged) ? undefined : merged
 }
