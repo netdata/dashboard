@@ -236,7 +236,6 @@ export const ChartWithLoader = ({
       }) : null
 
       const group = attributes.method || window.NETDATA.chartDefaults.method
-      console.log("attributes", attributes)
       setShouldFetch(false)
       dispatch(
         fetchDataAction.request({
