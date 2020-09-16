@@ -95,7 +95,8 @@ export interface StaticAttributes {
   appendOptions?: string | undefined
   gtime?: number
   method?: string
-  aggrMethod?: string
+  // eslint-disable-next-line camelcase
+  aggr_method?: string
   overrideOptions?: string
   pixelsPerPoint?: number
   points?: number
@@ -319,7 +320,7 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
-  aggrMethod: { key: "aggr-method", type: "string", defaultValue: "avg" },
+  aggr_method: { key: "aggr-method", defaultValue: "avg" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
@@ -589,7 +590,6 @@ export const getAttributesDynamic = (node: Element) => {
     .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
     .map((attribute) => ({
       [attribute.name.replace("data-", "")]: attribute.value,
-      [attribute.aggrMethod]: mapDefaultAggrMethod(attribute.units),
     }))
   const merged = mergeAll(showValueOfAttribues)
   return isEmpty(merged) ? undefined : merged
