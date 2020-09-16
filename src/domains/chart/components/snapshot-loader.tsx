@@ -7,7 +7,7 @@ import { selectGlobalPanAndZoom } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRangeObjT } from "types/common"
 
-import { Attributes } from "../utils/transformDataAttributes"
+import { Attributes, mapDefaultAggrMethod } from "../utils/transformDataAttributes"
 import { fetchDataForSnapshotAction } from "../actions"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { getChartURLOptions } from "../utils/get-chart-url-options"
@@ -45,7 +45,7 @@ const SnapshotLoader = ({
       after: after || null,
       before: before || null,
       dimensions: attributes.dimensions,
-
+      aggrMethod: mapDefaultAggrMethod(attributes.units || ""),
       chartLibrary,
       id: chartUuid,
     }))

@@ -10,10 +10,7 @@ const underscoredKey = (target: {}, key: string, value: any) => ({
   [camelToUnderscore(key)]: value,
 })
 
-export const objectTransformator = (
-  data: any,
-  { func, action }: ObjectTransformatorOptions,
-) => {
+export const objectTransformator = (data: any, { func, action }: ObjectTransformatorOptions) => {
   if (Array.isArray(data)) {
     return data.map(func)
   }

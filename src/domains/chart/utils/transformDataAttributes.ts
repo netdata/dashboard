@@ -543,7 +543,9 @@ export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
 export const getAttributesDynamic = (node: Element) => {
   const showValueOfAttribues = Array.from(node.attributes)
     .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
-    .map((attribute) => ({ [attribute.name.replace("data-", "")]: attribute.value }))
+    .map((attribute) => ({
+      [attribute.name.replace("data-", "")]: attribute.value,
+    }))
   const merged = mergeAll(showValueOfAttribues)
   return isEmpty(merged) ? undefined : merged
 }
@@ -552,4 +554,46 @@ export const getAttributes = (node: Element): Attributes => {
   const attributesStatic = getAttributesStatic(node)
   const showValueOf = getAttributesDynamic(node)
   return { ...attributesStatic, showValueOf }
+}
+
+export const mapDefaultAggrMethod = (unit: string): string => {
+  const avgUnits: any = {
+    percentage: true,
+    percent: true,
+    operation: true,
+    run: true,
+    request: true,
+    Rotations: true,
+    ratio: true,
+    seconds: true,
+    milliseconds: true,
+    millisec: true,
+    ms: true,
+    log2: true,
+    minute: true,
+    hour: true,
+    interval: true,
+    tick: true,
+    celsius: true,
+    C: true,
+    MHz: true,
+    Hz: true,
+    Volt: true,
+    kWh: true,
+    Ampere: true,
+    Amps: true,
+    dBm: true,
+    value: true,
+    stratum: true,
+    units: true,
+    Watt: true,
+    temprature: true,
+    RPM: true,
+    Quadro: true,
+    adv: true,
+  }
+  if (avgUnits[unit]) {
+    return "avg"
+  }
+  return "sum"
 }
