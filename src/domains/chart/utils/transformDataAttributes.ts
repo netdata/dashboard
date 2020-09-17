@@ -557,14 +557,13 @@ export const getAttributes = (node: Element): Attributes => {
 }
 
 export const mapDefaultAggrMethod = (unit: string): string => {
+  if (unit.length === 0) {
+    return "sum"
+  }
   const avgUnits: any = {
     percentage: true,
     percent: true,
-    "%": true,
-    operation: true,
-    run: true,
-    request: true,
-    Rotations: true,
+    "Rotations/min": true,
     ratio: true,
     seconds: true,
     "seconds ago": true,
@@ -591,7 +590,7 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     stratum: true,
     units: true,
     Watt: true,
-    temprature: true,
+    temperature: true,
     "random number": true,
     RPM: true,
     Quadro: true,
@@ -600,6 +599,19 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     GeForce: true,
   }
   if (avgUnits[unit]) {
+    return "avg"
+  }
+  const avgUnitsRegExes: any = [
+    ".*%.*",
+    ".*/operation",
+    ".*/run",
+    ".*/ run",
+    ".*/request",
+  ]
+  if (avgUnitsRegExes.some((regEx: string) => {
+    const regExpression = RegExp(regEx, "i")
+    return regExpression.test(unit)
+  })) {
     return "avg"
   }
   return "sum"
