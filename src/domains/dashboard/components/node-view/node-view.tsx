@@ -25,7 +25,6 @@ const chartsPerRow = () => (
   options.chartsPerRow === 0 ? 1 : options.chartsPerRow
 )
 
-
 interface SubSectionProps {
   chartsMetadata: ChartsMetadata
   dropdownMenu?: DropdownMenu
@@ -112,6 +111,7 @@ interface Props {
   timeWindow?: number
   attributes?: ChartsAttributes
   metricsCorrelationMetadata?: ChartsMetadata
+  children?: React.ReactNode | React.ReactNode[]
 }
 export const NodeView = ({
   chartsMetadata,
@@ -122,6 +122,7 @@ export const NodeView = ({
   timeWindow,
   attributes,
   metricsCorrelationMetadata,
+  children,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState("")
@@ -165,6 +166,7 @@ export const NodeView = ({
   return (
     <div className="node-view__container">
       <div ref={ref} className="charts-body" role="main">
+        {children}
         {!!duration && (
           main.map((menuName, menuIndex) => {
             const menu = menus[menuName]
