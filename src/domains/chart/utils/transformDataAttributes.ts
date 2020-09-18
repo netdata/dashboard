@@ -557,14 +557,13 @@ export const getAttributes = (node: Element): Attributes => {
 }
 
 export const mapDefaultAggrMethod = (unit: string): string => {
+  if (unit.length === 0) {
+    return "sum"
+  }
   const avgUnits: any = {
     percentage: true,
     percent: true,
-    "%": true,
-    operation: true,
-    run: true,
-    request: true,
-    Rotations: true,
+    "rotations/min": true,
     ratio: true,
     seconds: true,
     "seconds ago": true,
@@ -572,34 +571,45 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     millisec: true,
     ms: true,
     "log2 s": true,
-    Minutes: true,
     minutes: true,
-    Hours: true,
     hours: true,
     interval: true,
     ticks: true,
-    Celsius: true,
-    C: true,
-    MHz: true,
-    Hz: true,
-    Volts: true,
-    kWh: true,
-    Ampere: true,
-    Amps: true,
-    dBm: true,
+    celsius: true,
+    c: true,
+    mhz: true,
+    hz: true,
+    volts: true,
+    kwh: true,
+    ampere: true,
+    amps: true,
+    dbm: true,
     value: true,
     stratum: true,
     units: true,
-    Watt: true,
-    temprature: true,
+    watt: true,
+    temperature: true,
     "random number": true,
-    RPM: true,
-    Quadro: true,
+    rpm: true,
+    quadro: true,
     "adv/item": true,
     multiplier: true,
-    GeForce: true,
+    geforce: true,
   }
-  if (avgUnits[unit]) {
+  if (avgUnits[unit.toLowerCase()]) {
+    return "avg"
+  }
+  const avgUnitsRegExes: any = [
+    ".*%.*",
+    ".*/operation",
+    ".*/run",
+    ".*/ run",
+    ".*/request",
+  ]
+  if (avgUnitsRegExes.some((regEx: string) => {
+    const regExpression = RegExp(regEx, "i")
+    return regExpression.test(unit.toLowerCase())
+  })) {
     return "avg"
   }
   return "sum"
