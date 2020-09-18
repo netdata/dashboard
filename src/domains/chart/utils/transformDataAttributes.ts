@@ -596,7 +596,7 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     multiplier: true,
     geforce: true,
   }
-  if (avgUnits[unit]) {
+  if (avgUnits[unit.toLowerCase()]) {
     return "avg"
   }
   const avgUnitsRegExes: any = [
