@@ -14,7 +14,7 @@ import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
-import { fillMissingData } from "utils/fill-missing-data"
+import { fillMissingData, transformResults } from "utils/fill-missing-data"
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
 } from "components/notifications"
@@ -138,10 +138,11 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 
   const onSuccessCallback = (data: {}) => {
     const { fillMissingPoints } = fetchDataParams
+    const chartData = transformResults(data as ChartData, format)
     fetchDataResponseChannel.put(fetchDataAction.success({
       chartData: fillMissingPoints
-        ? fillMissingData(data as ChartData, fillMissingPoints)
-        : data,
+        ? fillMissingData(chartData as ChartData, fillMissingPoints)
+        : chartData,
       fetchDataParams,
       id,
     }))

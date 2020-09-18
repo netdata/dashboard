@@ -1,4 +1,4 @@
-import { tail } from "ramda"
+import { tail, sum } from "ramda"
 import { ChartData, DygraphData } from "domains/chart/chart-types"
 
 /*
@@ -57,6 +57,25 @@ export const addPointsDygraph = (data: DygraphData, nrOfPointsToFill: number) =>
 export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
   if (data.format === "json") {
     return addPointsDygraph(data as DygraphData, nrOfPointsToFill)
+  }
+  return data
+}
+
+const emptyArray: number[] = []
+export const transformResults = (data: ChartData, format: string) => {
+  if (format === "array" && data.format === "json") {
+    if (Array.isArray(data.result)) return data
+
+    return {
+      ...data,
+      result: (data.result.data as number[][]).reduce((acc: number[], pointData: number[]) => {
+        pointData.shift()
+        return [
+          ...acc,
+          sum(pointData),
+        ]
+      }, emptyArray),
+    }
   }
   return data
 }
