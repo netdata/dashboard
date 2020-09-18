@@ -563,7 +563,7 @@ export const mapDefaultAggrMethod = (unit: string): string => {
   const avgUnits: any = {
     percentage: true,
     percent: true,
-    "Rotations/min": true,
+    "rotations/min": true,
     ratio: true,
     seconds: true,
     "seconds ago": true,
@@ -571,32 +571,30 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     millisec: true,
     ms: true,
     "log2 s": true,
-    Minutes: true,
     minutes: true,
-    Hours: true,
     hours: true,
     interval: true,
     ticks: true,
-    Celsius: true,
-    C: true,
-    MHz: true,
-    Hz: true,
-    Volts: true,
-    kWh: true,
-    Ampere: true,
-    Amps: true,
-    dBm: true,
+    celsius: true,
+    c: true,
+    mhz: true,
+    hz: true,
+    volts: true,
+    kwh: true,
+    ampere: true,
+    amps: true,
+    dbm: true,
     value: true,
     stratum: true,
     units: true,
-    Watt: true,
+    watt: true,
     temperature: true,
     "random number": true,
-    RPM: true,
-    Quadro: true,
+    rpm: true,
+    quadro: true,
     "adv/item": true,
     multiplier: true,
-    GeForce: true,
+    geforce: true,
   }
   if (avgUnits[unit]) {
     return "avg"
@@ -610,7 +608,7 @@ export const mapDefaultAggrMethod = (unit: string): string => {
   ]
   if (avgUnitsRegExes.some((regEx: string) => {
     const regExpression = RegExp(regEx, "i")
-    return regExpression.test(unit)
+    return regExpression.test(unit.toLowerCase())
   })) {
     return "avg"
   }
