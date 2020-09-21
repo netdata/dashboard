@@ -91,7 +91,8 @@ const [fetchMetrics$] = getFetchStream(
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
+    host, chart, format, points, group, gtime, options,
+    after, before, dimensions, aggrMethod, nodeIds,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -134,6 +135,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     dimensions,
     context: chart,
     ...(aggrMethod && { aggr_method: aggrMethod }),
+    ...(nodeIds && { node_ids: nodeIds }),
   }
 
   const onSuccessCallback = (data: {}) => {
@@ -165,7 +167,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
-    host, chart, format, points, group, gtime, options, after, before, dimensions, aggrMethod,
+    host, chart, format, points, group, gtime, options,
+    after, before, dimensions, aggrMethod, nodeIds,
     chartLibrary, id,
   } = payload
 
@@ -189,6 +192,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     before,
     dimensions,
     ...(aggrMethod && { aggr_method: aggrMethod }),
+    ...(nodeIds && { node_ids: nodeIds }),
   }
 
   const onSuccessCallback = (data: unknown) => {

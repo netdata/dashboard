@@ -36,7 +36,11 @@ interface SubSectionProps {
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
   attributesOverrides?: ChartsAttributes
+  nodeIds: string[]
 }
+
+const emptyNodeIds: SubSectionProps.nodeIds = []
+
 const SubSection = memo(({
   chartsMetadata,
   dropdownMenu,
@@ -48,6 +52,7 @@ const SubSection = memo(({
   renderCustomElementForDygraph,
   shouldDisplayHeadMain,
   attributesOverrides,
+  nodeIds = emptyNodeIds
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
   return (
@@ -76,6 +81,7 @@ const SubSection = memo(({
                     forceTimeWindow: true, // respect timeWindow
                     host,
                     ...(attributesOverrides ? attributesOverrides[attributes.id] : {}),
+                    nodeIds,
                   }
                 }
                 key={`${attributes.id}-${attributes.dimensions}`}
@@ -112,6 +118,7 @@ interface Props {
   attributes?: ChartsAttributes
   metricsCorrelationMetadata?: ChartsMetadata
   children?: React.ReactNode | React.ReactNode[]
+  nodeIds?: string[]
 }
 export const NodeView = ({
   chartsMetadata,
@@ -123,6 +130,7 @@ export const NodeView = ({
   attributes,
   metricsCorrelationMetadata,
   children,
+  nodeIds,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState("")
@@ -191,6 +199,7 @@ export const NodeView = ({
                   host={host}
                   chartsMetadata={metricsCorrelationMetadata || chartsMetadata}
                   attributesOverrides={attributes}
+                  nodeIds={nodeIds}
                 />
               </div>
             )
