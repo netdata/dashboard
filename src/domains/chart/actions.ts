@@ -39,7 +39,7 @@ export interface FetchDataUrlParams {
   before?: number | null,
   dimensions?: string,
   aggrMethod?: string,
-  nodeIds?: string[],
+  nodeIDs?: string[],
 }
 export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,
@@ -71,6 +71,7 @@ export interface FetchChartPayload {
   chart: string
   id: string
   host: string
+  nodeIDs: string[] | undefined
 }
 
 export const fetchChartAction = createRequestAction<

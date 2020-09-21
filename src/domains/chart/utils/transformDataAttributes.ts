@@ -291,7 +291,7 @@ export interface Attributes extends StaticAttributes {
   // changed structure compared to original dashboard.js (not flat list, but dynamic objects stored
   // in "showValueOf" property
   showValueOf?: { [key: string]: string }
-  nodeIds?: string[]
+  nodeIDs?: string[]
 }
 
 export interface ChartsAttributes {

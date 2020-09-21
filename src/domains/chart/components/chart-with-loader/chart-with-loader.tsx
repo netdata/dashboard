@@ -74,7 +74,7 @@ export const ChartWithLoader = ({
   /**
    * fetch chart details
    */
-  const { host = serverDefault, id, nodeIds } = attributes
+  const { host = serverDefault, id, nodeIDs } = attributes
   const dispatch = useDispatch()
   const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
   const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
@@ -88,7 +88,7 @@ export const ChartWithLoader = ({
           chart: id,
           id: chartUuid,
           host,
-          nodeIds,
+          nodeIDs,
         }),
       )
     }
@@ -100,7 +100,7 @@ export const ChartWithLoader = ({
     isFetchingDetails,
     chartMetadata,
     externalChartMetadata,
-    nodeIds,
+    nodeIDs,
   ])
 
   // todo local state option
@@ -253,7 +253,7 @@ export const ChartWithLoader = ({
           before: before || null,
           dimensions: attributes.dimensions,
           aggrMethod: attributes.aggrMethod,
-          nodeIds,
+          nodeIDs,
 
           // properties for the reducer
           fetchDataParams: {
@@ -289,7 +289,7 @@ export const ChartWithLoader = ({
     shouldUsePanAndZoomPadding,
     shouldFetch,
     cancelTokenSource,
-    nodeIds,
+    nodeIDs,
   ])
 
   useSelector(selectSpacePanelTransitionEndIsActive)
