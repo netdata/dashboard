@@ -85,6 +85,7 @@ export interface StaticAttributes {
   units?: string
   unitsCommon?: string
   unitsDesired?: string
+  aggrMethod?: string
   colors?: string
   commonColors?: string
   decimalDigits?: number
@@ -318,6 +319,7 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
+  aggrMethod: { key: "aggr-method" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },

@@ -133,7 +133,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     before,
     dimensions,
     context: chart,
-    aggr_method: aggrMethod,
+    ...(aggrMethod && { aggr_method: aggrMethod }),
   }
 
   const onSuccessCallback = (data: {}) => {
@@ -188,7 +188,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     after,
     before,
     dimensions,
-    aggr_method: aggrMethod,
+    ...(aggrMethod && { aggr_method: aggrMethod }),
   }
 
   const onSuccessCallback = (data: unknown) => {

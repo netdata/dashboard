@@ -63,3 +63,4 @@ export type ChartsMetadata = ChartsMetadata_
 /* eslint-enable import/first,import/newline-after-import */
 
 export { DashboardThemeProvider } from "./theme-provider"
+export { mapDefaultAggrMethod } from "domains/chart/utils/transformDataAttributes"

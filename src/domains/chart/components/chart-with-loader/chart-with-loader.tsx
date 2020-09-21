@@ -21,7 +21,7 @@ import { getCorrectedPoints } from "utils/fill-missing-data"
 import { fallbackUpdateTimeInterval, panAndZoomDelay } from "../../constants"
 import { getChartURLOptions } from "../../utils/get-chart-url-options"
 import { chartLibrariesSettings } from "../../utils/chartLibrariesSettings"
-import { Attributes, mapDefaultAggrMethod } from "../../utils/transformDataAttributes"
+import { Attributes } from "../../utils/transformDataAttributes"
 import { getChartPixelsPerPoint } from "../../utils/get-chart-pixels-per-point"
 import { useFetchNewDataClock } from "../../hooks/use-fetch-new-data-clock"
 
@@ -250,7 +250,7 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
-          aggrMethod: mapDefaultAggrMethod(attributes.units || ""),
+          aggrMethod: attributes.aggrMethod,
 
           // properties for the reducer
           fetchDataParams: {
