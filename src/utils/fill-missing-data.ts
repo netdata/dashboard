@@ -68,7 +68,7 @@ export const transformResults = (data: ChartData, format: string) => {
 
     return {
       ...data,
-      result: (data.result.data as number[][]).reduce((acc: number[], pointData: number[]) => {
+      result: ((data as DygraphData).result.data).reduce((acc: number[], pointData: number[]) => {
         pointData.shift()
         return [
           ...acc,
