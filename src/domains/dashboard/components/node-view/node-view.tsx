@@ -2,13 +2,11 @@ import React, {
   memo, useRef, useState, useEffect, useMemo,
 } from "react"
 import { useScroll } from "react-use"
-
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
-
 import { renderChartsAndMenu } from "../../utils/render-charts-and-menu"
 import { Menu, options } from "../../utils/netdata-dashboard"
 import { parseChartString } from "../../utils/parse-chart-string"
@@ -66,6 +64,7 @@ const SubSection = memo(({
             duration={duration}
             host={host}
             chartsMetadata={chartsMetadata}
+            attributesOverrides={attributesOverrides}
           />
         )}
         {submenuNames.flatMap(
@@ -81,7 +80,7 @@ const SubSection = memo(({
                     forceTimeWindow: true, // respect timeWindow
                     host,
                     nodeIDs,
-                    ...attributesOverrides,
+                    ...(attributesOverrides && attributesOverrides[attributes.id]),
                   }
                 }
                 key={`${attributes.id}-${attributes.dimensions}`}

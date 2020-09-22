@@ -50,7 +50,7 @@ const SnapshotLoader = ({
       id: chartUuid,
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // todo fetch based on state
+  }, [attributes]) // todo fetch based on state
   return null
 }
 

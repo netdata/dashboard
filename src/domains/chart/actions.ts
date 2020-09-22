@@ -28,18 +28,18 @@ export interface FetchDataParams {
   viewRange: [number, number]
 }
 export interface FetchDataUrlParams {
-  host: string,
-  chart: string,
-  format: string,
-  points: number,
-  group: string,
-  gtime: number,
-  options: string,
-  after: number | null,
-  before?: number | null,
-  dimensions?: string,
-  aggrMethod?: string,
-  nodeIDs?: string[],
+  host: string
+  chart: string
+  format: string
+  points: number
+  group: string
+  gtime: number
+  options: string
+  after: number | null
+  before?: number | null
+  dimensions?: string
+  aggrMethod?: string
+  nodeIDs?: string[]
 }
 export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,
@@ -71,7 +71,7 @@ export interface FetchChartPayload {
   chart: string
   id: string
   host: string
-  nodeIDs: string[] | undefined
+  nodeIDs?: string[]
 }
 
 export const fetchChartAction = createRequestAction<

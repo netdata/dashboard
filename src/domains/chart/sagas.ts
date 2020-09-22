@@ -134,7 +134,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     before,
     dimensions,
     context: chart,
-    aggr_method: aggrMethod || "avg",
+    ...(aggrMethod && { aggr_method: aggrMethod }),
     ...(nodeIDs && { node_ids: nodeIDs }),
   }
 

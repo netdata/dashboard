@@ -8359,7 +8359,6 @@ let chartState = function (element) {
         if (this.dimensions) {
             this.data_url += "&dimensions=" + this.dimensions;
         }
-        
         if (NETDATA.options.debug.chart_data_url || this.debug) {
             this.log('chartURL(): ' + this.data_url + ' WxH:' + this.chartWidth() + 'x' + this.chartHeight() + ' points: ' + data_points.toString() + ' library: ' + this.library_name);
         }
