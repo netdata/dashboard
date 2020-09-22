@@ -80,8 +80,8 @@ const SubSection = memo(({
                     ...attributes,
                     forceTimeWindow: true, // respect timeWindow
                     host,
-                    ...(attributesOverrides ? attributesOverrides[attributes.id] : {}),
                     nodeIDs,
+                    ...attributesOverrides,
                   }
                 }
                 key={`${attributes.id}-${attributes.dimensions}`}

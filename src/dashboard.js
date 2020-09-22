@@ -7488,10 +7488,6 @@ let chartState = function (element, chartIndex) {
         if (this.dimensions) {
             this.data_url += "&dimensions=" + this.dimensions;
         }
-                
-        if (this.aggr_method) {
-            this.data_url += "&aggr_method=" + this.aggr_method;
-        }
 
         if (NETDATA.options.debug.chart_data_url || this.debug) {
             this.log('chartURL(): ' + this.data_url + ' WxH:' + this.chartWidth() + 'x' + this.chartHeight() + ' points: ' + data_points.toString() + ' library: ' + this.library_name);
