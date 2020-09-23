@@ -42,6 +42,8 @@ export const selectGlobalSelectionMaster = createSelector(
 
 export const selectGlobalPanAndZoom = createSelector(selectGlobal, prop("globalPanAndZoom"))
 
+export const selectDefaultAfter = createSelector(selectGlobal, prop("defaultAfter"))
+
 export const selectGlobalChartUnderlay = createSelector(selectGlobal, prop("globalChartUnderlay"))
 
 export const selectHasWindowFocus = createSelector(selectGlobal, prop("hasWindowFocus"))
