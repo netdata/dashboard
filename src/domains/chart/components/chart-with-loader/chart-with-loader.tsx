@@ -276,6 +276,7 @@ export const ChartWithLoader = ({
     chartSettings,
     chartUuid,
     chartWidth,
+    defaultAfter,
     dispatch,
     hasLegend,
     host,
