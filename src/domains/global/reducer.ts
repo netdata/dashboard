@@ -12,6 +12,7 @@ import {
   centerAroundHighlightAction,
   clearHighlightAction,
   resetGlobalPanAndZoomAction,
+  setDefaultAfterAction,
   windowFocusChangeAction,
   fetchHelloAction,
   updatePersonUrlsAction,
@@ -65,6 +66,7 @@ export type StateT = {
     masterID?: string
     shouldForceTimeRange?: boolean
   }
+  defaultAfter: null | number
   globalChartUnderlay: null | {
     after: number
     before: number
@@ -116,6 +118,7 @@ export const initialState: StateT = {
   commonMax: {},
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
+  defaultAfter: null,
   globalChartUnderlay: null,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
@@ -319,6 +322,11 @@ globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
   ...state,
   globalPanAndZoom: initialState.globalPanAndZoom,
   hoveredX: initialState.hoveredX, // need to reset this also on mobile
+}))
+
+globalReducer.on(setDefaultAfterAction, (state, { after }) => ({
+  ...state,
+  defaultAfter: after,
 }))
 
 globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID }) => ({
