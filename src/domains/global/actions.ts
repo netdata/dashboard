@@ -42,6 +42,13 @@ export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
 
+export interface SetDefaultAfterAction {
+  after: number
+}
+export const setDefaultAfterAction = createAction<SetDefaultAfterAction>(
+  `${storeKey}/setDefaultAfterAction`,
+)
+
 export interface SetGlobalChartUnderlayAction {
   after: number
   before: number
