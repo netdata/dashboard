@@ -46,6 +46,7 @@ const SnapshotLoader = ({
       before: before || null,
       dimensions: attributes.dimensions,
       aggrMethod: attributes.aggrMethod,
+      nodeIDs: attributes.nodeIDs,
       chartLibrary,
       id: chartUuid,
     }))

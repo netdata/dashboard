@@ -41,6 +41,7 @@ interface RenderSubmenuNameArg {
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   attributesOverrides?: ChartsAttributes
+  nodeIDs: string[]
 }
 export const renderSubmenuName = ({
   chartsMetadata,
@@ -52,6 +53,7 @@ export const renderSubmenuName = ({
   pcentWidth,
   renderCustomElementForDygraph,
   attributesOverrides,
+  nodeIDs,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -83,7 +85,7 @@ export const renderSubmenuName = ({
           .map(parseChartString)
           .map((attributes: Attributes | null) => attributes && (
             <ChartWrapper
-              attributes={{ ...attributes, host }}
+              attributes={{ ...attributes, host, nodeIDs }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
             />
@@ -131,6 +133,7 @@ export const renderSubmenuName = ({
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
                 ...(attributesOverrides ? attributesOverrides[chart.id] : {}),
+                nodeIDs,
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}

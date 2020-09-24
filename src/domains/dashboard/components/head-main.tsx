@@ -10,6 +10,7 @@ interface Props {
   host: string
   chartsMetadata: ChartsMetadata
   attributesOverrides?: ChartsAttributes
+  nodeIDs: string[]
 }
 export const HeadMain = ({
   charts,
@@ -17,12 +18,14 @@ export const HeadMain = ({
   host,
   chartsMetadata,
   attributesOverrides,
+  nodeIDs,
 }: Props) => {
   const commonAttributes = {
     host,
     after: -duration,
     forceTimeWindow: true,
     points: duration,
+    nodeIDs,
   }
 
   // todo

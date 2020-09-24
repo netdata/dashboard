@@ -86,6 +86,7 @@ export interface StaticAttributes {
   unitsCommon?: string
   unitsDesired?: string
   aggrMethod?: string
+  nodeIDs?: string[]
   colors?: string
   commonColors?: string
   decimalDigits?: number
@@ -291,7 +292,6 @@ export interface Attributes extends StaticAttributes {
   // changed structure compared to original dashboard.js (not flat list, but dynamic objects stored
   // in "showValueOf" property
   showValueOf?: { [key: string]: string }
-  nodeIDs?: string[]
 }
 
 export interface ChartsAttributes {
@@ -321,6 +321,7 @@ const getAttributesMap = (): AttributesMap => ({
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
   aggrMethod: { key: "aggr-method" },
+  nodeIDs: { key: "node-ids" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },

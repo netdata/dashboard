@@ -65,6 +65,7 @@ const SubSection = memo(({
             host={host}
             chartsMetadata={chartsMetadata}
             attributesOverrides={attributesOverrides}
+            nodeIDs={nodeIDs}
           />
         )}
         {submenuNames.flatMap(
@@ -99,6 +100,7 @@ const SubSection = memo(({
         menuName,
         pcentWidth,
         attributesOverrides,
+        nodeIDs,
       }))}
     </div>
   )
