@@ -103,7 +103,7 @@ export const getNewSelectedDimensions: GetNewSelectedDimensions = ({
   return newSelectedDimensions
 }
 
-export const ChartLegend = ({
+export const ChartLegendRight = ({
   // attributes,
   chartData,
   chartMetadata,
