@@ -4,116 +4,39 @@ import classNames from "classnames"
 import { colorHex2Rgb } from "utils/color-hex-2-rgb"
 import { useDateTime } from "utils/date-time"
 
-import { seconds4human } from "../utils/seconds4human"
-import { Attributes } from "../utils/transformDataAttributes"
-import { ChartData, ChartMetadata, DygraphData } from "../chart-types"
+import { legendResolutionTooltip, legendPluginModuleString } from "../utils/legend-utils"
+
+import { ChartMetadata, DygraphData } from "../chart-types"
 
 interface Props {
-  attributes: Attributes
   chartData: DygraphData
   chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
     [key: string]: string
   }
+  dimensionNames: string[]
   hoveredRow: number
   hoveredX: number | null
   legendFormatValue: (value: number | string | null) => (number | string)
+  onDimensionClick: (clickedDimensionName: string, event: React.MouseEvent) => void
   selectedDimensions: string[]
-  setSelectedDimensions: (selectedDimensions: string[]) => void
   showLatestOnBlur: boolean
   unitsCurrent: string
   viewBefore: number
 }
 
-export const legendPluginModuleString = (withContext: boolean, chartMetadata: ChartMetadata) => {
-  let str = " "
-  let context = ""
-
-  if (withContext && typeof chartMetadata.context === "string") {
-    // eslint-disable-next-line prefer-destructuring
-    context = chartMetadata.context
-  }
-
-  if (typeof chartMetadata.plugin === "string" && chartMetadata.plugin !== "") {
-    str = chartMetadata.plugin
-
-    if (str.endsWith(".plugin")) {
-      str = str.substring(0, str.length - 7)
-    }
-
-    if (typeof chartMetadata.module === "string" && chartMetadata.module !== "") {
-      str += `:${chartMetadata.module}`
-    }
-
-    if (withContext && context !== "") {
-      str += `, ${context}`
-    }
-  } else if (withContext && context !== "") {
-    str = context
-  }
-  return str
-}
-
-const legendResolutionTooltip = (chartData: ChartData, chartMetadata: ChartMetadata) => {
-  const collected = chartMetadata.update_every
-  // todo if there's no data (but maybe there wont be situation like this), then use "collected"
-  const viewed = chartData.view_update_every
-  if (collected === viewed) {
-    return `resolution ${seconds4human(collected)}`
-  }
-
-  return `resolution ${seconds4human(viewed)}, collected every ${seconds4human(collected)}`
-}
-
-type GetNewSelectedDimensions = (arg: {
-  allDimensions: string[],
-  selectedDimensions: string[],
-  clickedDimensionName: string,
-  isModifierKeyPressed: boolean,
-}) => string[]
-
-export const getNewSelectedDimensions: GetNewSelectedDimensions = ({
-  allDimensions,
-  selectedDimensions,
-  clickedDimensionName,
-  isModifierKeyPressed,
-}) => {
-  // when selectedDimensions is empty, then all dimensions should be enabled
-  // let's narrow this case now
-  const enabledDimensions = selectedDimensions.length === 0 ? allDimensions : selectedDimensions
-  const isCurrentlySelected = enabledDimensions.includes(clickedDimensionName)
-
-  let newSelectedDimensions: string[]
-  if (!isModifierKeyPressed
-    && ((isCurrentlySelected && enabledDimensions.length > 1) || !isCurrentlySelected)
-  ) {
-    newSelectedDimensions = [clickedDimensionName]
-  } else if (isCurrentlySelected) { // modifier key pressed
-    newSelectedDimensions = enabledDimensions.filter(
-      (dimension) => dimension !== clickedDimensionName,
-    )
-  } else { // modifier key pressed
-    newSelectedDimensions = enabledDimensions.concat(clickedDimensionName)
-  }
-
-  if (newSelectedDimensions.length === allDimensions.length) {
-    return []
-  }
-  return newSelectedDimensions
-}
-
 export const ChartLegendRight = ({
-  // attributes,
   chartData,
   chartMetadata,
   chartLibrary,
   colors,
+  dimensionNames,
   hoveredRow,
   hoveredX,
   legendFormatValue,
+  onDimensionClick,
   selectedDimensions,
-  setSelectedDimensions,
   showLatestOnBlur,
   unitsCurrent,
   viewBefore,
@@ -122,6 +45,7 @@ export const ChartLegendRight = ({
   // const netdataLast = chartData.last_entry * 1000
   // const dataUpdateEvery = chartData.view_update_every * 1000
   // showUndefined = Math.abs(netdataLast - viewBefore) > dataUpdateEvery
+  // (showUndefined also when difference between last and before is bigger than granularity)
   const showUndefined = hoveredRow === -1 && !showLatestOnBlur
 
   // todo support timezone
@@ -134,18 +58,6 @@ export const ChartLegendRight = ({
   const colorFillOpacity = window.NETDATA.options.current[
     `color_fill_opacity_${chartMetadata.chart_type}`
   ]
-
-  const handleDimensionClick = (clickedDimensionName: string) => (event: React.MouseEvent) => {
-    event.preventDefault()
-    const isModifierKeyPressed = event.shiftKey || event.ctrlKey
-    const newSelectedDimensions = getNewSelectedDimensions({
-      allDimensions: chartData.dimension_names,
-      selectedDimensions,
-      clickedDimensionName,
-      isModifierKeyPressed,
-    })
-    setSelectedDimensions(newSelectedDimensions)
-  }
 
   const { localeDateString, localeTimeString } = useDateTime()
 
@@ -196,7 +108,7 @@ export const ChartLegendRight = ({
       <br />
       <div className="netdata-legend-series" ref={scrollbarRef}>
         <div className="netdata-legend-series-content">
-          {chartData.dimension_names.map((dimensionName, i) => {
+          {dimensionNames.map((dimensionName, i) => {
             // todo dimension could be a separate component
             const color = colors[dimensionName]
             const rgb = colorHex2Rgb(color)
@@ -225,7 +137,9 @@ export const ChartLegendRight = ({
                     "netdata-legend-name",
                     isSelected ? "selected" : "not-selected",
                   )}
-                  onClick={handleDimensionClick(dimensionName)}
+                  onClick={(event) => {
+                    onDimensionClick(dimensionName, event)
+                  }}
                   role="button"
                   style={{ color }}
                   tabIndex={0}
@@ -252,7 +166,9 @@ export const ChartLegendRight = ({
                     "netdata-legend-value",
                     !isSelected && "hidden",
                   )}
-                  onClick={handleDimensionClick(dimensionName)}
+                  onClick={(event) => {
+                    onDimensionClick(dimensionName, event)
+                  }}
                   role="button"
                   style={{ color }} // omitted !important during refractor, react doesn't support it
                   tabIndex={0}
