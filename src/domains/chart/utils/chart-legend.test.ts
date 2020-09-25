@@ -1,6 +1,6 @@
-import { getNewSelectedDimensions } from "./chart-legend"
+import { getNewSelectedDimensions } from "./legend-utils"
 
-describe("chart-legend", () => {
+describe("legend-utils", () => {
   describe("getNewSelectedDimensions", () => {
     it("selects dimension - no modifier, from default setting", () => {
       expect(getNewSelectedDimensions({

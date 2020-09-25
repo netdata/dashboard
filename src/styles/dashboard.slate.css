@@ -397,6 +397,13 @@ code {
     /* width and height is calculated (depends on the appearance of the legend) */
 }
 
+.netdata-chart-with-legend-bottom {
+    display: block;
+    overflow: hidden;
+    z-index: 5;
+    flex-grow: 1;
+}
+
 .netdata-peity-chart {
 
 }

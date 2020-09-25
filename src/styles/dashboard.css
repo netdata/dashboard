@@ -97,7 +97,7 @@ body {
 }
 
 .netdata-container-with-legend {
-    display: inline-block;
+    /*display: inline-block;*/
     overflow: hidden;
 
     transform: translate3d(0,0,0);
@@ -109,6 +109,9 @@ body {
     position: relative;
 
     /* width and height is given per chart with data-width and data-height */
+
+    display: flex;
+    flex-direction: column;
 }
 
 .netdata-legend-resize-handler {
@@ -381,6 +384,13 @@ body {
     flex-grow: 1;
 
     /* width and height is calculated (depends on the appearance of the legend) */
+}
+
+.netdata-chart-with-legend-bottom {
+    display: block;
+    overflow: hidden;
+    z-index: 5;
+    flex-grow: 1;
 }
 
 .netdata-peity-chart {
