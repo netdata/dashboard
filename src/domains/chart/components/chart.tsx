@@ -348,6 +348,26 @@ export const Chart = memo(({
     ? Math.floor(((hoveredX as number) - chartData.after * MS_IN_SECOND) / viewUpdateEvery)
     : -1
 
+  const isLegendOnBottom = attributes.legendPosition === "bottom"
+
+  const legendToolbox = (
+    <LegendToolbox
+      onToolboxLeftClick={handleToolboxLeftClick}
+      onToolboxResetClick={handleToolboxResetClick}
+      onToolboxRightClick={handleToolboxRightClick}
+      onToolboxZoomInClick={handleToolboxZoomInClick}
+      onToolboxZoomOutClick={handleToolboxZoomOutClick}
+    />
+  )
+
+  const resizeHandler = (
+    <ResizeHandler
+      chartContainerElement={chartContainerElement}
+      chartUuid={chartUuid}
+      heightId={attributes.heightId}
+    />
+  )
+
   return (
     <>
       <AbstractChart
@@ -391,23 +411,15 @@ export const Chart = memo(({
           showLatestOnBlur={showLatestOnBlur}
           unitsCurrent={unitsCurrent}
           viewBefore={viewBefore}
+          legendToolbox={legendToolbox}
+          resizeHandler={resizeHandler}
         />
       )}
-      {shouldDisplayToolbox && (
-        <LegendToolbox
-          onToolboxLeftClick={handleToolboxLeftClick}
-          onToolboxResetClick={handleToolboxResetClick}
-          onToolboxRightClick={handleToolboxRightClick}
-          onToolboxZoomInClick={handleToolboxZoomInClick}
-          onToolboxZoomOutClick={handleToolboxZoomOutClick}
-        />
+      {shouldDisplayToolbox && !isLegendOnBottom && (
+        legendToolbox
       )}
-      {shouldDisplayResizeHandler && (
-        <ResizeHandler
-          chartContainerElement={chartContainerElement}
-          chartUuid={chartUuid}
-          heightId={attributes.heightId}
-        />
+      {shouldDisplayResizeHandler && !isLegendOnBottom && (
+        resizeHandler
       )}
     </>
   )

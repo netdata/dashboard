@@ -98,7 +98,7 @@ export const AbstractChart = ({
   const { hasLegend } = chartSettings
   const chartElementClassName = hasLegend(attributes)
     ? classNames(
-      "netdata-chart-with-legend-right",
+      `netdata-chart-with-legend-${attributes.legendPosition || "right"}`,
       `netdata-${chartLibrary}-chart-with-legend-right`,
     )
     : classNames(

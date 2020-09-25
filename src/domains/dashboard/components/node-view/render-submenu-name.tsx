@@ -4,6 +4,7 @@ import { name2id } from "utils/name-2-id"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
+import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { ChartsMetadata } from "domains/global/types"
 import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT } from "utils"
 
@@ -96,6 +97,11 @@ export const renderSubmenuName = ({
       {chartsSorted.map((chart) => {
         const commonMin = chartCommonMin(chart.family, chart.context, chart.units)
         const commonMax = chartCommonMax(chart.family, chart.context, chart.units)
+        const baseHeight = options.chartsHeight
+          + (commonAttributesOverrides?.legendPosition === "bottom"
+            ? LEGEND_BOTTOM_SINGLE_LINE_HEIGHT
+            : 0
+          )
         return (
           <div
             className="netdata-chartblock-container"
@@ -115,7 +121,7 @@ export const renderSubmenuName = ({
                 chartLibrary: "dygraph",
                 width: "100%",
                 height: netdataDashboard.contextHeight(
-                  chart.context, options.chartsHeight,
+                  chart.context, baseHeight,
                 ),
                 dygraphValueRange: netdataDashboard.contextValueRange(
                   chart.context,
