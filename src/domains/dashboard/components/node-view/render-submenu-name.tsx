@@ -42,6 +42,7 @@ interface RenderSubmenuNameArg {
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   attributesOverrides?: ChartsAttributes
   nodeIDs: string[]
+  commonAttributesOverrides?: Partial<Attributes>
 }
 export const renderSubmenuName = ({
   chartsMetadata,
@@ -54,6 +55,7 @@ export const renderSubmenuName = ({
   renderCustomElementForDygraph,
   attributesOverrides,
   nodeIDs,
+  commonAttributesOverrides,
 }: RenderSubmenuNameArg) => (submenuName: string) => {
   const submenuID = name2id(`menu_${menuName}_submenu_${submenuName}`)
   const submenu = menu.submenus[submenuName]
@@ -132,6 +134,7 @@ export const renderSubmenuName = ({
                 // add commonMin/commonMax attributes only if they are set
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
+                ...commonAttributesOverrides,
                 ...(attributesOverrides ? attributesOverrides[chart.id] : {}),
                 nodeIDs,
               }}

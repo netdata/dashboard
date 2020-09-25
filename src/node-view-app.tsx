@@ -12,6 +12,7 @@ import "./dashboard-react"
 
 import "./types/global"
 import { NodeView } from "domains/dashboard/components/node-view"
+import { Attributes } from "domains/chart/utils/transformDataAttributes"
 
 import { ChartsMetadata } from "domains/global/types"
 
@@ -48,6 +49,10 @@ if (window.netdataPrepCallback) {
 
 const AppStyle = { height: "100vh" }
 
+const commonAttributesOverrides: Partial<Attributes> = {
+  legendPosition: "bottom",
+}
+
 const NodeViewApp = () => { // eslint-disable-line arrow-body-style
   const [realMetadata, setRealMetadata] = useState()
   const scrollableContainerRef = React.createRef<HTMLDivElement>()
@@ -70,6 +75,7 @@ const NodeViewApp = () => { // eslint-disable-line arrow-body-style
             host="http://localhost:19999/api/v1/data"
             dropdownMenu={[]}
             scrollableContainerRef={scrollableContainerRef}
+            commonAttributesOverrides={commonAttributesOverrides}
           />
         </DashboardThemeProvider>
       )}
