@@ -2,7 +2,7 @@ import { cond } from "ramda"
 import React from "react"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
-import { ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
+import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 
 interface Props {
   charts: ChartsMetadata["charts"]
@@ -11,6 +11,7 @@ interface Props {
   chartsMetadata: ChartsMetadata
   attributesOverrides?: ChartsAttributes
   nodeIDs: string[]
+  commonAttributesOverrides?: Partial<Attributes>
 }
 export const HeadMain = ({
   charts,
@@ -19,6 +20,7 @@ export const HeadMain = ({
   chartsMetadata,
   attributesOverrides,
   nodeIDs,
+  commonAttributesOverrides,
 }: Props) => {
   const commonAttributes = {
     host,
@@ -26,6 +28,7 @@ export const HeadMain = ({
     forceTimeWindow: true,
     points: duration,
     nodeIDs,
+    ...commonAttributesOverrides,
   }
 
   // todo

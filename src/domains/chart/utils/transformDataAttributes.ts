@@ -82,6 +82,7 @@ export interface StaticAttributes {
   after?: number
   before?: number
   legend?: boolean
+  legendPosition?: "bottom"
   units?: string
   unitsCommon?: string
   unitsDesired?: string
@@ -317,6 +318,7 @@ const getAttributesMap = (): AttributesMap => ({
   after: { key: "after", defaultValue: window.NETDATA.chartDefaults.after },
   before: { key: "before", defaultValue: window.NETDATA.chartDefaults.before },
   legend: { key: "legend", type: "boolean", defaultValue: true },
+  legendPosition: { key: "legend-position" },
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
