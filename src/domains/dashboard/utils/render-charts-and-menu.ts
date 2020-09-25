@@ -124,7 +124,7 @@ function enrichChartData(chartName: string, chart: ChartMetadata) {
       break
   }
 
-  chartEnriched.submenu = chartEnriched.family
+  chartEnriched.submenu = chartEnriched.family || "all"
   return chartEnriched
 }
 
