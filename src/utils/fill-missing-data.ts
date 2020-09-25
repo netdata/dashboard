@@ -90,7 +90,6 @@ export const mapDefaultAggrMethod = (unit: string): string => {
     "rotations/min": true,
     ratio: true,
     seconds: true,
-    kbps: true,
     "seconds ago": true,
     milliseconds: true,
     millisec: true,
