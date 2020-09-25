@@ -33,6 +33,7 @@ interface SubSectionProps {
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
+  commonAttributesOverrides?: Partial<Attributes>
   attributesOverrides?: ChartsAttributes
   nodeIDs: string[]
 }
@@ -50,6 +51,7 @@ const SubSection = memo(({
   renderCustomElementForDygraph,
   shouldDisplayHeadMain,
   attributesOverrides,
+  commonAttributesOverrides,
   nodeIDs = emptyNodeIDs,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
@@ -66,6 +68,7 @@ const SubSection = memo(({
             chartsMetadata={chartsMetadata}
             attributesOverrides={attributesOverrides}
             nodeIDs={nodeIDs}
+            commonAttributesOverrides={commonAttributesOverrides}
           />
         )}
         {submenuNames.flatMap(
@@ -81,6 +84,7 @@ const SubSection = memo(({
                     forceTimeWindow: true, // respect timeWindow
                     host,
                     nodeIDs,
+                    ...commonAttributesOverrides,
                     ...(attributesOverrides && attributesOverrides[attributes.id]),
                   }
                 }
@@ -101,6 +105,7 @@ const SubSection = memo(({
         pcentWidth,
         attributesOverrides,
         nodeIDs,
+        commonAttributesOverrides,
       }))}
     </div>
   )
@@ -117,6 +122,7 @@ interface Props {
   scrollableContainerRef: React.RefObject<HTMLDivElement>
   timeWindow?: number
   attributes?: ChartsAttributes
+  commonAttributesOverrides?: Partial<Attributes>
   metricsCorrelationMetadata?: ChartsMetadata
   children?: React.ReactNode | React.ReactNode[]
   nodeIDs?: string[]
@@ -129,6 +135,7 @@ export const NodeView = ({
   scrollableContainerRef,
   timeWindow,
   attributes,
+  commonAttributesOverrides,
   metricsCorrelationMetadata,
   children,
   nodeIDs,
@@ -200,6 +207,7 @@ export const NodeView = ({
                   host={host}
                   chartsMetadata={metricsCorrelationMetadata || chartsMetadata}
                   attributesOverrides={attributes}
+                  commonAttributesOverrides={commonAttributesOverrides}
                   nodeIDs={nodeIDs || []}
                 />
               </div>
