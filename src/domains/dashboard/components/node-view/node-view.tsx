@@ -35,7 +35,7 @@ interface SubSectionProps {
   shouldDisplayHeadMain: boolean
   commonAttributesOverrides?: Partial<Attributes>
   attributesOverrides?: ChartsAttributes
-  nodeIDs: string[]
+  nodeIDs?: string[]
 }
 
 const emptyNodeIDs: string[] = []
@@ -208,7 +208,7 @@ export const NodeView = ({
                   chartsMetadata={metricsCorrelationMetadata || chartsMetadata}
                   attributesOverrides={attributes}
                   commonAttributesOverrides={commonAttributesOverrides}
-                  nodeIDs={nodeIDs || []}
+                  nodeIDs={nodeIDs}
                 />
               </div>
             )
