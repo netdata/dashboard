@@ -8,7 +8,7 @@ interface Props {
   menuNames: string[]
   menus: Menus
 }
-export const MenuSidebar = ({
+export const MenuSidebar = React.memo(({
   currentChart,
   menuNames,
   menus,
@@ -35,4 +35,4 @@ export const MenuSidebar = ({
       </ul>
     </div>
   )
-}
+})
