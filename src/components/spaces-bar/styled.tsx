@@ -1,7 +1,7 @@
 import styled from "styled-components"
 import { getSizeBy, getColor } from "@netdata/netdata-ui"
 
-const spacesBarZIndex = 4
+import { spacesBarZIndex } from "styles/z-index"
 
 export const ListContainer = styled.div`
   position: fixed;

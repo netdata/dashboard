@@ -3,7 +3,7 @@ import {
   getColor, getSizeBy, breakpoints,
 } from "@netdata/netdata-ui"
 
-const appHeaderZIndex = 5
+import { appHeaderZIndex } from "styles/z-index"
 
 export const StyledHeader = styled.header`
   z-index: ${appHeaderZIndex};
