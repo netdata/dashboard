@@ -13,6 +13,7 @@ import {
   selectPanAndZoomDataPadding,
   selectSnapshot,
   selectSpacePanelTransitionEndIsActive,
+  selectDefaultAfter,
 } from "domains/global/selectors"
 import { serverDefault } from "utils/server-detection"
 import { CHART_UNMOUNTED } from "utils/netdata-sdk"
@@ -154,15 +155,18 @@ export const ChartWithLoader = ({
     setShouldFetch(true)
   }, [panAndZoomThrottled, setShouldFetch])
 
+  const defaultAfter = useSelector(selectDefaultAfter)
   // when after/before changes, don't wait for next interval, just fetch immediately
   useUpdateEffect(() => {
     setShouldFetch(true)
-  }, [attributes.after, attributes.before])
+  }, [attributes.after, attributes.before, defaultAfter])
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
     before: initialBefore = window.NETDATA.chartDefaults.before,
   } = attributes
+
+  const liveModeAfter = defaultAfter || initialAfter
 
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const { hasLegend } = chartSettings
@@ -220,7 +224,7 @@ export const ChartWithLoader = ({
       } else {
         // no panAndZoom
         before = initialBefore
-        after = initialAfter
+        after = liveModeAfter
         pointsMultiplier = 1
       }
 
@@ -230,10 +234,11 @@ export const ChartWithLoader = ({
         || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
       const points = forceDataPoints || dataPoints * pointsMultiplier
 
+      const shouldForceTimeWindow = attributes.forceTimeWindow || Boolean(defaultAfter)
       // if we want to add fake points, we need first need to request less
       // to have the desired frequency
       // this will be removed when Agents will support forcing time-window between points
-      const correctedPoints = attributes.forceTimeWindow ? getCorrectedPoints({
+      const correctedPoints = shouldForceTimeWindow ? getCorrectedPoints({
         after, before, firstEntry: actualChartMetadata.first_entry, points,
       }) : null
 
@@ -274,14 +279,15 @@ export const ChartWithLoader = ({
     chartSettings,
     chartUuid,
     chartWidth,
+    defaultAfter,
     dispatch,
     hasLegend,
     host,
-    initialAfter,
     initialBefore,
     isFetchingData,
     isPanAndZoomMaster,
     isRemotelyControlled,
+    liveModeAfter,
     panAndZoom,
     portalNode,
     setShouldFetch,

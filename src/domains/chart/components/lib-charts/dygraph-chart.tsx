@@ -67,6 +67,7 @@ interface GetInitialDygraphOptions {
   setMinMax: (minMax: TimeRange) => void
   shouldSmoothPlot: boolean,
   unitsCurrent: string,
+  xAxisDateString: (d: Date) => string,
   xAxisTimeString: (d: Date) => string,
 }
 const getInitialDygraphOptions = ({
@@ -81,6 +82,7 @@ const getInitialDygraphOptions = ({
   setMinMax,
   shouldSmoothPlot,
   unitsCurrent,
+  xAxisDateString,
   xAxisTimeString,
 }: GetInitialDygraphOptions) => {
   const isSparkline = attributes.dygraphTheme === "sparkline"
@@ -235,7 +237,10 @@ const getInitialDygraphOptions = ({
         ticker: Dygraph.dateTicker,
         axisLabelWidth: dygraphXAxisLabelWidth,
         drawAxis: isSparkline ? false : dygraphDrawXAxis,
-        axisLabelFormatter: (d: Date | number) => xAxisTimeString(d as Date),
+        axisLabelFormatter: (d: Date | number) => ((d as Date).toTimeString().startsWith("00:00:00")
+          ? xAxisDateString(d as Date)
+          : xAxisTimeString(d as Date)
+        ),
       },
       y: {
         logscale: isLogScale,
@@ -318,7 +323,7 @@ export const DygraphChart = ({
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
-  const { xAxisTimeString } = useDateTime()
+  const { xAxisDateString, xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const hiddenLabelsElementId = `${chartUuid}-hidden-labels-id`
 
@@ -424,6 +429,7 @@ export const DygraphChart = ({
         setMinMax,
         shouldSmoothPlot,
         unitsCurrent,
+        xAxisDateString,
         xAxisTimeString,
       })
 
@@ -804,7 +810,7 @@ export const DygraphChart = ({
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isFakeStacked, isMouseDown,
     orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    updateChartPanOrZoom, xAxisTimeString])
+    updateChartPanOrZoom, xAxisDateString, xAxisTimeString])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {

@@ -100,9 +100,26 @@ export const useDateTime = () => {
       : xAxisTimeStringNative
   }, [timezone, isUsingTimezone])
 
+
+  const xAxisDateString = useMemo(() => {
+    const xAxisOptions = {
+      localeMatcher: "best fit",
+      hour12: false,
+      formatMatcher: "best fit",
+      day: "2-digit",
+      month: "2-digit",
+      timeZone: isUsingTimezone ? timezone : undefined,
+    }
+    const xAxisFormat = () => new Intl.DateTimeFormat(navigator.language, xAxisOptions)
+    return isSupportingDateTimeFormat
+      ? (d: Date | number) => xAxisFormat().format(d)
+      : xAxisTimeStringNative
+  }, [timezone, isUsingTimezone])
+
   return {
     localeDateString,
     localeTimeString,
+    xAxisDateString,
     xAxisTimeString,
   }
 }

@@ -1,12 +1,13 @@
 import styled from "styled-components"
 import { getSizeBy, getColor, H4 } from "@netdata/netdata-ui"
 
+import { spacePanelZIndex } from "styles/z-index"
 import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
 
 const PANEL_CONTAINER_PADDING = 3
 export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: boolean }>`
   position: fixed;
-  z-index: 3;
+  z-index: ${spacePanelZIndex};
   left: 56px;
   transform: ${({ isActive }) => (isActive ? "translateX(0)" : "translateX(-100%)")};
   top: 56px;
