@@ -75,31 +75,33 @@ export const ChartWithLoader = ({
   /**
    * fetch chart details
    */
-  const host = attributes.host || serverDefault
+  const { host = serverDefault, id, nodeIDs } = attributes
   const dispatch = useDispatch()
   const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
   const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
-    selectChartMetadataRequest(state, { chartId: attributes.id, id: chartUuid })
+    selectChartMetadataRequest(state, { chartId: id, id: chartUuid })
   ))
   const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
       dispatch(
         fetchChartAction.request({
-          chart: attributes.id,
+          chart: id,
           id: chartUuid,
           host,
+          nodeIDs,
         }),
       )
     }
   }, [
-    attributes.id,
+    id,
     chartUuid,
     dispatch,
     host,
     isFetchingDetails,
     chartMetadata,
     externalChartMetadata,
+    nodeIDs,
   ])
 
   // todo local state option
@@ -241,7 +243,6 @@ export const ChartWithLoader = ({
       }) : null
 
       const group = attributes.method || window.NETDATA.chartDefaults.method
-
       setShouldFetch(false)
       dispatch(
         fetchDataAction.request({
@@ -256,6 +257,8 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
+          aggrMethod: attributes.aggrMethod,
+          nodeIDs,
 
           // properties for the reducer
           fetchDataParams: {
@@ -292,6 +295,7 @@ export const ChartWithLoader = ({
     shouldUsePanAndZoomPadding,
     shouldFetch,
     cancelTokenSource,
+    nodeIDs,
   ])
 
   useSelector(selectSpacePanelTransitionEndIsActive)
@@ -310,8 +314,8 @@ export const ChartWithLoader = ({
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
-      chartID: attributes.id,
-    }), [renderCustomElementForDygraph, attributes, actualChartMetadata],
+      chartID: id,
+    }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata],
   )
 
   // eslint-disable-next-line max-len
@@ -354,7 +358,7 @@ export const ChartWithLoader = ({
         <S.ChartDropdownContainer>
           <ChartDropdown
             dropdownMenu={dropdownMenu}
-            chartID={attributes.id}
+            chartID={id}
             attributes={attributes}
             chartMetadata={actualChartMetadata}
           />

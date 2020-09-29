@@ -85,6 +85,8 @@ export interface StaticAttributes {
   units?: string
   unitsCommon?: string
   unitsDesired?: string
+  aggrMethod?: string
+  nodeIDs?: string[]
   colors?: string
   commonColors?: string
   decimalDigits?: number
@@ -318,6 +320,8 @@ const getAttributesMap = (): AttributesMap => ({
   units: { key: "units" },
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
+  aggrMethod: { key: "aggr-method" },
+  nodeIDs: { key: "node-ids" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
   decimalDigits: { key: "decimal-digits" },
@@ -543,7 +547,9 @@ export const getAttributesStatic = (node: Element): Attributes => mapObjIndexed(
 export const getAttributesDynamic = (node: Element) => {
   const showValueOfAttribues = Array.from(node.attributes)
     .filter((attribute) => attribute.name.startsWith("data-show-value-of"))
-    .map((attribute) => ({ [attribute.name.replace("data-", "")]: attribute.value }))
+    .map((attribute) => ({
+      [attribute.name.replace("data-", "")]: attribute.value,
+    }))
   const merged = mergeAll(showValueOfAttribues)
   return isEmpty(merged) ? undefined : merged
 }

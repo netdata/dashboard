@@ -2,13 +2,11 @@ import React, {
   memo, useRef, useState, useEffect, useMemo,
 } from "react"
 import { useScroll } from "react-use"
-
 import { name2id } from "utils/name-2-id"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
-
 import { renderChartsAndMenu } from "../../utils/render-charts-and-menu"
 import { Menu, options } from "../../utils/netdata-dashboard"
 import { parseChartString } from "../../utils/parse-chart-string"
@@ -25,7 +23,6 @@ const chartsPerRow = () => (
   options.chartsPerRow === 0 ? 1 : options.chartsPerRow
 )
 
-
 interface SubSectionProps {
   chartsMetadata: ChartsMetadata
   dropdownMenu?: DropdownMenu
@@ -37,7 +34,11 @@ interface SubSectionProps {
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
   shouldDisplayHeadMain: boolean
   attributesOverrides?: ChartsAttributes
+  nodeIDs: string[]
 }
+
+const emptyNodeIDs: string[] = []
+
 const SubSection = memo(({
   chartsMetadata,
   dropdownMenu,
@@ -49,6 +50,7 @@ const SubSection = memo(({
   renderCustomElementForDygraph,
   shouldDisplayHeadMain,
   attributesOverrides,
+  nodeIDs = emptyNodeIDs,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
   return (
@@ -62,6 +64,8 @@ const SubSection = memo(({
             duration={duration}
             host={host}
             chartsMetadata={chartsMetadata}
+            attributesOverrides={attributesOverrides}
+            nodeIDs={nodeIDs}
           />
         )}
         {submenuNames.flatMap(
@@ -76,7 +80,8 @@ const SubSection = memo(({
                     ...attributes,
                     forceTimeWindow: true, // respect timeWindow
                     host,
-                    ...(attributesOverrides ? attributesOverrides[attributes.id] : {}),
+                    nodeIDs,
+                    ...(attributesOverrides && attributesOverrides[attributes.id]),
                   }
                 }
                 key={`${attributes.id}-${attributes.dimensions}`}
@@ -95,6 +100,7 @@ const SubSection = memo(({
         menuName,
         pcentWidth,
         attributesOverrides,
+        nodeIDs,
       }))}
     </div>
   )
@@ -112,6 +118,8 @@ interface Props {
   timeWindow?: number
   attributes?: ChartsAttributes
   metricsCorrelationMetadata?: ChartsMetadata
+  children?: React.ReactNode | React.ReactNode[]
+  nodeIDs?: string[]
 }
 export const NodeView = ({
   chartsMetadata,
@@ -122,6 +130,8 @@ export const NodeView = ({
   timeWindow,
   attributes,
   metricsCorrelationMetadata,
+  children,
+  nodeIDs,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState("")
@@ -165,6 +175,7 @@ export const NodeView = ({
   return (
     <div className="node-view__container">
       <div ref={ref} className="charts-body" role="main">
+        {children}
         {!!duration && (
           main.map((menuName, menuIndex) => {
             const menu = menus[menuName]
@@ -189,6 +200,7 @@ export const NodeView = ({
                   host={host}
                   chartsMetadata={metricsCorrelationMetadata || chartsMetadata}
                   attributesOverrides={attributes}
+                  nodeIDs={nodeIDs || []}
                 />
               </div>
             )

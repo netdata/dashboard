@@ -2,24 +2,30 @@ import { cond } from "ramda"
 import React from "react"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
+import { ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 
 interface Props {
   charts: ChartsMetadata["charts"]
   duration: number
   host: string
   chartsMetadata: ChartsMetadata
+  attributesOverrides?: ChartsAttributes
+  nodeIDs: string[]
 }
 export const HeadMain = ({
   charts,
   duration,
   host,
   chartsMetadata,
+  attributesOverrides,
+  nodeIDs,
 }: Props) => {
   const commonAttributes = {
     host,
     after: -duration,
     forceTimeWindow: true,
     points: duration,
+    nodeIDs,
   }
 
   // todo
@@ -37,10 +43,12 @@ export const HeadMain = ({
             chartLibrary: "easypiechart",
             title: "Used Swap",
             units: "%",
+            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: "DD4400",
+            ...(attributesOverrides && attributesOverrides["system.swap"]),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.swap"]}
@@ -60,6 +68,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
+              ...(attributesOverrides && attributesOverrides["system.io"]),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -74,6 +83,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
+              ...(attributesOverrides && attributesOverrides["system.io"]),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -91,6 +101,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
+              ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -105,6 +116,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
+              ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -120,10 +132,12 @@ export const HeadMain = ({
             chartLibrary: "gauge",
             title: "CPU",
             units: "%",
+            aggrMethod: "avg",
             gaugeMaxValue: 100,
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
+            ...(attributesOverrides && attributesOverrides["system.cpu"]),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.cpu"]}
@@ -144,6 +158,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.net"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -158,6 +173,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.net"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -176,6 +192,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ip"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -190,6 +207,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ip"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -208,6 +226,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ipv4"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -222,6 +241,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ipv4"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -238,9 +258,11 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
                 units: "kbps",
+                aggrMethod: "sum",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ipv6"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -255,6 +277,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
+                ...(attributesOverrides && attributesOverrides["system.ipv6"]),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -273,10 +296,12 @@ export const HeadMain = ({
             chartLibrary: "easypiechart",
             title: "Used RAM",
             units: "%",
+            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: colors[7],
+            ...(attributesOverrides && attributesOverrides["system.ram"]),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.ram"]}

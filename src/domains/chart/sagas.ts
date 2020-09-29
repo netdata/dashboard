@@ -14,8 +14,7 @@ import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
-import { fillMissingData } from "utils/fill-missing-data"
-
+import { fillMissingData, transformResults } from "utils/fill-missing-data"
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
 } from "components/notifications"
@@ -92,7 +91,8 @@ const [fetchMetrics$] = getFetchStream(
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
-    host, chart, format, points, group, gtime, options, after, before, dimensions,
+    host, chart, format, points, group, gtime, options,
+    after, before, dimensions, aggrMethod, nodeIDs,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -133,12 +133,18 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     after,
     before,
     dimensions,
+    context: chart,
+    ...(aggrMethod && { aggr_method: aggrMethod }),
+    ...(nodeIDs && { node_ids: nodeIDs.join(",") }),
   }
 
-  const onSuccessCallback = (data: unknown) => {
+  const onSuccessCallback = (data: {}) => {
     const { fillMissingPoints } = fetchDataParams
+    const chartData = transformResults(data as ChartData, format)
     fetchDataResponseChannel.put(fetchDataAction.success({
-      chartData: fillMissingPoints ? fillMissingData(data as ChartData, fillMissingPoints) : data,
+      chartData: fillMissingPoints
+        ? fillMissingData(chartData as ChartData, fillMissingPoints)
+        : chartData,
       fetchDataParams,
       id,
     }))
@@ -148,7 +154,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     console.warn("fetch chart data failure") // eslint-disable-line no-console
     fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
   }
-
 
   fetchMetrics$.next({
     url,
@@ -162,7 +167,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
 const [fetchForSnapshot$, resetFetchForSnapshot$] = getFetchStream(CONCURRENT_CALLS_LIMIT_SNAPSHOTS)
 function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayload>) {
   const {
-    host, chart, format, points, group, gtime, options, after, before, dimensions,
+    host, chart, format, points, group, gtime, options,
+    after, before, dimensions, aggrMethod, nodeIDs,
     chartLibrary, id,
   } = payload
 
@@ -185,6 +191,8 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     after,
     before,
     dimensions,
+    ...(aggrMethod && { aggr_method: aggrMethod }),
+    ...(nodeIDs && { node_ids: nodeIDs.join(",") }),
   }
 
   const onSuccessCallback = (data: unknown) => {

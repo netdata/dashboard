@@ -1,4 +1,4 @@
-import { tail } from "ramda"
+import { tail, sum } from "ramda"
 import { ChartData, DygraphData } from "domains/chart/chart-types"
 
 /*
@@ -59,4 +59,82 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
     return addPointsDygraph(data as DygraphData, nrOfPointsToFill)
   }
   return data
+}
+
+const emptyArray: number[] = []
+export const transformResults = (data: ChartData, format: string) => {
+  if (format === "array" && data.format === "json") {
+    if (Array.isArray(data.result)) return data
+
+    return {
+      ...data,
+      result: ((data as DygraphData).result.data).reduce((acc: number[], pointData: number[]) => {
+        pointData.shift()
+        return [
+          ...acc,
+          sum(pointData),
+        ]
+      }, emptyArray),
+    }
+  }
+  return data
+}
+
+export const mapDefaultAggrMethod = (unit: string): string => {
+  if (unit.length === 0) {
+    return "sum"
+  }
+  const avgUnits: any = {
+    percentage: true,
+    percent: true,
+    "rotations/min": true,
+    ratio: true,
+    seconds: true,
+    "seconds ago": true,
+    milliseconds: true,
+    millisec: true,
+    ms: true,
+    "log2 s": true,
+    minutes: true,
+    hours: true,
+    interval: true,
+    ticks: true,
+    celsius: true,
+    c: true,
+    mhz: true,
+    hz: true,
+    volts: true,
+    kwh: true,
+    ampere: true,
+    amps: true,
+    dbm: true,
+    value: true,
+    stratum: true,
+    units: true,
+    watt: true,
+    temperature: true,
+    "random number": true,
+    rpm: true,
+    quadro: true,
+    "adv/item": true,
+    multiplier: true,
+    geforce: true,
+  }
+  if (avgUnits[unit.toLowerCase()]) {
+    return "avg"
+  }
+  const avgUnitsRegExes: any = [
+    ".*%.*",
+    ".*/operation",
+    ".*/run",
+    ".*/ run",
+    ".*/request",
+  ]
+  if (avgUnitsRegExes.some((regEx: string) => {
+    const regExpression = RegExp(regEx, "i")
+    return regExpression.test(unit.toLowerCase())
+  })) {
+    return "avg"
+  }
+  return "sum"
 }

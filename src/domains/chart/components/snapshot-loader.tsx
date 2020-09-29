@@ -45,12 +45,13 @@ const SnapshotLoader = ({
       after: after || null,
       before: before || null,
       dimensions: attributes.dimensions,
-
+      aggrMethod: attributes.aggrMethod,
+      nodeIDs: attributes.nodeIDs,
       chartLibrary,
       id: chartUuid,
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // todo fetch based on state
+  }) // todo fetch based on state
   return null
 }
 
