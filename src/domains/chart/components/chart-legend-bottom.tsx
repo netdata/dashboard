@@ -98,6 +98,7 @@ export const ChartLegendBottom = ({
                 role="button"
                 tabIndex={0}
                 isDisabled={!isSelected}
+                key={dimensionName}
               >
                 <S.DimensionIcon
                   title={dimensionName}
