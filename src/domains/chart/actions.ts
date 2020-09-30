@@ -1,5 +1,5 @@
 import { createAction } from "redux-act"
-import { CancelTokenSource } from "axios"
+import { CancelTokenSource, Method } from "axios"
 
 import { createRequestAction } from "utils/createRequestAction"
 
@@ -40,6 +40,7 @@ export interface FetchDataUrlParams {
   dimensions?: string
   aggrMethod?: string
   nodeIDs?: string[]
+  httpMethod?: Method
 }
 export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,
