@@ -92,7 +92,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
     host, chart, format, points, group, gtime, options,
-    after, before, dimensions, aggrMethod, nodeIDs,
+    after, before, dimensions, aggrMethod, nodeIDs, httpMethod,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -122,20 +122,37 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     ? `${alwaysEndWithSlash(host)}api/v1/data`
     : host
 
-  const params = {
-    chart,
-    _: new Date().valueOf(),
-    format,
-    points,
-    group,
-    gtime,
-    options,
-    after,
-    before,
-    dimensions,
-    context: chart,
-    ...(aggrMethod && { aggr_method: aggrMethod }),
-    ...(nodeIDs && nodeIDs.length && { node_ids: nodeIDs.join(",") }),
+  const axiosOptions = httpMethod === "POST" ? {
+    // used by cloud's room-overview
+    data: {
+      filter: {
+        nodeIDs,
+        context: chart,
+        dimensions: dimensions && dimensions.split(/['|]/),
+      },
+      after,
+      before,
+      points,
+      group,
+      gtime,
+      agent_options: options.split("|"),
+      aggregation: {
+        method: aggrMethod,
+      },
+    },
+  }: {
+    params: {
+      chart,
+      _: new Date().valueOf(),
+      format,
+      points,
+      group,
+      gtime,
+      options,
+      after,
+      before,
+      dimensions,
+    },
   }
 
   const onSuccessCallback = (data: {}) => {
@@ -156,8 +173,9 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   }
 
   fetchMetrics$.next({
+    ...axiosOptions,
+    method: httpMethod || "GET",
     url,
-    params,
     onErrorCallback,
     onSuccessCallback,
     cancelTokenSource,
