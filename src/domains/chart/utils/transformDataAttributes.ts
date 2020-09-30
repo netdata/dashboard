@@ -1,4 +1,5 @@
 import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
+import { Method } from "axios"
 import { ChartLibraryName } from "./chartLibrariesSettings"
 
 type OutputValue = string | boolean | number | null | undefined | any[]
@@ -75,6 +76,7 @@ type AttributeConfig = BaseAttributeConfig | BooleanAttributeConfig
 export interface StaticAttributes {
   id: string
   host?: string | undefined
+  httpMethod?: Method
   title?: string
   chartLibrary: ChartLibraryName
   width: number | string | null
@@ -311,6 +313,7 @@ const getAttributesMap = (): AttributesMap => ({
   // todo try to write above rule in TS
   id: { key: "netdata" },
   host: { key: "host" },
+  httpMethod: { key: "http-method" },
   title: { key: "title" },
   chartLibrary: { key: "chart-library", defaultValue: window.NETDATA.chartDefaults.library },
   width: { key: "width", defaultValue: window.NETDATA.chartDefaults.width },

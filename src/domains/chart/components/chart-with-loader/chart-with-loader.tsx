@@ -262,6 +262,7 @@ export const ChartWithLoader = ({
           dimensions: attributes.dimensions,
           aggrMethod: attributes.aggrMethod,
           nodeIDs,
+          httpMethod: attributes.httpMethod,
 
           // properties for the reducer
           fetchDataParams: {
