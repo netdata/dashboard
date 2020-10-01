@@ -40,12 +40,12 @@ export const getFetchStream = (concurrentCallsLimit: number) => {
       cancelToken: cancelTokenSource?.token,
     })).pipe(
       tap(({ data }) => { onSuccessCallback(data) }),
-      catchError((error) => {
+      catchError((error: Error) => {
         // todo implement error handling to support NETDATA.options.current.retries_on_data_failures
         if (error?.message !== CHART_UNMOUNTED) {
           console.warn("fetch error", url) // eslint-disable-line no-console
         }
-        onErrorCallback()
+        onErrorCallback(error)
         return empty()
       }),
     )

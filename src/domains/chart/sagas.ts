@@ -167,8 +167,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     }))
   }
 
-  const onErrorCallback = () => {
-    console.warn("fetch chart data failure") // eslint-disable-line no-console
+  const onErrorCallback = (error: Error) => {
+    console.warn("fetch chart data failure", error) // eslint-disable-line no-console
     fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
   }
 
