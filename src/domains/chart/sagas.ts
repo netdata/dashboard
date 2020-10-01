@@ -140,7 +140,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
         method: aggrMethod,
       },
     },
-  }: {
+  } : {
     params: {
       chart,
       _: new Date().valueOf(),

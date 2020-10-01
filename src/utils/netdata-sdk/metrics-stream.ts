@@ -39,7 +39,7 @@ export const getFetchStream = (concurrentCallsLimit: number) => {
       timeout: METRICS_TIMEOUT,
       cancelToken: cancelTokenSource?.token,
     })).pipe(
-      tap(({ data }) => { onSuccessCallback(data) }),
+      tap(({ data: responseData }) => { onSuccessCallback(responseData) }),
       catchError((error: Error) => {
         // todo implement error handling to support NETDATA.options.current.retries_on_data_failures
         if (error?.message !== CHART_UNMOUNTED) {
