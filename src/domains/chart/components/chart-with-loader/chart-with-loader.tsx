@@ -1,6 +1,8 @@
 import { cond, always, T } from "ramda"
 import axios from "axios"
-import React, { useEffect, useState, useMemo } from "react"
+import React, {
+  useEffect, useState, useMemo, useRef,
+} from "react"
 import { useThrottle, useUpdateEffect, useUnmount } from "react-use"
 
 import { AppStateT } from "store/app-state"
@@ -50,9 +52,10 @@ import * as S from "./styled"
 import "./chart-with-loader.css"
 
 export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
-  attributes: Attributes,
-  chartMetadata: ChartMetadata,
-  chartID: string,
+  attributes: Attributes
+  chartMetadata: ChartMetadata
+  chartID: string
+  getChartData: () => ChartData | null
 }) => JSX.Element
 
 export type Props = {
@@ -310,11 +313,15 @@ export const ChartWithLoader = ({
     }
   }, [externalSelectedDimensions])
 
+  const chartDataRef = useRef<ChartData | null>(null)
+  chartDataRef.current = chartData
+
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartID: id,
+      getChartData: () => chartDataRef.current,
     }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata],
   )
 
