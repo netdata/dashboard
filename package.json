@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "./lib/src/index-npm.js",
   "homepage": ".",
   "files": [
