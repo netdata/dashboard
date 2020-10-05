@@ -3,7 +3,9 @@ import axios from "axios"
 import React, {
   useEffect, useState, useMemo, useRef,
 } from "react"
-import { useThrottle, useUpdateEffect, useUnmount } from "react-use"
+import {
+  useThrottle, useUpdateEffect, useUnmount, useDebounce,
+} from "react-use"
 
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
@@ -195,6 +197,28 @@ export const ChartWithLoader = ({
   })
 
   /**
+   * spinner state
+   * show spinner when it's fetching for more than 2 seconds
+   * hide spinner immediately when it's not fetching
+   */
+  const [shouldShowSpinnerDebounced, setShouldShowSpinnerDebounced] = useState(false)
+  const shouldShowSpinner = shouldShowSpinnerDebounced && isFetchingData
+  useDebounce(
+    () => {
+      if (isFetchingData) {
+        setShouldShowSpinnerDebounced(true)
+      }
+    },
+    2000,
+    [isFetchingData],
+  )
+  useEffect(() => {
+    if (!isFetchingData && shouldShowSpinnerDebounced) {
+      setShouldShowSpinnerDebounced(false)
+    }
+  }, [isFetchingData, shouldShowSpinnerDebounced])
+
+  /**
    * fetch data
    */
   useEffect(() => {
@@ -363,7 +387,7 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {isFetchingData && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
+      {shouldShowSpinner && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown
