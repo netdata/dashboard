@@ -47,6 +47,7 @@ import {
 import { Loader } from "../loader"
 import { Chart } from "../chart"
 import { ChartDropdown, DropdownMenu } from "../chart-dropdown"
+import { ChartSpinner } from "../chart-spinner/chart-spinner"
 
 import * as S from "./styled"
 import "./chart-with-loader.css"
@@ -362,6 +363,7 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
+      {isFetchingData && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown
