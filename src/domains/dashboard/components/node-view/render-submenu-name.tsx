@@ -97,11 +97,9 @@ export const renderSubmenuName = ({
       {chartsSorted.map((chart) => {
         const commonMin = chartCommonMin(chart.family, chart.context, chart.units)
         const commonMax = chartCommonMax(chart.family, chart.context, chart.units)
-        const baseHeight = options.chartsHeight
-          + (commonAttributesOverrides?.legendPosition === "bottom"
-            ? LEGEND_BOTTOM_SINGLE_LINE_HEIGHT
-            : 0
-          )
+        const chartAdditionalHeight = commonAttributesOverrides?.legendPosition === "bottom"
+          ? LEGEND_BOTTOM_SINGLE_LINE_HEIGHT
+          : 0
         return (
           <div
             className="netdata-chartblock-container"
@@ -121,8 +119,8 @@ export const renderSubmenuName = ({
                 chartLibrary: "dygraph",
                 width: "100%",
                 height: netdataDashboard.contextHeight(
-                  chart.context, baseHeight,
-                ),
+                  chart.context, options.chartsHeight,
+                ) + chartAdditionalHeight,
                 dygraphValueRange: netdataDashboard.contextValueRange(
                   chart.context,
                 ),
