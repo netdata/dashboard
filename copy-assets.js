@@ -7,4 +7,5 @@ cpx.copy("src/styles/*", "lib/src/styles", {})
 cpx.copy("src/**/*.css", "lib/src", {})
 cpx.copy("src/**/*.scss", "lib/src", {})
 
+cpx.copy("src/**/*.gif", "lib/src", {})
 cpx.copy("src/**/*.svg", "lib/src", {})
