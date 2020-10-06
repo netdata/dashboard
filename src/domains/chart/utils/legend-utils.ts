@@ -1,7 +1,7 @@
 import { ChartData, ChartMetadata } from "../chart-types"
 import { seconds4human } from "./seconds4human"
 
-export const LEGEND_BOTTOM_SINGLE_LINE_HEIGHT = 40
+export const LEGEND_BOTTOM_SINGLE_LINE_HEIGHT = 80
 
 export const legendPluginModuleString = (withContext: boolean, chartMetadata: ChartMetadata) => {
   let str = " "
