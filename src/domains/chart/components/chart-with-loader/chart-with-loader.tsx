@@ -1,7 +1,7 @@
 import { cond, always, T } from "ramda"
 import axios from "axios"
 import React, {
-  useEffect, useState, useMemo, useRef,
+  useEffect, useState, useMemo,
 } from "react"
 import {
   useThrottle, useUpdateEffect, useUnmount, useDebounce,
@@ -339,16 +339,13 @@ export const ChartWithLoader = ({
     }
   }, [externalSelectedDimensions])
 
-  const chartDataRef = useRef<ChartData | null>(null)
-  chartDataRef.current = chartData
-
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartID: id,
-      getChartData: () => chartDataRef.current,
-    }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata],
+      getChartData: () => chartData,
+    }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata, chartData],
   )
 
   // eslint-disable-next-line max-len
