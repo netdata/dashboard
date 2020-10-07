@@ -18,7 +18,6 @@ export const LegendSecondRow = styled.div`
 `
 
 export const LegendUnit = styled.div`
-  margin-top: 4px;
   color: ${getColor("textFocus")};
 `
 

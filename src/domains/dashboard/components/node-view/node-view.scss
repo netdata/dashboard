@@ -57,6 +57,18 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     & ul {
       padding-left: 0;
     }
+
+    .dashboard-section {
+      h1 {
+        margin-top: 20px;
+      }
+    }
+
+    .dashboard-section-container {
+      & > h2 {
+        margin-top: 20px;
+      }
+    }
   }
 
   &__sidebar-container {
