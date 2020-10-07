@@ -58,6 +58,10 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       padding-left: 0;
     }
 
+    .dygraph-chart--legend-bottom .dygraph-axis-label-y {
+      text-align: start ;
+    }
+
     .dashboard-section {
       h1 {
         margin-top: 20px;
