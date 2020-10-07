@@ -37,6 +37,10 @@ export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
   margin-right: ${getSizeBy(2)};
   cursor: pointer;
   opacity: ${({ isDisabled }) => (isDisabled ? 0.3 : null)};
+  user-select: none;
+  &:focus {
+    outline: none;
+  }
 `
 
 export const DimensionIcon = styled.div<{ color: string }>`
