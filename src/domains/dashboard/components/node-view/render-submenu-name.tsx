@@ -71,12 +71,12 @@ export const renderSubmenuName = ({
       id={submenuID}
       key={submenuName}
     >
-      <h2 id={submenuID} className="netdata-chart-alignment">
+      <h2 id={submenuID}>
         {submenu.title}
       </h2>
       {submenuInfo && (
         <div
-          className="dashboard-submenu-info netdata-chart-alignment"
+          className="dashboard-submenu-info"
           role="document"
         >
           {submenuInfo}
