@@ -2,6 +2,7 @@ import { sortBy, reverse } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback,
 } from "react"
+import classNames from "classnames"
 import { useUpdateEffect, useUnmount, useMount } from "react-use"
 // this version is needed because it contains a fix for handling constant value in the chart
 // ie. https://github.com/danvk/dygraphs/pull/909
@@ -94,7 +95,9 @@ const getInitialDygraphOptions = ({
     dygraphSmooth = dygraphChartType === "line"
       && !isSparkline,
     dygraphDrawAxis = true,
+    legendPosition,
   } = attributes
+  const isLegendOnBottom = legendPosition === "bottom"
   const {
     // destructuring with default values
     dygraphColors = orderedColors,
@@ -151,7 +154,7 @@ const getInitialDygraphOptions = ({
     dygraphXAxisLabelWidth = 60,
     dygraphDrawXAxis = dygraphDrawAxis,
     dygraphYPixelsPerLabel = 15,
-    dygraphYAxisLabelWidth = 50,
+    dygraphYAxisLabelWidth = isLegendOnBottom ? 30 : 50,
     dygraphDrawYAxis = dygraphDrawAxis,
   } = attributes
   return {
@@ -177,8 +180,8 @@ const getInitialDygraphOptions = ({
     xRangePad: dygraphXRangePad,
     yRangePad: isSparkline ? 1 : dygraphYRangePad,
     valueRange: dygraphValueRange,
-    ylabel: isSparkline ? undefined : unitsCurrent,
-    yLabelWidth: isSparkline ? 0 : dygraphYLabelWidth,
+    ylabel: (isSparkline || isLegendOnBottom) ? undefined : unitsCurrent,
+    yLabelWidth: (isSparkline || isLegendOnBottom) ? 0 : dygraphYLabelWidth,
 
     // the function to plot the chart
     plotter: (dygraphSmooth && shouldSmoothPlot) ? window.smoothPlotter : null,
@@ -815,8 +818,9 @@ export const DygraphChart = ({
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
       const isSparkline = attributes.dygraphTheme === "sparkline"
+      const isLegendOnBottom = attributes.legendPosition === "bottom"
       dygraphInstance.current.updateOptions({
-        ylabel: isSparkline ? undefined : unitsCurrent,
+        ylabel: (isSparkline || isLegendOnBottom) ? undefined : unitsCurrent,
       })
     }
   }, [attributes, unitsCurrent])
@@ -1030,12 +1034,17 @@ export const DygraphChart = ({
     }
   })
 
+  const isLegendOnBottom = attributes.legendPosition === "bottom"
+
   return (
     <>
       <div
         ref={chartElement}
         id={chartElementId}
-        className={chartElementClassName}
+        className={classNames(
+          chartElementClassName,
+          { "dygraph-chart--legend-bottom": isLegendOnBottom },
+        )}
       />
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
