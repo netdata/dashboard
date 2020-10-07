@@ -111,7 +111,7 @@ code {
 }
 
 .netdata-container-with-legend {
-    display: inline-block;
+    /*display: inline-block;*/
     overflow: hidden;
 
     transform: translate3d(0,0,0);
@@ -123,6 +123,9 @@ code {
     position: relative;
 
     /* width and height is given per chart with data-width and data-height */
+
+    display: flex;
+    flex-direction: column;
 }
 
 .netdata-legend-resize-handler {
@@ -140,7 +143,6 @@ code {
     color: #373b40;
     text-align: center;
     overflow: hidden;
-    z-index: 20;
     padding: 0px;
     margin: 0px;
 }
@@ -159,7 +161,6 @@ code {
     color: #373b40;
     text-align: center;
     overflow: hidden;
-    z-index: 20;
     padding: 0px;
     margin: 0px;
 
@@ -182,7 +183,6 @@ code {
     color: #474b50;
     text-align: center;
     overflow: hidden;
-    z-index: 21;
     padding: 0px;
     margin: 0px;
     cursor: pointer;
@@ -400,7 +400,6 @@ code {
 .netdata-chart-with-legend-bottom {
     display: block;
     overflow: hidden;
-    z-index: 5;
     flex-grow: 1;
 }
 
