@@ -28,6 +28,8 @@ export const DateTimeSeparator = styled.span`
 export const LegendItems = styled.div`
   display: flex;
   flex-wrap: wrap;
+  overflow: auto;
+  max-height: 80px;
 `
 
 export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
