@@ -8,15 +8,16 @@ interface Props {
 export const ChartSpinner = ({
   chartLibrary,
 }: Props) => {
-  const top = chartLibrary === "dygraph" ? 30 : 0
+  const top = chartLibrary === "dygraph" ? 35 : 0
   const right = chartLibrary === "dygraph" ? 10 : 0
+  const size = chartLibrary === "dygraph" ? 36 : 18
   return (
-    <S.GifSpinnerContainer style={{ width: "10px", height: "10px" }} top={top} right={right}>
+    <S.GifSpinnerContainer size={size} top={top} right={right}>
       <svg
         shapeRendering="geometricPrecision"
         textRendering="geometricPrecision"
         viewBox="0 0 20 20"
-        transform="translate(0,-5)"
+        transform="translate(0,0)"
       >
         <g transform="translate(10,9) translate(-8,-9)">
           <S.SvgCircle

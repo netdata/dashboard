@@ -12,11 +12,13 @@ const svgSpinnerAnimation = keyframes`
   }
 `
 
-export const GifSpinnerContainer = styled.div<{ top: number, right: number }>`
+export const GifSpinnerContainer = styled.div<{ top: number, right: number, size: number }>`
   position: absolute;
   top: ${prop("top")}px;
   right: ${prop("right")}px;
-  opacity: .5;
+  width: ${prop("size")}px;
+  height: ${prop("size")}px;
+  opacity: .4;
 `
 
 export const SvgSpinner = styled.g`
