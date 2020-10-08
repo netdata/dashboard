@@ -92,7 +92,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
     host, chart, format, points, group, gtime, options,
-    after, before, dimensions, aggrMethod, nodeIDs,
+    after, before, dimensions,
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
