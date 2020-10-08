@@ -133,9 +133,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     after,
     before,
     dimensions,
-    context: chart,
-    ...(aggrMethod && { aggr_method: aggrMethod }),
-    ...(nodeIDs && nodeIDs.length && { node_ids: nodeIDs.join(",") }),
   }
 
   const onSuccessCallback = (data: {}) => {
