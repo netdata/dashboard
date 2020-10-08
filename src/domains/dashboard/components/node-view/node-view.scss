@@ -62,6 +62,10 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       text-align: start ;
     }
 
+    .dygraph-chart--legend-bottom .dygraph-title {
+      text-indent: 0;
+    }
+
     .dashboard-section {
       h1 {
         margin-top: 20px;
