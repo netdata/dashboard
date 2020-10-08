@@ -386,7 +386,9 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {(shouldShowSpinner || showSpinnerAlways) && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
+      {(shouldShowSpinner || showSpinnerAlways) && (
+        <ChartSpinner chartLibrary={attributes.chartLibrary} />
+      )}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown
