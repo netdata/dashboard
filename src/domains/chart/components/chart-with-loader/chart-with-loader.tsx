@@ -61,6 +61,8 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   getChartData: () => ChartData | null
 }) => JSX.Element
 
+const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
+
 export type Props = {
   attributes: Attributes
   chartUuid: string
@@ -384,7 +386,7 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {shouldShowSpinner && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
+      {(shouldShowSpinner || showSpinnerAlways) && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown
