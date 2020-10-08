@@ -76,7 +76,7 @@ export const IconContainer = styled.div`
 `
 export const IframeContainer = styled.div`
   position: relative;
-  width: 84px;
+  width: 130px;
   height: 40px;
 `
 

@@ -122,7 +122,7 @@ export const SpacePanel = ({
                   <S.SignInButton
                     href={cloudSignInUrl}
                   >
-                    Sign-in
+                    Sign In to Cloud
                   </S.SignInButton>
 
                 </S.BottomPanel>
