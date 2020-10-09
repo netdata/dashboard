@@ -3,6 +3,7 @@ import React from "react"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
+import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
 interface Props {
   charts: ChartsMetadata["charts"]
@@ -46,12 +47,12 @@ export const HeadMain = ({
             chartLibrary: "easypiechart",
             title: "Used Swap",
             units: "%",
-            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: "DD4400",
             ...(attributesOverrides && attributesOverrides["system.swap"]),
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.swap"]}
@@ -135,12 +136,12 @@ export const HeadMain = ({
             chartLibrary: "gauge",
             title: "CPU",
             units: "%",
-            aggrMethod: "avg",
             gaugeMaxValue: 100,
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
             ...(attributesOverrides && attributesOverrides["system.cpu"]),
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.cpu"]}
@@ -261,11 +262,11 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
                 units: "kbps",
-                aggrMethod: "sum",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ipv6"]),
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -299,12 +300,12 @@ export const HeadMain = ({
             chartLibrary: "easypiechart",
             title: "Used RAM",
             units: "%",
-            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: colors[7],
             ...(attributesOverrides && attributesOverrides["system.ram"]),
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.ram"]}
