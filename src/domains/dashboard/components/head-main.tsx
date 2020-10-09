@@ -49,13 +49,12 @@ export const HeadMain = ({
             width: "9%",
             before: 0,
             colors: "DD4400",
-            ...(attributesOverrides && attributesOverrides["system.swap"]),
             dimensions: "used",
             units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
-          }}
-          style={{ marginRight: 10 }}
-          chartMetadata={chartsMetadata.charts["system.swap"]}
+            style={{ marginRight: 10 }}
+            chartMetadata={chartsMetadata.charts["system.swap"]}
+        }}
         />
       )}
 
@@ -139,7 +138,7 @@ export const HeadMain = ({
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
-            ...(attributesOverrides && attributesOverrides["system.cpu"]),
+            units: "%",
             units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
           }}
