@@ -261,7 +261,7 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
                 units: "kbps",
-                aggrMethod: "sum",
+                aggrMethod: "avg",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
