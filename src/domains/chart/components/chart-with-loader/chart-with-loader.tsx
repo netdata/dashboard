@@ -167,7 +167,13 @@ export const ChartWithLoader = ({
   // when after/before changes, don't wait for next interval, just fetch immediately
   useUpdateEffect(() => {
     setShouldFetch(true)
-  }, [attributes.after, attributes.before, defaultAfter])
+  }, [
+    attributes.after,
+    attributes.before,
+    defaultAfter,
+    attributes.dimensions,
+    attributes.aggrMethod,
+  ])
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
