@@ -3,6 +3,7 @@ import React from "react"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
+import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
 interface Props {
   charts: ChartsMetadata["charts"]
@@ -41,17 +42,17 @@ export const HeadMain = ({
           attributes={{
             ...commonAttributes,
             id: "system.swap",
-            dimensions: "used",
             appendOptions: "percentage",
             chartLibrary: "easypiechart",
             title: "Used Swap",
-            units: "%",
-            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: "DD4400",
             ...(attributesOverrides && attributesOverrides["system.swap"]),
+            dimensions: "used",
+            units: "%",
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.swap"]}
@@ -65,13 +66,13 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.io",
-              dimensions: "in",
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
               ...(attributesOverrides && attributesOverrides["system.io"]),
+              dimensions: "in",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -80,13 +81,13 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.io",
-              dimensions: "out",
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
               ...(attributesOverrides && attributesOverrides["system.io"]),
+              dimensions: "out",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -98,13 +99,13 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.pgpgio",
-              dimensions: "in",
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
               ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
+              dimensions: "in",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -113,13 +114,13 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.pgpgio",
-              dimensions: "out",
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
               ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
+              dimensions: "out",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -134,13 +135,13 @@ export const HeadMain = ({
             id: "system.cpu",
             chartLibrary: "gauge",
             title: "CPU",
-            units: "%",
-            aggrMethod: "avg",
             gaugeMaxValue: 100,
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
             ...(attributesOverrides && attributesOverrides["system.cpu"]),
+            units: "%",
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.cpu"]}
@@ -155,13 +156,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.net",
-                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "Net Inbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.net"]),
+                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -170,13 +171,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.net",
-                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "Net Outbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.net"]),
+                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -189,13 +190,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ip",
-                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IP Inbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ip"]),
+                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -204,13 +205,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ip",
-                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IP Outbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ip"]),
+                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -223,13 +224,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv4",
-                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IPv4 Inbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ipv4"]),
+                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -238,13 +239,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv4",
-                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IPv4 Outbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ipv4"]),
+                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -257,15 +258,15 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv6",
-                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
-                units: "kbps",
-                aggrMethod: "avg",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ipv6"]),
+                units: "kbps",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
+                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -274,13 +275,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv6",
-                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IPv6 Outbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 ...(attributesOverrides && attributesOverrides["system.ipv6"]),
+                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -294,17 +295,17 @@ export const HeadMain = ({
           attributes={{
             ...commonAttributes,
             id: "system.ram",
-            dimensions: "used|buffers|active|wired",
             appendOptions: "percentage",
             chartLibrary: "easypiechart",
             title: "Used RAM",
-            units: "%",
-            aggrMethod: "avg",
             easyPieChartMaxValue: 100,
             width: "9%",
             before: 0,
             colors: colors[7],
             ...(attributesOverrides && attributesOverrides["system.ram"]),
+            aggrMethod: mapDefaultAggrMethod("%"),
+            dimensions: "used|buffers|active|wired",
+            units: "%",
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.ram"]}
