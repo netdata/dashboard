@@ -2,27 +2,21 @@ import React from "react"
 
 import * as S from "./styled"
 
-// @ts-ignore
-import chartLoadingSpinner from "./chart-loading-spinner-ver3.gif"
-
-// temporary measure, to test spinner in form of a gif
-const isGifSpinner = Boolean(localStorage.getItem("gif-spinner"))
-
 interface Props {
   chartLibrary: string
 }
 export const ChartSpinner = ({
   chartLibrary,
 }: Props) => {
-  const margin = chartLibrary === "dygraph" ? 4 : 0
-  if (isGifSpinner) {
-    return (
-      <S.GifSpinnerContainer className="GifSpinnerContainer" margin={margin}>
-        <img src={chartLoadingSpinner} alt="spinner" />
-      </S.GifSpinnerContainer>
-    )
-  }
+  const top = chartLibrary === "dygraph" ? 33 : 0
+  const right = chartLibrary === "dygraph" ? 8 : 0
+  const size = chartLibrary === "dygraph" ? 10 : 7
+  const spaceBetween = chartLibrary === "dygraph" ? 4 : 2
   return (
-    <S.ChartSpinner margin={margin} />
+    <S.SpinnerContainer top={top} right={right}>
+      <S.Circle size={size} />
+      <S.Circle2 size={size} spaceBetween={spaceBetween} />
+      <S.Circle3 size={size} spaceBetween={spaceBetween} />
+    </S.SpinnerContainer>
   )
 }

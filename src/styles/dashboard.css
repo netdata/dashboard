@@ -129,7 +129,6 @@ body {
     color: var(--color-placeholder, #DDDDDD);
     text-align: center;
     overflow: hidden;
-    z-index: 20;
     padding: 0px;
     margin: 0px;
 }
@@ -148,7 +147,6 @@ body {
     color: var(--color-placeholder, #DDDDDD);
     text-align: center;
     overflow: hidden;
-    z-index: 20;
     padding: 0px;
     margin: 0px;
 
@@ -171,7 +169,6 @@ body {
     color: var(--color-border, #CDCDCD);
     text-align: center;
     overflow: hidden;
-    z-index: 21;
     padding: 0px;
     margin: 0px;
     cursor: pointer;
@@ -389,7 +386,6 @@ body {
 .netdata-chart-with-legend-bottom {
     display: block;
     overflow: hidden;
-    z-index: 5;
     flex-grow: 1;
 }
 

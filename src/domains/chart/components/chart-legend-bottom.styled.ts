@@ -18,7 +18,6 @@ export const LegendSecondRow = styled.div`
 `
 
 export const LegendUnit = styled.div`
-  margin-top: 4px;
   color: ${getColor("textFocus")};
 `
 
@@ -29,6 +28,8 @@ export const DateTimeSeparator = styled.span`
 export const LegendItems = styled.div`
   display: flex;
   flex-wrap: wrap;
+  overflow: auto;
+  max-height: 80px;
 `
 
 export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
@@ -38,6 +39,10 @@ export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
   margin-right: ${getSizeBy(2)};
   cursor: pointer;
   opacity: ${({ isDisabled }) => (isDisabled ? 0.3 : null)};
+  user-select: none;
+  &:focus {
+    outline: none;
+  }
 `
 
 export const DimensionIcon = styled.div<{ color: string }>`

@@ -66,7 +66,6 @@ const SubSection = memo(({
             duration={duration}
             host={host}
             chartsMetadata={chartsMetadata}
-            attributesOverrides={attributesOverrides}
             nodeIDs={nodeIDs}
             commonAttributesOverrides={commonAttributesOverrides}
           />

@@ -285,7 +285,7 @@ export const AppHeader = ({
               isDisabled={isOffline}
               onClick={handleSignInClick}
             >
-              Sign-in
+              Sign In to Cloud
             </SignInButton>
           )}
         </IframeContainer>

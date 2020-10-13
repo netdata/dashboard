@@ -61,6 +61,8 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   getChartData: () => ChartData | null
 }) => JSX.Element
 
+const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
+
 export type Props = {
   attributes: Attributes
   chartUuid: string
@@ -165,7 +167,13 @@ export const ChartWithLoader = ({
   // when after/before changes, don't wait for next interval, just fetch immediately
   useUpdateEffect(() => {
     setShouldFetch(true)
-  }, [attributes.after, attributes.before, defaultAfter])
+  }, [
+    attributes.after,
+    attributes.before,
+    defaultAfter,
+    attributes.dimensions,
+    attributes.aggrMethod,
+  ])
 
   const {
     after: initialAfter = window.NETDATA.chartDefaults.after,
@@ -384,7 +392,9 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {shouldShowSpinner && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
+      {(shouldShowSpinner || showSpinnerAlways) && (
+        <ChartSpinner chartLibrary={attributes.chartLibrary} />
+      )}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
           <ChartDropdown

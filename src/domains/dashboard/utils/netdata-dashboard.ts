@@ -210,7 +210,7 @@ export const netdataDashboard = {
     const x = this.anyAttribute(this.context, "info", id, null)
 
     if (x !== null) {
-      return `<div class="shorten dashboard-context-info netdata-chart-alignment"
+      return `<div class="shorten dashboard-context-info"
         role="document">${x}</div>`
     }
     return ""

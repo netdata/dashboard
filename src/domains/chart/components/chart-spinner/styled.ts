@@ -3,46 +3,40 @@ import styled, { keyframes } from "styled-components"
 
 import { getColor } from "@netdata/netdata-ui"
 
-const spinnerAnimation = keyframes`
-  to {
-    transform: rotate(360deg);
+const circleAnimation = keyframes`
+  0% {
+   opacity: .1;
+  }
+  50% {
+    opacity: .5;
+  }
+  100% {
+   opacity: .1;
   }
 `
 
-export const GifSpinnerContainer = styled.div<{ margin: number }>`
+
+export const SpinnerContainer = styled.div<{ top: number, right: number }>`
   position: absolute;
-  top: ${prop("margin")}px;
-  right: ${prop("margin")}px;
+  top: ${prop("top")}px;
+  right: ${prop("right")}px;
+  display: flex;
 `
 
-const clockRadius = 8
-const clockLine = 1
-const clockColor = "border"
-
-
-export const ChartSpinner = styled.div<{ margin: number }>`
-  position: absolute;
-  top: ${prop("margin")}px;
-  right: ${prop("margin")}px;
-  
-  width: ${clockRadius * 2}px;
-  height: ${clockRadius * 2}px;
-  background-color: rgba(0, 0, 0, 0);
-  box-shadow: inset 0 0 0 ${clockLine}px ${getColor(clockColor)};
+export const Circle = styled.div<{ size: number }>`
+  width: ${prop("size")}px;
+  height: ${prop("size")}px;
+  background: ${getColor("border")};
   border-radius: 50%;
-  
-  &:after {
-    position: absolute;
-    content: "";
-    transform-origin: ${clockLine / 2}px ${clockLine / 2}px;
-    background-color: ${getColor(clockColor)};
-    height: ${clockLine}px;
-    top: ${clockRadius - clockLine / 2}px;
-    left: ${clockRadius - clockLine / 2}px;
-  }
-  
-  &:after {
-    width: ${clockRadius * (5 / 6)}px;
-    animation: ${spinnerAnimation} 0.6s linear infinite;
-  }
+  animation: 1s linear infinite both ${circleAnimation};
+`
+
+export const Circle2 = styled(Circle)<{ spaceBetween: number }>`
+  animation-delay: .3s; 
+  margin-left: ${prop("spaceBetween")}px;
+`
+
+export const Circle3 = styled(Circle)<{ spaceBetween: number }>`
+  animation-delay: .6s; 
+  margin-left: ${prop("spaceBetween")}px;
 `
