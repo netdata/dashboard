@@ -88,7 +88,12 @@ export const renderSubmenuName = ({
           .map(parseChartString)
           .map((attributes: Attributes | null) => attributes && (
             <ChartWrapper
-              attributes={{ ...attributes, host, nodeIDs }}
+              attributes={{
+                ...attributes,
+                ...commonAttributesOverrides,
+                host,
+                nodeIDs,
+              }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
             />
