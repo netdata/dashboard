@@ -3,6 +3,7 @@ import React, {
 } from "react"
 import { useScroll } from "react-use"
 import { name2id } from "utils/name-2-id"
+import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
@@ -81,10 +82,10 @@ const SubSection = memo(({
                   {
                     ...attributes,
                     forceTimeWindow: true, // respect timeWindow
+                    aggrMethod: mapDefaultAggrMethod(chartsMetadata.charts[attributes.id].units),
                     host,
                     nodeIDs,
                     ...commonAttributesOverrides,
-                    ...(attributesOverrides && attributesOverrides[attributes.id]),
                   }
                 }
                 key={`${attributes.id}-${attributes.dimensions}`}
