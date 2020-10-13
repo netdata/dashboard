@@ -3,32 +3,40 @@ import styled, { keyframes } from "styled-components"
 
 import { getColor } from "@netdata/netdata-ui"
 
-const svgSpinnerAnimation = keyframes`
+const circleAnimation = keyframes`
   0% {
-   transform: translate(10px,10px) rotate(0deg) translate(-10px,-10px);
+   opacity: .1;
+  }
+  50% {
+    opacity: .5;
   }
   100% {
-   transform: translate(10px,10px) rotate(350deg) translate(-10px,-10px);
+   opacity: .1;
   }
 `
 
-export const GifSpinnerContainer = styled.div<{ top: number, right: number, size: number }>`
+
+export const SpinnerContainer = styled.div<{ top: number, right: number }>`
   position: absolute;
   top: ${prop("top")}px;
   right: ${prop("right")}px;
+  display: flex;
+`
+
+export const Circle = styled.div<{ size: number }>`
   width: ${prop("size")}px;
   height: ${prop("size")}px;
-  opacity: .4;
+  background: ${getColor("border")};
+  border-radius: 50%;
+  animation: 1s linear infinite both ${circleAnimation};
 `
 
-export const SvgSpinner = styled.g`
-  animation: 1s linear infinite both ${svgSpinnerAnimation};
+export const Circle2 = styled(Circle)<{ spaceBetween: number }>`
+  animation-delay: .3s; 
+  margin-left: ${prop("spaceBetween")}px;
 `
 
-export const SvgSpinnerPath = styled.path`
-  fill: ${getColor("border")};
-`
-
-export const SvgCircle = styled.path`
-  fill: ${getColor("border")};
+export const Circle3 = styled(Circle)<{ spaceBetween: number }>`
+  animation-delay: .6s; 
+  margin-left: ${prop("spaceBetween")}px;
 `
