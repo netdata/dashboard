@@ -8,8 +8,8 @@ interface Props {
 export const ChartSpinner = ({
   chartLibrary,
 }: Props) => {
-  const top = chartLibrary === "dygraph" ? 35 : 0
-  const right = chartLibrary === "dygraph" ? 10 : 0
+  const top = chartLibrary === "dygraph" ? 33 : 0
+  const right = chartLibrary === "dygraph" ? 8 : 0
   const size = chartLibrary === "dygraph" ? 10 : 7
   const spaceBetween = chartLibrary === "dygraph" ? 4 : 2
   return (
