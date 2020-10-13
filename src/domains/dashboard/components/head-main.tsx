@@ -69,6 +69,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
+              aggrMethod: mapDefaultAggrMethod("kbps"),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -83,6 +84,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
+              aggrMethod: mapDefaultAggrMethod("kbps"),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -100,6 +102,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
+              aggrMethod: mapDefaultAggrMethod("KiB/s"),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -114,6 +117,7 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
+              aggrMethod: mapDefaultAggrMethod("KiB/s"),
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -132,7 +136,6 @@ export const HeadMain = ({
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
-            units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
@@ -154,6 +157,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -168,6 +172,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -186,6 +191,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -200,6 +206,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -218,6 +225,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -232,6 +240,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -249,7 +258,6 @@ export const HeadMain = ({
                 title: "IPv6 Inbound",
                 width: "11%",
                 before: 0,
-                units: "kbps",
                 unitsCommon: "system.ipv6.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -266,6 +274,7 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
+                aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -279,6 +288,7 @@ export const HeadMain = ({
           attributes={{
             ...commonAttributes,
             id: "system.ram",
+            dimensions: "used|buffers|active|wired",
             appendOptions: "percentage",
             chartLibrary: "easypiechart",
             title: "Used RAM",
@@ -286,9 +296,8 @@ export const HeadMain = ({
             width: "9%",
             before: 0,
             colors: colors[7],
-            aggrMethod: mapDefaultAggrMethod("%"),
-            dimensions: "used|buffers|active|wired",
             units: "%",
+            aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
           chartMetadata={chartsMetadata.charts["system.ram"]}
