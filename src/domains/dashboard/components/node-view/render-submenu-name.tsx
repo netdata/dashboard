@@ -7,6 +7,7 @@ import { RenderCustomElementForDygraph } from "domains/chart/components/chart-wi
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { ChartsMetadata } from "domains/global/types"
 import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT } from "utils"
+import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
 import { prioritySort } from "../../utils/sorting"
 import { parseChartString } from "../../utils/parse-chart-string"
@@ -91,6 +92,7 @@ export const renderSubmenuName = ({
               attributes={{
                 ...attributes,
                 ...commonAttributesOverrides,
+                aggrMethod: mapDefaultAggrMethod(chartsMetadata.charts[attributes.id].units),
                 host,
                 nodeIDs,
               }}
