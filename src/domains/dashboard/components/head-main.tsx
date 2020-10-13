@@ -249,6 +249,7 @@ export const HeadMain = ({
                 title: "IPv6 Inbound",
                 width: "11%",
                 before: 0,
+                units: "kbps",
                 unitsCommon: "system.ipv6.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
