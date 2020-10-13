@@ -2,7 +2,7 @@ import { cond } from "ramda"
 import React from "react"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
-import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
+import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
   duration: number
   host: string
   chartsMetadata: ChartsMetadata
-  attributesOverrides?: ChartsAttributes
   nodeIDs: string[]
   commonAttributesOverrides?: Partial<Attributes>
 }
@@ -19,7 +18,6 @@ export const HeadMain = ({
   duration,
   host,
   chartsMetadata,
-  attributesOverrides,
   nodeIDs,
   commonAttributesOverrides,
 }: Props) => {
@@ -70,8 +68,6 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
-              ...(attributesOverrides && attributesOverrides["system.io"]),
-              dimensions: "in",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -85,8 +81,6 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.io.mainhead",
-              ...(attributesOverrides && attributesOverrides["system.io"]),
-              dimensions: "out",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.io"]}
@@ -103,8 +97,6 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
-              ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
-              dimensions: "in",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -118,8 +110,6 @@ export const HeadMain = ({
               width: "11%",
               before: 0,
               unitsCommon: "system.pgpgio.mainhead",
-              ...(attributesOverrides && attributesOverrides["system.pgpgio"]),
-              dimensions: "out",
             }}
             style={{ marginRight: 10 }}
             chartMetadata={chartsMetadata.charts["system.pgpgio"]}
@@ -138,8 +128,6 @@ export const HeadMain = ({
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
-            units: "%",
-            units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
@@ -160,8 +148,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.net"]),
-                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -175,8 +161,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.net.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.net"]),
-                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.net"]}
@@ -194,8 +178,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ip"]),
-                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -209,8 +191,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ip.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ip"]),
-                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ip"]}
@@ -228,8 +208,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ipv4"]),
-                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -243,8 +221,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv4.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ipv4"]),
-                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv4"]}
@@ -262,8 +238,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ipv6"]),
-                units: "kbps",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
                 dimensions: "received",
               }}
@@ -279,8 +253,6 @@ export const HeadMain = ({
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
-                ...(attributesOverrides && attributesOverrides["system.ipv6"]),
-                dimensions: "sent",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -301,7 +273,6 @@ export const HeadMain = ({
             width: "9%",
             before: 0,
             colors: colors[7],
-            ...(attributesOverrides && attributesOverrides["system.ram"]),
             aggrMethod: mapDefaultAggrMethod("%"),
             dimensions: "used|buffers|active|wired",
             units: "%",
