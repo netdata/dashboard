@@ -128,7 +128,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       filter: {
         nodeIDs,
         context: chart,
-        dimensions: dimensions && dimensions.split(/['|]/),
+        dimensions: dimensions ? dimensions.split(/['|]/) : undefined,
       },
       after,
       before,
