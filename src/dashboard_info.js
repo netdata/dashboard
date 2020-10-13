@@ -55,7 +55,7 @@ netdataDashboard.menu = {
         title: 'Networking Stack',
         icon: '<i class="fas fa-cloud"></i>',
         info: function (os) {
-            if(os === "linux")
+            if (os === "linux")
                 return 'Metrics for the networking stack of the system. These metrics are collected from <code>/proc/net/netstat</code>, apply to both IPv4 and IPv6 traffic and are related to operation of the kernel networking stack.';
             else
                 return 'Metrics for the networking stack of the system.';
@@ -189,6 +189,11 @@ netdataDashboard.menu = {
         title: 'Netdata Monitoring',
         icon: '<i class="fas fa-chart-bar"></i>',
         info: 'Performance metrics for the operation of netdata itself and its plugins.'
+    },
+
+    'aclk_test': {
+        title: 'ACLK Test Generator',
+        info: 'For internal use to perform integration testing.'
     },
 
     'example': {
@@ -505,7 +510,61 @@ netdataDashboard.menu = {
         title: 'VCSA',
         icon: '<i class="fas fa-server"></i>',
         info: 'vCenter Server Appliance health statistics. Data collected from <a href="https://vmware.github.io/vsphere-automation-sdk-rest/vsphere/index.html#SVC_com.vmware.appliance.health">Health API</a>.'
-    }
+    },
+
+    'zookeeper': {
+        title: 'Zookeeper',
+        icon: '<i class="fas fa-database"></i>',
+        info: 'Provides health statistics for <b><a href="https://zookeeper.apache.org/">Zookeeper</a></b> server. Data collected through the command port using <code><a href="https://zookeeper.apache.org/doc/r3.5.5/zookeeperAdmin.html#sc_zkCommands">mntr</a></code> command.'
+    },
+
+    'hdfs': {
+        title: 'HDFS',
+        icon: '<i class="fas fa-folder-open"></i>',
+        info: 'Provides <b><a href="https://hadoop.apache.org/docs/r3.2.0/hadoop-project-dist/hadoop-hdfs/HdfsDesign.html">Hadoop Distributed File System</a></b> performance statistics. Module collects metrics over <code>Java Management Extensions</code> through the web interface of an <code>HDFS</code> daemon.'
+    },
+
+    'am2320': {
+        title: 'AM2320 Sensor',
+        icon: '<i class="fas fa-thermometer-half"></i>',
+        info: 'Readings from the external AM2320 Sensor.'
+    },
+
+    'scaleio': {
+        title: 'ScaleIO',
+        icon: '<i class="fas fa-database"></i>',
+        info: 'Performance and health statistics for various ScaleIO components. Data collected via VxFlex OS Gateway REST API.'
+    },
+
+    'squidlog': {
+        title: 'Squid log',
+        icon: '<i class="fas fa-file-alt"></i>',
+        info: undefined
+    },
+
+    'cockroachdb': {
+        title: 'CockroachDB',
+        icon: '<i class="fas fa-database"></i>',
+        info: 'Performance and health statistics for various <code>CockroachDB</code> components.'
+    },
+
+    'ebpf': {
+        title: 'eBPF',
+        icon: '<i class="fas fa-heartbeat"></i>',
+        info: 'Monitor system calls, internal functions, bytes read, bytes written and errors using <code>eBPF</code>.'
+    },
+
+    'vernemq': {
+        title: 'VerneMQ',
+        icon: '<i class="fas fa-comments"></i>',
+        info: 'Performance data for the <b><a href="https://vernemq.com/">VerneMQ</a></b> open-source MQTT broker.'
+    },
+
+    'pulsar': {
+        title: 'Pulsar',
+        icon: '<i class="fas fa-comments"></i>',
+        info: 'Summary, namespaces and topics performance data for the <b><a href="http://pulsar.apache.org/">Apache Pulsar</a></b> pub-sub messaging system.'
+    },
 };
 
 
@@ -687,7 +746,7 @@ var cgroupMemLimitIsSet = 0;
 netdataDashboard.context = {
     'system.cpu': {
         info: function (os) {
-            void(os);
+            void (os);
             return 'Total CPU utilization (all cores). 100% here means there is no CPU idle time at all. You can get per core usage at the <a href="#menu_cpu">CPUs</a> section and per application usage at the <a href="#menu_apps">Applications Monitoring</a> section.'
                 + netdataDashboard.sparkline('<br/>Keep an eye on <b>iowait</b> ', 'system.cpu', 'iowait', '%', '. If it is constantly high, your disks are a bottleneck and they slow your system down.')
                 + netdataDashboard.sparkline('<br/>An important metric worth monitoring, is <b>softirq</b> ', 'system.cpu', 'softirq', '%', '. A constantly high percentage of softirq may indicate network driver issues.');
@@ -696,8 +755,33 @@ netdataDashboard.context = {
     },
 
     'system.load': {
-        info: 'Current system load, i.e. the number of processes using CPU or waiting for system resources (usually CPU and disk). The 3 metrics refer to 1, 5 and 15 minute averages. The system calculates this once every 5 seconds. For more information check <a href="https://en.wikipedia.org/wiki/Load_(computing)" target="_blank">this wikipedia article</a>',
+        info: 'Current system load, i.e. the number of processes using CPU or waiting for system resources (usually CPU and disk). The 3 metrics refer to 1, 5 and 15 minute averages. The system calculates this once every 5 seconds. For more information check <a href="https://en.wikipedia.org/wiki/Load_(computing)" target="_blank">this wikipedia article</a>.',
         height: 0.7
+    },
+
+    'system.cpu_pressure': {
+        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html">Pressure Stall Information</a> ' +
+            'identifies and quantifies the disruptions caused by resource contentions. ' +
+            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on CPU. ' +
+            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+
+    'system.memory_some_pressure': {
+        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html">Pressure Stall Information</a> ' +
+            'identifies and quantifies the disruptions caused by resource contentions. ' +
+            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on memory. ' +
+            'The "full" line indicates the share of time in which <b>all non-idle</b> tasks are stalled on memory simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. ' +
+            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+
+    'system.io_some_pressure': {
+        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html">Pressure Stall Information</a> ' +
+            'identifies and quantifies the disruptions caused by resource contentions. ' +
+            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on I/O. ' +
+            'The "full" line indicates the share of time in which <b>all non-idle</b> tasks are stalled on I/O simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. ' +
+            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
     },
 
     'system.io': {
@@ -829,7 +913,7 @@ netdataDashboard.context = {
     'mem.ksm_ratios': {
         heads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-gauge-max-value="100"'
                     + ' data-chart-library="gauge"'
@@ -889,7 +973,7 @@ netdataDashboard.context = {
     },
 
     'mem.kernel': {
-        info: 'The total amount of memory being used by the kernel. <b>Slab</b> is the amount of memory used by the kernel to cache data structures for its own use. <b>KernelStack</b> is the amount of memory allocated for each task done by the kernel. <b>PageTables</b> is the amount of memory decicated to the lowest level of page tables (A page table is used to turn a virtual address into a physical memory address). <b>VmallocUsed</b> is the amount of memory being used as virtual address space.'
+        info: 'The total amount of memory being used by the kernel. <b>Slab</b> is the amount of memory used by the kernel to cache data structures for its own use. <b>KernelStack</b> is the amount of memory allocated for each task done by the kernel. <b>PageTables</b> is the amount of memory dedicated to the lowest level of page tables (A page table is used to turn a virtual address into a physical memory address). <b>VmallocUsed</b> is the amount of memory being used as virtual address space.'
     },
 
     'mem.slab': {
@@ -1002,6 +1086,70 @@ netdataDashboard.context = {
         info: 'Carried over process group uptime since the Netdata restart. The period of time within which at least one process in the group was running.'
     },
 
+    'apps.file_open': {
+        height: 2.0
+    },
+
+    'apps.file_open_error': {
+        height: 2.0
+    },
+
+    'apps.file_closed': {
+        height: 2.0
+    },
+
+    'apps.file_close_error': {
+        height: 2.0
+    },
+
+    'apps.file_deleted': {
+        height: 2.0
+    },
+
+    'apps.vfs_write_call': {
+        height: 2.0
+    },
+
+    'apps.vfs_write_error': {
+        height: 2.0
+    },
+
+    'apps.vfs_read_call': {
+        height: 2.0
+    },
+
+    'apps.vfs_read_error': {
+        height: 2.0
+    },
+
+    'apps.vfs_write_bytes': {
+        height: 2.0
+    },
+
+    'apps.vfs_read_bytes': {
+        height: 2.0
+    },
+
+    'apps.process_create': {
+        height: 2.0
+    },
+
+    'apps.thread_create': {
+        height: 2.0
+    },
+
+    'apps.task_close': {
+        height: 2.0
+    },
+
+    'apps.bandwidth_sent': {
+        height: 2.0
+    },
+
+    'apps.bandwidth_recv': {
+        height: 2.0
+    },
+
     // ------------------------------------------------------------------------
     // USERS
 
@@ -1062,7 +1210,7 @@ netdataDashboard.context = {
     'tc.qos': {
         heads: [
             function (os, id) {
-                void(os);
+                void (os);
 
                 if (id.match(/.*-ifb$/))
                     return netdataDashboard.gaugeChart('Inbound', '12%', '', '#5555AA');
@@ -1078,46 +1226,42 @@ netdataDashboard.context = {
     'net.net': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 if (id.match(/^cgroup_.*/)) {
                     var iface;
                     try {
                         iface = ' ' + id.substring(id.lastIndexOf('.net_') + 5, id.length);
-                    }
-                    catch (e) {
+                    } catch (e) {
                         iface = '';
                     }
                     return netdataDashboard.gaugeChart('Received' + iface, '12%', 'received');
-                }
-                else
+                } else
                     return '';
             },
             function (os, id) {
-                void(os);
+                void (os);
                 if (id.match(/^cgroup_.*/)) {
                     var iface;
                     try {
                         iface = ' ' + id.substring(id.lastIndexOf('.net_') + 5, id.length);
-                    }
-                    catch (e) {
+                    } catch (e) {
                         iface = '';
                     }
                     return netdataDashboard.gaugeChart('Sent' + iface, '12%', 'sent');
-                }
-                else
+                } else
                     return '';
             }
         ],
         heads: [
             function (os, id) {
-                void(os);
+                void (os);
                 if (!id.match(/^cgroup_.*/))
                     return netdataDashboard.gaugeChart('Received', '12%', 'received');
                 else
                     return '';
             },
             function (os, id) {
-                void(os);
+                void (os);
                 if (!id.match(/^cgroup_.*/))
                     return netdataDashboard.gaugeChart('Sent', '12%', 'sent');
                 else
@@ -1249,6 +1393,39 @@ netdataDashboard.context = {
         info: 'A deadlock happens when two or more transactions mutually hold and request for locks, creating a cycle of dependencies. For more information about <a href="https://dev.mysql.com/doc/refman/5.7/en/innodb-deadlocks-handling.html" target="_blank">how to minimize and handle deadlocks</a>.'
     },
 
+    'mysql.galera_cluster_status': {
+        info:
+            '<code>-1</code>: unknown, ' +
+            '<code>0</code>: primary (primary group configuration, quorum present), ' +
+            '<code>1</code>: non-primary (non-primary group configuration, quorum lost), ' +
+            '<code>2</code>: disconnected(not connected to group, retrying).'
+    },
+
+    'mysql.galera_cluster_state': {
+        info:
+            '<code>0</code>: undefined, ' +
+            '<code>1</code>: joining, ' +
+            '<code>2</code>: donor/desynced, ' +
+            '<code>3</code>: joined, ' +
+            '<code>4</code>: synced.'
+    },
+
+    'mysql.galera_cluster_weight': {
+        info: 'The value is counted as a sum of <code>pc.weight</code> of the nodes in the current Primary Component.'
+    },
+
+    'mysql.galera_connected': {
+        info: '<code>0</code> means that the node has not yet connected to any of the cluster components. ' +
+            'This may be due to misconfiguration.'
+    },
+
+    'mysql.open_transactions': {
+        info: 'The number of locally running transactions which have been registered inside the wsrep provider. ' +
+            'This means transactions which have made operations which have caused write set population to happen. ' +
+            'Transactions which are read only are not counted.'
+    },
+
+
     // ------------------------------------------------------------------------
     // POSTGRESQL
 
@@ -1307,6 +1484,14 @@ netdataDashboard.context = {
             '</ul>' +
             'For more information see <a href="https://www.postgresql.org/docs/current/static/warm-standby.html#STREAMING-REPLICATION-SLOTS" target="_blank">Replication Slots</a>.'
     },
+    'postgres.backend_usage': {
+        info: 'Connections usage against maximum connections allowed, as defined in the <i>max_connections</i> setting.<ul>' +
+            '<li><strong>available:</strong> maximum new connections allowed.</li>' +
+            '<li><strong>used:</strong> connections currently in use.</li>' +
+            '</ul>' +
+            'Assuming non-superuser accounts are being used to connect to Postgres (so <i>superuser_reserved_connections</i> are subtracted from <i>max_connections</i>).<br/>' +
+            'For more information see <a href="https://www.postgresql.org/docs/current/runtime-config-connection.html" target="_blank">Connections and Authentication</a>.'
+    },
 
 
     // ------------------------------------------------------------------------
@@ -1336,7 +1521,7 @@ netdataDashboard.context = {
     'apache.workers': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="busy"'
                     + ' data-append-options="percentage"'
@@ -1397,7 +1582,7 @@ netdataDashboard.context = {
     'lighttpd.workers': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="busy"'
                     + ' data-append-options="percentage"'
@@ -1488,7 +1673,7 @@ netdataDashboard.context = {
         info: 'Number of (connected) RetroShare friends.',
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="peers_connected"'
                     + ' data-append-options="friends"'
@@ -1528,7 +1713,7 @@ netdataDashboard.context = {
         valueRange: "[0, null]",
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 cgroupCPULimitIsSet = 1;
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="used"'
@@ -1550,7 +1735,7 @@ netdataDashboard.context = {
     'cgroup.cpu': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 if (cgroupCPULimitIsSet === 0) {
                     return '<div data-netdata="' + id + '"'
                         + ' data-chart-library="gauge"'
@@ -1563,8 +1748,7 @@ netdataDashboard.context = {
                         + ' data-points="CHART_DURATION"'
                         + ' data-colors="' + NETDATA.colors[4] + '"'
                         + ' role="application"></div>';
-                }
-                else
+                } else
                     return '';
             }
         ]
@@ -1573,7 +1757,7 @@ netdataDashboard.context = {
     'cgroup.mem_usage_limit': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 cgroupMemLimitIsSet = 1;
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="used"'
@@ -1596,7 +1780,7 @@ netdataDashboard.context = {
     'cgroup.mem_usage': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 if (cgroupMemLimitIsSet === 0) {
                     return '<div data-netdata="' + id + '"'
                         + ' data-chart-library="gauge"'
@@ -1609,8 +1793,7 @@ netdataDashboard.context = {
                         + ' data-points="CHART_DURATION"'
                         + ' data-colors="' + NETDATA.colors[1] + '"'
                         + ' role="application"></div>';
-                }
-                else
+                } else
                     return '';
             }
         ]
@@ -1619,7 +1802,7 @@ netdataDashboard.context = {
     'cgroup.throttle_io': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="read"'
                     + ' data-chart-library="gauge"'
@@ -1634,7 +1817,7 @@ netdataDashboard.context = {
                     + ' role="application"></div>';
             },
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="write"'
                     + ' data-chart-library="gauge"'
@@ -1759,6 +1942,10 @@ netdataDashboard.context = {
         info: 'The usage space in each OSD.'
     },
 
+    'ceph.osd_size': {
+        info: "Each OSD's size"
+    },
+
     'ceph.apply_latency': {
         info: 'Time taken to flush an update in each OSD.'
     },
@@ -1771,10 +1958,10 @@ netdataDashboard.context = {
     // web_log
 
     'web_log.response_statuses': {
-        info: 'Web server responses by type. <code>success</code> includes <b>1xx</b>, <b>2xx</b> and <b>304</b>, <code>error</code> includes <b>5xx</b>, <code>redirect</code> includes <b>3xx</b> except <b>304</b>, <code>bad</code> includes <b>4xx</b>, <code>other</code> are all the other responses.',
+        info: 'Web server responses by type. <code>success</code> includes <b>1xx</b>, <b>2xx</b>, <b>304</b> and <b>401</b>, <code>error</code> includes <b>5xx</b>, <code>redirect</code> includes <b>3xx</b> except <b>304</b>, <code>bad</code> includes <b>4xx</b> except <b>401</b>, <code>other</code> are all the other responses.',
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="success"'
                     + ' data-chart-library="gauge"'
@@ -1792,7 +1979,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="redirect"'
                     + ' data-chart-library="gauge"'
@@ -1810,7 +1997,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="bad"'
                     + ' data-chart-library="gauge"'
@@ -1828,7 +2015,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="error"'
                     + ' data-chart-library="gauge"'
@@ -1861,7 +2048,7 @@ netdataDashboard.context = {
     'web_log.response_time': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="avg"'
                     + ' data-chart-library="gauge"'
@@ -1907,7 +2094,7 @@ netdataDashboard.context = {
             '<code>other</code> are all the other responses.',
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="success"'
                     + ' data-chart-library="gauge"'
@@ -1925,7 +2112,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="redirect"'
                     + ' data-chart-library="gauge"'
@@ -1943,7 +2130,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="bad"'
                     + ' data-chart-library="gauge"'
@@ -1961,7 +2148,7 @@ netdataDashboard.context = {
             },
 
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="error"'
                     + ' data-chart-library="gauge"'
@@ -1996,7 +2183,7 @@ netdataDashboard.context = {
     'web_log.squid_duration': {
         mainheads: [
             function (os, id) {
-                void(os);
+                void (os);
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="avg"'
                     + ' data-chart-library="gauge"'
@@ -2079,6 +2266,106 @@ netdataDashboard.context = {
             '<code>TIMEOUT</code>, when the response was not completed due to a connection timeout.'
     },
 
+     // ------------------------------------------------------------------------
+    // go web_log
+
+    'web_log.type_requests': {
+        info: 'Web server responses by type. <code>success</code> includes <b>1xx</b>, <b>2xx</b>, <b>304</b> and <b>401</b>, <code>error</code> includes <b>5xx</b>, <code>redirect</code> includes <b>3xx</b> except <b>304</b>, <code>bad</code> includes <b>4xx</b> except <b>401</b>, <code>other</code> are all the other responses.',
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="success"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Successful"'
+                    + ' data-units="requests/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-common-max="' + id + '"'
+                    + ' data-colors="' + NETDATA.colors[0] + '"'
+                    + ' data-decimal-digits="0"'
+                    + ' role="application"></div>';
+            },
+
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="redirect"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Redirects"'
+                    + ' data-units="requests/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-common-max="' + id + '"'
+                    + ' data-colors="' + NETDATA.colors[2] + '"'
+                    + ' data-decimal-digits="0"'
+                    + ' role="application"></div>';
+            },
+
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="bad"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Bad Requests"'
+                    + ' data-units="requests/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-common-max="' + id + '"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="0"'
+                    + ' role="application"></div>';
+            },
+
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="error"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Server Errors"'
+                    + ' data-units="requests/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-common-max="' + id + '"'
+                    + ' data-colors="' + NETDATA.colors[1] + '"'
+                    + ' data-decimal-digits="0"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+
+    'web_log.request_processing_time': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="avg"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Average Response Time"'
+                    + ' data-units="milliseconds"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[4] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
     // ------------------------------------------------------------------------
     // Fronius Solar Power
 
@@ -2356,34 +2643,6 @@ netdataDashboard.context = {
         info: 'The number of currently connect users on the monitored Spigot server.'
     },
 
-    'unbound.queries': {
-        info: 'Shows the number of queries being processed of each type. Note that <code>Recursive</code> queries are also accounted as cache misses.'
-    },
-
-    'unbound.reqlist': {
-        info: 'Shows various stats about Unbound\'s internal request list.'
-    },
-
-    'unbound.recursion': {
-        info: 'Average and median time to complete recursive name resolution.'
-    },
-
-    'unbound.cache': {
-        info: 'The number of items in each of the various caches.'
-    },
-
-    'unbound.threads.queries': {
-        height: 0.2
-    },
-
-    'unbound.threads.reqlist': {
-        height: 0.2
-    },
-
-    'unbound.threads.recursion': {
-        height: 0.2
-    },
-
     'boinc.tasks': {
         info: 'The total number of tasks and the number of active tasks.  Active tasks are those which are either currently being processed, or are partialy processed but suspended.'
     },
@@ -2421,33 +2680,33 @@ netdataDashboard.context = {
 
     'proxysql.pool_status': {
         info: 'The status of the backend servers. ' +
-        '<code>1=ONLINE</code> backend server is fully operational, ' +
-        '<code>2=SHUNNED</code> backend sever is temporarily taken out of use because of either too many connection errors in a time that was too short, or replication lag exceeded the allowed threshold, ' +
-        '<code>3=OFFLINE_SOFT</code> when a server is put into OFFLINE_SOFT mode, new incoming connections aren\'t accepted anymore, while the existing connections are kept until they became inactive. In other words, connections are kept in use until the current transaction is completed. This allows to gracefully detach a backend, ' +
-        '<code>4=OFFLINE_HARD</code> when a server is put into OFFLINE_HARD mode, the existing connections are dropped, while new incoming connections aren\'t accepted either. This is equivalent to deleting the server from a hostgroup, or temporarily taking it out of the hostgroup for maintenance work, ' +
-        '<code>-1</code> Unknown status.'
+            '<code>1=ONLINE</code> backend server is fully operational, ' +
+            '<code>2=SHUNNED</code> backend sever is temporarily taken out of use because of either too many connection errors in a time that was too short, or replication lag exceeded the allowed threshold, ' +
+            '<code>3=OFFLINE_SOFT</code> when a server is put into OFFLINE_SOFT mode, new incoming connections aren\'t accepted anymore, while the existing connections are kept until they became inactive. In other words, connections are kept in use until the current transaction is completed. This allows to gracefully detach a backend, ' +
+            '<code>4=OFFLINE_HARD</code> when a server is put into OFFLINE_HARD mode, the existing connections are dropped, while new incoming connections aren\'t accepted either. This is equivalent to deleting the server from a hostgroup, or temporarily taking it out of the hostgroup for maintenance work, ' +
+            '<code>-1</code> Unknown status.'
     },
 
     'proxysql.pool_net': {
         info: 'The amount of data sent to/received from the backend ' +
-        '(This does not include metadata (packets\' headers, OK/ERR packets, fields\' description, etc).'
+            '(This does not include metadata (packets\' headers, OK/ERR packets, fields\' description, etc).'
     },
 
     'proxysql.pool_overall_net': {
         info: 'The amount of data sent to/received from the all backends ' +
-        '(This does not include metadata (packets\' headers, OK/ERR packets, fields\' description, etc).'
+            '(This does not include metadata (packets\' headers, OK/ERR packets, fields\' description, etc).'
     },
 
     'proxysql.questions': {
         info: '<code>questions</code> total number of queries sent from frontends, ' +
-        '<code>slow_queries</code> number of queries that ran for longer than the threshold in milliseconds defined in global variable <code>mysql-long_query_time</code>. '
+            '<code>slow_queries</code> number of queries that ran for longer than the threshold in milliseconds defined in global variable <code>mysql-long_query_time</code>. '
     },
 
     'proxysql.connections': {
         info: '<code>aborted</code> number of frontend connections aborted due to invalid credential or max_connections reached, ' +
-        '<code>connected</code> number of frontend connections currently connected, ' +
-        '<code>created</code> number of frontend connections created, ' +
-        '<code>non_idle</code> number of frontend connections that are not currently idle. '
+            '<code>connected</code> number of frontend connections currently connected, ' +
+            '<code>created</code> number of frontend connections created, ' +
+            '<code>non_idle</code> number of frontend connections that are not currently idle. '
     },
 
     'proxysql.pool_latency': {
@@ -2511,7 +2770,7 @@ netdataDashboard.context = {
 
     'vsphere.host_mem_usage': {
         info:
-            '<code>granted</code> is amount of machine memory that is mapped for a host, '+
+            '<code>granted</code> is amount of machine memory that is mapped for a host, ' +
             'it equals sum of all granted metrics for all powered-on virtual machines, plus machine memory for vSphere services on the host. ' +
             '<code>consumed</code> is amount of machine memory used on the host, it includes memory used by the Service Console, the VMkernel, vSphere services, plus the total consumed metrics for all running virtual machines. ' +
             '<code>consumed</code> = <code>total host memory</code> - <code>free host memory</code>.' +
@@ -2606,7 +2865,7 @@ netdataDashboard.context = {
             '<code>2</code>: one or more components in the appliance might be degraded; ' +
             '<code>3</code>: one or more components might be in an unusable status and the appliance might become unresponsive soon; ' +
             '<code>4</code>: no health data is available.'
-            },
+    },
 
     'vcsa.components_health': {
         info:
@@ -2616,7 +2875,7 @@ netdataDashboard.context = {
             '<code>2</code>: degraded, and may have serious problems; ' +
             '<code>3</code>: unavailable, or will stop functioning soon; ' +
             '<code>4</code>: no health data is available.'
-            },
+    },
 
     'vcsa.software_updates_health': {
         info:
@@ -2626,5 +2885,758 @@ netdataDashboard.context = {
             '<code>2</code>: non-security updates are available; ' +
             '<code>3</code>: security updates are available; ' +
             '<code>4</code>: an error retrieving information on software updates.'
+    },
+
+    // ------------------------------------------------------------------------
+    // Zookeeper
+
+    'zookeeper.server_state': {
+        info:
+            '<code>0</code>: unknown, ' +
+            '<code>1</code>: leader, ' +
+            '<code>2</code>: follower, ' +
+            '<code>3</code>: observer, ' +
+            '<code>4</code>: standalone.'
+    },
+
+    // ------------------------------------------------------------------------
+    // Squidlog
+
+    'squidlog.requests': {
+        info: 'Total number of requests (log lines read). It includes <code>unmatched</code>.'
+    },
+
+    'squidlog.excluded_requests': {
+        info: '<code>unmatched</code> counts the lines in the log file that are not matched by the plugin parser (<a href="https://github.com/netdata/netdata/issues/new?title=squidlog%20reports%20unmatched%20lines&body=squidlog%20plugin%20reports%20unmatched%20lines.%0A%0AThis%20is%20my%20log:%0A%0A%60%60%60txt%0A%0Aplease%20paste%20your%20squid%20server%20log%20here%0A%0A%60%60%60" target="_blank">let us know</a> if you have any unmatched).'
+    },
+
+    'squidlog.type_requests': {
+        info: 'Requests by response type:<br>' +
+            '<ul>' +
+            ' <li><code>success</code> includes 1xx, 2xx, 0, 304, 401.</li>' +
+            ' <li><code>error</code> includes 5xx and 6xx.</li>' +
+            ' <li><code>redirect</code> includes 3xx except 304.</li>' +
+            ' <li><code>bad</code> includes 4xx except 401.</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.http_status_code_class_responses': {
+        info: 'The HTTP response status code classes. According to <a href="https://tools.ietf.org/html/rfc7231" target="_blank">rfc7231</a>:<br>' +
+            ' <li><code>1xx</code> is informational responses.</li>' +
+            ' <li><code>2xx</code> is successful responses.</li>' +
+            ' <li><code>3xx</code> is redirects.</li>' +
+            ' <li><code>4xx</code> is bad requests.</li>' +
+            ' <li><code>5xx</code> is internal server errors.</li>' +
+            ' </ul>' +
+            'Squid also uses <code>0</code> for a result code being unavailable, and <code>6xx</code> to signal an invalid header, a proxy error.'
+    },
+
+    'squidlog.http_status_code_responses': {
+        info: 'Number of responses for each http response status code individually.'
+    },
+
+    'squidlog.uniq_clients': {
+        info: 'Unique clients (requesting instances), within each data collection iteration. If data collection is <b>per second</b>, this chart shows <b>unique clients per second</b>.'
+    },
+
+    'squidlog.bandwidth': {
+        info: 'The size is the amount of data delivered to the clients. Mind that this does not constitute the net object size, as headers are also counted. ' +
+            'Also, failed requests may deliver an error page, the size of which is also logged here.'
+    },
+
+    'squidlog.response_time': {
+        info: 'The elapsed time considers how many milliseconds the transaction busied the cache. It differs in interpretation between TCP and UDP:' +
+            '<ul>' +
+            ' <li><code>TCP</code> this is basically the time from having received the request to when Squid finishes sending the last byte of the response.</li>' +
+            ' <li><code>UDP</code> this is the time between scheduling a reply and actually sending it.</li>' +
+            ' </ul>' +
+            'Please note that <b>the entries are logged after the reply finished being sent</b>, not during the lifetime of the transaction.'
+    },
+
+    'squidlog.cache_result_code_requests': {
+        info: 'The Squid result code is composed of several tags (separated by underscore characters) which describe the response sent to the client. ' +
+            'Check the <a href="https://wiki.squid-cache.org/SquidFaq/SquidLogs#Squid_result_codes">squid documentation</a> about them.'
+    },
+
+    'squidlog.cache_result_code_transport_tag_requests': {
+        info: 'These tags are always present and describe delivery method.<br>' +
+            '<ul>' +
+            ' <li><code>TCP</code> requests on the HTTP port (usually 3128).</li>' +
+            ' <li><code>UDP</code> requests on the ICP port (usually 3130) or HTCP port (usually 4128).</li>' +
+            ' <li><code>NONE</code> Squid delivered an unusual response or no response at all. Seen with cachemgr requests and errors, usually when the transaction fails before being classified into one of the above outcomes. Also seen with responses to CONNECT requests.</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.cache_result_code_handling_tag_requests': {
+        info: 'These tags are optional and describe why the particular handling was performed or where the request came from.<br>' +
+            '<ul>' +
+            ' <li><code>CF</code> at least one request in this transaction was collapsed. See <a href="http://www.squid-cache.org/Doc/config/collapsed_forwarding/" target="_blank">collapsed_forwarding</a>  for more details about request collapsing.</li>' +
+            ' <li><code>CLIENT</code> usually seen with client issued a "no-cache", or analogous cache control command along with the request. Thus, the cache has to validate the object.</li>' +
+            ' <li><code>IMS</code> the client sent a revalidation (conditional) request.</li>' +
+            ' <li><code>ASYNC</code> the request was generated internally by Squid. Usually this is background fetches for cache information exchanges, background revalidation from <i>stale-while-revalidate</i> cache controls, or ESI sub-objects being loaded.</li>' +
+            ' <li><code>SWAPFAIL</code> the object was believed to be in the cache, but could not be accessed. A new copy was requested from the server.</li>' +
+            ' <li><code>REFRESH</code> a revalidation (conditional) request was sent to the server.</li>' +
+            ' <li><code>SHARED</code> this request was combined with an existing transaction by collapsed forwarding.</li>' +
+            ' <li><code>REPLY</code> the HTTP reply from server or peer. Usually seen on <code>DENIED</code> due to <a href="http://www.squid-cache.org/Doc/config/http_reply_access/" target="_blank">http_reply_access</a> ACLs preventing delivery of servers response object to the client.</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.cache_code_object_tag_requests': {
+        info: 'These tags are optional and describe what type of object was produced.<br>' +
+            '<ul>' +
+            ' <li><code>NEGATIVE</code> only seen on HIT responses, indicating the response was a cached error response. e.g. <b>404 not found</b>.</li>' +
+            ' <li><code>STALE</code> the object was cached and served stale. This is usually caused by <i>stale-while-revalidate</i> or <i>stale-if-error</i> cache controls.</li>' +
+            ' <li><code>OFFLINE</code> the requested object was retrieved from the cache during <a href="http://www.squid-cache.org/Doc/config/offline_mode/" target="_blank">offline_mode</a>. The offline mode never validates any object.</li>' +
+            ' <li><code>INVALID</code> an invalid request was received. An error response was delivered indicating what the problem was.</li>' +
+            ' <li><code>FAILED</code> only seen on <code>REFRESH</code> to indicate the revalidation request failed. The response object may be the server provided network error or the stale object which was being revalidated depending on stale-if-error cache control.</li>' +
+            ' <li><code>MODIFIED</code> only seen on <code>REFRESH</code> responses to indicate revalidation produced a new modified object.</li>' +
+            ' <li><code>UNMODIFIED</code> only seen on <code>REFRESH</code> responses to indicate revalidation produced a 304 (Not Modified) status. The client gets either a full 200 (OK), a 304 (Not Modified), or (in theory) another response, depending on the client request and other details.</li>' +
+            ' <li><code>REDIRECT</code> Squid generated an HTTP redirect response to this request.</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.cache_code_load_source_tag_requests': {
+        info: 'These tags are optional and describe whether the response was loaded from cache, network, or otherwise.<br>' +
+            '<ul>' +
+            ' <li><code>HIT</code> the response object delivered was the local cache object.</li>' +
+            ' <li><code>MEM</code> the response object came from memory cache, avoiding disk accesses. Only seen on HIT responses.</li>' +
+            ' <li><code>MISS</code> the response object delivered was the network response object.</li>' +
+            ' <li><code>DENIED</code> the request was denied by access controls.</li>' +
+            ' <li><code>NOFETCH</code> an ICP specific type, indicating service is alive, but not to be used for this request.</li>' +
+            ' <li><code>TUNNEL</code> a binary tunnel was established for this transaction.</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.cache_code_error_tag_requests': {
+        info: 'These tags are optional and describe some error conditions which occured during response delivery.<br>' +
+            '<ul>' +
+            ' <li><code>ABORTED</code> the response was not completed due to the connection being aborted (usually by the client).</li>' +
+            ' <li><code>TIMEOUT</code> the response was not completed due to a connection timeout.</li>' +
+            ' <li><code>IGNORED</code> while refreshing a previously cached response A, Squid got a response B that was older than A (as determined by the Date header field). Squid ignored response B (and attempted to use A instead).</li>' +
+            ' </ul>'
+    },
+
+    'squidlog.http_method_requests': {
+        info: 'The request method to obtain an object. Please refer to section <a href="https://wiki.squid-cache.org/SquidFaq/SquidLogs#Request_methods">request-methods</a> for available methods and their description.'
+    },
+
+    'squidlog.hier_code_requests': {
+        info: 'A code that explains how the request was handled, e.g. by forwarding it to a peer, or going straight to the source. ' +
+            'Any hierarchy tag may be prefixed with <code>TIMEOUT_</code>, if the timeout occurs waiting for all ICP replies to return from the neighbours. The timeout is either dynamic, if the <a href="http://www.squid-cache.org/Doc/config/icp_query_timeout/" target="_blank">icp_query_timeout</a> was not set, or the time configured there has run up. ' +
+            'Refer to <a href="https://wiki.squid-cache.org/SquidFaq/SquidLogs#Hierarchy_Codes" target="_blank">Hierarchy Codes</a> for details on hierarchy codes.'
+    },
+
+    'squidlog.server_address_forwarded_requests': {
+        info: 'The IP address or hostname where the request (if a miss) was forwarded. For requests sent to origin servers, this is the origin server\'s IP address. ' +
+            'For requests sent to a neighbor cache, this is the neighbor\'s hostname. NOTE: older versions of Squid would put the origin server hostname here.'
+    },
+
+    'squidlog.mime_type_requests': {
+        info: 'The content type of the object as seen in the HTTP reply header. Please note that ICP exchanges usually don\'t have any content type.'
+    },
+
+    // ------------------------------------------------------------------------
+    // CockroachDB
+
+    'cockroachdb.process_cpu_time_combined_percentage': {
+        info: 'Current combined cpu utilization, calculated as <code>(user+system)/num of logical cpus</code>.'
+    },
+
+    'cockroachdb.host_disk_bandwidth': {
+        info: 'Summary disk bandwidth statistics across all system host disks.'
+    },
+
+    'cockroachdb.host_disk_operations': {
+        info: 'Summary disk operations statistics across all system host disks.'
+    },
+
+    'cockroachdb.host_disk_iops_in_progress': {
+        info: 'Summary disk iops in progress statistics across all system host disks.'
+    },
+
+    'cockroachdb.host_network_bandwidth': {
+        info: 'Summary network bandwidth statistics across all system host network interfaces.'
+    },
+
+    'cockroachdb.host_network_packets': {
+        info: 'Summary network packets statistics across all system host network interfaces.'
+    },
+
+    'cockroachdb.live_nodes': {
+        info: 'Will be <code>0</code> if this node is not itself live.'
+    },
+
+    'cockroachdb.total_storage_capacity': {
+        info: 'Entire disk capacity. It includes non-CR data, CR data, and empty space.'
+    },
+
+    'cockroachdb.storage_capacity_usability': {
+        info: '<code>usable</code> is sum of empty space and CR data, <code>unusable</code> is space used by non-CR data.'
+    },
+
+    'cockroachdb.storage_usable_capacity': {
+        info: 'Breakdown of <code>usable</code> space.'
+    },
+
+    'cockroachdb.storage_used_capacity_percentage': {
+        info: '<code>total</code> is % of <b>total</b> space used, <code>usable</code> is % of <b>usable</b> space used.'
+    },
+
+    'cockroachdb.sql_bandwidth': {
+        info: 'The total amount of SQL client network traffic.'
+    },
+
+    'cockroachdb.sql_errors': {
+        info: '<code>statement</code> is statements resulting in a planning or runtime error, ' +
+            '<code>transaction</code> is SQL transactions abort errors.'
+    },
+
+    'cockroachdb.sql_started_ddl_statements': {
+        info: 'The amount of <b>started</b> DDL (Data Definition Language) statements. ' +
+            'This type means database schema changes. ' +
+            'It includes <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>RENAME</code>, <code>TRUNCATE</code> and <code>COMMENT</code> statements.'
+    },
+
+    'cockroachdb.sql_executed_ddl_statements': {
+        info: 'The amount of <b>executed</b> DDL (Data Definition Language) statements. ' +
+            'This type means database schema changes. ' +
+            'It includes <code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>, <code>RENAME</code>, <code>TRUNCATE</code> and <code>COMMENT</code> statements.'
+    },
+
+    'cockroachdb.sql_started_dml_statements': {
+        info: 'The amount of <b>started</b> DML (Data Manipulation Language) statements.'
+    },
+
+    'cockroachdb.sql_executed_dml_statements': {
+        info: 'The amount of <b>executed</b> DML (Data Manipulation Language) statements.'
+    },
+
+    'cockroachdb.sql_started_tcl_statements': {
+        info: 'The amount of <b>started</b> TCL (Transaction Control Language) statements.'
+    },
+
+    'cockroachdb.sql_executed_tcl_statements': {
+        info: 'The amount of <b>executed</b> TCL (Transaction Control Language) statements.'
+    },
+
+    'cockroachdb.live_bytes': {
+        info: 'The amount of live data used by both applications and the CockroachDB system.'
+    },
+
+    'cockroachdb.kv_transactions': {
+        info: 'KV transactions breakdown:<br>' +
+            '<ul>' +
+            ' <li><code>committed</code> committed KV transactions (including 1PC).</li>' +
+            ' <li><code>fast-path_committed</code> KV transaction on-phase commit attempts.</li>' +
+            ' <li><code>aborted</code> aborted KV transactions.</li>' +
+            ' </ul>'
+    },
+
+    'cockroachdb.kv_transaction_restarts': {
+        info: 'KV transactions restarts breakdown:<br>' +
+            '<ul>' +
+            ' <li><code>write too old</code> restarts due to a concurrent writer committing first.</li>' +
+            ' <li><code>write too old (multiple)</code> restarts due to multiple concurrent writers committing first.</li>' +
+            ' <li><code>forwarded timestamp (iso=serializable)</code> restarts due to a forwarded commit timestamp and isolation=SERIALIZABLE".</li>' +
+            ' <li><code>possible replay</code> restarts due to possible replays of command batches at the storage layer.</li>' +
+            ' <li><code>async consensus failure</code> restarts due to async consensus writes that failed to leave intents.</li>' +
+            ' <li><code>read within uncertainty interval</code> restarts due to reading a new value within the uncertainty interval.</li>' +
+            ' <li><code>aborted</code> restarts due to an abort by a concurrent transaction (usually due to deadlock).</li>' +
+            ' <li><code>push failure</code> restarts due to a transaction push failure.</li>' +
+            ' <li><code>unknown</code> restarts due to a unknown reasons.</li>' +
+            ' </ul>'
+    },
+
+    'cockroachdb.ranges': {
+        info: 'CockroachDB stores all user data (tables, indexes, etc.) and almost all system data in a giant sorted map of key-value pairs. ' +
+            'This keyspace is divided into "ranges", contiguous chunks of the keyspace, so that every key can always be found in a single range.'
+    },
+
+    'cockroachdb.ranges_replication_problem': {
+        info: 'Ranges with not optimal number of replicas:<br>' +
+            '<ul>' +
+            ' <li><code>unavailable</code> ranges with fewer live replicas than needed for quorum.</li>' +
+            ' <li><code>under replicated</code> ranges with fewer live replicas than the replication target.</li>' +
+            ' <li><code>over replicated</code> ranges with more live replicas than the replication target.</li>' +
+            ' </ul>'
+    },
+
+    'cockroachdb.replicas': {
+        info: 'CockroachDB replicates each range (3 times by default) and stores each replica on a different node.'
+    },
+
+    'cockroachdb.replicas_leaders': {
+        info: 'For each range, one of the replicas is the <code>leader</code> for write requests, <code>not leaseholders</code> is the number of Raft leaders whose range lease is held by another store.'
+    },
+
+    'cockroachdb.replicas_leaseholders': {
+        info: 'For each range, one of the replicas holds the "range lease". This replica, referred to as the <code>leaseholder</code>, is the one that receives and coordinates all read and write requests for the range.'
+    },
+
+    'cockroachdb.queue_processing_failures': {
+        info: 'Failed replicas breakdown by queue:<br>' +
+            '<ul>' +
+            ' <li><code>gc</code> replicas which failed processing in the GC queue.</li>' +
+            ' <li><code>replica gc</code> replicas which failed processing in the replica GC queue.</li>' +
+            ' <li><code>replication</code> replicas which failed processing in the replicate queue.</li>' +
+            ' <li><code>split</code> replicas which failed processing in the split queue.</li>' +
+            ' <li><code>consistency</code> replicas which failed processing in the consistency checker queue.</li>' +
+            ' <li><code>raft log</code> replicas which failed processing in the Raft log queue.</li>' +
+            ' <li><code>raft snapshot</code> replicas which failed processing in the Raft repair queue.</li>' +
+            ' <li><code>time series maintenance</code> replicas which failed processing in the time series maintenance queue.</li>' +
+            ' </ul>'
+    },
+
+    'cockroachdb.rebalancing_queries': {
+        info: 'Number of kv-level requests received per second by the store, averaged over a large time period as used in rebalancing decisions.'
+    },
+
+    'cockroachdb.rebalancing_writes': {
+        info: 'Number of keys written (i.e. applied by raft) per second to the store, averaged over a large time period as used in rebalancing decisions.'
+    },
+
+    'cockroachdb.slow_requests': {
+        info: 'Requests that have been stuck for a long time.'
+    },
+
+    'cockroachdb.timeseries_samples': {
+        info: 'The amount of metric samples written to disk.'
+    },
+
+    'cockroachdb.timeseries_write_errors': {
+        info: 'The amount of errors encountered while attempting to write metrics to disk.'
+    },
+
+    'cockroachdb.timeseries_write_bytes': {
+        info: 'Size of metric samples written to disk.'
+    },
+
+    // ------------------------------------------------------------------------
+    // eBPF
+
+    'ebpf.tcp_functions': {
+        title : 'TCP calls',
+        info: 'Successful or failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code> and <code>tcp_close</code>.'
+    },
+
+    'ebpf.tcp_bandwidth': {
+        title : 'TCP bandwidth',
+        info: 'Bytes sent and received for functions <code>tcp_sendmsg</code> and <code>tcp_cleanup_rbuf</code>.'
+    },
+
+    'ebpf.tcp_retransmit': {
+        title : 'TCP retransmit',
+        info: 'Number of packets retransmitted for function <code>tcp_retranstmit_skb</code>.'
+    },
+
+    'ebpf.tcp_error': {
+        title : 'TCP errors',
+        info: 'Failed calls that to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code> and <code>tcp_close</code>.'
+    },
+
+    'ebpf.udp_functions': {
+        title : 'UDP calls',
+        info: 'Successful or failed calls to  functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
+    },
+
+    'ebpf.udp_bandwidth': {
+        title : 'UDP bandwidth',
+        info: 'Bytes sent and received for functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
+    },
+
+    'ebpf.file_descriptor': {
+        title : 'File access',
+        info: 'Calls for internal functions on Linux kernel. The open dimension is attached to the kernel internal function <code>do_sys_open</code>, which is the common function called from'+
+            ' <a href="https://www.man7.org/linux/man-pages/man2/open.2.html" target="_blank">open(2)</a> ' +
+            ' and <a href="https://www.man7.org/linux/man-pages/man2/openat.2.html" target="_blank">openat(2)</a>. ' +
+            ' The close dimension is attached to the function <code>__close_fd</code>, which is called from system call' +
+            ' <a href="https://www.man7.org/linux/man-pages/man2/close.2.html" target="_blank">close(2)</a>. '
+    },
+
+    'ebpf.file_error': {
+        title : 'File access error',
+        info: 'Failed calls to the kernel internal function <code>do_sys_open</code>, which is the common function called from'+
+            ' <a href="https://www.man7.org/linux/man-pages/man2/open.2.html" target="_blank">open(2)</a> ' +
+            ' and <a href="https://www.man7.org/linux/man-pages/man2/openat.2.html" target="_blank">openat(2)</a>. ' +
+            ' The close dimension is attached to the function <code>__close_fd</code>, which is called from system call' +
+            ' <a href="https://www.man7.org/linux/man-pages/man2/close.2.html" target="_blank">close(2)</a>. '
+    },
+
+    'ebpf.deleted_objects': {
+        title : 'VFS remove',
+        info: 'This chart does not show all events that remove files from the file system, because file systems can create their own functions to remove files, it shows calls for the function <code>vfs_unlink</code>. '
+    },
+
+    'ebpf.io': {
+        title : 'VFS IO',
+        info: 'Successful or failed calls to functions <code>vfs_read</code> and <code>vfs_write</code>. This chart may not show all file system events if it uses other functions to store data on disk.'
+    },
+
+    'ebpf.io_bytes': {
+        title : 'VFS bytes written',
+        info: 'Total of bytes read or written with success using the functions  <code>vfs_read</code> and <code>vfs_write</code>.'
+    },
+
+    'ebpf.io_error': {
+        title : 'VFS IO error',
+        info: 'Failed calls to functions <code>vfs_read</code> and <code>vfs_write</code>.'
+    },
+
+    'ebpf.process_thread': {
+        title : 'Task creation',
+        info: 'Number of times that the function <code>do_fork</code> is called to create a new task, which is the common name used to define process and tasks inside the kernel. Netdata identifies the threads by couting the number of calls for <code>sys_clone</code> that has the flag <code>CLONE_THREAD</code> set.'
+    },
+
+    'ebpf.exit': {
+        title : 'Exit monitoring',
+        info: 'Calls for the functions responsible for closing (<code>do_exit</code>) and releasing (<code>release_task</code>) tasks.'
+    },
+
+    'ebpf.task_error': {
+        title : 'Task error',
+        info: 'Number of errors to create a new process or thread.'
+    },
+
+    'ebpf.process_status': {
+        title : 'Task status',
+        info: 'Difference between the number of process created and the number of threads created per period(<code>process</code> dimension), it also shows the number of possible zombie process running on system.'
+    },
+
+    // ------------------------------------------------------------------------
+    // ACLK Internal Stats
+    'netdata.aclk_status': {
+        valueRange: "[0, 1]",
+        info: 'This chart shows if ACLK was online during entirety of the sample duration.'
+    },
+
+    'netdata.aclk_query_per_second': {
+        info: 'This chart shows how many queries were added for ACLK_query thread to process and how many it was actually able to process.'
+    },
+
+    'netdata.aclk_latency_mqtt': {
+        info: 'Measures latency between MQTT publish of the message and it\'s PUB_ACK being received'
+    },
+
+    // ------------------------------------------------------------------------
+    // VerneMQ
+
+    'vernemq.sockets': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="open_sockets"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Connected Clients"'
+                    + ' data-units="clients"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="16%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[4] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
             }
+        ]
+    },
+    'vernemq.queue_processes': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="queue_processes"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Queues Processes"'
+                    + ' data-units="processes"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="16%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[4] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'vernemq.queue_messages_in_queues': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="queue_messages_current"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Messages in the Queues"'
+                    + ' data-units="messages"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="16%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[2] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'vernemq.queue_messages': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="queue_message_in"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="MQTT Recieve Rate"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[0] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="queue_message_out"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="MQTT Send Rate"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[1] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+        ]
+    },
+    'vernemq.average_scheduler_utilization': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="system_utilization"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Average Scheduler Utilization"'
+                    + ' data-units="percentage"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="16%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+
+    // ------------------------------------------------------------------------
+    // Apache Pulsar
+    'pulsar.messages_rate': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="pulsar_rate_in"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="Publish"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[0] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="pulsar_rate_out"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="Dispatch"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[1] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+        ]
+    },
+    'pulsar.subscription_msg_rate_redeliver': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="pulsar_subscription_msg_rate_redeliver"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Redelivered"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'pulsar.subscription_blocked_on_unacked_messages': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="pulsar_subscription_blocked_on_unacked_messages"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Blocked On Unacked"'
+                    + ' data-units="subscriptions"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'pulsar.msg_backlog': {
+        mainheads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="pulsar_msg_backlog"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Messages Backlog"'
+                    + ' data-units="messages"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[2] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+
+    'pulsar.namespace_messages_rate': {
+        heads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="publish"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="Publish"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[0] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="dispatch"'
+                    + ' data-chart-library="easypiechart"'
+                    + ' data-title="Dispatch"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[1] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+        ]
+    },
+    'pulsar.namespace_subscription_msg_rate_redeliver': {
+        heads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="redelivered"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Redelivered"'
+                    + ' data-units="messages/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'pulsar.namespace_subscription_blocked_on_unacked_messages': {
+        heads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="blocked"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Blocked On Unacked"'
+                    + ' data-units="subscriptions"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            }
+        ]
+    },
+    'pulsar.namespace_msg_backlog': {
+        heads: [
+            function (os, id) {
+                void (os);
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="backlog"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-title="Messages Backlog"'
+                    + ' data-units="messages"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="14%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[2] + '"'
+                    + ' data-decimal-digits="2"'
+                    + ' role="application"></div>';
+            },
+        ],
+    },
 };
