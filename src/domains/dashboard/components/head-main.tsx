@@ -50,9 +50,9 @@ export const HeadMain = ({
             dimensions: "used",
             units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
-            style={{ marginRight: 10 }}
-            chartMetadata={chartsMetadata.charts["system.swap"]}
-        }}
+          }}
+          style={{ marginRight: 10 }}
+          chartMetadata={chartsMetadata.charts["system.swap"]}
         />
       )}
 
