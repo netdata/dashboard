@@ -136,6 +136,7 @@ export const HeadMain = ({
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
+            units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
