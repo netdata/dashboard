@@ -63,6 +63,7 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.io",
+              dimensions: "in",
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
@@ -76,6 +77,7 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.io",
+              dimensions: "out",
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
@@ -92,6 +94,7 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.pgpgio",
+              dimensions: "in",
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
@@ -105,6 +108,7 @@ export const HeadMain = ({
             attributes={{
               ...commonAttributes,
               id: "system.pgpgio",
+              dimensions: "out",
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
@@ -128,6 +132,7 @@ export const HeadMain = ({
             width: "20%",
             colors: colors[12],
             unitsCommon: "system.pgpgio.mainhead",
+            units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),
           }}
           style={{ marginRight: 10 }}
@@ -143,6 +148,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.net",
+                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "Net Inbound",
                 width: "11%",
@@ -156,6 +162,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.net",
+                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "Net Outbound",
                 width: "11%",
@@ -173,6 +180,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ip",
+                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IP Inbound",
                 width: "11%",
@@ -186,6 +194,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ip",
+                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IP Outbound",
                 width: "11%",
@@ -203,6 +212,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv4",
+                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IPv4 Inbound",
                 width: "11%",
@@ -216,6 +226,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv4",
+                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IPv4 Outbound",
                 width: "11%",
@@ -233,13 +244,13 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv6",
+                dimensions: "received",
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
                 width: "11%",
                 before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
-                dimensions: "received",
               }}
               style={{ marginRight: 10 }}
               chartMetadata={chartsMetadata.charts["system.ipv6"]}
@@ -248,6 +259,7 @@ export const HeadMain = ({
               attributes={{
                 ...commonAttributes,
                 id: "system.ipv6",
+                dimensions: "sent",
                 chartLibrary: "easypiechart",
                 title: "IPv6 Outbound",
                 width: "11%",
