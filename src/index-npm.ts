@@ -36,6 +36,7 @@ export {
   setGlobalChartUnderlayAction,
   centerAroundHighlightAction,
   clearHighlightAction,
+  setSpacePanelTransitionEndAction,
 } from "domains/global/actions"
 export { selectStopUpdatesWhenFocusIsLost, selectDestroyOnHide } from "domains/global/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
