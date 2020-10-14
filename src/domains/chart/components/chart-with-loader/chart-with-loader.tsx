@@ -9,7 +9,7 @@ import {
 
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
-
+import { Tooltip } from "@rmwc/tooltip"
 import {
   selectGlobalPanAndZoom,
   selectGlobalSelection,
@@ -210,7 +210,6 @@ export const ChartWithLoader = ({
    * hide spinner immediately when it's not fetching
    */
   const [shouldShowSpinnerDebounced, setShouldShowSpinnerDebounced] = useState(false)
-  const shouldShowSpinner = shouldShowSpinnerDebounced && isFetchingData
   useDebounce(
     () => {
       if (isFetchingData) {
@@ -392,8 +391,8 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {(shouldShowSpinner || showSpinnerAlways) && (
-        <ChartSpinner chartLibrary={attributes.chartLibrary} />
+      {(isFetchingData || showSpinnerAlways) && (
+        <ChartSpinner chartLibrary={attributes.chartLibrary} isTakingTooLong={shouldShowSpinnerDebounced} />
       )}
       {dropdownMenu && (dropdownMenu.length > 0) && (
         <S.ChartDropdownContainer>
