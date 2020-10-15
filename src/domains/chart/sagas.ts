@@ -156,7 +156,9 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   }
 
   const onSuccessCallback = (data: { [id: string]: unknown}) => {
-    if (data?.result) {
+    if (!data?.result) {
+      fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
+    } else {
       const { fillMissingPoints } = fetchDataParams
       const chartData = transformResults(((data as unknown) as ChartData), format)
       fetchDataResponseChannel.put(fetchDataAction.success({
