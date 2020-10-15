@@ -155,16 +155,20 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     },
   }
 
-  const onSuccessCallback = (data: {}) => {
-    const { fillMissingPoints } = fetchDataParams
-    const chartData = transformResults(data as ChartData, format)
-    fetchDataResponseChannel.put(fetchDataAction.success({
-      chartData: fillMissingPoints
-        ? fillMissingData(chartData as ChartData, fillMissingPoints)
-        : chartData,
-      fetchDataParams,
-      id,
-    }))
+  const onSuccessCallback = (data: { [id: string]: unknown}) => {
+    if (!data?.result) {
+      fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
+    } else {
+      const { fillMissingPoints } = fetchDataParams
+      const chartData = transformResults(((data as unknown) as ChartData), format)
+      fetchDataResponseChannel.put(fetchDataAction.success({
+        chartData: fillMissingPoints
+          ? fillMissingData(chartData as ChartData, fillMissingPoints)
+          : chartData,
+        fetchDataParams,
+        id,
+      }))
+    }
   }
 
   const onErrorCallback = (error: Error) => {
