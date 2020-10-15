@@ -3,7 +3,6 @@
   "version": "2.6.0",
   "main": "./lib/src/index-npm.js",
   "homepage": ".",
-  "main": "./lib/src/index-npm.js",
   "files": [
     "/lib"
   ],
