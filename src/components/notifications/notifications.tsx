@@ -4,7 +4,7 @@ import { toast } from "react-toastify"
 
 import { createUINotification } from "components/ui-notification"
 
-import { NodeIconContainer } from "./styled"
+import * as S from "./styled"
 
 export const toastOptions = {
   position: toast.POSITION.BOTTOM_RIGHT,
@@ -22,9 +22,9 @@ export const showCloudInstallationProblemNotification = () => {
     ...uiNotification,
     success: false,
     leftContent: (
-      <NodeIconContainer>
+      <S.NodeIconContainer>
         <Icon name="gear" size="large" />
-      </NodeIconContainer>
+      </S.NodeIconContainer>
     ),
   })
   toast.error(notificationComponent, toastOptions)
@@ -33,16 +33,22 @@ export const showCloudInstallationProblemNotification = () => {
 export const showCloudConnectionProblemNotification = () => {
   const uiNotification = {
     header: "Connection Problem",
-    text: "This agent cannot connect to Netdata Cloud. Please talk to system's administrator for"
-      + " more information.",
+    text: (
+      <S.NotificationLink
+        href="https://learn.netdata.cloud/docs/agent/packaging/installer#automatic-one-line-installation-script"
+        target="_blank"
+      >
+        To access Cloud install again your agent via the kickstart script
+      </S.NotificationLink>
+    ),
   }
   const notificationComponent = createUINotification({
     ...uiNotification,
     success: false,
     leftContent: (
-      <NodeIconContainer>
+      <S.NodeIconContainer>
         <Icon name="gear" size="large" />
-      </NodeIconContainer>
+      </S.NodeIconContainer>
     ),
   })
   toast.error(notificationComponent, toastOptions)
