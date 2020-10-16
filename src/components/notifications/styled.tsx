@@ -12,3 +12,10 @@ export const NodeIconContainer = styled.div`
     fill: ${getColor(["gray", "limedSpruce"])};
   }
 `
+
+export const NotificationLink = styled.a`
+  &, &:hover {
+    text-decoration: underline;
+    color: inherit;
+  }
+`
