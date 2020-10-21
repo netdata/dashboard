@@ -3,7 +3,6 @@ import React, {
 } from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
-import { DefaultTheme } from "@netdata/netdata-ui"
 
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
@@ -22,7 +21,12 @@ import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { useListenToPostMessage } from "utils/post-message"
 import { useSelector } from "store/redux-separate-context"
-import { selectCloudBaseUrl, selectHasFetchedInfo, selectSignInUrl } from "domains/global/selectors"
+import {
+  selectCloudBaseUrl,
+  selectHasFetchedInfo,
+  selectSignInUrl,
+  selectTheme,
+} from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
@@ -42,6 +46,7 @@ import "./types/global"
 
 import { useInfo } from "hooks/use-info"
 import { serverStatic } from "utils/server-detection"
+import { mapTheme } from "utils/map-theme"
 import {
   netdataCallback,
   updateLocaleFunctions,
@@ -141,9 +146,10 @@ const App: React.FC = () => {
   const signInUrl = useSelector(selectSignInUrl)
 
   const hasFetchedInfo = useSelector(selectHasFetchedInfo)
+  const theme = useSelector(selectTheme)
 
   return (
-    <ThemeProvider theme={DefaultTheme}>
+    <ThemeProvider theme={mapTheme(theme)}>
       {hasFetchDependencies && (
         // this needs to render after dynamic css files are loaded, otherwise netdata-ui
         // styling will have smaller priority than bootstrap css
