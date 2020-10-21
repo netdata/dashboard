@@ -12,7 +12,7 @@ export const StyledHeader = styled.header`
   position: fixed;
   height: 56px;
   width: 100%;
-  background: ${getColor("tooltip")};
+  background: ${getColor(["gray", "limedSpruce"])};
   display: flex;
   flex-flow: row nowrap;
 
