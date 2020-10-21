@@ -1,7 +1,8 @@
 import { __, prop } from "ramda"
 import React, {
-  useEffect, useState, useCallback, useMemo, memo,
+  useEffect, useState, useCallback, useMemo, memo, useContext,
 } from "react"
+import { ThemeContext } from "styled-components"
 
 import {
   requestCommonColorsAction,
@@ -69,6 +70,7 @@ export const Chart = memo(({
   setSelectedDimensions,
   showLatestOnBlur,
 }: Props) => {
+  const themeContext = useContext(ThemeContext)
   const unitsScalingMethod = useSelector(selectUnitsScalingMethod)
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings
@@ -371,6 +373,8 @@ export const Chart = memo(({
   return (
     <>
       <AbstractChart
+        // remount on theme change
+        key={themeContext.name}
         attributes={attributes}
         chartContainerElement={chartContainerElement}
         chartData={chartData}
