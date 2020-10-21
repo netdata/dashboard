@@ -10,7 +10,7 @@ export const ListContainer = styled.div`
   top: 56px;
   height: calc(100vh - 56px);
   width: ${getSizeBy(7)};
-  background: ${getColor("tooltip")};
+  background: ${getColor(["gray", "limedSpruce"])};
   padding-top: ${getSizeBy(2)};
   display: flex;
   flex-direction: column;
