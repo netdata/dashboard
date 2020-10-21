@@ -76,7 +76,7 @@ export const IconContainer = styled.div`
 `
 export const IframeContainer = styled.div`
   position: relative;
-  width: 130px;
+  width: 134px;
   height: 40px;
 `
 
@@ -97,19 +97,20 @@ export const SignInButton = styled.a<{ isDisabled: boolean }>`
   height: 40px;
   font-weight: bold;
   font-size: 12px;
-  color: #FFF;
   flex-flow: row nowrap;
   align-items: center;
-  text-decoration: none;
   user-select: none;
   display: flex;
   text-transform: uppercase;
   justify-content: center;
+  &, &:hover {
+    color: #FFF;
+    text-decoration: none;
+  }
   &:hover {
-    border-color: #00CB51;
+    border-color: ${getColor("accent")};
     border-width: 3px;
     border-radius: 4px;
-    text-decoration: none;
   }
 `
 
