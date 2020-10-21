@@ -10,7 +10,7 @@ export const SidebarSocialMedia = () => (
             Do you like Netdata?
         </S.GithubCopyLine>
         <S.GithubStarQuestion href="https://github.com/netdata/netdata/" target="_blank">
-            Give us a star?
+            Give us a star!
         </S.GithubStarQuestion>
       </S.GithubCopy>
       <S.GithubIcon href="https://github.com/netdata/netdata/" target="_blank">
