@@ -122,18 +122,25 @@ export const SignInButton = styled.a`
   border-style:solid;
   border-radius: 3px;
   border-width: 0;
-  width: 128px;
+  width: 134px;
   height: 40px;
   font-weight: bold;
   font-size: 12px;
-  color: #FFF;
   flex-flow: row nowrap;
   align-items: center;
-  text-decoration: none;
   user-select: none;
   display: flex;
   text-transform: uppercase;
   justify-content: center;
+  &, &:hover {
+    color: #FFF;
+    text-decoration: none;
+  }
+  &:hover {
+    border-color: ${getColor("accent")};
+    border-width: 3px;
+    border-radius: 4px;
+  }
 `
 
 export const NoNetworkIcon = styled.svg`
