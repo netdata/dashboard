@@ -1,9 +1,13 @@
 import { mergeAll, mergeRight } from "ramda"
 import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
+import { DashboardTheme } from "utils/map-theme"
 
 export const SYNC_PAN_AND_ZOOM = "sync_pan_and_zoom"
 export const STOP_UPDATES_WHEN_FOCUS_IS_LOST = "stop_updates_when_focus_is_lost"
 export const DESTROY_ON_HIDE = "destroy_on_hide"
+export const THEME = "theme"
+
+export const themeLocalStorageKey = "netdataTheme"
 
 /* eslint-disable camelcase */
 
@@ -21,7 +25,7 @@ export interface Options {
   [SYNC_PAN_AND_ZOOM]: boolean
 
   // visual options
-  theme: string
+  [THEME]: DashboardTheme
   show_help: boolean
   pan_and_zoom_data_padding: boolean
   smooth_plot: boolean
@@ -60,7 +64,7 @@ export const INITIAL_OPTIONS: Options = {
   [SYNC_PAN_AND_ZOOM]: true,
 
   // visual options
-  theme: "slate",
+  [THEME]: "slate",
   // when enabled the charts will show some help
   // when there's no bootstrap, we can't show it
   show_help: Boolean(window.netdataShowHelp) && !window.netdataNoBootstrap,
@@ -77,7 +81,8 @@ export const INITIAL_OPTIONS: Options = {
   user_set_server_timezone: "default", // as set by the user on the dashboard
 }
 
-const removeOptionsPrefix = <T extends string>(key: T) => key.replace(/^options\./, "")
+const localStorageKeyToOption = <T extends string>(key: T) => key.replace(/^options\./, "")
+  .replace(themeLocalStorageKey, THEME)
 
 const getItemFromLocalStorage = <T extends string>(key: T) => {
   const value = localStorage.getItem(key)
@@ -91,6 +96,12 @@ const getItemFromLocalStorage = <T extends string>(key: T) => {
   try {
     parsed = JSON.parse(value)
   } catch (e) {
+    // todo fix after main.js refactor
+    // special case for netdataTheme, only this option is not boolean
+    if (key === themeLocalStorageKey && value) {
+      return value
+    }
+
     console.log(`localStorage: failed to read "${key}", using default`) // eslint-disable-line no-console, max-len
     // it was not present in old dashboard, but it probably makes sense to remove broken values
     localStorage.removeItem(key)
@@ -101,9 +112,9 @@ const getItemFromLocalStorage = <T extends string>(key: T) => {
 
 export const getOptionsMergedWithLocalStorage = (): Options => {
   const optionsFromLocalStorage = Object.keys(localStorage)
-    .filter((key) => key.startsWith("options."))
+    .filter((key) => key.startsWith("options.") || key === themeLocalStorageKey)
     .map((key) => ({
-      [removeOptionsPrefix(key)]: getItemFromLocalStorage(key),
+      [localStorageKeyToOption(key)]: getItemFromLocalStorage(key),
     }))
     .filter((o) => Object.values(o)[0] !== null)
 
