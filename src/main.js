@@ -42,6 +42,8 @@ import { serverDefault } from './utils/server-detection';
 import { name2id } from './utils/name-2-id';
 import { isProperTimezone } from './utils/date-time';
 import { NETDATA_REGISTRY_SERVER } from './utils';
+import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from './domains/chart/utils/legend-utils';
+import { defaultAttributes } from './domains/chart/utils/transformDataAttributes';
 
 // this is temporary, hook will be used after the full main.js refactor
 let localeDateString, localeTimeString
@@ -1789,6 +1791,10 @@ function renderPage(menus, data) {
     // sort the menus
     var main = sortObjectByPriority(menus);
     var i = 0, len = main.length;
+
+    // todo hook to options
+    const hasChartsOnBottom = defaultAttributes.legendPosition === "bottom"
+    const chartAdditionalHeight = hasChartsOnBottom ? LEGEND_BOTTOM_SINGLE_LINE_HEIGHT : 0
     while (i < len) {
         var menu = main[i++];
 
@@ -1861,15 +1867,19 @@ function renderPage(menus, data) {
                     chtml += '<div role="row" class="dashboard-print-row">';
                 }
 
+                const chartHeight = netdataDashboard.contextHeight(chart.context, options.chartsHeight)
+                    + chartAdditionalHeight;
+
                 chtml += '<div class="netdata-chartblock-container" style="width: ' + pcent_width.toString() + '%;">' + netdataDashboard.contextInfo(chart.context) + '<div class="netdata-container" id="chart_' + NETDATA.name2id(chart.id) + '" data-netdata="' + chart.id + '"'
                   + ' data-width="100%"'
-                  + ' data-height="' + netdataDashboard.contextHeight(chart.context, options.chartsHeight).toString() + 'px"'
+                  + ' data-height="' + chartHeight.toString() + 'px"'
                   + ' data-dygraph-valuerange="' + netdataDashboard.contextValueRange(chart.context) + '"'
                   + ' data-before="0"'
                   + ' data-after="-' + duration.toString() + '"'
                   + ' data-id="' + NETDATA.name2id(options.hostname + '/' + chart.id) + '"'
                   + ' data-colors="' + netdataDashboard.anyAttribute(netdataDashboard.context, 'colors', chart.context, '') + '"'
                   + ' data-decimal-digits="' + netdataDashboard.contextDecimalDigits(chart.context, -1) + '"'
+                  + (hasChartsOnBottom ? ' data-legend-position="bottom"' : '')
                   + chartCommonMin(chart.family, chart.context, chart.units)
                   + chartCommonMax(chart.family, chart.context, chart.units)
                   + ' role="application"></div></div>';
