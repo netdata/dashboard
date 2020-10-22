@@ -3174,7 +3174,13 @@ window.printPreflight = () => {
 }
 
 function printPage() {
-    window.NETDATA.parseDom()
+    window.NETDATA.parseDom();
+    if (urlOptions.pan_and_zoom === true) {
+        reduxStore.dispatch(setGlobalPanAndZoomAction({
+            after: urlOptions.after,
+            before: urlOptions.before,
+        }))
+    }
     showPageFooter(); // todo after full rewrite the footer should show when charts are loaded
 }
 
