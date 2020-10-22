@@ -564,3 +564,7 @@ export const getAttributes = (node: Element): Attributes => {
   const showValueOf = getAttributesDynamic(node)
   return { ...attributesStatic, showValueOf }
 }
+
+export const defaultAttributes: Partial<Attributes> = {
+  legendPosition: "bottom",
+}
