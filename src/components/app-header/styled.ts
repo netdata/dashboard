@@ -104,7 +104,7 @@ export const SignInButton = styled.a<{ isDisabled: boolean }>`
   text-transform: uppercase;
   justify-content: center;
   &, &:hover {
-    color: #FFF;
+    color: ${getColor("bright")};
     text-decoration: none;
   }
   &:hover {
