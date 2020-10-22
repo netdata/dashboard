@@ -18,7 +18,6 @@ export const LegendSecondRow = styled.div`
 `
 
 export const LegendUnit = styled.div`
-  color: ${getColor("textFocus")};
 `
 
 export const DateTimeSeparator = styled.span`
