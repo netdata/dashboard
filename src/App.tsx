@@ -37,7 +37,6 @@ import { useRegistry } from "hooks/use-registry"
 import { useListenToFocusMessages } from "hooks/use-listen-to-focus-messages"
 import { useAlarms } from "hooks/use-alarms"
 import { AppHeader } from "components/app-header"
-import { TimeFrameBar } from "components/time-frame-bar"
 import { SpacesBar } from "components/spaces-bar"
 import { SpacePanel } from "components/space-panel"
 import { NotificationsContainer } from "components/notifications-container"
@@ -188,7 +187,6 @@ const App: React.FC = () => {
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
-                <TimeFrameBar />
                 <Portals key={refreshHelper} />
                 <SidebarSocialMediaPortal>
                   <SidebarSocialMedia />
