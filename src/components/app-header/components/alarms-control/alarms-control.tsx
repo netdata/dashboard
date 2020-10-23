@@ -1,7 +1,19 @@
 import React from "react"
 import { Button } from "@netdata/netdata-ui"
 import { IconContainer } from "../../styled"
-import { IndicatorsContainer, AlarmIndicator } from "./styled"
+
+const getAlarmIconName = (criticalAlarmsCount: number, warningAlarmsCount: number) => {
+  if (criticalAlarmsCount > 0 && warningAlarmsCount > 0) {
+    return "alarmCriticalWarning"
+  }
+  if (criticalAlarmsCount > 0) {
+    return "alarmCritical"
+  }
+  if (warningAlarmsCount > 0) {
+    return "alarmWarning"
+  }
+  return "alarm"
+}
 
 interface Props {
   criticalAlarmsCount: number
@@ -12,11 +24,6 @@ export const AlarmsControl = ({
   warningAlarmsCount,
 }: Props) => (
   <IconContainer>
-    <IndicatorsContainer>
-      {criticalAlarmsCount > 0 && <AlarmIndicator alarmType="critical" />}
-      {warningAlarmsCount > 0 && <AlarmIndicator alarmType="warning" />}
-    </IndicatorsContainer>
-
     <Button
       flavour="borderless"
       neutral
@@ -24,7 +31,7 @@ export const AlarmsControl = ({
       className="btn"
       data-toggle="modal"
       data-target="#alarmsModal"
-      icon="alarm"
+      icon={getAlarmIconName(criticalAlarmsCount, warningAlarmsCount)}
       title="Alarms"
     />
   </IconContainer>
