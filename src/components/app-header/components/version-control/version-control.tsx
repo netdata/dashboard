@@ -1,14 +1,12 @@
 import React from "react"
+import { Button } from "@netdata/netdata-ui"
 
 import { useHttp } from "hooks/use-http"
-import { SvgIcon } from "components/svg-icon"
-import { iconsList } from "./icons-list"
+import { IconContainer } from "../../styled"
 import {
   Container,
-  NewVersionIndicator, NoUpdateCloud,
-  TextBold,
+  NewVersionIndicator,
 } from "./styled"
-
 
 const NETDATA_LATEST_VERSION_URL = "https://api.github.com/repos/netdata/netdata/releases/latest"
 const NETDATA_LATEST_GCS_VERSION_URL = "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
@@ -94,23 +92,32 @@ export const VersionControl = ({
   return (
     <Container>
       {isNewVersionAvailable && (
-        <NewVersionIndicator
-          href="#"
-          data-toggle="modal"
-          data-target="#updateModal"
-        >
-          <SvgIcon icon={iconsList.updateCloudIcon} width={22} />
-          <TextBold> Update Now </TextBold>
+        <NewVersionIndicator>
+          <Button
+            flavour="borderless"
+            themeType="dark"
+            className="btn"
+            data-toggle="modal"
+            data-target="#updateModal"
+            icon="update_pending"
+            title="Need help?"
+            label="Update Now"
+          />
         </NewVersionIndicator>
       )}
       {!isNewVersionAvailable && (
-        <NoUpdateCloud
-          href=""
-          data-toggle="modal"
-          data-target="#updateModal"
-        >
-          <SvgIcon icon={iconsList.noUpdateCloudIcon} width={24} />
-        </NoUpdateCloud>
+        <IconContainer>
+          <Button
+            flavour="borderless"
+            themeType="dark"
+            neutral
+            className="btn"
+            data-toggle="modal"
+            data-target="#updateModal"
+            icon="update"
+            title="Check Version"
+          />
+        </IconContainer>
       )}
     </Container>
   )

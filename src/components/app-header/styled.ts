@@ -80,10 +80,6 @@ export const IframeContainer = styled.div`
   height: 40px;
 `
 
-export const StyledHelpIcon = styled.a`
-  font-size: 16px;
-`
-
 export const SignInButton = styled.a<{ isDisabled: boolean }>`
   padding: 8px;
   cursor: pointer;
