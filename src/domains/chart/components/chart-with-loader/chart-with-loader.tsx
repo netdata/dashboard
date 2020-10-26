@@ -173,6 +173,7 @@ export const ChartWithLoader = ({
     defaultAfter,
     attributes.dimensions,
     attributes.aggrMethod,
+    attributes.groupBy,
   ])
 
   const {
@@ -296,6 +297,7 @@ export const ChartWithLoader = ({
           aggrMethod: attributes.aggrMethod,
           nodeIDs,
           httpMethod: attributes.httpMethod,
+          groupBy: attributes.groupBy,
 
           // properties for the reducer
           fetchDataParams: {

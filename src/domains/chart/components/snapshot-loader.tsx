@@ -49,6 +49,7 @@ const SnapshotLoader = ({
       nodeIDs: attributes.nodeIDs,
       chartLibrary,
       id: chartUuid,
+      groupBy: attributes.groupBy,
     }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }) // todo fetch based on state

@@ -89,6 +89,7 @@ export interface StaticAttributes {
   unitsCommon?: string
   unitsDesired?: string
   aggrMethod?: string
+  groupBy?: "node" | "dimension"
   nodeIDs?: string[]
   colors?: string
   commonColors?: string
@@ -326,6 +327,7 @@ const getAttributesMap = (): AttributesMap => ({
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
   aggrMethod: { key: "aggr-method" },
+  groupBy: { key: "group-by" },
   nodeIDs: { key: "node-ids" },
   colors: { key: "colors" },
   commonColors: { key: "common-colors" },
