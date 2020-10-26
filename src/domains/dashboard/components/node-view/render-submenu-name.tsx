@@ -79,9 +79,11 @@ export const renderSubmenuName = ({
         <div
           className="dashboard-submenu-info"
           role="document"
-        >
-          {submenuInfo}
-        </div>
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: submenuInfo,
+          }}
+        />
       )}
       <div className="netdata-chart-row">
         {chartsSorted
