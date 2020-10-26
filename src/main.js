@@ -2340,15 +2340,23 @@ function alarmsUpdateModal() {
         while (len--) {
             family = families_sorted[i++].name;
             var active_family_added = false;
-            var expanded = 'true';
-            var collapsed = '';
-            var cin = 'in';
+
+            var expanded = 'false';
+            var collapsed = 'class="collapsed"';
+            var cin = '';
+
+            // uncomment if first family needs to be expanded by default
+            // var expanded = 'true';
+            // var collapsed = '';
+            // var cin = 'in';
 
             if (fc !== 0) {
                 all += "</table></div></div></div>";
-                expanded = 'false';
-                collapsed = 'class="collapsed"';
-                cin = '';
+
+                // uncomment if first family needs to be expanded by default
+                // expanded = 'false';
+                // collapsed = 'class="collapsed"';
+                // cin = '';
             }
 
             all += '<div class="panel panel-default"><div class="panel-heading" role="tab" id="alarm_all_heading_' + fc.toString() + '"><h4 class="panel-title"><a ' + collapsed + ' role="button" data-toggle="collapse" data-parent="#alarms_all_accordion" href="#alarm_all_' + fc.toString() + '" aria-expanded="' + expanded + '" aria-controls="alarm_all_' + fc.toString() + '">' + family.toString() + '</a></h4></div><div id="alarm_all_' + fc.toString() + '" class="panel-collapse collapse ' + cin + '" role="tabpanel" aria-labelledby="alarm_all_heading_' + fc.toString() + '" data-alarm-id="' + fc.toString() + '"><div class="panel-body" id="alarm_all_body_' + fc.toString() + '">';
