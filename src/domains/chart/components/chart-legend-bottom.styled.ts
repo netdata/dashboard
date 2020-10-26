@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { getSizeBy, getColor } from "@netdata/netdata-ui"
+import { getSizeBy } from "@netdata/netdata-ui"
 
 export const LegendContainer = styled.div`
   margin-bottom: ${getSizeBy(3)};
