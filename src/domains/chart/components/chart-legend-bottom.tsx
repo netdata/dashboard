@@ -113,6 +113,7 @@ export const ChartLegendBottom = ({
               </S.DimensionItem>
             )
           })}
+          <S.DimensionItemToolboxPlaceholder />
         </S.LegendItems>
         <S.ToolboxContainer>
           {legendToolbox}

@@ -44,6 +44,14 @@ export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
   }
 `
 
+// toolbox is based on "absolute", so to make sure it's not put on top of dimension-item
+// let's put a transparent block as last in dimension-items container. Toolbox will soon be moved
+// to other place so it's temporary
+export const DimensionItemToolboxPlaceholder = styled.div`
+  width: 140px;
+  height: 20px;
+`
+
 export const DimensionIcon = styled.div<{ color: string }>`
   width: ${getSizeBy(2)};
   height: ${getSizeBy(1)};
