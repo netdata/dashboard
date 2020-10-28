@@ -177,11 +177,12 @@ export const ChartWithLoader = ({
   ])
 
   const {
-    after: initialAfter = window.NETDATA.chartDefaults.after,
     before: initialBefore = window.NETDATA.chartDefaults.before,
   } = attributes
 
-  const liveModeAfter = defaultAfter || initialAfter
+  // attributes.after should be now used only for old custom dashboard
+  // and in the future for setting timeframe per-chart
+  const liveModeAfter = attributes.after || defaultAfter
 
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const { hasLegend } = chartSettings
