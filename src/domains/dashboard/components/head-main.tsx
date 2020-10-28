@@ -23,7 +23,6 @@ export const HeadMain = ({
 }: Props) => {
   const commonAttributes = {
     host,
-    after: -duration,
     forceTimeWindow: true,
     points: duration,
     nodeIDs,
@@ -45,7 +44,6 @@ export const HeadMain = ({
             title: "Used Swap",
             easyPieChartMaxValue: 100,
             width: "9%",
-            before: 0,
             colors: "DD4400",
             dimensions: "used",
             units: "%",
@@ -67,7 +65,6 @@ export const HeadMain = ({
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
-              before: 0,
               unitsCommon: "system.io.mainhead",
               aggrMethod: mapDefaultAggrMethod("kbps"),
             }}
@@ -82,7 +79,6 @@ export const HeadMain = ({
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
-              before: 0,
               unitsCommon: "system.io.mainhead",
               aggrMethod: mapDefaultAggrMethod("kbps"),
             }}
@@ -100,7 +96,6 @@ export const HeadMain = ({
               chartLibrary: "easypiechart",
               title: "Disk Read",
               width: "11%",
-              before: 0,
               unitsCommon: "system.pgpgio.mainhead",
               aggrMethod: mapDefaultAggrMethod("KiB/s"),
             }}
@@ -115,7 +110,6 @@ export const HeadMain = ({
               chartLibrary: "easypiechart",
               title: "Disk Write",
               width: "11%",
-              before: 0,
               unitsCommon: "system.pgpgio.mainhead",
               aggrMethod: mapDefaultAggrMethod("KiB/s"),
             }}
@@ -156,7 +150,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "Net Inbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.net.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -171,7 +164,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "Net Outbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.net.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -190,7 +182,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IP Inbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ip.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -205,7 +196,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IP Outbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ip.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -224,7 +214,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv4 Inbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ipv4.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -239,7 +228,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv4 Outbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ipv4.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -258,7 +246,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv6 Inbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -273,7 +260,6 @@ export const HeadMain = ({
                 chartLibrary: "easypiechart",
                 title: "IPv6 Outbound",
                 width: "11%",
-                before: 0,
                 unitsCommon: "system.ipv6.mainhead",
                 aggrMethod: mapDefaultAggrMethod("kbps"),
               }}
@@ -295,7 +281,6 @@ export const HeadMain = ({
             title: "Used RAM",
             easyPieChartMaxValue: 100,
             width: "9%",
-            before: 0,
             colors: colors[7],
             units: "%",
             aggrMethod: mapDefaultAggrMethod("%"),

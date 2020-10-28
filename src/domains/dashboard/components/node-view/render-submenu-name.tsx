@@ -134,8 +134,6 @@ export const renderSubmenuName = ({
                   chart.context,
                 ),
                 dygraphTitleHeight: NODE_VIEW_DYGRAPH_TITLE_HEIGHT,
-                before: 0,
-                after: -duration,
                 heightId: `${name2id(`${options.hostname}/${chart.id}`)}`,
                 colors: `${netdataDashboard.anyAttribute(
                   netdataDashboard.context, "colors", chart.context, "",

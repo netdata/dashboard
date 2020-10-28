@@ -66,7 +66,7 @@ export type StateT = {
     masterID?: string
     shouldForceTimeRange?: boolean
   }
-  defaultAfter: null | number
+  defaultAfter: number
   globalChartUnderlay: null | {
     after: number
     before: number
@@ -112,13 +112,16 @@ export type StateT = {
   options: Options
 }
 
+export const initialDefaultAfter = -900
+
 export const initialState: StateT = {
   commonColorsKeys: {},
   commonMin: {},
   commonMax: {},
   currentSelectionMasterId: null,
   globalPanAndZoom: null,
-  defaultAfter: null,
+  // todo for dashboard calculate it based on width and window.NETDATA.chartDefaults.after
+  defaultAfter: initialDefaultAfter,
   globalChartUnderlay: null,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
