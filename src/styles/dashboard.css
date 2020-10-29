@@ -474,7 +474,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: var(--color-border, #666);
+    color: var(--color-main, #666);
     font-weight: normal;
     text-shadow: var(--color-elementBackground, #BBB) 0px 0px 1px;
     /* -webkit-font-smoothing: none; */
@@ -488,7 +488,7 @@ body {
     width: 64%;
     margin-left: 18% !important;
     text-align: center;
-    color: var(--color-separator, #999999);
+    color: var(--color-border, #999999);
     font-weight: bold;
 }
 
@@ -500,7 +500,7 @@ body {
     width: 60%;
     margin-left: 20% !important;
     text-align: center;
-    color: var(--color-separator, #999999);
+    color: var(--color-border, #999999);
     font-weight: normal;
 }
 
@@ -525,7 +525,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: var(--color-mainBackground, #FFFFFF);
+    color: var(--color-main, #FFFFFF);
     font-weight: bold;
     z-index: 1;
     text-shadow: var(--color-elementBackground, #777) 0px 0px 1px;
@@ -541,7 +541,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: var(--color-separator, #999999);
+    color: var(--color-border, #999999);
     font-weight: bold;
 }
 
@@ -554,7 +554,7 @@ body {
     width: 100%;
     text-align: left;
     margin-left: 5%;
-    color: var(--color-separator, #999999);
+    color: var(--color-border, #999999);
     font-weight: normal;
 }
 
@@ -567,7 +567,7 @@ body {
     width: 92%;
     margin-left: 8%;
     text-align: left;
-    color: var(--color-separator, #999999);
+    color: var(--color-main, #999999);
     font-weight: normal;
 }
 
@@ -580,7 +580,7 @@ body {
     width: 95%;
     margin-right: 5%;
     text-align: right;
-    color: var(--color-separator, #999999);
+    color: var(--color-main, #999999);
     font-weight: normal;
 }
 

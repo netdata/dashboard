@@ -4,6 +4,7 @@
   --color-attention: #563d7c;
   --color-text: #333;
   --color-textFocus: #767676;
+  --color-disabled: transparent;
 }
 
 /* copied from main.css */
@@ -49,31 +50,39 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.42857143;
-    color: var(--color-text);
-    background-color: var(--color-mainBackground);
+    color: var(--color-border);
+    background-color: var(--color-elementBackground);
     & a {
+      color: var(--color-primary);
       text-decoration: none;
+      &:hover, &:active {
+        color: var(--color-primary);
+        text-decoration: underline;
+      }
     }
     & ul {
       padding-left: 0;
     }
 
     .dygraph-chart--legend-bottom .dygraph-axis-label-y {
-      text-align: start ;
+      text-align: start;
     }
 
     .dygraph-chart--legend-bottom .dygraph-title {
+      color: var(--color-main);
       text-indent: 0;
     }
 
     .dashboard-section {
       h1 {
+        color: var(--color-main);
         margin-top: 20px;
       }
     }
 
     .dashboard-section-container {
       & > h2 {
+        color: var(--color-main);
         margin-top: 20px;
       }
     }
@@ -100,7 +109,7 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       padding: 4px 20px;
       font-size: 13px;
       font-weight: 500;
-      color: var(--color-textFocus);
+      color: var(--color-border);
       & .svg-inline--fa {
         width: 20px;
         text-align: center;
@@ -111,10 +120,10 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       &:hover,
       &:focus {
         padding-left: 19px;
-        color: var(--color-attention);
+        color: var(--color-main);
         text-decoration: none;
         background-color: transparent;
-        border-left: 1px solid var(--color-attention);
+        border-left: 1px solid var(--color-main);
       }
     }
 
@@ -131,12 +140,28 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     & > .node-view__sidebar-link {
       padding-left: 18px;
       font-weight: bold;
-      color: var(--color-attention);
+      color: var(--color-main);
       background-color: transparent;
-      border-left: 2px solid var(--color-attention);
+      border-left: 2px solid var(--color-main);
+
+      &:hover,
+      &:focus {
+        background-color: transparent;
+      }
     }
     & .node-view__sidebar-submenu {
       display: block;
+    }
+  }
+
+  &__sidebar-menu-li--active {
+    & > .node-view__sidebar-link {
+      background-color: var(--color-disabled);
+
+      &:hover,
+      &:focus {
+        background-color: var(--color-disabled);
+      }
     }
   }
 
