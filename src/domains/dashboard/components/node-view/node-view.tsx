@@ -17,6 +17,7 @@ import { MenuSidebar } from "../menu-sidebar"
 import { ChartWrapper } from "../chart-wrapper"
 import { renderSubmenuName } from "./render-submenu-name"
 import { generateHeadCharts } from "./generate-head-charts"
+import { useUpdateTheme } from "./use-update-theme"
 import "dashboard_info"
 import "./node-view.scss"
 
@@ -178,6 +179,8 @@ export const NodeView = ({
   const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata),
     [menuPartialMetadata, fullMetadata])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
+
+  useUpdateTheme()
 
   return (
     <div className="node-view__container">

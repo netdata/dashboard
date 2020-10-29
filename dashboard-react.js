@@ -265,6 +265,8 @@ NETDATA.themes = {
     gauge_pointer: '#C0C0C0',
     gauge_stroke: '#F0F0F0',
     gauge_gradient: false,
+    gauge_stop_color: '#FC8D5E',
+    gauge_start_color: '#B0E952',
     d3pie: {
       title: '#333333',
       subtitle: '#666666',
@@ -301,6 +303,8 @@ NETDATA.themes = {
     gauge_pointer: '#474b50',
     gauge_stroke: '#373b40',
     gauge_gradient: false,
+    gauge_stop_color: '#FC8D5E',
+    gauge_start_color: '#B0E952',
     d3pie: {
       title: '#C8C8C8',
       subtitle: '#283236',
