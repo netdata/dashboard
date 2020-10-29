@@ -7,6 +7,7 @@ import { ThemeContext } from "styled-components"
 import {
   requestCommonColorsAction,
   resetGlobalPanAndZoomAction,
+  setDefaultAfterAction,
   setGlobalPanAndZoomAction,
   setGlobalSelectionAction,
 } from "domains/global/actions"
@@ -44,6 +45,13 @@ interface Props {
   chartHeight: number
   chartUuid: string
   chartWidth: number
+  defaultAfter: number
+  globalPanAndZoom: null | {
+    after: number // timestamp in ms
+    before: number // timestamp in ms
+    masterID?: string
+    shouldForceTimeRange?: boolean
+  }
   hasEmptyData: boolean
   isRemotelyControlled: boolean
   requestedViewRange: TimeRange
@@ -63,6 +71,8 @@ export const Chart = memo(({
   chartHeight,
   chartUuid,
   chartWidth,
+  defaultAfter,
+  globalPanAndZoom,
   hasEmptyData,
   isRemotelyControlled,
   requestedViewRange,
@@ -297,25 +307,40 @@ export const Chart = memo(({
   }, [handleToolBoxPanAndZoom, netdataLast, viewAfter, viewBefore])
 
   const handleToolboxZoomInClick = useCallback((event: React.MouseEvent) => {
+    const panAndZoomStep = getPanAndZoomStep(event) * 0.8
+    if (!globalPanAndZoom) {
+      dispatch(setDefaultAfterAction({
+        after: defaultAfter / (panAndZoomStep + 1),
+      }))
+      return
+    }
     // if visible time range is much bigger than available time range in history, first zoom-in
     // should just fit to available range
     if ((viewBefore - viewAfter) > (netdataLast - netdataFirst) * 1.2) {
       handleToolBoxPanAndZoom(netdataFirst, netdataLast)
       return
     }
-    const dt = ((viewBefore - viewAfter) * getPanAndZoomStep(event) * 0.8) / 2
+    const dt = ((viewBefore - viewAfter) * panAndZoomStep) / 2
     const newAfter = viewAfter + dt
     const newBefore = viewBefore - dt
     handleToolBoxPanAndZoom(newAfter, newBefore)
-  }, [handleToolBoxPanAndZoom, netdataFirst, netdataLast, viewAfter, viewBefore])
+  }, [defaultAfter, dispatch, globalPanAndZoom, handleToolBoxPanAndZoom, netdataFirst, netdataLast,
+    viewAfter, viewBefore])
 
   const handleToolboxZoomOutClick = useCallback((event: React.MouseEvent) => {
-    const dt = ((viewBefore - viewAfter) / (1.0 - (getPanAndZoomStep(event) * 0.8))
+    const panAndZoomStep = getPanAndZoomStep(event) * 0.8
+    if (!globalPanAndZoom) {
+      dispatch(setDefaultAfterAction({
+        after: defaultAfter * (panAndZoomStep + 1),
+      }))
+      return
+    }
+    const dt = ((viewBefore - viewAfter) / (1.0 - (panAndZoomStep * 0.8))
       - (viewBefore - viewAfter)) / 2
     const newAfter = viewAfter - dt
     const newBefore = viewBefore + dt
     handleToolBoxPanAndZoom(newAfter, newBefore)
-  }, [handleToolBoxPanAndZoom, viewAfter, viewBefore])
+  }, [defaultAfter, dispatch, globalPanAndZoom, handleToolBoxPanAndZoom, viewAfter, viewBefore])
 
   const handleToolboxResetClick = useCallback(() => {
     if (isSyncPanAndZoom) {
