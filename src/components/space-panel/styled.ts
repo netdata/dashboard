@@ -16,7 +16,7 @@ export const PanelContainer = styled.aside<{ isActive: boolean, isSignedIn: bool
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  color: ${getColor("text")};
+  color: ${getColor(["gray", "arsenic"])};
   padding: ${({ isSignedIn, theme }) => (
     isSignedIn ? 0 : getSizeBy(PANEL_CONTAINER_PADDING)({ theme })
   )} 0;
