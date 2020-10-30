@@ -61,8 +61,8 @@ export type StateT = {
   commonMax: CommonMinMax
   currentSelectionMasterId: string | null
   globalPanAndZoom: null | {
-    after: number
-    before: number
+    after: number // timestamp in ms
+    before: number // timestamp in ms
     masterID?: string
     shouldForceTimeRange?: boolean
   }

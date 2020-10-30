@@ -37,8 +37,14 @@ export {
   centerAroundHighlightAction,
   clearHighlightAction,
   setSpacePanelTransitionEndAction,
+  setDefaultAfterAction,
 } from "domains/global/actions"
-export { selectStopUpdatesWhenFocusIsLost, selectDestroyOnHide } from "domains/global/selectors"
+export {
+  selectStopUpdatesWhenFocusIsLost,
+  selectDestroyOnHide,
+  selectDefaultAfter,
+  selectGlobalPanAndZoom,
+} from "domains/global/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
 
 export { VersionControl } from "components/app-header/components/version-control"
