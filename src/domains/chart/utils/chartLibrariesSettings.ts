@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import { Attributes } from "./transformDataAttributes"
 
 export type ChartLibraryName = "dygraph" | "sparkline" | "peity" | "google"
@@ -73,7 +74,10 @@ export const chartLibrariesSettings: ChartLibrariesSettings = {
     },
     containerClass(attributes: Attributes) {
       return this.hasLegend(attributes)
-        ? "netdata-container-with-legend"
+        ? classNames(
+          "netdata-container-with-legend",
+          attributes.legendPosition === "bottom" && "netdata-container-with-legend--bottom",
+        )
         : "netdata-container"
     },
     // container_class(state) {

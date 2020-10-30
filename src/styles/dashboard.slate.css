@@ -117,7 +117,7 @@ code {
 }
 
 .netdata-container-with-legend {
-    /*display: inline-block;*/
+    display: inline-block;
     overflow: hidden;
 
     transform: translate3d(0,0,0);
@@ -129,7 +129,9 @@ code {
     position: relative;
 
     /* width and height is given per chart with data-width and data-height */
+}
 
+.netdata-container-with-legend.netdata-container-with-legend--bottom {
     display: flex;
     flex-direction: column;
 }
