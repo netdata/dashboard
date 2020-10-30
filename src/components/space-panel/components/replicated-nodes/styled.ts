@@ -44,7 +44,7 @@ export const StyledIcon = styled(Icon)`
   flex-shrink: 0;
   flex-grow: 0;
   margin-right: ${getSizeBy(2)};
-  fill: ${getColor("text")};
+  fill: ${getColor(["gray", "arsenic"])};
 `
 
 export const MasterNodeContainer = styled.div`
