@@ -45,6 +45,9 @@ import {
 } from "./dygraph/utils"
 import "./dygraph-chart.css"
 
+import useProceededChart from "../../hooks/use-proceeded-chart"
+import ProceededChartDisclaimer from "./proceeded-chart-disclaimer"
+
 // This is the threshold above which we assume chart shown duration has changed
 const timeframeThreshold = 5000
 const dygraphResizeDebounceTime = 500
@@ -371,6 +374,10 @@ export const DygraphChart = ({
   // state.dygraph_last_touch_end in old dashboard
   const dygraphLastTouchEnd = useRef<undefined | number>()
 
+  const [
+    isProceeded, precededChartRef, updatePrecededPosition,
+  ] = useProceededChart(chartData.first_entry)
+
   const dispatch = useDispatch()
   const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
 
@@ -498,6 +505,8 @@ export const DygraphChart = ({
         },
 
         underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
+          updatePrecededPosition(g)
+
           // the chart is about to be drawn
           // this function renders global highlighted time-frame
 
@@ -813,7 +822,7 @@ export const DygraphChart = ({
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isFakeStacked, isMouseDown,
     orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    updateChartPanOrZoom, xAxisDateString, xAxisTimeString])
+    updateChartPanOrZoom, xAxisDateString, xAxisTimeString, updatePrecededPosition])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
@@ -994,6 +1003,13 @@ export const DygraphChart = ({
     }
   }, [attributes, chartData.result, chartUuid, commonMinState, commonMaxState, dispatch])
 
+  useLayoutEffect(() => {
+    if (isProceeded && dygraphInstance.current) {
+      updatePrecededPosition(dygraphInstance.current)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isProceeded])
+
   useUnmount(() => {
     if (dygraphInstance.current) {
       dygraphInstance.current.destroy()
@@ -1046,6 +1062,9 @@ export const DygraphChart = ({
           { "dygraph-chart--legend-bottom": isLegendOnBottom },
         )}
       />
+      {isProceeded && (
+        <ProceededChartDisclaimer ref={precededChartRef as React.Ref<HTMLDivElement>} />
+      )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
   )
