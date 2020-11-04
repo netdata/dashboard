@@ -7,7 +7,7 @@ import "./types/global"
 import { GlobalColors } from "./global.colors"
 
 const dashboardThemes: { [k: string]: "white" | "slate" } = {
-  unspecified: "white",
+  unspecified: "slate",
   light: "white",
   dark: "slate",
   blue: "slate",
