@@ -1,5 +1,4 @@
-import React, { useCallback, useState, useEffect } from "react"
-
+import React, { useState, useCallback, useEffect } from "react"
 import { ToolboxButton } from "domains/chart/components/toolbox-button"
 import { setResizeHeightAction } from "domains/chart/actions"
 import { useDispatch } from "store/redux-separate-context"
@@ -11,80 +10,64 @@ interface Props {
   chartUuid: string
   heightId: string | undefined
 }
-// eslint-disable-next-line no-empty-pattern
-export const ResizeHandler = ({
-  chartContainerElement,
-  chartUuid,
-  heightId,
-}: Props) => {
-  const [resizing, setResizing] = useState<
-    { mouseStartY: number, startHeight: number }
-  >()
 
+export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Props) => {
+  const [resizeHeight, setResizeHeight] = useState(() => chartContainerElement.clientHeight)
   const dispatch = useDispatch()
 
-  // handle resizing effect
-  useEffect(() => { // eslint-disable-line consistent-return
-    if (resizing) {
-      const handleMove = (event: MouseEvent | TouchEvent) => {
-        const y = event.type === "mousemove"
-          ? (event as MouseEvent).clientY
-          // "touchmove"
-          // @ts-ignore
-          : (event as TouchEvent).touches.item(event.touches - 1).pageY
-
-        const newHeight = resizing.startHeight + y - resizing.mouseStartY
-
-        if (newHeight >= 70) {
-          // eslint-disable-next-line no-param-reassign
-          chartContainerElement.style.height = `${newHeight.toString()}px`
-          // todo when attributes.id are present, hook height to localStorage
-          dispatch(setResizeHeightAction({
-            id: chartUuid,
-            resizeHeight: newHeight,
-          }))
-          if (heightId) {
-            localStorage.setItem(
-              `${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`,
-              `${newHeight}px`,
-            )
-          }
-        }
-      }
-      document.addEventListener("mousemove", handleMove, false)
-      document.addEventListener("touchmove", handleMove, false)
-      // on exit, remove listeners
-      return () => {
-        document.removeEventListener("mousemove", handleMove)
-        document.removeEventListener("touchmove", handleMove)
+  useEffect(() => {
+    // todo when attributes.id are present, hook height to localStorage
+    if (resizeHeight >= 70) {
+      dispatch(
+        setResizeHeightAction({
+          id: chartUuid,
+          resizeHeight,
+        }),
+      )
+      if (heightId) {
+        localStorage.setItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`, `${resizeHeight}px`)
       }
     }
-  }, [chartContainerElement, chartUuid, dispatch, heightId, resizing])
+  }, [resizeHeight, chartUuid, heightId, dispatch])
 
-  // process end event
-  useEffect(() => { // eslint-disable-line consistent-return
-    if (resizing) {
-      const handleEndEvent = () => {
-        setResizing(undefined)
-      }
-      document.addEventListener("mouseup", handleEndEvent, false)
-      document.addEventListener("touchend", handleEndEvent, false)
-      return () => {
-        document.removeEventListener("mouseup", handleEndEvent)
-        document.removeEventListener("touchend", handleEndEvent)
-      }
-    }
-  }, [resizing])
+  const handleResize = useCallback(
+    (event) => {
+      event.preventDefault()
+      const intialHeight = chartContainerElement.clientHeight
+      const eventStartHeight = event.type === "touchstart"
+        ? event.touches[0].clientY
+        : event.clientY
 
-  // start resizing handler
-  const resizeStartHandler = useCallback((event) => {
-    event.preventDefault()
-    setResizing({
-      // todo handle touch event
-      mouseStartY: event.clientY,
-      startHeight: chartContainerElement.clientHeight,
-    })
-  }, [chartContainerElement])
+      const setHeight = (currentHeight: number) => {
+        const nextHeight = intialHeight + currentHeight - eventStartHeight
+        // eslint-disable-next-line no-param-reassign
+        chartContainerElement.style.height = `${nextHeight.toString()}px`
+        setResizeHeight(nextHeight)
+      }
+
+      const onMouseMove = (e: MouseEvent) => setHeight(e.clientY)
+      const onTouchMove = (e: TouchEvent) => setHeight(e.touches[0].clientY)
+
+      const onMouseEnd = () => {
+        document.removeEventListener("mousemove", onMouseMove)
+        document.removeEventListener("mouseup", onMouseEnd)
+      }
+
+      const onTouchEnd = () => {
+        document.removeEventListener("touchmove", onTouchMove)
+        document.removeEventListener("touchend", onTouchEnd)
+      }
+
+      if (event.type === "touchstart") {
+        document.addEventListener("touchmove", onTouchMove)
+        document.addEventListener("touchend", onTouchEnd)
+      } else {
+        document.addEventListener("mousemove", onMouseMove)
+        document.addEventListener("mouseup", onMouseEnd)
+      }
+    },
+    [chartContainerElement],
+  )
 
   return (
     <ToolboxButton
@@ -93,14 +76,14 @@ export const ResizeHandler = ({
         event.preventDefault()
         event.stopPropagation()
       }}
-      onMouseDown={resizeStartHandler}
-      onTouchStart={resizeStartHandler}
+      onMouseDown={handleResize}
+      onTouchStart={handleResize}
       iconType="resize"
       popoverTitle="Chart Resize"
       popoverContent="Drag this point with your mouse or your finger (on touch devices), to resize
-       the chart vertically. You can also <b>double click it</b> or <b>double tap it</b> to reset
-        between 2 states: the default and the one that fits all the values.<br/><small>Help
-         can be disabled from the settings.</small>"
+     the chart vertically. You can also <b>double click it</b> or <b>double tap it</b> to reset
+      between 2 states: the default and the one that fits all the values.<br/><small>Help
+       can be disabled from the settings.</small>"
     />
   )
 }

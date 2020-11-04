@@ -71,4 +71,5 @@ export const DimensionValue = styled.span`
 
 export const ToolboxContainer = styled.div`
   position: relative;
+  touch-action: none;
 `
