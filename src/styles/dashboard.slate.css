@@ -186,7 +186,7 @@ code {
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
-    color: #474b50;
+    color: var(--color-border, #474b50);
     text-align: center;
     overflow: hidden;
     padding: 0px;
@@ -512,7 +512,7 @@ code {
     width: 64%;
     margin-left: 18% !important;
     text-align: center;
-    color: #676b70;
+    color: var(--color-border,#676b70);
     font-weight: bold;
 }
 
@@ -524,7 +524,7 @@ code {
     width: 60%;
     margin-left: 20% !important;
     text-align: center;
-    color: #676b70;
+    color:var(--color-border,#676b70);
     font-weight: normal;
 }
 
@@ -565,7 +565,7 @@ code {
     left: 0;
     width: 100%;
     text-align: center;
-    color: #676b70;
+    color: var(--color-border, #676b70);
     font-weight: bold;
 }
 
@@ -578,7 +578,7 @@ code {
     width: 100%;
     text-align: left;
     margin-left: 5%;
-    color: #676b70;
+    color: var(--color-border,#676b70);
     font-weight: normal;
 }
 
