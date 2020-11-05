@@ -95,6 +95,11 @@ h1:before, h2:before {
 .dashboard-context-info {
     display: block;
     margin-top: 10px;
+    color: var(--color-border, #878b90);
+}
+  
+.dashboard-context-info a {
+    color: var(--color-primary, #00ab44);
 }
 
 #masthead h1 {
