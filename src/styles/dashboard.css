@@ -1,4 +1,9 @@
 /* SPDX-License-Identfier: GPL-3.0-or-later */
+:root {
+    --color-primary: #00ab44;
+    --color-border: #93a3b0;
+}
+
 html,
 body {
     /*font-family: Calibri,"Segoe UI","Helvetica Neue",Helvetica,Arial,sans-serif;*/
