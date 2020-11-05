@@ -295,7 +295,7 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
-          aggrMethod: attributes.aggrMethod,
+          aggrMethod: attributes.aggrMethod === "sum-of-abs" ? "sum" : attributes.aggrMethod,
           nodeIDs,
           httpMethod: attributes.httpMethod,
           groupBy: attributes.groupBy,

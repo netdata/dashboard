@@ -93,7 +93,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     // props for api
     host, chart, format, points, group, gtime, options,
     after, before, dimensions, aggrMethod, nodeIDs, httpMethod,
-    // groupBy = "dimension", // group by node or dimension
+    groupBy = "dimension", // group by node or dimension
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -140,14 +140,14 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       aggregation: {
         method: aggrMethod,
       },
-      // aggregations: [groupBy === "node" && {
-      //   method: "sum",
-      //   groupBy: ["chart", "node"],
-      // },
-      // {
-      //   method: aggrMethod,
-      //   groupBy: [groupBy],
-      // }].filter(Boolean),
+      aggregations: [groupBy === "node" && {
+        method: "sum",
+        groupBy: ["chart", "node"],
+      },
+      {
+        method: aggrMethod,
+        groupBy: [groupBy],
+      }].filter(Boolean),
     },
   } : {
     params: {
@@ -200,7 +200,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
   const {
     host, chart, format, points, group, gtime, options,
     after, before, dimensions, aggrMethod,
-    // groupBy,
+    groupBy,
     nodeIDs,
     chartLibrary, id,
   } = payload
@@ -226,7 +226,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
     dimensions,
     ...(aggrMethod && { aggr_method: aggrMethod }),
     ...(nodeIDs && { node_ids: nodeIDs.join(",") }),
-    // ...(groupBy && { groupBy }),
+    ...(groupBy && { groupBy }),
   }
 
   const onSuccessCallback = (data: unknown) => {

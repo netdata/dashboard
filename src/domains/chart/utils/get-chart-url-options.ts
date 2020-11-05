@@ -24,5 +24,9 @@ export const getChartURLOptions = (
     ret += "|nonzero"
   }
 
+  if (attributes.aggrMethod === "sum-of-abs") {
+    ret += "|absolute"
+  }
+
   return ret
 }
