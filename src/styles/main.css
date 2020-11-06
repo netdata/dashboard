@@ -169,7 +169,7 @@ body.modal-open {
     padding: 4px 20px;
     font-size: 13px;
     font-weight: 500;
-    color: #767676;
+    color: var(--color-border);
 }
 
 .dashboard-sidebar .nav > li > a > .svg-inline--fa {
@@ -177,23 +177,25 @@ body.modal-open {
     text-align: center;
 }
 
-.dashboard-sidebar .nav > li > a:hover,
-.dashboard-sidebar .nav > li > a:focus {
-    padding-left: 19px;
-    color: #563d7c;
-    text-decoration: none;
-    background-color: transparent;
-    border-left: 1px solid #563d7c;
-}
-
 .dashboard-sidebar .nav > .active > a,
 .dashboard-sidebar .nav > .active:hover > a,
 .dashboard-sidebar .nav > .active:focus > a {
     padding-left: 18px;
     font-weight: bold;
-    color: #563d7c;
-    background-color: transparent;
-    border-left: 2px solid #563d7c;
+    color: var(--color-main);
+    border-left: 2px solid var(--color-main);
+}
+
+.dashboard-sidebar .nav > .active > a {
+    background: var(--color-disabled);
+}
+
+.dashboard-sidebar .nav > li > a:hover,
+.dashboard-sidebar .nav > li > a:focus {
+    padding-left: 19px;
+    color: var(--color-main);
+    text-decoration: none;
+    border-left: 1px solid var(--color-main);
 }
 
 /* Nav: second level (shown on .active) */
@@ -208,6 +210,9 @@ body.modal-open {
     padding-left: 30px;
     font-size: 12px;
     font-weight: normal;
+    background: transparent;
+    border-width: 1px;
+    border-color: inherit;
 }
 
 .dashboard-sidebar .nav .nav > li > a:hover,

@@ -3,6 +3,7 @@
     --color-main: #FFFFFF;  
     --color-primary: #00ab44;
     --color-border: #878b90;
+    --color-disabled: #383B40;
 }
 
 html,
@@ -18,13 +19,6 @@ body {
 code {
     color: #bbb; /*#c7254e;*/
     background-color: #555; /* #f9f2f4; */
-}
-
-.dashboard-sidebar .nav > .active > a,
-.dashboard-sidebar .nav > .active:hover > a,
-.dashboard-sidebar .nav > .active:focus > a {
-    color: #765d9c;
-    border-left: 2px solid #765d9c;
 }
 
 .morelink {
