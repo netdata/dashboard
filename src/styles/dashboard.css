@@ -1,5 +1,6 @@
 /* SPDX-License-Identfier: GPL-3.0-or-later */
 :root {
+    --color-main: #35414A;
     --color-primary: #00ab44;
     --color-border: #93a3b0;
 }
@@ -479,7 +480,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: var(--color-main, #666);
+    color: var(--color-main);
     font-weight: normal;
     text-shadow: var(--color-elementBackground, #BBB) 0px 0px 1px;
     /* -webkit-font-smoothing: none; */
@@ -530,7 +531,7 @@ body {
     left: 0;
     width: 100%;
     text-align: center;
-    color: var(--color-main, #FFFFFF);
+    color: var(--color-main);
     font-weight: bold;
     z-index: 1;
     text-shadow: var(--color-elementBackground, #777) 0px 0px 1px;
@@ -572,7 +573,7 @@ body {
     width: 92%;
     margin-left: 8%;
     text-align: left;
-    color: var(--color-main, #999999);
+    color: var(--color-main);
     font-weight: normal;
 }
 
@@ -585,7 +586,7 @@ body {
     width: 95%;
     margin-right: 5%;
     text-align: right;
-    color: var(--color-main, #999999);
+    color: var(--color-main);
     font-weight: normal;
 }
 
