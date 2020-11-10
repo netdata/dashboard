@@ -4,6 +4,8 @@ import React, {
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 
+import "@material/menu-surface/dist/mdc.menu-surface.css"
+
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
 
