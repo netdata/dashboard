@@ -63,6 +63,10 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
 
 const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
 
+const dimensionsAggrMethodMap = {
+  "sum-of-abs": "sum",
+}
+
 export type Props = {
   attributes: Attributes
   chartUuid: string
@@ -295,7 +299,10 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
-          aggrMethod: attributes.aggrMethod === "sum-of-abs" ? "sum" : attributes.aggrMethod,
+          aggrMethod: attributes.aggrMethod,
+          // @ts-ignore
+          dimensionsAggrMethod: dimensionsAggrMethodMap[attributes.dimensionsAggrMethod]
+            || attributes.dimensionsAggrMethod,
           nodeIDs,
           httpMethod: attributes.httpMethod,
           groupBy: attributes.groupBy,

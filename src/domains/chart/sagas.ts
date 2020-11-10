@@ -92,7 +92,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
     host, chart, format, points, group, gtime, options,
-    after, before, dimensions, aggrMethod, nodeIDs, httpMethod,
+    after, before, dimensions, aggrMethod, dimensionsAggrMethod = "sum", nodeIDs, httpMethod,
     groupBy = "dimension", // group by node or dimension
     // props for the store
     fetchDataParams, id, cancelTokenSource,
@@ -137,11 +137,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       group,
       gtime,
       agent_options: options.split("|"),
-      aggregation: {
-        method: aggrMethod,
-      },
       aggregations: [groupBy === "node" && {
-        method: "sum",
+        method: dimensionsAggrMethod,
         groupBy: ["chart", "node"],
       },
       {
