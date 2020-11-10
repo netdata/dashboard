@@ -1299,7 +1299,7 @@ const netdataDashboard = {
 
         key = key + '.' + this.sparklines_registry[key].count;
 
-        return prefix + '<div class="netdata-container" data-netdata="' + chart + '" data-after="-120" data-width="25%" data-height="15px" data-chart-library="dygraph" data-dygraph-theme="sparkline" data-dimensions="' + dimension + '" data-show-value-of-' + dimension + '-at="' + key + '"></div> (<span id="' + key + '" style="display: inline-block; min-width: 50px; text-align: right;">X</span>' + units + ')' + suffix;
+        return prefix + '<div class="netdata-container" data-netdata="' + chart + '" data-width="25%" data-height="15px" data-chart-library="dygraph" data-dygraph-theme="sparkline" data-dimensions="' + dimension + '" data-show-value-of-' + dimension + '-at="' + key + '"></div> (<span id="' + key + '" style="display: inline-block; min-width: 50px; text-align: right;">X</span>' + units + ')' + suffix;
     },
 
     gaugeChart: function (title, width, dimensions, colors) {
@@ -1317,8 +1317,6 @@ const netdataDashboard = {
           + ' data-gauge-adjust="width"'
           + ' data-title="' + title + '"'
           + ' data-width="' + width + '"'
-          + ' data-before="0"'
-          + ' data-after="-CHART_DURATION"'
           + ' data-points="CHART_DURATION"'
           + ' data-colors="' + colors + '"'
           + ' role="application"></div>';
@@ -1574,8 +1572,6 @@ function headMain(os, charts, duration) {
           + ' data-units="%"'
           + ' data-easypiechart-max-value="100"'
           + ' data-width="9%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-colors="#DD4400"'
           + ' role="application"></div>';
@@ -1587,8 +1583,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Disk Read"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.io.mainhead"'
           + ' role="application"></div>';
@@ -1598,8 +1592,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Disk Write"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.io.mainhead"'
           + ' role="application"></div>';
@@ -1610,8 +1602,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Disk Read"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.pgpgio.mainhead"'
           + ' role="application"></div>';
@@ -1621,8 +1611,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Disk Write"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.pgpgio.mainhead"'
           + ' role="application"></div>';
@@ -1635,7 +1623,6 @@ function headMain(os, charts, duration) {
           + ' data-units="%"'
           + ' data-gauge-max-value="100"'
           + ' data-width="20%"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-colors="' + NETDATA.colors[12] + '"'
           + ' role="application"></div>';
@@ -1647,8 +1634,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Net Inbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.net.mainhead"'
           + ' role="application"></div>';
@@ -1658,8 +1643,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="Net Outbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.net.mainhead"'
           + ' role="application"></div>';
@@ -1670,8 +1653,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="IP Inbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ip.mainhead"'
           + ' role="application"></div>';
@@ -1681,8 +1662,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="IP Outbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ip.mainhead"'
           + ' role="application"></div>';
@@ -1693,8 +1672,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="IPv4 Inbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ipv4.mainhead"'
           + ' role="application"></div>';
@@ -1704,8 +1681,6 @@ function headMain(os, charts, duration) {
           + ' data-chart-library="easypiechart"'
           + ' data-title="IPv4 Outbound"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ipv4.mainhead"'
           + ' role="application"></div>';
@@ -1717,8 +1692,6 @@ function headMain(os, charts, duration) {
           + ' data-title="IPv6 Inbound"'
           + ' data-units="kbps"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ipv6.mainhead"'
           + ' role="application"></div>';
@@ -1729,8 +1702,6 @@ function headMain(os, charts, duration) {
           + ' data-title="IPv6 Outbound"'
           + ' data-units="kbps"'
           + ' data-width="11%"'
-          + ' data-before="0"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-common-units="system.ipv6.mainhead"'
           + ' role="application"></div>';
@@ -1745,7 +1716,6 @@ function headMain(os, charts, duration) {
           + ' data-units="%"'
           + ' data-easypiechart-max-value="100"'
           + ' data-width="9%"'
-          + ' data-after="-' + duration.toString() + '"'
           + ' data-points="' + duration.toString() + '"'
           + ' data-colors="' + NETDATA.colors[7] + '"'
           + ' role="application"></div>';
@@ -1874,8 +1844,6 @@ function renderPage(menus, data) {
                   + ' data-width="100%"'
                   + ' data-height="' + chartHeight.toString() + 'px"'
                   + ' data-dygraph-valuerange="' + netdataDashboard.contextValueRange(chart.context) + '"'
-                  + ' data-before="0"'
-                  + ' data-after="-' + duration.toString() + '"'
                   + ' data-id="' + NETDATA.name2id(options.hostname + '/' + chart.id) + '"'
                   + ' data-colors="' + netdataDashboard.anyAttribute(netdataDashboard.context, 'colors', chart.context, '') + '"'
                   + ' data-decimal-digits="' + netdataDashboard.contextDecimalDigits(chart.context, -1) + '"'
