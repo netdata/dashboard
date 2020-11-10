@@ -138,12 +138,16 @@ body.modal-open {
 
 .affix {
     position: static;
-    top: 70px !important;
+    top: 140px !important;
     /*width: 220px;*/
 }
 
+.sidebar-body {
+    margin-top: 70px;
+}
+
 .dashboard-sidebar {
-    max-height: calc(100% - 70px) !important;
+    max-height: calc(100% - 140px) !important;
     overflow-y: auto;
     /*width: 220px !important;*/
 }
