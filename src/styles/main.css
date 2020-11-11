@@ -1,6 +1,7 @@
 /* force the vertical window scrollbar */
 html {
     overflow-y: hidden;
+    font-size: 16px !important; /* To override nasty bootstrap.css default! */
 }
 
 /* prevent body from hiding under the navbar */
