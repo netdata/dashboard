@@ -897,6 +897,29 @@ export const DygraphChart = ({
     dygraphFillAlpha, hasEmptyData, isFakeStacked, isRemotelyControlled, orderedColors,
     requestedViewRange, viewAfter, viewBefore])
 
+  useUpdateEffect(() => {
+    if (!dygraphInstance.current) {
+      return
+    }
+
+    const dygraphOptionsStatic = getInitialDygraphOptions({
+      attributes,
+      chartData,
+      chartMetadata,
+      chartSettings,
+      dimensionsVisibility,
+      hiddenLabelsElementId,
+      isFakeStacked,
+      orderedColors,
+      setMinMax,
+      shouldSmoothPlot,
+      unitsCurrent,
+      xAxisDateString,
+      xAxisTimeString,
+    })
+    dygraphInstance.current.updateOptions(dygraphOptionsStatic)
+  }, [dygraphChartType])
+
 
   // set selection
   const currentSelectionMasterId = useSelector(selectGlobalSelectionMaster)

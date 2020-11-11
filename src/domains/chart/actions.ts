@@ -39,6 +39,7 @@ export interface FetchDataUrlParams {
   before?: number | null
   dimensions?: string
   aggrMethod?: string
+  dimensionsAggrMethod?: string
   nodeIDs?: string[]
   httpMethod?: Method
   groupBy?: "node" | "dimension"

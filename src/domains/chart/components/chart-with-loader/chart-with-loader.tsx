@@ -58,10 +58,14 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   attributes: Attributes
   chartMetadata: ChartMetadata
   chartID: string
-  getChartData: () => ChartData | null
+  chartData: ChartData | null
 }) => JSX.Element
 
 const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
+
+const dimensionsAggrMethodMap = {
+  "sum-of-abs": "sum",
+}
 
 export type Props = {
   attributes: Attributes
@@ -296,6 +300,9 @@ export const ChartWithLoader = ({
           before: before || null,
           dimensions: attributes.dimensions,
           aggrMethod: attributes.aggrMethod,
+          // @ts-ignore
+          dimensionsAggrMethod: dimensionsAggrMethodMap[attributes.dimensionsAggrMethod]
+            || attributes.dimensionsAggrMethod,
           nodeIDs,
           httpMethod: attributes.httpMethod,
           groupBy: attributes.groupBy,
@@ -355,7 +362,7 @@ export const ChartWithLoader = ({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartID: id,
-      getChartData: () => chartData,
+      chartData,
     }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata, chartData],
   )
 
