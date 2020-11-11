@@ -22,9 +22,9 @@ const PRESET_RANGES: [string, number][] = [
   ["Last 5 minutes", -5 * MINUTE],
   ["Last 15 minutes", -15 * MINUTE],
   ["Last 30 minutes", -30 * MINUTE],
+  ["Last 2 hours", -2 * HOUR],
   ["Last 6 hours", -6 * HOUR],
-  ["Last 12 hours", -12 * HOUR],
-  ["Last 7 days", -7 * DAY],
+  ["Last 12 days", -12 * DAY],
 ]
 
 export const ShortPickArea = (props: ShortPickerPropsT) => {
