@@ -37,6 +37,10 @@ export const getDataForFakeStacked = (
   ]
 })
 
+const isPercentage = (unit: string) => unit === "percentage"
+  || unit === "percent"
+  || unit.indexOf("%") !== -1
+
 export const getDygraphChartType = (
   attributes: Attributes, chartData: DygraphData, chartMetadata: ChartMetadata,
   chartSettings: ChartLibraryConfig,
@@ -44,7 +48,13 @@ export const getDygraphChartType = (
   const isLogScale = (chartSettings.isLogScale as ((a: Attributes) => boolean))(attributes)
   const {
     dygraphType: dygraphRequestedType = chartMetadata.chart_type,
+    groupBy,
   } = attributes
+
+  if (groupBy === "node" && isPercentage(chartMetadata.units)) {
+    return "line"
+  }
+
   // corresponds to state.tmp.dygraph_chart_type in old app
   let dygraphChartType = dygraphRequestedType
   if (dygraphChartType === "stacked" && chartData.dimensions === 1) {
