@@ -7,13 +7,14 @@ import {
 import { dialogsZIndex, customDropdownZIndex, portalSidebarZIndex } from "styles/z-index"
 // todo move those components to netdata-ui to reuse them with the cloud
 import { Dropdown } from "components/mdx-components/dropdown"
-import { RMWCThemeProvider } from "components/rmwc-theme-provider"
+import { RMWCThemeProvider } from "rmwc-theme-provider"
 
 // @ts-ignore
-export const StyledSidebar = styled(PortalSidebar).attrs({ Wrapper: RMWCThemeProvider })`
+export const StyledSidebar = styled(PortalSidebar).attrs(() => ({
+  Wrapper: RMWCThemeProvider,
+}))`
   width: ${getSizeBy(83)};
   height: ${getSizeBy(58)};
-  position: fixed;
   overflow: visible;
   ${portalSidebarZIndex}
 `
