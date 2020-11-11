@@ -58,7 +58,7 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   attributes: Attributes
   chartMetadata: ChartMetadata
   chartID: string
-  getChartData: () => ChartData | null
+  chartData: ChartData | null
 }) => JSX.Element
 
 const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
@@ -362,7 +362,7 @@ export const ChartWithLoader = ({
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartID: id,
-      getChartData: () => chartData,
+      chartData,
     }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata, chartData],
   )
 
