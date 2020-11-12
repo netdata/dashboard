@@ -929,7 +929,6 @@ export const DygraphChart = ({
     dygraphInstance.current.updateOptions(dygraphOptionsStatic)
   }, [dygraphChartType])
 
-
   // set selection
   const currentSelectionMasterId = useSelector(selectGlobalSelectionMaster)
   useLayoutEffect(() => {
@@ -955,7 +954,7 @@ export const DygraphChart = ({
     if (dygraphInstance.current) {
       (dygraphInstance.current as NetdataDygraph).resize()
     }
-  }, [resizeHeight])
+  }, [resizeHeight, chartData.dimension_names.length])
 
 
   const commonMinState = useSelector((state: AppStateT) => (
