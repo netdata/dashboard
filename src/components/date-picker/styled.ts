@@ -9,8 +9,8 @@ import { dialogsZIndex, customDropdownZIndex, portalSidebarZIndex } from "styles
 import { Dropdown } from "components/mdx-components/dropdown"
 import { RMWCThemeProvider } from "rmwc-theme-provider"
 
-// @ts-ignore
-export const StyledSidebar = styled(PortalSidebar).attrs(() => ({
+// todo fix "any"
+export const StyledSidebar = (styled(PortalSidebar) as any).attrs(() => ({
   Wrapper: RMWCThemeProvider,
 }))`
   width: ${getSizeBy(83)};
@@ -124,8 +124,7 @@ export const DropdownBox = styled.div`
   height: 32px;
 `
 
-// @ts-ignore
-export const StyledDropdown = styled(Dropdown)`
+export const StyledDropdown = (styled(Dropdown) as any)`
   width: 88px;
   height: 32px;
   padding-top: 8px;

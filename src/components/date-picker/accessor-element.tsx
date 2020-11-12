@@ -7,15 +7,7 @@ import {
 import { PickedValues } from "./types"
 import { getShortHandTimeAlias, MINUTE } from "./utils"
 // @ts-ignore
-import ArrowSvg from "./assets/arrow.svg"
-// @ts-ignore
 import CalendarSvg from "./assets/calendar.svg"
-
-const Arrow = () => (
-  <HeaderSvg>
-    <use xlinkHref={`#${ArrowSvg.id}`} />
-  </HeaderSvg>
-)
 
 const Calendar = () => (
   <IconSpacer>
@@ -36,6 +28,7 @@ export const PickerAccessorElement = (props: PickerAccessorPropsT) => {
       <AccessorBox onClick={onClick}>
         <Calendar />
         <>{getShortHandTimeAlias(-start)}</>
+        <ArrowsIcon name="arrows_vertical" />
       </AccessorBox>
     )
   }
