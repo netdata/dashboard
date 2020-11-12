@@ -134,14 +134,10 @@ export const Picker = (props: PickerPropsT) => {
     close()
   }
 
-  if (!isOpen) {
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    return <PickerAccessorElement onClick={() => handleOpenState(true)} {...pickedValues} />
-  }
 
   const focusTagging = focusTaggingMap[focusedInput]
 
-  return (
+  const pickerModal = (
     <StyledSidebar right closeOnEsc closeOnOverlayClick>
       <PickerBox ref={ref}>
         <PickerActionArea>
@@ -191,5 +187,13 @@ export const Picker = (props: PickerPropsT) => {
         </PickerBtnArea>
       </PickerBox>
     </StyledSidebar>
+  )
+
+  return (
+    <>
+      {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+      <PickerAccessorElement onClick={() => handleOpenState(true)} {...pickedValues} />
+      {isOpen && pickerModal}
+    </>
   )
 }
