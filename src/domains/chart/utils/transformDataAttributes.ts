@@ -320,7 +320,9 @@ const getAttributesMap = (): AttributesMap => ({
   chartLibrary: { key: "chart-library", defaultValue: window.NETDATA.chartDefaults.library },
   width: { key: "width", defaultValue: window.NETDATA.chartDefaults.width },
   height: { key: "height", defaultValue: window.NETDATA.chartDefaults.height },
-  after: { key: "after", defaultValue: window.NETDATA.chartDefaults.after },
+  // todo use chartDefaults for static custom dashboards
+  // after: { key: "after", defaultValue: window.NETDATA.chartDefaults.after },
+  after: { key: "after" },
   before: { key: "before", defaultValue: window.NETDATA.chartDefaults.before },
   legend: { key: "legend", type: "boolean", defaultValue: true },
   legendPosition: { key: "legend-position" },
