@@ -4,6 +4,7 @@ import {
 } from "@netdata/netdata-ui"
 
 import { appHeaderZIndex } from "styles/z-index"
+
 export const HEADER_SIZE = 56
 
 export const StyledHeader = styled.header`

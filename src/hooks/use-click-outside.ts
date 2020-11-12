@@ -8,7 +8,7 @@ export const useCloseOnOutsideClick = (onClose: () => void) => {
         onClose()
       }
     },
-    [onClose]
+    [onClose],
   )
   const clickListener = useCallback(
     (e: MouseEvent) => {
@@ -18,7 +18,7 @@ export const useCloseOnOutsideClick = (onClose: () => void) => {
         }
       }
     },
-    [onClose]
+    [onClose],
   )
   useEffect(() => {
     document.addEventListener("click", clickListener)

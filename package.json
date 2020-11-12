@@ -48,7 +48,7 @@
     "react-dates": "^21.8.0",
     "react-headroom": "^3.0.0",
     "react-redux": "^7.1.1",
-    "react-scripts": "^3.3.1",
+    "react-scripts": "3.3.0",
     "react-toastify": "^5.5.0",
     "react-use": "^13.27.1",
     "redux": "^4.0.4",
