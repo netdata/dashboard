@@ -16,11 +16,12 @@ export const StyledSidebar = styled(PortalSidebar).attrs(() => ({
   width: ${getSizeBy(83)};
   height: ${getSizeBy(58)};
   overflow: visible;
+  top: ${getSizeBy(14)};
   ${portalSidebarZIndex}
 `
 export const PickerBox = styled.div`
   display: flex;
-  margin-top: ${getSizeBy(7)};
+  position: relative;
   min-width: ${getSizeBy(83)};
   min-height: ${getSizeBy(43)};
   flex-direction: column;
