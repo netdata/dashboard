@@ -1,7 +1,9 @@
 import React from "react"
 import moment from "moment"
 
-import { AccessorBox, HeaderSvg, IconSpacer, StartEndContainer } from "./styled"
+import {
+  AccessorBox, HeaderSvg, IconSpacer, StartEndContainer, ArrowsIcon,
+} from "./styled"
 import { PickedValues } from "./types"
 import { getShortHandTimeAlias, MINUTE } from "./utils"
 // @ts-ignore
@@ -42,11 +44,15 @@ export const PickerAccessorElement = (props: PickerAccessorPropsT) => {
   return (
     <AccessorBox onClick={onClick}>
       <Calendar />
-      <>{startAlias}</>
-      &nbsp;
-      <Arrow />
-      &nbsp;
-      <>{endAlias}</>
+      <StartEndContainer>
+        <div>
+          {startAlias}
+        </div>
+        <div>
+          {endAlias}
+        </div>
+      </StartEndContainer>
+      <ArrowsIcon name="arrows_vertical" />
     </AccessorBox>
   )
 }

@@ -29,7 +29,6 @@ export const PickerBox = styled.div`
   background-color: ${getColor("mainBackground")};
   color: ${getColor("text")};
   z-index: ${dialogsZIndex};
-  box-shadow: 1px 2px 10px -4px ${getColor("border")};
 `
 export const HeaderSvg = styled.svg`
   fill: ${getColor("text")};
@@ -98,11 +97,13 @@ export const ShortPickElement = styled.div<{ isSelected?: boolean }>`
   }
 `
 export const AccessorBox = styled.div`
+  width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   color: ${getColor("text")};
   align-items: center;
-  padding: 10px;
+  height: 40px;
+  padding: 0 10px;
   border: 1px solid #aeb3b7;
   box-sizing: border-box;
   white-space: nowrap;
@@ -140,11 +141,11 @@ export const StyledDropdown = styled(Dropdown)`
   color: ${getColor("text")};
   .mdc-menu-surface--anchor {
     .mdc-menu-surface--open {
-      ${customDropdownZIndex}
       margin-left: -16px;
       margin-top: ${getSizeBy(2)};
       width: ${getSizeBy(35)};
       background: ${getColor("mainBackground")};
+      ${customDropdownZIndex}
     }
   }
 `
@@ -179,7 +180,18 @@ export const CustomInput = styled.input`
   margin-left: 10px;
   margin-right: 10px;
   outline: none;
+  color: inherit; // needed for dashboard, in cloud it's default value
   &:focus {
     border: 1px solid ${getColor("primary")};
   }
+`
+
+export const StartEndContainer = styled.div`
+  margin-left: 4px;
+`
+
+export const ArrowsIcon = styled(Icon)`
+  height: 8px;
+  margin-left: auto;
+  fill: ${getColor("text")};
 `

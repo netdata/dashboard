@@ -10,7 +10,6 @@ export const DatePickerContainer = styled.div`
   right: ${PICKER_RIGHT_MARGIN}px;
   
   top: ${HEADER_SIZE}px;
-  z-index: 1000;
   
   /* media styling, needs to match .sidebar-body in main.css */
   @media (min-width: 1360px) {
