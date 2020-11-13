@@ -1,7 +1,9 @@
-import React from "react"
+import React, { useCallback } from "react"
 import classNames from "classnames"
 
 import { name2id } from "utils/name-2-id"
+
+import { ReportEvent } from "types/report"
 
 import { sortObjectByPriority } from "../../utils/sorting"
 import { Menus } from "../../utils/netdata-dashboard"
@@ -11,15 +13,23 @@ interface RenderSingleMenuArgument {
   currentChart: string
   handleScrollToId: (event: React.MouseEvent) => void
   menus: Menus
+  reportEvent: ReportEvent
 }
 export const renderSingleMenu = ({
   currentChart,
   handleScrollToId,
   menus,
+  reportEvent,
 }: RenderSingleMenuArgument) => (menuName: string) => {
   const menu = menus[menuName]
   const menuID = name2id(`menu_${menuName}`)
   const submenuNames = sortObjectByPriority(menu.submenus)
+
+  const onMenuClick = useCallback((event) => {
+    handleScrollToId(event)
+    const name = menu.title.replace(/[^\w]/g, "-").toLowerCase()
+    reportEvent("metric-sidebar", `click-${name}`)
+  }, [menu.title])
 
   // currentChart could be either just menu name "menu_ipv4"
   // or menu + submenu - "menu_ipv4_submenu_sockets"
@@ -35,7 +45,7 @@ export const renderSingleMenu = ({
       <a
         className="node-view__sidebar-link"
         href={`#${menuID}`}
-        onClick={handleScrollToId}
+        onClick={onMenuClick}
       >
         {/* eslint-disable-next-line react/no-danger */}
         <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
