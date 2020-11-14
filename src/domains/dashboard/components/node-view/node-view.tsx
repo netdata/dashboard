@@ -130,6 +130,7 @@ interface Props {
   children?: React.ReactNode | React.ReactNode[]
   nodeIDs?: string[]
   reportEvent?: ReportEvent
+  defaultChart?: string
 }
 export const NodeView = ({
   chartsMetadata,
@@ -144,9 +145,11 @@ export const NodeView = ({
   children,
   nodeIDs,
   reportEvent = noop,
+  defaultChart = "",
 }: Props) => {
   const [width, setWidth] = useState(0)
-  const [currentChart, setCurrentChart] = useState("")
+  const [currentChart, setCurrentChart] = useState(defaultChart)
+
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!width && ref.current) {
@@ -154,6 +157,15 @@ export const NodeView = ({
     }
   }, [width])
 
+  useEffect(() => {
+    if (!defaultChart) return
+
+    setTimeout(() => {
+      const chartElement = document.querySelector(`#${defaultChart}`)
+      if (chartElement) chartElement.scrollIntoView()
+    }, 100)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const { y } = useScroll(scrollableContainerRef)
   useEffect(() => {
