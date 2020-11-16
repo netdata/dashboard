@@ -14,7 +14,7 @@ export const StyledSidebar = (styled(PortalSidebar) as any).attrs(() => ({
   Wrapper: RMWCThemeProvider,
 }))`
   width: ${getSizeBy(83)};
-  height: ${getSizeBy(58)};
+  height: ${getSizeBy(51)};
   overflow: visible;
   top: ${getSizeBy(14)};
   ${portalSidebarZIndex}
