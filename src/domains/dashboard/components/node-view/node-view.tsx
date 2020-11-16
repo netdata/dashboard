@@ -131,6 +131,7 @@ interface Props {
   nodeIDs?: string[]
   reportEvent?: ReportEvent
   defaultChart?: string
+  onChangeChart?: (chart: string) => void
 }
 export const NodeView = ({
   chartsMetadata,
@@ -146,6 +147,7 @@ export const NodeView = ({
   nodeIDs,
   reportEvent = noop,
   defaultChart = "",
+  onChangeChart,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState(defaultChart)
@@ -181,8 +183,9 @@ export const NodeView = ({
 
       const chartIdInMenu = currentNode.getAttribute("id") as string
       setCurrentChart(chartIdInMenu)
+      if (onChangeChart) onChangeChart(chartIdInMenu)
     }
-  }, [ref, setCurrentChart, y])
+  }, [ref, setCurrentChart, y, onChangeChart])
 
 
   // todo support print mode when it will be used in main.js
