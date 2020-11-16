@@ -3,6 +3,7 @@ import { getSizeBy } from "@netdata/netdata-ui"
 
 export const LegendContainer = styled.div`
   margin-bottom: ${getSizeBy(3)};
+  padding-left: 35px;
 `
 
 export const LegendFirstRow = styled.div`
@@ -35,10 +36,11 @@ export const DimensionItem = styled.div<{ color: string, isDisabled: boolean }>`
   display: flex;
   align-items: center;
   color: ${({ color }) => color};
-  margin-right: ${getSizeBy(2)};
+  margin-right: 12px;
   cursor: pointer;
   opacity: ${({ isDisabled }) => (isDisabled ? 0.3 : null)};
   user-select: none;
+  font-size: 11px;
   &:focus {
     outline: none;
   }
@@ -53,8 +55,8 @@ export const DimensionItemToolboxPlaceholder = styled.div`
 `
 
 export const DimensionIcon = styled.div<{ color: string }>`
-  width: ${getSizeBy(2)};
-  height: ${getSizeBy(1)};
+  width: 14px;
+  height: 7px;
   border-radius: 4px;
   overflow: hidden;
   background-color: ${({ color }) => color};
