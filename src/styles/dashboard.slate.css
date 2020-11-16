@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 :root {
-    --color-main: #FFFFFF;  
+    --color-main: #FFFFFF;
     --color-primary: #00ab44;
     --color-border: #878b90;
 }
@@ -43,7 +43,8 @@ code {
 }
 
 .netdata-chart-alignment {
-    margin-left: 55px;
+    /* 55 for legend-right */
+    margin-left: 35px;
 }
 
 .netdata-chart-row {
@@ -464,7 +465,8 @@ code {
 }
 
 .dygraph-title {
-    text-indent: 56px;
+    /* 56 for legend-right */
+    text-indent: 36px;
     text-align: left;
     position: absolute;
     left: 0px;
