@@ -98,7 +98,7 @@ h1:before, h2:before {
     margin-top: 10px;
     color: var(--color-border, #878b90);
 }
-  
+
 .dashboard-context-info a {
     color: var(--color-primary, #00ab44);
 }
