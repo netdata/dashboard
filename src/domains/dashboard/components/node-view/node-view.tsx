@@ -160,10 +160,12 @@ export const NodeView = ({
   useEffect(() => {
     if (!defaultChart) return
 
-    setTimeout(() => {
+    const timeoutID = setTimeout(() => {
       const chartElement = document.querySelector(`#${defaultChart}`)
       if (chartElement) chartElement.scrollIntoView()
     }, 100)
+    // eslint-disable-next-line consistent-return
+    return () => clearTimeout(timeoutID)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
