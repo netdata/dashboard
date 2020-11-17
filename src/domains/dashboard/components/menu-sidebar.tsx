@@ -1,5 +1,6 @@
 import React from "react"
 
+import { ReportEvent } from "types/report"
 import { Menus } from "../utils/netdata-dashboard"
 import { renderSingleMenu } from "./node-view/render-single-menu"
 
@@ -7,11 +8,13 @@ interface Props {
   currentChart: string
   menuNames: string[]
   menus: Menus
+  reportEvent: ReportEvent
 }
 export const MenuSidebar = React.memo(({
   currentChart,
   menuNames,
   menus,
+  reportEvent,
 }: Props) => {
   const handleScrollToId = (event: React.MouseEvent) => {
     event.preventDefault()
@@ -31,6 +34,7 @@ export const MenuSidebar = React.memo(({
           currentChart,
           handleScrollToId,
           menus,
+          reportEvent,
         }))}
       </ul>
     </div>

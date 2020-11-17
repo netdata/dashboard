@@ -4,6 +4,8 @@ import React, {
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 
+import "@material/menu-surface/dist/mdc.menu-surface.css"
+
 // intentionally loading before bootstrap styles
 import "./styles/main.css"
 
@@ -29,6 +31,7 @@ import {
 } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
+import { DatePickerContainer } from "domains/dashboard/components/date-picker-container"
 import { PrintModal } from "domains/dashboard/components/print-modal"
 import { SidebarSocialMedia } from "domains/dashboard/components/sidebar-social-media"
 import { SidebarSocialMediaPortal } from "domains/dashboard/components/sidebar-social-media-portal"
@@ -188,6 +191,7 @@ const App: React.FC = () => {
             {hasFetchDependencies && haveDOMReadyForParsing && (
               <>
                 <Portals key={refreshHelper} />
+                <DatePickerContainer />
                 <SidebarSocialMediaPortal>
                   <SidebarSocialMedia />
                 </SidebarSocialMediaPortal>

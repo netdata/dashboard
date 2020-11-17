@@ -14,7 +14,6 @@ import { parseChartString } from "../../utils/parse-chart-string"
 import { netdataDashboard, options, Menu } from "../../utils/netdata-dashboard"
 import { ChartWrapper } from "../chart-wrapper"
 
-
 import { generateHeadCharts } from "./generate-head-charts"
 
 export const chartCommonMin = (family: string, context: string, units: string) => (

@@ -5,12 +5,14 @@ import {
 
 import { appHeaderZIndex } from "styles/z-index"
 
+export const HEADER_SIZE = 56
+
 export const StyledHeader = styled.header`
   z-index: ${appHeaderZIndex};
   top: 0;
   left: 0;
   position: fixed;
-  height: 56px;
+  height: ${HEADER_SIZE}px;
   width: 100%;
   background: ${getColor(["gray", "limedSpruce"])};
   display: flex;

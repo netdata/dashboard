@@ -4,6 +4,7 @@ import React, {
 import { useScroll } from "react-use"
 import { name2id } from "utils/name-2-id"
 import { mapDefaultAggrMethod } from "utils/fill-missing-data"
+import { ReportEvent } from "types/report"
 import { ChartsMetadata } from "domains/global/types"
 import { Attributes, ChartsAttributes } from "domains/chart/utils/transformDataAttributes"
 import { DropdownMenu } from "domains/chart/components/chart-dropdown"
@@ -41,6 +42,7 @@ interface SubSectionProps {
 }
 
 const emptyNodeIDs: string[] = []
+const noop = () => {}
 
 const SubSection = memo(({
   chartsMetadata,
@@ -127,6 +129,9 @@ interface Props {
   metricsCorrelationMetadata?: ChartsMetadata
   children?: React.ReactNode | React.ReactNode[]
   nodeIDs?: string[]
+  reportEvent?: ReportEvent
+  defaultChart?: string
+  onChangeChart?: (chart: string) => void
 }
 export const NodeView = ({
   chartsMetadata,
@@ -140,9 +145,13 @@ export const NodeView = ({
   metricsCorrelationMetadata,
   children,
   nodeIDs,
+  reportEvent = noop,
+  defaultChart = "",
+  onChangeChart,
 }: Props) => {
   const [width, setWidth] = useState(0)
-  const [currentChart, setCurrentChart] = useState("")
+  const [currentChart, setCurrentChart] = useState(defaultChart)
+
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (!width && ref.current) {
@@ -150,6 +159,17 @@ export const NodeView = ({
     }
   }, [width])
 
+  useEffect(() => {
+    if (!defaultChart) return
+
+    const timeoutID = setTimeout(() => {
+      const chartElement = document.querySelector(`#${defaultChart}`)
+      if (chartElement) chartElement.scrollIntoView()
+    })
+    // eslint-disable-next-line consistent-return
+    return () => clearTimeout(timeoutID)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const { y } = useScroll(scrollableContainerRef)
   useEffect(() => {
@@ -163,8 +183,9 @@ export const NodeView = ({
 
       const chartIdInMenu = currentNode.getAttribute("id") as string
       setCurrentChart(chartIdInMenu)
+      if (onChangeChart) onChangeChart(chartIdInMenu)
     }
-  }, [ref, setCurrentChart, y])
+  }, [ref, setCurrentChart, y, onChangeChart])
 
 
   // todo support print mode when it will be used in main.js
@@ -222,6 +243,7 @@ export const NodeView = ({
         currentChart={currentChart}
         menuNames={main}
         menus={menus}
+        reportEvent={reportEvent}
       />
     </div>
   )

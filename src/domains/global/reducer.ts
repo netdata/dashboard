@@ -1,6 +1,8 @@
 import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
+import { getInitialAfterFromWindow } from "utils"
+import { isMainJs } from "utils/env"
 import { RegistryMachine } from "domains/global/sagas"
 import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
 import { fetchInfoAction } from "domains/chart/actions"
@@ -112,7 +114,7 @@ export type StateT = {
   options: Options
 }
 
-export const initialDefaultAfter = -900
+export const initialDefaultAfter = isMainJs ? getInitialAfterFromWindow() : -900
 
 export const initialState: StateT = {
   commonColorsKeys: {},
