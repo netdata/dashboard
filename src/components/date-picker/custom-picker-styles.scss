@@ -425,7 +425,7 @@
     background-color: var(--mdc-theme-main);
     padding-left: 30px;
     position: absolute;
-    left: -108px;
+    left: -47px;
     top: -25px
   }
   #dpEndDateInput{
@@ -433,7 +433,7 @@
     background-color: var(--mdc-theme-main);
     padding-left: 30px;
     position: absolute;
-    right:-60px;
+    right:-128px;
     top: -25px;
   }
   .DateInput_input {
@@ -593,7 +593,7 @@
     width: 430px;
     position: absolute;
     bottom: 67px;
-    right: 0;
+    right: 60px;
     display: inline-block
   }
   .DateRangePicker__block {
@@ -608,7 +608,8 @@
     direction: rtl
   }
   .DateRangePicker_picker__directionLeft {
-    left: 0
+    // overwrite inline styling
+    left: 0 !important;
   }
   .DateRangePicker_picker__directionRight {
     right: 0
