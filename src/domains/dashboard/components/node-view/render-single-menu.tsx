@@ -25,11 +25,11 @@ export const renderSingleMenu = ({
   const menuID = name2id(`menu_${menuName}`)
   const submenuNames = sortObjectByPriority(menu.submenus)
 
-  const onMenuClick = useCallback((event) => {
+  const onMenuClick = (event: React.MouseEvent) => {
     handleScrollToId(event)
     const name = menu.title.replace(/[^\w]/g, "-").toLowerCase()
     reportEvent("metric-sidebar", `click-${name}`)
-  }, [menu.title])
+  }
 
   // currentChart could be either just menu name "menu_ipv4"
   // or menu + submenu - "menu_ipv4_submenu_sockets"
