@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React from "react"
 import classNames from "classnames"
 
 import { name2id } from "utils/name-2-id"
