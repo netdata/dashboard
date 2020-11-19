@@ -218,7 +218,7 @@ export const AppHeader = ({
             className="btn"
             data-toggle="modal"
             data-target="#loadSnapshotModal"
-            icon="upload"
+            icon="download"
             title="Import a snapshot"
           />
         </IconContainer>
@@ -230,7 +230,7 @@ export const AppHeader = ({
             className="btn"
             data-toggle="modal"
             data-target="#saveSnapshotModal"
-            icon="download"
+            icon="upload"
             title="Export a snapshot"
           />
         </IconContainer>
