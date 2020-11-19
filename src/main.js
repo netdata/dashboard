@@ -33,6 +33,7 @@ import {
     startSnapshotModeAction,
     stopSnapshotModeAction,
 } from './domains/dashboard/actions';
+import { snapshotExportResetAction } from './domains/chart/actions';
 import {
     selectAmountOfCharts,
     selectAmountOfSnapshotsFailed,
@@ -3739,6 +3740,7 @@ window.saveSnapshot = () => {
                 eltxt.innerText = '0%';
 
                 reduxStore.dispatch(stopSnapshotModeAction())
+                reduxStore.dispatch(snapshotExportResetAction())
                 if (clearPanAndZoom) {
                     // clear that afterwards
                     reduxStore.dispatch(resetGlobalPanAndZoomAction())

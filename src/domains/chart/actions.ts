@@ -70,6 +70,10 @@ export const fetchDataForSnapshotAction = createRequestAction<
   { id: string, snapshotData: ChartData }
 >(`${storeKey}/fetchDataForSnapshotAction`)
 
+export const snapshotExportResetAction = createRequestAction(
+  `${storeKey}/snapshotExportResetAction`,
+)
+
 export interface FetchChartPayload {
   chart: string
   id: string
