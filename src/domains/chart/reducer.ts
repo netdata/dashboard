@@ -1,4 +1,6 @@
-import { map, omit, assoc } from "ramda"
+import {
+  map, omit, assoc, pick,
+} from "ramda"
 import { createReducer } from "redux-act"
 
 import { setOptionAction } from "domains/global/actions"
@@ -10,6 +12,7 @@ import {
   setResizeHeightAction,
   clearChartStateAction,
   fetchDataForSnapshotAction,
+  snapshotExportResetAction,
   setChartPanAndZoomAction,
   resetChartPanAndZoomAction,
   fetchDataCancelAction,
@@ -113,6 +116,11 @@ chartReducer.on(fetchDataForSnapshotAction.success, (state, { id, snapshotData }
     snapshotData,
   },
 }))
+
+chartReducer.on(snapshotExportResetAction, (state) => map((substate) => ({
+  ...substate,
+  ...pick(["snapshotDataIsFetching", "snapshotDataIsError", "snapshotData"], initialSingleState),
+}), state))
 
 
 chartReducer.on(fetchChartAction.request, (state, { id }) => ({
