@@ -23,3 +23,5 @@ export const getInitialAfterFromWindow = () => {
   // var duration = Math.round(($(div).width() * pcent_width / 100 * data.update_every / 3) / 60) * 60;
   return -Math.round((div.getBoundingClientRect().width / 3) / 60) * 60
 }
+
+export const SPACE_PANEL_STATE = "space-panel-state"
