@@ -310,7 +310,7 @@ export const Chart = memo(({
     const panAndZoomStep = getPanAndZoomStep(event) * 0.8
     if (!globalPanAndZoom) {
       dispatch(setDefaultAfterAction({
-        after: defaultAfter / (panAndZoomStep + 1),
+        after: Math.round(defaultAfter / (panAndZoomStep + 1)),
       }))
       return
     }
@@ -331,7 +331,7 @@ export const Chart = memo(({
     const panAndZoomStep = getPanAndZoomStep(event) * 0.8
     if (!globalPanAndZoom) {
       dispatch(setDefaultAfterAction({
-        after: defaultAfter * (panAndZoomStep + 1),
+        after: Math.round(defaultAfter * (panAndZoomStep + 1)),
       }))
       return
     }
