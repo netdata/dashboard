@@ -1,6 +1,7 @@
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
+import { SPACE_PANEL_STATE } from "utils"
 import {
   selectIsCloudEnabled,
   selectIsUsingGlobalRegistry,
@@ -63,7 +64,17 @@ export const SpacePanel = ({
   const panelIsActive = useSelector(selectSpacePanelIsActive)
 
   useEffect(() => {
-    dispatch(setSpacePanelStatusAction({ isActive: isSignedIn }))
+    const spacePanelStatePersisted = localStorage.getItem(SPACE_PANEL_STATE)
+    // control space panel from localStorage only when it's in closed state
+    // if we want to persist "opened" state, we need to fix a problem when we see invitation
+    // to cloud before sign-in state is propagated from iframes
+    // it can be difficult to detect and differentiate from the case where user uses space-panel
+    // to use registry and streamed-nodes
+    if (spacePanelStatePersisted === "false") {
+      dispatch(setSpacePanelStatusAction({ isActive: false }))
+    } else {
+      dispatch(setSpacePanelStatusAction({ isActive: isSignedIn }))
+    }
   }, [dispatch, isSignedIn])
 
   const streamedHostsData = getStreamedNodes(chartsMetadata)
