@@ -1,7 +1,7 @@
 import React, {
   memo, useRef, useState, useEffect, useMemo,
 } from "react"
-import { useScroll } from "react-use"
+import { useScroll, useDebounce } from "react-use"
 import { name2id } from "utils/name-2-id"
 import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 import { ReportEvent } from "types/report"
@@ -172,7 +172,7 @@ export const NodeView = ({
   }, [])
 
   const { y } = useScroll(scrollableContainerRef)
-  useEffect(() => {
+  useDebounce(() => {
     if (ref.current) {
       const currentNode = Array.from(ref.current.querySelectorAll("[id]"))
         .find(isSectionNodeVisible)
@@ -185,7 +185,7 @@ export const NodeView = ({
       setCurrentChart(chartIdInMenu)
       if (onChangeChart) onChangeChart(chartIdInMenu)
     }
-  }, [ref, setCurrentChart, y, onChangeChart])
+  }, 100, [y])
 
 
   // todo support print mode when it will be used in main.js
