@@ -387,7 +387,7 @@ export const Chart = memo(({
     />
   )
 
-  const resizeHandler = (
+  const resizeHandler = shouldDisplayResizeHandler && (
     <ResizeHandler
       chartContainerElement={chartContainerElement}
       chartUuid={chartUuid}
@@ -447,7 +447,7 @@ export const Chart = memo(({
       {shouldDisplayToolbox && !isLegendOnBottom && (
         legendToolbox
       )}
-      {shouldDisplayResizeHandler && !isLegendOnBottom && (
+      {!isLegendOnBottom && (
         resizeHandler
       )}
     </>
