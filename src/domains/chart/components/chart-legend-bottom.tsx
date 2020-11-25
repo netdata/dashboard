@@ -22,7 +22,7 @@ interface Props {
   unitsCurrent: string
   viewBefore: number
   legendToolbox: JSX.Element
-  resizeHandler: JSX.Element
+  resizeHandler: React.ReactNode
 }
 
 export const ChartLegendBottom = ({
