@@ -1,5 +1,16 @@
 /* eslint-disable camelcase */
 
+interface IError {
+  errorMsgKey: string
+  errorMessage: string
+}
+
+export interface INode {
+  id: string
+  error?: IError
+  chartIDs?: string[]
+}
+
 export interface ChartDataBase {
   after: number
   api: number
@@ -15,6 +26,7 @@ export interface ChartDataBase {
   max: number
   min: number
   name: string
+  nodes?: INode[]
   points: number
 
   update_every: number
