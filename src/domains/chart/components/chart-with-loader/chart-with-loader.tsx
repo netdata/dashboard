@@ -1,7 +1,7 @@
 import { cond, always, T } from "ramda"
 import axios from "axios"
 import React, {
-  useEffect, useState, useMemo,
+  useEffect, useState, useMemo, useLayoutEffect,
 } from "react"
 import {
   useThrottle, useUpdateEffect, useUnmount, useDebounce,
@@ -66,6 +66,8 @@ const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
 const dimensionsAggrMethodMap = {
   "sum-of-abs": "sum",
 }
+
+const emptyArray = [] as any
 
 export type Props = {
   attributes: Attributes
@@ -349,13 +351,18 @@ export const ChartWithLoader = ({
 
   const externalSelectedDimensions = attributes?.selectedDimensions
   const [selectedDimensions, setSelectedDimensions] = useState<string[]>(externalSelectedDimensions
-    || [])
+    || emptyArray)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (externalSelectedDimensions) {
       setSelectedDimensions(externalSelectedDimensions)
     }
   }, [externalSelectedDimensions])
+
+  useLayoutEffect(() => {
+    setSelectedDimensions(externalSelectedDimensions || emptyArray)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [attributes?.groupBy])
 
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
