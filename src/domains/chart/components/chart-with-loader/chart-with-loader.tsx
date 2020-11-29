@@ -379,13 +379,18 @@ export const ChartWithLoader = ({
 
   if (!chartData || !actualChartMetadata) {
     return (
-      <Loader
+      <>
+        <Loader
         // Loader should remount when that flag is changed, because inside
         // there's an oldschool bootstrap icon which doesn't handle updates well
-        key={`${hasEmptyData}`}
-        hasEmptyData={hasEmptyData}
-        containerNode={portalNode}
-      />
+          key={`${hasEmptyData}`}
+          hasEmptyData={hasEmptyData}
+          containerNode={portalNode}
+        />
+        {(shouldShowSpinner) && (
+          <ChartSpinner chartLibrary={attributes.chartLibrary} />
+        )}
+      </>
     )
   }
 
