@@ -92,14 +92,14 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
 
     .dashboard-section {
       h1 {
-        color: var(--color-main);
+        color: var(--color-key);
         margin-top: 20px;
       }
     }
 
     .dashboard-section-container {
       & > h2 {
-        color: var(--color-main);
+        color: var(--color-key);
         margin-top: 20px;
       }
     }
@@ -137,10 +137,10 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       &:hover,
       &:focus {
         padding-left: 19px;
-        color: var(--color-main);
+        color: var(--color-key);
         text-decoration: none;
         background-color: transparent;
-        border-left: 1px solid var(--color-main);
+        border-left: 1px solid var(--color-key);
       }
     }
 
@@ -157,9 +157,9 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     & > .node-view__sidebar-link {
       padding-left: 18px;
       font-weight: bold;
-      color: var(--color-main);
+      color: var(--color-key);
       background-color: transparent;
-      border-left: 2px solid var(--color-main);
+      border-left: 2px solid var(--color-key);
 
       &:hover,
       &:focus {
