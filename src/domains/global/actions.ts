@@ -49,6 +49,8 @@ export const setDefaultAfterAction = createAction<SetDefaultAfterAction>(
   `${storeKey}/setDefaultAfterAction`,
 )
 
+export const resetDefaultAfterAction = createAction(`${storeKey}/resetDefaultAfterAction`)
+
 export interface SetGlobalChartUnderlayAction {
   after: number
   before: number

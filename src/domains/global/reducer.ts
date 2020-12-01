@@ -30,6 +30,7 @@ import {
   setSpacePanelTransitionEndAction,
   resetRegistry,
   accessRegistrySuccessAction,
+  resetDefaultAfterAction,
 } from "./actions"
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
@@ -332,6 +333,11 @@ globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
 globalReducer.on(setDefaultAfterAction, (state, { after }) => ({
   ...state,
   defaultAfter: after,
+}))
+
+globalReducer.on(resetDefaultAfterAction, (state) => ({
+  ...state,
+  defaultAfter: initialState.defaultAfter,
 }))
 
 globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID }) => ({

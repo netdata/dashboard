@@ -8,6 +8,7 @@ import {
   requestCommonColorsAction,
   resetGlobalPanAndZoomAction,
   setDefaultAfterAction,
+  resetDefaultAfterAction,
   setGlobalPanAndZoomAction,
   setGlobalSelectionAction,
 } from "domains/global/actions"
@@ -344,11 +345,15 @@ export const Chart = memo(({
 
   const handleToolboxResetClick = useCallback(() => {
     if (isSyncPanAndZoom) {
-      dispatch(resetGlobalPanAndZoomAction())
+      if (globalPanAndZoom) {
+        dispatch(resetGlobalPanAndZoomAction())
+      } else {
+        dispatch(resetDefaultAfterAction())
+      }
     } else {
       dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
     }
-  }, [chartUuid, dispatch, isSyncPanAndZoom])
+  }, [chartUuid, dispatch, globalPanAndZoom, isSyncPanAndZoom])
 
   /**
    * assign colors
