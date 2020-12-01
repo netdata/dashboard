@@ -149,7 +149,6 @@ body {
     right: 30px;
     height: 15px;
     width: 110px;
-    background-color: var(--color-mainBackground, #fff);
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
