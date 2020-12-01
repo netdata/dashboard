@@ -24,6 +24,7 @@ export const GlobalColors = createGlobalStyle`
     --color-bright: ${getColor("bright")};
     --color-text: ${getColor("text")};
     --color-textFocus: ${getColor("textFocus")};
+    --color-key: ${getColor("key")};
     --color-sectionHeaderBackground: ${getColor("sectionHeaderBackground")};
     --color-placeholder: ${getColor("placeholder")};
   }
