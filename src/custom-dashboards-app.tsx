@@ -1,11 +1,15 @@
 import React from "react"
 import Ps from "perfect-scrollbar"
+import { ThemeProvider } from "styled-components"
 
 import { loadCss } from "utils/css-loader"
+import { mapTheme } from "utils/map-theme"
 import "domains/chart/utils/jquery-loader"
 import { Portals } from "domains/chart/components/portals"
 import { useRegistry } from "hooks/use-registry"
 import { useAlarms } from "hooks/use-alarms"
+import { useSelector } from "store/redux-separate-context"
+import { selectTheme } from "domains/global/selectors"
 
 import "./types/global"
 
@@ -34,10 +38,14 @@ const CustomDashboardsApp: React.FC = () => { // eslint-disable-line arrow-body-
   const shouldUseAlarms = !!window.netdataShowAlarms
   useAlarms(shouldUseAlarms)
 
+  const theme = useSelector(selectTheme)
+
   return (
-    <div className="App">
-      <Portals />
-    </div>
+    <ThemeProvider theme={mapTheme(theme)}>
+      <div className="App">
+        <Portals />
+      </div>
+    </ThemeProvider>
   )
 }
 
