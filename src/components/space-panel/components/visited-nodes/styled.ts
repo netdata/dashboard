@@ -51,6 +51,7 @@ export const StyledIcon = styled(Icon)`
   fill: ${getColor(["gray", "arsenic"])};
 `
 
+// @ts-ignore todo extend interface in dashboard due to lack of types in netdata-ui
 export const NodeUrl = styled(TextNano.withComponent("a"))`
   text-decoration: none;
   margin-left: ${getSizeBy(5)};
@@ -63,6 +64,7 @@ export const NodeUrl = styled(TextNano.withComponent("a"))`
   }
 `
 
+// @ts-ignore todo
 export const NodeName = styled(Text.withComponent("a"))`
   flex: 1;
   overflow: hidden;
