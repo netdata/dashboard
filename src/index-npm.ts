@@ -10,8 +10,8 @@ import "./cloud-settings"
 // 2) main Dashboard, 3) cloud npm package
 import "../dashboard-react"
 // todo support themes
-import "./styles/dashboard.css"
 import "./styles/bootstrap-3.3.7.css"
+import "./styles/dashboard.css"
 
 import "vendor/fontawesome-all-5.0.1.min"
 
