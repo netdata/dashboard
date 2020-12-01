@@ -210,7 +210,7 @@ body {
 }
 
 .netdata-message.icon {
-    color: var(--color-elementBackground, #F8F8F8);
+    color: var(--color-borderSecondary, #F8F8F8);
     text-align: center;
     vertical-align: middle;
 }
