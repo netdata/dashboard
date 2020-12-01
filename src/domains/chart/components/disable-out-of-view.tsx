@@ -38,6 +38,8 @@ const cloneWithCanvas = (element: HTMLElement) => {
   return cloned
 }
 
+const shouldCleanChartStateAlways = localStorage.getItem("wipe-chart-state")
+
 interface Props {
   attributes: Attributes
   chartUuid: string
@@ -109,6 +111,12 @@ export const DisableOutOfView = ({
   ) {
     previousIsVisibleIntersection.current = isVisibleIntersection
   }
+
+  useEffect(() => {
+    if (!isPrintMode && shouldHide && shouldCleanChartStateAlways) {
+      dispatch(clearChartStateAction({ id: chartUuid }))
+    }
+  }, [chartUuid, dispatch, shouldHide])
 
 
   if (isPrintMode) {
