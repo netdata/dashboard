@@ -61,8 +61,6 @@ export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   chartData: ChartData | null
 }) => JSX.Element
 
-const showSpinnerAlways = Boolean(localStorage.getItem("show-spinner-always"))
-
 const dimensionsAggrMethodMap = {
   "sum-of-abs": "sum",
 }
@@ -416,7 +414,7 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {(shouldShowSpinner || showSpinnerAlways) && (
+      {(shouldShowSpinner) && (
         <ChartSpinner chartLibrary={attributes.chartLibrary} />
       )}
       {dropdownMenu && (dropdownMenu.length > 0) && (
