@@ -171,17 +171,6 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     }
   }
 
-  &__sidebar-menu-li--active {
-    & > .node-view__sidebar-link {
-      background-color: var(--color-disabled);
-
-      &:hover,
-      &:focus {
-        background-color: var(--color-disabled);
-      }
-    }
-  }
-
   /* Nav: second level (shown on .active) */
   &__sidebar-submenu {
     display: none;
