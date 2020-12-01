@@ -64,6 +64,23 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
       padding-left: 0;
     }
 
+    & code {
+      position: relative;
+      background: none;
+      color: var(--color-primary);
+      &:before {
+        // a hack to use color variables with background opacity
+        content: "";
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        background-color: var(--color-primary);
+        opacity: 0.1;
+        pointer-events: none; // prevent changing cursor on code blocks
+      }
+    }
+
     .dygraph-chart--legend-bottom .dygraph-axis-label-y {
       text-align: start;
     }
