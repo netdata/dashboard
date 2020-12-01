@@ -45,7 +45,7 @@ const Node = ({
             <StyledIcon name="node" />
             <NodeName
               href=""
-              onClick={(event) => {
+              onClick={(event: React.SyntheticEvent) => {
                 event.preventDefault() // prevent navigating to url
                 event.stopPropagation()
                 window.gotoServerModalHandler(machineGuid)
