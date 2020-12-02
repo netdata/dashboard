@@ -14,7 +14,7 @@ const dashboardThemes: { [k: string]: "white" | "slate" } = {
 }
 
 const uiKitThemes: { [k: string]: any } = {
-  unspecified: DefaultTheme,
+  unspecified: DarkTheme,
   light: DefaultTheme,
   dark: DarkTheme,
   blue: BlueTheme,
