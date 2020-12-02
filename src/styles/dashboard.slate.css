@@ -149,7 +149,7 @@ code {
     vertical-align: middle;
     line-height: 15px;
     cursor: ns-resize;
-    color: #373b40;
+    color: var(--color-selected, #373b40);
     text-align: center;
     overflow: hidden;
     padding: 0px;
@@ -188,7 +188,7 @@ code {
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
-    color: var(--color-border, #474b50);
+    color: var(--color-selected, #373b40);
     text-align: center;
     overflow: hidden;
     padding: 0px;
