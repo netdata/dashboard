@@ -135,7 +135,7 @@ body {
     vertical-align: middle;
     line-height: 15px;
     cursor: ns-resize;
-    color: var(--color-placeholder, #DDDDDD);
+    color: var(--color-selected, #CDCDCD);
     text-align: center;
     overflow: hidden;
     padding: 0px;
@@ -174,7 +174,7 @@ body {
     font-size: 12px;
     vertical-align: middle;
     line-height: 15px;
-    color: var(--color-border, #CDCDCD);
+    color: var(--color-selected, #CDCDCD);
     text-align: center;
     overflow: hidden;
     padding: 0px;
