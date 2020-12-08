@@ -85,6 +85,9 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
   },${encodeURIComponent(options)}`
 )
 
+// currently BE always transforms data as if `flip` was there
+const IS_FLIP_RESPECTED_IN_COMPOSITE_CHARTS = false
+
 const [fetchMetrics$] = getFetchStream(
   isPrintMode ? CONCURRENT_CALLS_LIMIT_PRINT : CONCURRENT_CALLS_LIMIT_METRICS,
 )
@@ -123,6 +126,13 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     ? `${alwaysEndWithSlash(host)}api/v1/data`
     : host
 
+  const agentOptionsOriginal = options.split("|")
+  const hasFlip = agentOptionsOriginal.includes("flip")
+  const shouldAddFakeFlip = !IS_FLIP_RESPECTED_IN_COMPOSITE_CHARTS && !hasFlip
+  // if flip is not respected in composite-charts, send it always (like dygraph charts normally do)
+  const agentOptions = shouldAddFakeFlip
+    ? agentOptionsOriginal.concat("flip") : agentOptionsOriginal
+
   const axiosOptions = httpMethod === "POST" ? {
     // used by cloud's room-overview
     data: {
@@ -136,7 +146,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       points,
       group,
       gtime,
-      agent_options: options.split("|"),
+      agent_options: agentOptions,
       aggregations: [groupBy === "node" && {
         method: dimensionsAggrMethod,
         groupBy: ["chart", "node"],
@@ -166,7 +176,11 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
     } else {
       const { fillMissingPoints } = fetchDataParams
-      const chartData = transformResults(((data as unknown) as ChartData), format)
+      const chartData = transformResults(
+        ((data as unknown) as ChartData),
+        format,
+        shouldAddFakeFlip,
+      )
       fetchDataResponseChannel.put(fetchDataAction.success({
         chartData: fillMissingPoints
           ? fillMissingData(chartData as ChartData, fillMissingPoints)
