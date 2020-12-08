@@ -1,4 +1,4 @@
-import { tail, sum } from "ramda"
+import { tail, sum, reverse } from "ramda"
 import { ChartData, DygraphData } from "domains/chart/chart-types"
 
 /*
@@ -62,13 +62,16 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
 }
 
 const emptyArray: number[] = []
-export const transformResults = (data: ChartData, format: string) => {
+export const transformResults = (data: ChartData, format: string, shouldRevertFlip:boolean) => {
   if (format === "array" && data.format === "json") {
     if (Array.isArray(data.result)) return data
 
+    const dataResult = shouldRevertFlip
+      ? reverse((data as DygraphData).result.data)
+      : (data as DygraphData).result.data
     return {
       ...data,
-      result: ((data as DygraphData).result.data).reduce((acc: number[], pointData: number[]) => {
+      result: dataResult.reduce((acc: number[], pointData: number[]) => {
         pointData.shift()
         return [
           ...acc,
