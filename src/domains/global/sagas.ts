@@ -44,34 +44,22 @@ export function* watchWindowFocusChannel() {
   }
 }
 
-const injectGTM = (machineGuid: string) => {
-  // @ts-ignore
-  if (document.querySelector("script[src^=\"https://www.googletagmanager.com/gtm.js\"]")) {
-    // make sure gtm is loaded only once
+const injectPosthog = (machineGuid: string) => {
+  if (window.posthog) {
     return
   }
   /* eslint-disable */
   // @ts-ignore
-  ; (function (w, d, s, l, i) {
-    // @ts-ignore
-    w[l] = w[l] || []
-    // @ts-ignore
-    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
-    var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s),
-      // @ts-ignore
-      dl = l != "dataLayer" ? "&l=" + l : ""
-    // @ts-ignore
-    j.async = false
-
-    // @ts-ignore
-    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl
-    // @ts-ignore
-    f.parentNode.insertBefore(j, f)
-  })(window, document, "script", "dataLayer", "GTM-N6CBMJD")
-  // @ts-ignore
-  dataLayer.push({ anonymous_statistics: "true", machine_guid: machineGuid })
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   /* eslint-enable */
+  window.posthog.init("zR4pStMtxgP3wJ27vIjQJvZNXwMWqZlzP0x4dKbHOHg", { api_host: "https://app.posthog.com" })
+  window.posthog.register({
+    distinct_id: machineGuid,
+    $ip: "127.0.0.1",
+    $current_url: "agent dashboard",
+    $pathname: "netdata-dashboard",
+    $host: "dashboard.netdata.io",
+  })
 }
 
 export type PersonUrl = [
@@ -230,7 +218,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
 
   if (response.data.anonymous_statistics) {
-    injectGTM(response.data.machine_guid)
+    injectPosthog(response.data.machine_guid)
   }
 
   // now make access call - max_redirects, callback, etc...
