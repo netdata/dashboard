@@ -44,6 +44,36 @@ export function* watchWindowFocusChannel() {
   }
 }
 
+const injectGTM = (machineGuid: string) => {
+  // @ts-ignore
+  if (document.querySelector("script[src^=\"https://www.googletagmanager.com/gtm.js\"]")) {
+    // make sure gtm is loaded only once
+    return
+  }
+  /* eslint-disable */
+  // @ts-ignore
+  ; (function (w, d, s, l, i) {
+    // @ts-ignore
+    w[l] = w[l] || []
+    // @ts-ignore
+    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
+    var f = d.getElementsByTagName(s)[0],
+      j = d.createElement(s),
+      // @ts-ignore
+      dl = l != "dataLayer" ? "&l=" + l : ""
+    // @ts-ignore
+    j.async = false
+
+    // @ts-ignore
+    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl
+    // @ts-ignore
+    f.parentNode.insertBefore(j, f)
+  })(window, document, "script", "dataLayer", "GTM-N6CBMJD")
+  // @ts-ignore
+  dataLayer.push({ anonymous_statistics: "true", machine_guid: machineGuid })
+  /* eslint-enable */
+}
+
 const injectPosthog = (machineGuid: string) => {
   if (window.posthog) {
     return
@@ -218,6 +248,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
 
   if (response.data.anonymous_statistics) {
+    injectGTM(response.data.machine_guid)
     injectPosthog(response.data.machine_guid)
   }
 
