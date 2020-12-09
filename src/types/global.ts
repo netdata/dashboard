@@ -129,6 +129,7 @@ interface Window {
   $: jQuery
   jQuery: jQuery
   smoothPlotter: () => void
+  posthog: any
 
   // user configuration options
   netdataNoBootstrap?: boolean
