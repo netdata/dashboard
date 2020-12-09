@@ -116,8 +116,8 @@ export const GaugeChart = ({
       const {
         gaugePointerColor = window.NETDATA.themes.current.gauge_pointer,
         gaugeStrokeColor = window.NETDATA.themes.current.gauge_stroke,
-        gaugeStartColor = window.NETDATA.themes.current.gauge_start_color,
-        gaugeStopColor = window.NETDATA.themes.current.gauge_stop_color,
+        gaugeStartColor = orderedColors[0],
+        gaugeStopColor,
         gaugeGenerateGradient = false,
       } = attributes
 
