@@ -70,6 +70,9 @@ export interface ChartMetadata {
   dimensions: {
     [key: string]: Dimension
   }
+  chartLabels?: {
+    [key: string]: string
+  }
   duration: number
   enabled: boolean
   family: string
