@@ -15,6 +15,7 @@ export type Props = {
   chartMetadata?: ChartMetadata | undefined
   dropdownMenu?: DropdownMenu
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  onAttributesChange?: any
 }
 
 export const ChartContainer = ({
@@ -24,6 +25,7 @@ export const ChartContainer = ({
   dropdownMenu,
   portalNode,
   renderCustomElementForDygraph,
+  onAttributesChange,
 }: Props) => (
   <DisableOutOfView
     attributes={attributes}
@@ -34,6 +36,7 @@ export const ChartContainer = ({
       attributes={attributes}
       chartUuid={chartUuid}
       renderCustomElementForDygraph={renderCustomElementForDygraph}
+      onAttributesChange={onAttributesChange}
       dropdownMenu={dropdownMenu}
       externalChartMetadata={chartMetadata}
       portalNode={portalNode}
