@@ -265,6 +265,7 @@ export const AbstractChart = ({
       chartUuid={chartUuid}
       dimensionsVisibility={dimensionsVisibility}
       hasEmptyData={hasEmptyData}
+      hasLegend={hasLegend(attributes)}
       isRemotelyControlled={isRemotelyControlled}
       orderedColors={orderedColors}
       hoveredRow={hoveredRow}

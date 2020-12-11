@@ -283,6 +283,7 @@ interface Props {
   }
   dimensionsVisibility: boolean[]
   hasEmptyData: boolean
+  hasLegend: boolean
   isRemotelyControlled: boolean
   onUpdateChartPanAndZoom: (arg: {
     after: number, before: number,
@@ -313,6 +314,7 @@ export const DygraphChart = ({
   chartUuid,
   dimensionsVisibility,
   hasEmptyData,
+  hasLegend,
   isRemotelyControlled,
   onUpdateChartPanAndZoom,
   orderedColors,
@@ -1084,7 +1086,7 @@ export const DygraphChart = ({
           { "dygraph-chart--legend-bottom": isLegendOnBottom },
         )}
       />
-      {isProceeded && (
+      {isProceeded && hasLegend && (
         <ProceededChartDisclaimer ref={precededChartRef as React.Ref<HTMLDivElement>} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
