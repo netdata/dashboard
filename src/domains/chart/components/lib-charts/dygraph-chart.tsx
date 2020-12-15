@@ -302,7 +302,6 @@ interface Props {
   unitsCurrent: string
   viewAfter: number
   viewBefore: number
-  requestedViewRange: TimeRange
 }
 export const DygraphChart = ({
   attributes,
@@ -329,7 +328,6 @@ export const DygraphChart = ({
   unitsCurrent,
   viewAfter,
   viewBefore,
-  requestedViewRange,
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
@@ -887,7 +885,7 @@ export const DygraphChart = ({
       const hasChangedDuration = Math.abs((viewBefore - viewAfter) - (xAxisRange[1] - xAxisRange[0])) > timeframeThreshold
 
       // check if the time is relative
-      const hasScrolledToTheFutureDuringPlayMode = requestedViewRange[1] <= 0
+      const hasScrolledToTheFutureDuringPlayMode = viewBefore <= 0
       && (xAxisRange[1] > viewBefore)
       // if viewAfter is bigger than current dateWindow start, just reset dateWindow
       && (xAxisRange[0] > viewAfter)
@@ -915,7 +913,7 @@ export const DygraphChart = ({
     }
   }, [attributes, chartData.result, chartUuid, dimensionsVisibility, dygraphChartType,
     dygraphFillAlpha, hasEmptyData, isFakeStacked, isRemotelyControlled, orderedColors,
-    requestedViewRange, viewAfter, viewBefore])
+    viewAfter, viewBefore])
 
   useUpdateEffect(() => {
     if (!dygraphInstance.current) {

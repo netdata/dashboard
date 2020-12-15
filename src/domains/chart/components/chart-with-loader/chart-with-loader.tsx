@@ -37,6 +37,7 @@ import {
   makeSelectChartMetadataRequest,
   selectChartPanAndZoom,
   selectChartIsFetchingData,
+  selectChartViewRange,
 } from "../../selectors"
 import {
   ChartData,
@@ -138,6 +139,9 @@ export const ChartWithLoader = ({
 
 
   const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(
+    state, { id: chartUuid },
+  ))
+  const viewRange = useSelector((state: AppStateT) => selectChartViewRange(
     state, { id: chartUuid },
   ))
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
@@ -245,7 +249,7 @@ export const ChartWithLoader = ({
 
       let after
       let before
-      let viewRange
+      let newViewRange
       let pointsMultiplier = 1
 
       if (panAndZoom) {
@@ -253,7 +257,7 @@ export const ChartWithLoader = ({
           after = Math.round(panAndZoom.after / 1000)
           before = Math.round(panAndZoom.before / 1000)
 
-          viewRange = [after, before]
+          newViewRange = [after, before]
 
           if (shouldUsePanAndZoomPadding) {
             const requestedPadding = Math.round((before - after) / 2)
@@ -273,7 +277,7 @@ export const ChartWithLoader = ({
         pointsMultiplier = 1
       }
 
-      viewRange = (viewRange || [after, before]).map((x) => x * 1000) as [number, number]
+      newViewRange = (newViewRange || [after, before]).map((x) => x * 1000) as [number, number]
 
       const dataPoints = attributes.points
         || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
@@ -316,7 +320,7 @@ export const ChartWithLoader = ({
             // those params should be synced with data
             fillMissingPoints: correctedPoints ? (points - correctedPoints) : undefined,
             isRemotelyControlled,
-            viewRange,
+            viewRange: newViewRange,
           },
           id: chartUuid,
           cancelTokenSource,
@@ -421,7 +425,10 @@ export const ChartWithLoader = ({
         globalPanAndZoom={globalPanAndZoom}
         hasEmptyData={hasEmptyData}
         isRemotelyControlled={fetchDataParams.isRemotelyControlled}
-        requestedViewRange={fetchDataParams.viewRange}
+        // view range that updates only when data is fetched
+        viewRangeForCurrentData={fetchDataParams.viewRange}
+        // view range that updates when requesting and fetching of data
+        viewRange={viewRange!}
         selectedDimensions={selectedDimensions}
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}

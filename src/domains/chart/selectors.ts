@@ -40,7 +40,7 @@ export const makeSelectChartMetadataRequest = () => createSelector(
 
 export const selectChartViewRange = createSelector(
   selectSingleChartState,
-  (chartState) => chartState.fetchDataParams.viewRange,
+  (chartState) => chartState.viewRange,
 )
 
 export const selectChartIsFetchingData = createSelector(

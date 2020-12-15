@@ -24,7 +24,7 @@ import {
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
-import { isTimestamp, MS_IN_SECOND } from "utils"
+import { MS_IN_SECOND, isTimestamp } from "utils"
 
 import { resetChartPanAndZoomAction, setChartPanAndZoomAction } from "domains/chart/actions"
 
@@ -58,7 +58,8 @@ interface Props {
   globalPanAndZoom: null | GlobalPanAndZoomState
   hasEmptyData: boolean
   isRemotelyControlled: boolean
-  requestedViewRange: TimeRange
+  viewRangeForCurrentData: TimeRange
+  viewRange: TimeRange
   selectedDimensions: string[]
   setSelectedDimensions: (newState: string[]) => void
   showLatestOnBlur: boolean
@@ -79,7 +80,8 @@ export const Chart = memo(({
   globalPanAndZoom,
   hasEmptyData,
   isRemotelyControlled,
-  requestedViewRange,
+  viewRangeForCurrentData,
+  viewRange,
   selectedDimensions,
   setSelectedDimensions,
   showLatestOnBlur,
@@ -175,11 +177,15 @@ export const Chart = memo(({
     ? globalHoveredX
     : localHoveredX
 
-  const viewAfter = isTimestamp(requestedViewRange[0])
-    ? requestedViewRange[0]
+  // time-frames for requested data (even when request is pending)
+  const viewAfter = isTimestamp(viewRange[0]) ? viewRange[0] : chartData.after * MS_IN_SECOND
+  const viewBefore = isTimestamp(viewRange[1]) ? viewRange[1] : chartData.before * MS_IN_SECOND
+
+  const viewAfterForCurrentData = isTimestamp(viewRangeForCurrentData[0])
+    ? viewRangeForCurrentData[0]
     : chartData.after * MS_IN_SECOND
-  const viewBefore = isTimestamp(requestedViewRange[1])
-    ? requestedViewRange[1]
+  const viewBeforeForCurrentData = isTimestamp(viewRangeForCurrentData[1])
+    ? viewRangeForCurrentData[1]
     : chartData.before * MS_IN_SECOND // when 'before' is 0 or negative
 
   const netdataFirst = chartData.first_entry * MS_IN_SECOND
@@ -208,7 +214,12 @@ export const Chart = memo(({
    * pan-and-zoom handler (both for toolbox and mouse events)
    */
   const handleUpdateChartPanAndZoom = useCallback(({
-    after, before, callback, shouldForceTimeRange, shouldNotExceedAvailableRange,
+    after,
+    before,
+    callback,
+    shouldFlushImmediately = false,
+    shouldForceTimeRange,
+    shouldNotExceedAvailableRange,
   }) => {
     if (before < after) {
       return
@@ -444,9 +455,8 @@ export const Chart = memo(({
         setMinMax={([min, max]) => legendFormatValueDecimalsFromMinMax(min, max)}
         showLatestOnBlur={showLatestOnBlur}
         unitsCurrent={unitsCurrent}
-        viewAfter={viewAfter}
-        viewBefore={viewBefore}
-        requestedViewRange={requestedViewRange}
+        viewAfterForCurrentData={viewAfterForCurrentData}
+        viewBeforeForCurrentData={viewBeforeForCurrentData}
       />
       {hasLegend(attributes) && (
         <ChartLegend

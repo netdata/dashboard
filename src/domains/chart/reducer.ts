@@ -6,6 +6,7 @@ import { createReducer } from "redux-act"
 import { setOptionAction } from "domains/global/actions"
 import { SYNC_PAN_AND_ZOOM } from "domains/global/options"
 
+import { isTimestamp } from "utils"
 import {
   fetchDataAction,
   fetchChartAction,
@@ -43,6 +44,7 @@ export const initialSingleState = {
   snapshotDataIsFetching: false,
   snapshotDataIsError: false,
   snapshotData: null,
+  viewRange: null,
 }
 
 export const chartReducer = createReducer<StateT>(
@@ -52,12 +54,13 @@ export const chartReducer = createReducer<StateT>(
 
 const getSubstate = (state: StateT, id: string) => state[id] || initialSingleState
 
-chartReducer.on(fetchDataAction.request, (state, { chart, id }) => ({
+chartReducer.on(fetchDataAction.request, (state, { chart, fetchDataParams, id }) => ({
   ...state,
   [id]: {
     ...getSubstate(state, id),
     chartId: chart,
     isFetchingData: true,
+    viewRange: fetchDataParams.viewRange,
   },
 }))
 
@@ -86,6 +89,7 @@ chartReducer.on(fetchDataAction.success, (state, { id, chartData, fetchDataParam
     fetchDataParams,
     isFetchingData: false,
     isFetchDataFailure: false,
+    viewRange: fetchDataParams.viewRange,
   },
 }))
 
