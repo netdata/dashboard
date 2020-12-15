@@ -25,7 +25,8 @@ export const getChartURLOptions = (
   }
 
   if (attributes.dimensionsAggrMethod === "sum-of-abs"
-    || (!attributes.dimensionsAggrMethod && attributes.groupBy === "node")) {
+  || (!attributes.dimensionsAggrMethod && attributes.groupBy && attributes.groupBy !== "dimension")
+  ) {
     ret += "|absolute"
   }
 

@@ -42,7 +42,7 @@ export interface FetchDataUrlParams {
   dimensionsAggrMethod?: string
   nodeIDs?: string[]
   httpMethod?: Method
-  groupBy?: "node" | "dimension"
+  groupBy?: string
 }
 export interface FetchDataPayload extends FetchDataUrlParams {
   id: string,

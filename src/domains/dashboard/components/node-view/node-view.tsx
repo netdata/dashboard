@@ -35,12 +35,15 @@ interface SubSectionProps {
   menuName: string
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  onAttributesChange: any
+  renderBeforeCharts?: any
   shouldDisplayHeadMain: boolean
   commonAttributesOverrides?: Partial<Attributes>
-  attributesOverrides?: ChartsAttributes
+  attributesOverrides: ChartsAttributes
   nodeIDs?: string[]
 }
 
+const emptyObject = {} as any
 const emptyNodeIDs: string[] = []
 const noop = () => {}
 
@@ -53,16 +56,28 @@ const SubSection = memo(({
   menuName,
   pcentWidth,
   renderCustomElementForDygraph,
+  onAttributesChange,
+  renderBeforeCharts,
   shouldDisplayHeadMain,
   attributesOverrides,
   commonAttributesOverrides,
   nodeIDs = emptyNodeIDs,
 }: SubSectionProps) => {
   const submenuNames = sortObjectByPriority(menu.submenus)
+
   return (
     <div role="region" className="dashboard-subsection">
       {/* eslint-disable-next-line react/no-danger */}
       <span dangerouslySetInnerHTML={{ __html: menu.info }} />
+      {renderBeforeCharts && renderBeforeCharts({
+        menuName,
+        chartIds: submenuNames
+          .flatMap((name: string) => menu.submenus[name].charts)
+          .map((chart: any) => chart.id) as string[],
+        chartsAttributes: attributesOverrides,
+        chartsMetadata,
+        onAttributesChange,
+      })}
       <div className="netdata-chart-row">
         {shouldDisplayHeadMain && (
           <HeadMain
@@ -74,7 +89,7 @@ const SubSection = memo(({
             commonAttributesOverrides={commonAttributesOverrides}
           />
         )}
-        {submenuNames.flatMap(
+        {menuName !== "kubernetes" && submenuNames.flatMap(
           (submenu) => menu.submenus[submenu].charts
             .concat().sort(prioritySort) // shallow clone, sort by priority
             .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
@@ -100,6 +115,7 @@ const SubSection = memo(({
       {submenuNames.map(renderSubmenuName({
         chartsMetadata,
         renderCustomElementForDygraph,
+        onAttributesChange,
         dropdownMenu,
         duration,
         host,
@@ -122,6 +138,8 @@ interface Props {
   dropdownMenu?: DropdownMenu
   host?: string
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  onAttributesChange?: any
+  renderBeforeCharts?: any
   scrollableContainerRef: React.RefObject<HTMLDivElement>
   timeWindow?: number
   attributes?: ChartsAttributes
@@ -132,15 +150,18 @@ interface Props {
   reportEvent?: ReportEvent
   defaultChart?: string
   onChangeChart?: (chart: string) => void
+  isComposite?: boolean
 }
 export const NodeView = ({
   chartsMetadata,
   dropdownMenu,
   host = "http://localhost:19999",
   renderCustomElementForDygraph,
+  onAttributesChange,
+  renderBeforeCharts,
   scrollableContainerRef,
   timeWindow,
-  attributes,
+  attributes = emptyObject,
   commonAttributesOverrides,
   metricsCorrelationMetadata,
   children,
@@ -148,6 +169,7 @@ export const NodeView = ({
   reportEvent = noop,
   defaultChart = "",
   onChangeChart,
+  isComposite = false,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState(defaultChart)
@@ -197,8 +219,8 @@ export const NodeView = ({
   const menuPartialMetadata = metricsCorrelationMetadata || chartsMetadata
   // This is used to generate and show some statistics VS the full dataset
   const fullMetadata = metricsCorrelationMetadata && chartsMetadata
-  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata),
-    [menuPartialMetadata, fullMetadata])
+  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata, isComposite),
+    [menuPartialMetadata, fullMetadata, isComposite])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
   useUpdateTheme()
@@ -222,6 +244,8 @@ export const NodeView = ({
                 </div>
                 <SubSection
                   renderCustomElementForDygraph={renderCustomElementForDygraph}
+                  onAttributesChange={onAttributesChange}
+                  renderBeforeCharts={renderBeforeCharts}
                   duration={duration}
                   dropdownMenu={dropdownMenu}
                   menu={menu}

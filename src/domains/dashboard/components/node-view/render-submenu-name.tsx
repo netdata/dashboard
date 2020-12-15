@@ -41,7 +41,8 @@ interface RenderSubmenuNameArg {
   menuName: string
   pcentWidth: number
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
-  attributesOverrides?: ChartsAttributes
+  onAttributesChange: any
+  attributesOverrides: ChartsAttributes
   nodeIDs: string[]
   commonAttributesOverrides?: Partial<Attributes>
 }
@@ -54,6 +55,7 @@ export const renderSubmenuName = ({
   menuName,
   pcentWidth,
   renderCustomElementForDygraph,
+  onAttributesChange,
   attributesOverrides,
   nodeIDs,
   commonAttributesOverrides,
@@ -96,9 +98,15 @@ export const renderSubmenuName = ({
                 aggrMethod: mapDefaultAggrMethod(chartsMetadata.charts[attributes.id].units),
                 host,
                 nodeIDs,
+                ...attributesOverrides[attributes.id],
               }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
+              onAttributesChange={
+                (value: any) => onAttributesChange(
+                  { ...attributesOverrides, [attributes.id]: value },
+                )
+              }
             />
           ))}
       </div>
@@ -145,12 +153,15 @@ export const renderSubmenuName = ({
                 ...(commonMin ? { commonMin } : {}),
                 ...(commonMax ? { commonMax } : {}),
                 ...commonAttributesOverrides,
-                ...(attributesOverrides ? attributesOverrides[chart.id] : {}),
                 nodeIDs,
+                ...attributesOverrides[chart.id],
               }}
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}
               renderCustomElementForDygraph={renderCustomElementForDygraph}
+              onAttributesChange={(value: any) => onAttributesChange(
+                { ...attributesOverrides, [chart.id]: value },
+              )}
             />
           </div>
         )

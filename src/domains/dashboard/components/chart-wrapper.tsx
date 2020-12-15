@@ -9,6 +9,8 @@ import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 import { ChartMetadata } from "domains/chart/chart-types"
 
+const noop = () => {}
+
 interface Props {
   attributes: Attributes
   height?: number
@@ -17,6 +19,7 @@ interface Props {
   chartMetadata: ChartMetadata
   dropdownMenu?: DropdownMenu
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  onAttributesChange?: any
 }
 
 export const ChartWrapper = ({
@@ -26,6 +29,7 @@ export const ChartWrapper = ({
   style: styleOverride,
   chartMetadata,
   renderCustomElementForDygraph,
+  onAttributesChange = noop,
 }: Props) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
   const [chartContainerElement, setChartContainerElement] = useState<HTMLDivElement>()
@@ -57,6 +61,7 @@ export const ChartWrapper = ({
           dropdownMenu={dropdownMenu}
           portalNode={chartContainerElement}
           renderCustomElementForDygraph={renderCustomElementForDygraph}
+          onAttributesChange={onAttributesChange}
         />
       )}
     </div>

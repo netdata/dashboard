@@ -51,7 +51,7 @@ export const getDygraphChartType = (
     groupBy,
   } = attributes
 
-  if (groupBy === "node" && isPercentage(chartMetadata.units)) {
+  if (groupBy && groupBy !== "dimension" && isPercentage(chartMetadata.units)) {
     return "line"
   }
 

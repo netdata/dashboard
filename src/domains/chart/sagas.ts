@@ -133,6 +133,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const agentOptions = shouldAddFakeFlip
     ? agentOptionsOriginal.concat("flip") : agentOptionsOriginal
 
+  const groupValue = groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`
+
   const axiosOptions = httpMethod === "POST" ? {
     // used by cloud's room-overview
     data: {
@@ -147,13 +149,13 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       group,
       gtime,
       agent_options: agentOptions,
-      aggregations: [groupBy === "node" && {
+      aggregations: [groupBy !== "dimension" && {
         method: dimensionsAggrMethod,
-        groupBy: ["chart", "node"],
+        groupBy: ["chart", groupValue],
       },
       {
         method: aggrMethod,
-        groupBy: [groupBy],
+        groupBy: [groupValue],
       }].filter(Boolean),
     },
   } : {

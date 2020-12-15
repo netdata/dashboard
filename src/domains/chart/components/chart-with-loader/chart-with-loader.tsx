@@ -56,6 +56,7 @@ import "./chart-with-loader.css"
 
 export type RenderCustomElementForDygraph = (selectedChartConfiguration: {
   attributes: Attributes
+  onAttributesChange: any
   chartMetadata: ChartMetadata
   chartID: string
   chartData: ChartData | null
@@ -74,6 +75,7 @@ export type Props = {
   externalChartMetadata?: ChartMetadata
   portalNode: HTMLElement
   renderCustomElementForDygraph?: RenderCustomElementForDygraph
+  onAttributesChange?: any
 }
 
 export const ChartWithLoader = ({
@@ -83,6 +85,7 @@ export const ChartWithLoader = ({
   externalChartMetadata,
   portalNode,
   renderCustomElementForDygraph,
+  onAttributesChange,
 }: Props) => {
   /**
    * fetch chart details
@@ -364,11 +367,20 @@ export const ChartWithLoader = ({
 
   const customElementForDygraph = useMemo(
     () => renderCustomElementForDygraph && renderCustomElementForDygraph({
+      onAttributesChange,
       attributes,
       chartMetadata: actualChartMetadata as ChartMetadata,
-      chartID: id,
       chartData,
-    }), [renderCustomElementForDygraph, attributes, id, actualChartMetadata, chartData],
+      chartID: id,
+    }),
+    [
+      onAttributesChange,
+      renderCustomElementForDygraph,
+      attributes,
+      id,
+      actualChartMetadata,
+      chartData,
+    ],
   )
 
   // eslint-disable-next-line max-len

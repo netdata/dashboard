@@ -3,13 +3,13 @@ import { clone } from "ramda"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartMetadata, ChartEnriched } from "domains/chart/chart-types"
 import { netdataDashboard, options } from "./netdata-dashboard"
-
+import isKubernetesChart from "./is-kubernetes-chart"
 
 // enrich the data structure returned by netdata
 // to reflect our menu system and content
 // TODO: this is a shame - we should fix charts naming (issue #807)
 // ^^ (original comment from gsmox, still valid!)
-function enrichChartData(chartName: string, chart: ChartMetadata) {
+function enrichChartData(chartName: string, chart: ChartMetadata, isComposite: boolean) {
   const [type] = chartName.split(".") as string[]
   const parts = type.split("_")
   const tmp = parts[0]
@@ -43,7 +43,9 @@ function enrichChartData(chartName: string, chart: ChartMetadata) {
       break
 
     case "cgroup":
-      if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
+      if (isComposite && isKubernetesChart(chartEnriched)) {
+        chartEnriched.menu = "kubernetes"
+      } else if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
         || chartEnriched.id.match(/.*[._/-:]kvm[._/-:]*/)
       ) {
         chartEnriched.menu_pattern = "cgqemu"
@@ -128,7 +130,11 @@ function enrichChartData(chartName: string, chart: ChartMetadata) {
   return chartEnriched
 }
 
-export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsMetadata) => {
+export const renderChartsAndMenu = (
+  data: ChartsMetadata,
+  fullMetadata?: ChartsMetadata,
+  isComposite?: boolean,
+) => {
   options.menus = {}
   options.submenu_names = {}
 
@@ -136,7 +142,8 @@ export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsM
   const { charts } = data
 
   Object.keys(charts).forEach((chartName: string) => {
-    const chart = enrichChartData(chartName, charts[chartName] as ChartEnriched)
+    // @ts-ignore
+    const chart = enrichChartData(chartName, charts[chartName] as ChartEnriched, isComposite)
     const m = chart.menu
 
     // create the menu
@@ -191,7 +198,12 @@ export const renderChartsAndMenu = (data: ChartsMetadata, fullMetadata?: ChartsM
   if (fullMetadata) {
     const correlationCharts = fullMetadata.charts
     Object.keys(correlationCharts).forEach((chartName: string) => {
-      const chart = enrichChartData(chartName, correlationCharts[chartName] as ChartEnriched)
+      const chart = enrichChartData(
+        chartName,
+        correlationCharts[chartName] as ChartEnriched,
+        // @ts-ignore
+        isComposite,
+      )
       const m = chart.menu
       if (!menus[m]) {
         return
