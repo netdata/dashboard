@@ -372,7 +372,15 @@ export const ChartWithLoader = ({
       chartMetadata: actualChartMetadata as ChartMetadata,
       chartData,
       chartID: id,
-    }), [onAttributesChange, renderCustomElementForDygraph, attributes, id, actualChartMetadata, chartData],
+    }),
+    [
+      onAttributesChange,
+      renderCustomElementForDygraph,
+      attributes,
+      id,
+      actualChartMetadata,
+      chartData,
+    ],
   )
 
   // eslint-disable-next-line max-len

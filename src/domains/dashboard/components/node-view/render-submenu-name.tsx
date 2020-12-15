@@ -102,7 +102,11 @@ export const renderSubmenuName = ({
               }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
-              onAttributesChange={(value: any) => onAttributesChange({ ...attributesOverrides, [attributes.id]: value })}
+              onAttributesChange={
+                (value: any) => onAttributesChange(
+                  { ...attributesOverrides, [attributes.id]: value },
+                )
+              }
             />
           ))}
       </div>
@@ -155,7 +159,9 @@ export const renderSubmenuName = ({
               chartMetadata={chartsMetadata.charts[chart.id]}
               dropdownMenu={dropdownMenu}
               renderCustomElementForDygraph={renderCustomElementForDygraph}
-              onAttributesChange={(value: any) => onAttributesChange({ ...attributesOverrides, [chart.id]: value })}
+              onAttributesChange={(value: any) => onAttributesChange(
+                { ...attributesOverrides, [chart.id]: value },
+              )}
             />
           </div>
         )
