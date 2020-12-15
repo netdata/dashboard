@@ -311,16 +311,9 @@ globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => (
 
 globalReducer.on(
   setGlobalPanAndZoomAction,
-  (state, {
-    after, before, masterID, shouldForceTimeRange,
-  }) => ({
+  (state, payload) => ({
     ...state,
-    globalPanAndZoom: {
-      after,
-      before,
-      masterID,
-      shouldForceTimeRange,
-    },
+    globalPanAndZoom: payload,
   }),
 )
 
