@@ -21,10 +21,10 @@ interface TimeWindowCorrection {
   widthRatio?: number
 }
 const getForceTimeWindowCorrection = (
-  chartData: EasyPieChartData, requestedViewRange: TimeRange,
+  chartData: EasyPieChartData, viewRange: TimeRange,
 ): TimeWindowCorrection => {
-  const requestedAfter = convertToTimestamp(requestedViewRange[0])
-  const requestedBefore = convertToTimestamp(requestedViewRange[1])
+  const requestedAfter = convertToTimestamp(viewRange[0])
+  const requestedBefore = convertToTimestamp(viewRange[1])
   const after = chartData.after * MS_IN_SECOND
   const before = chartData.before * MS_IN_SECOND
 
@@ -59,7 +59,8 @@ interface Props {
   isRemotelyControlled: boolean
   orderedColors: string[]
   unitsCurrent: string
-  requestedViewRange: TimeRange
+  viewAfterForCurrentData: number,
+  viewBeforeForCurrentData: number,
 }
 export const SparklineChart = ({
   attributes,
@@ -70,7 +71,8 @@ export const SparklineChart = ({
   chartElementId,
   orderedColors,
   unitsCurrent,
-  requestedViewRange,
+  viewAfterForCurrentData,
+  viewBeforeForCurrentData,
 }: Props) => {
   const chartElement = useRef<HTMLDivElement>(null)
 
@@ -79,7 +81,7 @@ export const SparklineChart = ({
   const sparklineOptions = useRef<{[key: string]: any}>()
 
   const { paddingLeftPercentage = undefined, widthRatio = 1 } = attributes.forceTimeWindow
-    ? getForceTimeWindowCorrection(chartData, requestedViewRange)
+    ? getForceTimeWindowCorrection(chartData, [viewAfterForCurrentData, viewBeforeForCurrentData])
     : {}
 
   // create chart

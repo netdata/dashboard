@@ -109,6 +109,7 @@ export interface ChartState {
     masterID?: string
     shouldForceTimeRange?: boolean
   }
+  viewRange: null | [number, number]
 
   fetchDataParams: {
     isRemotelyControlled: boolean

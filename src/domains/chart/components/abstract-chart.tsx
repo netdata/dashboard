@@ -49,9 +49,8 @@ interface Props {
   setMinMax: (minMax: [number, number]) => void
   showLatestOnBlur: boolean
   unitsCurrent: string
-  viewAfter: number,
-  viewBefore: number,
-  requestedViewRange: TimeRange
+  viewAfterForCurrentData: number,
+  viewBeforeForCurrentData: number,
 }
 
 export const AbstractChart = ({
@@ -77,9 +76,8 @@ export const AbstractChart = ({
   setMinMax,
   showLatestOnBlur,
   unitsCurrent,
-  viewAfter,
-  viewBefore,
-  requestedViewRange,
+  viewAfterForCurrentData,
+  viewBeforeForCurrentData,
 }: Props) => {
   const dispatch = useDispatch()
 
@@ -90,11 +88,18 @@ export const AbstractChart = ({
     // freeze charts
     // don't send masterID, so no padding is applied
     if (isSyncPanAndZoom) {
-      dispatch(setGlobalPanAndZoomAction({ after: viewAfter, before: viewBefore }))
+      dispatch(setGlobalPanAndZoomAction({
+        after: viewAfterForCurrentData,
+        before: viewBeforeForCurrentData,
+      }))
     } else {
-      dispatch(setChartPanAndZoomAction({ after: viewAfter, before: viewBefore, id: chartUuid }))
+      dispatch(setChartPanAndZoomAction({
+        after: viewAfterForCurrentData,
+        before: viewBeforeForCurrentData,
+        id: chartUuid,
+      }))
     }
-  }, [chartUuid, dispatch, isSyncPanAndZoom, viewAfter, viewBefore])
+  }, [chartUuid, dispatch, isSyncPanAndZoom, viewAfterForCurrentData, viewBeforeForCurrentData])
 
   const chartSettings = chartLibrariesSettings[chartLibrary]
   const { hasLegend } = chartSettings
@@ -139,8 +144,8 @@ export const AbstractChart = ({
         setMinMax={setMinMax}
         showUndefined={showUndefined}
         unitsCurrent={unitsCurrent}
-        viewAfter={viewAfter}
-        viewBefore={viewBefore}
+        viewAfter={viewAfterForCurrentData}
+        viewBefore={viewBeforeForCurrentData}
       />
     )
   }
@@ -170,8 +175,8 @@ export const AbstractChart = ({
         setMinMax={setMinMax}
         showUndefined={showUndefined}
         unitsCurrent={unitsCurrent}
-        viewAfter={viewAfter}
-        viewBefore={viewBefore}
+        viewAfter={viewAfterForCurrentData}
+        viewBefore={viewBeforeForCurrentData}
       />
     )
   }
@@ -189,7 +194,8 @@ export const AbstractChart = ({
         isRemotelyControlled={isRemotelyControlled}
         orderedColors={orderedColors}
         unitsCurrent={unitsCurrent}
-        requestedViewRange={requestedViewRange}
+        viewAfterForCurrentData={viewAfterForCurrentData}
+        viewBeforeForCurrentData={viewBeforeForCurrentData}
       />
     )
   }
@@ -278,9 +284,8 @@ export const AbstractChart = ({
       setHoveredX={setHoveredX}
       setMinMax={setMinMax}
       unitsCurrent={unitsCurrent}
-      viewAfter={viewAfter}
-      viewBefore={viewBefore}
-      requestedViewRange={requestedViewRange}
+      viewAfter={viewAfterForCurrentData}
+      viewBefore={viewBeforeForCurrentData}
     />
   )
 }
