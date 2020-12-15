@@ -819,6 +819,7 @@ export const DygraphChart = ({
 
             // remember the timestamp of the last touch end
             dygraphLastTouchEnd.current = now
+            propsRef.current.immediatelyDispatchPanAndZoom()
           },
         },
       }
