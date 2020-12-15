@@ -292,6 +292,7 @@ interface Props {
     shouldNotExceedAvailableRange: boolean,
   }) => void
   orderedColors: string[]
+  immediatelyDispatchPanAndZoom: () => void
 
   hoveredRow: number
   hoveredX: number | null
@@ -318,6 +319,7 @@ export const DygraphChart = ({
   isRemotelyControlled,
   onUpdateChartPanAndZoom,
   orderedColors,
+  immediatelyDispatchPanAndZoom,
 
   hoveredRow,
   hoveredX,
@@ -409,6 +411,7 @@ export const DygraphChart = ({
     chartData,
     globalChartUnderlay,
     hoveredX,
+    immediatelyDispatchPanAndZoom,
     // put it to ref to prevent additional updateOptions() after creating dygraph
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
@@ -419,13 +422,14 @@ export const DygraphChart = ({
   useLayoutEffect(() => {
     propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
+    propsRef.current.immediatelyDispatchPanAndZoom = immediatelyDispatchPanAndZoom
     propsRef.current.globalChartUnderlay = globalChartUnderlay
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.updateChartPanOrZoom = updateChartPanOrZoom
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom,
+  }, [chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
     setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
@@ -633,10 +637,12 @@ export const DygraphChart = ({
               latestIsUserAction.current = true
               // @ts-ignore
               Dygraph.endPan(event, dygraph, context)
+              propsRef.current.immediatelyDispatchPanAndZoom()
             } else if (context.isZooming) {
               latestIsUserAction.current = true
               // @ts-ignore
               Dygraph.endZoom(event, dygraph, context)
+              propsRef.current.immediatelyDispatchPanAndZoom()
             }
           },
 
@@ -826,7 +832,7 @@ export const DygraphChart = ({
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isFakeStacked, isMouseDown,
     orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    updateChartPanOrZoom, xAxisDateString, xAxisTimeString, updatePrecededPosition])
+    xAxisDateString, xAxisTimeString, updatePrecededPosition, immediatelyDispatchPanAndZoom])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {

@@ -3,6 +3,7 @@ import React, {
   useEffect, useState, useCallback, useMemo, memo, useContext,
 } from "react"
 import { ThemeContext } from "styled-components"
+import { useDebouncedCallback } from "use-debounce"
 
 import {
   requestCommonColorsAction,
@@ -38,6 +39,13 @@ import { LegendToolbox } from "./legend-toolbox"
 import { ResizeHandler } from "./resize-handler"
 import { AbstractChart } from "./abstract-chart"
 
+interface GlobalPanAndZoomState {
+  after: number // timestamp in ms
+  before: number // timestamp in ms
+  masterID?: string
+  shouldForceTimeRange?: boolean
+}
+
 interface Props {
   attributes: Attributes
   chartContainerElement: HTMLElement
@@ -47,12 +55,7 @@ interface Props {
   chartUuid: string
   chartWidth: number
   defaultAfter: number
-  globalPanAndZoom: null | {
-    after: number // timestamp in ms
-    before: number // timestamp in ms
-    masterID?: string
-    shouldForceTimeRange?: boolean
-  }
+  globalPanAndZoom: null | GlobalPanAndZoomState
   hasEmptyData: boolean
   isRemotelyControlled: boolean
   requestedViewRange: TimeRange
@@ -190,6 +193,17 @@ export const Chart = memo(({
 
   const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
 
+  const setGlobalPanAndZoomDebounced = useDebouncedCallback(
+    (newGlobalPanAndZoom) => {
+      dispatch(setGlobalPanAndZoomAction(newGlobalPanAndZoom))
+    },
+    400, // corresponds to global_pan_sync_time in old dashboard
+  )
+
+  const immediatelyDispatchPanAndZoom = useCallback(() => {
+    setGlobalPanAndZoomDebounced.flush()
+  }, [setGlobalPanAndZoomDebounced])
+
   /**
    * pan-and-zoom handler (both for toolbox and mouse events)
    */
@@ -259,12 +273,12 @@ export const Chart = memo(({
     }
 
     if (isSyncPanAndZoom) {
-      dispatch(setGlobalPanAndZoomAction({
+      setGlobalPanAndZoomDebounced.callback({
         after: afterForced,
         before: beforeForced,
         masterID: chartUuid,
         shouldForceTimeRange,
-      }))
+      })
     } else {
       dispatch(setChartPanAndZoomAction({
         after: afterForced,
@@ -278,7 +292,7 @@ export const Chart = memo(({
       callback(afterForced, beforeForced)
     }
   }, [chartData.view_update_every, chartUuid, dispatch, fixedMinDuration, isSyncPanAndZoom,
-    netdataFirst, netdataLast, viewAfter, viewBefore])
+    netdataFirst, netdataLast, setGlobalPanAndZoomDebounced, viewAfter, viewBefore])
 
   /**
    * toolbox handlers
@@ -420,6 +434,7 @@ export const Chart = memo(({
         dimensionsVisibility={dimensionsVisibility}
         hasEmptyData={hasEmptyData}
         onUpdateChartPanAndZoom={handleUpdateChartPanAndZoom}
+        immediatelyDispatchPanAndZoom={immediatelyDispatchPanAndZoom}
         isRemotelyControlled={isRemotelyControlled}
         legendFormatValue={legendFormatValue}
         orderedColors={orderedColors}

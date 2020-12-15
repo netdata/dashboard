@@ -42,6 +42,7 @@ interface Props {
   orderedColors: string[]
   hoveredX: number | null
   onUpdateChartPanAndZoom: (arg: { after: number, before: number, masterID: string }) => void
+  immediatelyDispatchPanAndZoom: () => void
 
   hoveredRow: number
   setHoveredX: (hoveredX: number | null, noMaster?: boolean) => void
@@ -71,6 +72,7 @@ export const AbstractChart = ({
   hoveredRow,
   hoveredX,
   onUpdateChartPanAndZoom,
+  immediatelyDispatchPanAndZoom,
   setHoveredX,
   setMinMax,
   showLatestOnBlur,
@@ -268,6 +270,7 @@ export const AbstractChart = ({
       hasLegend={hasLegend(attributes)}
       isRemotelyControlled={isRemotelyControlled}
       orderedColors={orderedColors}
+      immediatelyDispatchPanAndZoom={immediatelyDispatchPanAndZoom}
       hoveredRow={hoveredRow}
       hoveredX={hoveredX}
       onUpdateChartPanAndZoom={onUpdateChartPanAndZoom}
