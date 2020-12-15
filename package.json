@@ -60,6 +60,7 @@
     "tableexport.jquery.plugin": "^1.6.7",
     "typeface-ibm-plex-sans": "0.0.75",
     "typescript": "^3.7.3",
+    "use-debounce": "^5.2.0",
     "uuid": "^3.4.0"
   },
   "devDependencies": {
