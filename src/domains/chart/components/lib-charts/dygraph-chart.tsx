@@ -412,6 +412,7 @@ export const DygraphChart = ({
     // put it to ref to prevent additional updateOptions() after creating dygraph
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
+    updateChartPanOrZoom,
     viewAfter,
     viewBefore,
   })
@@ -421,10 +422,11 @@ export const DygraphChart = ({
     propsRef.current.globalChartUnderlay = globalChartUnderlay
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
+    propsRef.current.updateChartPanOrZoom = updateChartPanOrZoom
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
   }, [chartData, globalChartUnderlay, hoveredX, resetGlobalPanAndZoom,
-    setGlobalChartUnderlay, viewAfter, viewBefore])
+    setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -497,13 +499,13 @@ export const DygraphChart = ({
             if (isInRangeOfAvailableData({
               after, before, chartData: propsRef.current.chartData,
             })) {
-              updateChartPanOrZoom({ after, before })
+              propsRef.current.updateChartPanOrZoom({ after, before })
             }
           }
         },
         zoomCallback: (minDate: number, maxDate: number) => {
           latestIsUserAction.current = true
-          updateChartPanOrZoom({ after: minDate, before: maxDate })
+          propsRef.current.updateChartPanOrZoom({ after: minDate, before: maxDate })
         },
 
         underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
@@ -721,7 +723,7 @@ export const DygraphChart = ({
 
               const [after, before] = zoomRange(dygraph, percentage, xPct, yPct)
 
-              updateChartPanOrZoom({
+              propsRef.current.updateChartPanOrZoom({
                 after,
                 before,
                 shouldNotExceedAvailableRange: true,
