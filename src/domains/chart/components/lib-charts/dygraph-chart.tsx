@@ -428,7 +428,7 @@ export const DygraphChart = ({
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
   }, [chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
-    setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
+    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -829,9 +829,9 @@ export const DygraphChart = ({
       dygraphInstance.current = instance
     }
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
-    globalChartUnderlay, hasEmptyData, hiddenLabelsElementId, isFakeStacked, isMouseDown,
-    orderedColors, setGlobalChartUnderlay, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    xAxisDateString, xAxisTimeString, updatePrecededPosition, immediatelyDispatchPanAndZoom])
+    hasEmptyData, hiddenLabelsElementId, isFakeStacked,
+    orderedColors, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
+    xAxisDateString, xAxisTimeString, updatePrecededPosition])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
