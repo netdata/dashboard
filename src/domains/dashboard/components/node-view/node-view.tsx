@@ -150,6 +150,7 @@ interface Props {
   reportEvent?: ReportEvent
   defaultChart?: string
   onChangeChart?: (chart: string) => void
+  isComposite?: boolean
 }
 export const NodeView = ({
   chartsMetadata,
@@ -168,6 +169,7 @@ export const NodeView = ({
   reportEvent = noop,
   defaultChart = "",
   onChangeChart,
+  isComposite = false,
 }: Props) => {
   const [width, setWidth] = useState(0)
   const [currentChart, setCurrentChart] = useState(defaultChart)
@@ -217,8 +219,8 @@ export const NodeView = ({
   const menuPartialMetadata = metricsCorrelationMetadata || chartsMetadata
   // This is used to generate and show some statistics VS the full dataset
   const fullMetadata = metricsCorrelationMetadata && chartsMetadata
-  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata),
-    [menuPartialMetadata, fullMetadata])
+  const menus = useMemo(() => renderChartsAndMenu(menuPartialMetadata, fullMetadata, isComposite),
+    [menuPartialMetadata, fullMetadata, isComposite])
   const main = useMemo(() => sortObjectByPriority(menus), [menus])
 
   useUpdateTheme()
