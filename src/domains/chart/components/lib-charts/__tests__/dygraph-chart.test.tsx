@@ -53,6 +53,7 @@ const dygraphDefaultProps = {
   hasEmptyData: false,
   hasLegend: true,
   hoveredRow: -1,
+  immediatelyDispatchPanAndZoom: () => {},
   legendFormatValue: (v: number) => v,
   onUpdateChartPanAndZoom: () => {},
   orderedColors: ["#ff00ff", "#00ffff", "#ffff00"],
