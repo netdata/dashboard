@@ -290,6 +290,9 @@ export const Chart = memo(({
         masterID: chartUuid,
         shouldForceTimeRange,
       })
+      if (shouldFlushImmediately) {
+        setGlobalPanAndZoomDebounced.flush()
+      }
     } else {
       dispatch(setChartPanAndZoomAction({
         after: afterForced,
@@ -315,6 +318,7 @@ export const Chart = memo(({
       after: newAfter,
       before: newBefore,
       shouldForceTimeRange: true,
+      shouldFlushImmediately: true,
     })
   }, [handleUpdateChartPanAndZoom, netdataFirst, netdataLast])
 
