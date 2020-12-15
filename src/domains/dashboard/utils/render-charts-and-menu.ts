@@ -3,7 +3,7 @@ import { clone } from "ramda"
 import { ChartsMetadata } from "domains/global/types"
 import { ChartMetadata, ChartEnriched } from "domains/chart/chart-types"
 import { netdataDashboard, options } from "./netdata-dashboard"
-
+import isKubernetesChart from "./is-kubernetes-chart"
 
 // enrich the data structure returned by netdata
 // to reflect our menu system and content
@@ -43,7 +43,9 @@ function enrichChartData(chartName: string, chart: ChartMetadata) {
       break
 
     case "cgroup":
-      if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
+      if (isKubernetesChart(chartEnriched)) {
+        chartEnriched.menu = "kubernetes"
+      } else if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
         || chartEnriched.id.match(/.*[._/-:]kvm[._/-:]*/)
       ) {
         chartEnriched.menu_pattern = "cgqemu"

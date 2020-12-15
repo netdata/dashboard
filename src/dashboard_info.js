@@ -565,6 +565,12 @@ netdataDashboard.menu = {
         icon: '<i class="fas fa-comments"></i>',
         info: 'Summary, namespaces and topics performance data for the <b><a href="http://pulsar.apache.org/">Apache Pulsar</a></b> pub-sub messaging system.'
     },
+
+    'kubernetes': {
+        title: 'Kubernetes',
+        icon: '<i class="fas fa-cogs"></i>',
+        info: 'Kubernetes information text goes here.',
+    },
 };
 
 
