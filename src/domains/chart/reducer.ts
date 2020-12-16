@@ -6,7 +6,6 @@ import { createReducer } from "redux-act"
 import { setOptionAction } from "domains/global/actions"
 import { SYNC_PAN_AND_ZOOM } from "domains/global/options"
 
-import { isTimestamp } from "utils"
 import {
   fetchDataAction,
   fetchChartAction,
