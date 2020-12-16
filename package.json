@@ -103,7 +103,7 @@
     "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco start",
     "start:console": "cp ../console.html public/index.html && npm run start",
     "start:node-view": "APP_NAME='node-view-app.tsx' HTML_FILE_NAME='index-node-view.html' npm run start",
-    "start:tv": "cd public && rm ./index.html && ln -s ../tv.html index.html && cd .. && APP_NAME='custom-dashboards-app.tsx' REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
+    "start:tv": "APP_NAME='custom-dashboards-app.tsx' HTML_FILE_NAME='tv-react.html' REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "start:dashboard": "REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco build",
     "test": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts test --env=jest-environment-jsdom-fourteen --watchAll=false",
