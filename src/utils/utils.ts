@@ -1,3 +1,5 @@
+import { equals } from "ramda"
+
 // we use numbers to specify time. it can be either a timestamp (ms), or a relative value in seconds
 // which is always 0 or less (0 is now, -300 is -5 minutes)
 
@@ -25,3 +27,15 @@ export const getInitialAfterFromWindow = () => {
 }
 
 export const SPACE_PANEL_STATE = "space-panel-state"
+
+export const useNewKeysOnlyIfDifferent = <T extends {}>(
+  keys: (keyof T)[], obj1: T | null, obj2: T,
+): T => {
+  if (!obj1) {
+    return obj2
+  }
+  return keys.reduce<T>((acc, key) => ({
+    ...acc,
+    [key]: equals(obj1[key], obj2![key]) ? obj1[key] : obj2[key],
+  }), obj2)
+}
