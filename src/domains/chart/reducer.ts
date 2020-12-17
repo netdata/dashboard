@@ -5,6 +5,7 @@ import { createReducer } from "redux-act"
 
 import { setOptionAction } from "domains/global/actions"
 import { SYNC_PAN_AND_ZOOM } from "domains/global/options"
+import { useNewKeysOnlyIfDifferent } from "utils"
 
 import {
   fetchDataAction,
@@ -51,7 +52,7 @@ export const chartReducer = createReducer<StateT>(
   initialState,
 )
 
-const getSubstate = (state: StateT, id: string) => state[id] || initialSingleState
+export const getSubstate = (state: StateT, id: string) => state[id] || initialSingleState
 
 chartReducer.on(fetchDataAction.request, (state, { chart, fetchDataParams, id }) => ({
   ...state,
@@ -80,17 +81,20 @@ chartReducer.on(fetchDataAction.failure, (state, { id }) => ({
   },
 }))
 
-chartReducer.on(fetchDataAction.success, (state, { id, chartData, fetchDataParams }) => ({
-  ...state,
-  [id]: {
-    ...getSubstate(state, id),
-    chartData,
-    fetchDataParams,
-    isFetchingData: false,
-    isFetchDataFailure: false,
-    viewRange: fetchDataParams.viewRange,
-  },
-}))
+chartReducer.on(fetchDataAction.success, (state, { id, chartData, fetchDataParams }) => {
+  const substate = getSubstate(state, id)
+  return {
+    ...state,
+    [id]: {
+      ...substate,
+      chartData: useNewKeysOnlyIfDifferent(["dimension_names"], substate.chartData, chartData!),
+      fetchDataParams,
+      isFetchingData: false,
+      isFetchDataFailure: false,
+      viewRange: fetchDataParams.viewRange,
+    },
+  }
+})
 
 
 chartReducer.on(fetchDataForSnapshotAction.request, (state, { id }) => ({

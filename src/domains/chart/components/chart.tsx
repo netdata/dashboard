@@ -114,7 +114,6 @@ export const Chart = memo(({
     && !attributes.hideResizeHandler
 
   const dispatch = useDispatch()
-  const dimensionNamesJoined = chartData.dimension_names.join()
   const allDimensionNames = useMemo(
     () => {
       // metadata and chartData dimensions match each other, but we need to first parse
@@ -127,9 +126,7 @@ export const Chart = memo(({
       )
       return dimensionNamesFromMetadata.concat(additionalDimensionNamesFromData)
     },
-    // intentionally skipping chartData.dimension_names for better memoization
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dimensionNamesJoined, chartMetadata.dimensions],
+    [chartData.dimension_names, chartMetadata.dimensions],
   )
   useEffect(() => {
     dispatch(requestCommonColorsAction({
