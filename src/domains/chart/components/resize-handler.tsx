@@ -24,9 +24,6 @@ export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Pr
           resizeHeight,
         }),
       )
-      if (heightId) {
-        localStorage.setItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`, `${resizeHeight}px`)
-      }
     }
   }, [resizeHeight, chartUuid, heightId, dispatch])
 
@@ -43,6 +40,9 @@ export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Pr
         // eslint-disable-next-line no-param-reassign
         chartContainerElement.style.height = `${nextHeight.toString()}px`
         setResizeHeight(nextHeight)
+        if (heightId) {
+          localStorage.setItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`, `${nextHeight}px`)
+        }
       }
 
       const onMouseMove = (e: MouseEvent) => setHeight(e.clientY)
@@ -66,7 +66,7 @@ export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Pr
         document.addEventListener("mouseup", onMouseEnd)
       }
     },
-    [chartContainerElement],
+    [chartContainerElement, heightId],
   )
 
   return (
