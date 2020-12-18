@@ -1,5 +1,9 @@
-import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
+import {
+  LOCALSTORAGE_HEIGHT_KEY_PREFIX,
+  LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD,
+} from "domains/chart/components/resize-handler"
 
+import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { Attributes } from "./transformDataAttributes"
 import { ChartLibraryConfig } from "./chartLibrariesSettings"
 
@@ -11,6 +15,23 @@ type GetPortalNodeStyles = (
   width: string | undefined,
   minWidth: string | undefined
 }
+
+const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) => {
+  const persitedHeight = localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightID}`)
+  if (persitedHeight) {
+    if (Number.isNaN(Number(persitedHeight))) {
+      return null
+    }
+    return `${isLegendOnBottom
+      ? Number(persitedHeight) + LEGEND_BOTTOM_SINGLE_LINE_HEIGHT
+      : persitedHeight
+    }px`
+  }
+  // we'll support the old key for few months, so user custom heights will be working
+  // but we'll save any changes to new key only
+  return localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD}${heightID}`)
+}
+
 export const getPortalNodeStyles: GetPortalNodeStyles = (
   attributes,
   chartSettings,
@@ -31,9 +52,10 @@ export const getPortalNodeStyles: GetPortalNodeStyles = (
       height = `${attributes.height.toString()}px`
     }
   }
+  const isLegendOnBottom = attributes.legendPosition === "bottom"
 
   const heightFromLocalStorage = attributes.heightId
-    ? localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${attributes.heightId}`)
+    ? getHeightFromLocalStorage(attributes.heightId, isLegendOnBottom)
     : null
 
   if (heightFromLocalStorage) {
