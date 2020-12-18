@@ -16,6 +16,8 @@ type GetPortalNodeStyles = (
   minWidth: string | undefined
 }
 
+const oldDefaultHeights = ["180px", "90px"]
+
 const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) => {
   const persitedHeight = localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightID}`)
   if (persitedHeight) {
@@ -27,9 +29,22 @@ const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) 
       : persitedHeight
     }px`
   }
-  // we'll support the old key for few months, so user custom heights will be working
-  // but we'll save any changes to new key only
-  return localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD}${heightID}`)
+
+  // We'll support the old key for few months, so that user's custom heights will be working,
+  // but we'll save any changes only to the new key.
+  const persistedHeightOld = localStorage.getItem(
+    `${LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD}${heightID}`,
+  )
+  if (persistedHeightOld) {
+    if (oldDefaultHeights.includes(persistedHeightOld)) {
+      // If saved value looks like `oldDefaultHeights`, then it is most likely an automatic value
+      // from old dashboard. Don't import it anymore. On next resize the height will be persisted
+      // to the new key.
+      return null
+    }
+    return persistedHeightOld
+  }
+  return null
 }
 
 export const getPortalNodeStyles: GetPortalNodeStyles = (
