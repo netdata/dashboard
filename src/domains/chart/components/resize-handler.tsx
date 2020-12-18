@@ -1,17 +1,22 @@
 import React, { useState, useCallback, useEffect } from "react"
 import { ToolboxButton } from "domains/chart/components/toolbox-button"
 import { setResizeHeightAction } from "domains/chart/actions"
+import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { useDispatch } from "store/redux-separate-context"
 
-export const LOCALSTORAGE_HEIGHT_KEY_PREFIX = "chart_heights."
+export const LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD = "chart_heights."
+export const LOCALSTORAGE_HEIGHT_KEY_PREFIX = "chart_height."
 
 interface Props {
   chartContainerElement: HTMLElement
   chartUuid: string
   heightId: string | undefined
+  isLegendOnBottom: boolean
 }
 
-export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Props) => {
+export const ResizeHandler = ({
+  chartContainerElement, chartUuid, heightId, isLegendOnBottom,
+}: Props) => {
   const [resizeHeight, setResizeHeight] = useState(() => chartContainerElement.clientHeight)
   const dispatch = useDispatch()
 
@@ -41,7 +46,13 @@ export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Pr
         chartContainerElement.style.height = `${nextHeight.toString()}px`
         setResizeHeight(nextHeight)
         if (heightId) {
-          localStorage.setItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`, `${nextHeight}px`)
+          const heightForPersistance = isLegendOnBottom
+            ? (nextHeight - LEGEND_BOTTOM_SINGLE_LINE_HEIGHT)
+            : nextHeight
+          localStorage.setItem(
+            `${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightId}`,
+            `${heightForPersistance}`,
+          )
         }
       }
 
@@ -66,7 +77,8 @@ export const ResizeHandler = ({ chartContainerElement, chartUuid, heightId }: Pr
         document.addEventListener("mouseup", onMouseEnd)
       }
     },
-    [chartContainerElement, heightId],
+    [chartContainerElement.clientHeight, chartContainerElement.style.height, heightId,
+      isLegendOnBottom],
   )
 
   return (

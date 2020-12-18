@@ -426,6 +426,7 @@ export const Chart = memo(({
       chartContainerElement={chartContainerElement}
       chartUuid={chartUuid}
       heightId={attributes.heightId}
+      isLegendOnBottom={isLegendOnBottom}
     />
   )
 
