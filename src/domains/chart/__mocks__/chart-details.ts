@@ -17,6 +17,7 @@ export const chartMetadataMock: ChartMetadata = {
   duration: 3997,
   first_entry: 1569923278,
   last_entry: 1569927274,
+  chartLabels: {},
   update_every: 1,
   dimensions: {
     user: {
