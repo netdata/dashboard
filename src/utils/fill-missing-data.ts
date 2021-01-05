@@ -97,6 +97,8 @@ export const transformResults = (data: ChartData, format: string, shouldRevertFl
       : (data as DygraphData).result.data
     return {
       ...data,
+      // set proper output type so other functions like fillMissingData work properly
+      format: "array",
       result: dataResult.reduce((acc: number[], pointData: number[]) => {
         pointData.shift()
         return [
