@@ -42,6 +42,7 @@ import { selectResizeHeight } from "../../selectors"
 
 import {
   getDygraphChartType, getDataForFakeStacked, transformColors, getDygraphFillAlpha,
+  hackDygraphIFrameTarps,
 } from "./dygraph/utils"
 import "./dygraph-chart.css"
 
@@ -546,6 +547,10 @@ export const DygraphChart = ({
             latestIsUserAction.current = true
             isMouseDown.current = true
             context.initializeMouseDown(event, dygraph, context)
+
+            // limit problematic dygraph's feature, more info above the function
+            // eslint-disable-next-line no-param-reassign
+            context.tarp.tarps = hackDygraphIFrameTarps(context.tarp.tarps)
 
             if (event.button && event.button === 1) {
               // middle mouse button
