@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useEffect } from "react"
 import { useEffectOnce } from "react-use"
-import { Button } from "@netdata/netdata-ui"
+import { Button, Documentation } from "@netdata/netdata-ui"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { ChartsMetadata } from "domains/global/types"
@@ -114,7 +114,6 @@ export const AppHeader = ({
     }, WAITING_FOR_HELLO_TIME)
   }, [setIsOffline])
 
-
   useEffectOnce(() => {
     // alternative way to catch iframe load (error or success) - firefox doesn't work with onLoad
     // attribute when src is unreachable. In Chrome DOMFrameContentLoaded doesn't fire, but it's ok
@@ -136,7 +135,6 @@ export const AppHeader = ({
     }
   })
 
-
   // wait a litte bit before we start showing spinners, rendering offline stuff, etc.
   useEffectOnce(() => {
     const timeoutId = setTimeout(() => {
@@ -156,9 +154,11 @@ export const AppHeader = ({
     }
 
     event.preventDefault()
-    dispatch(showSignInModalAction({
-      signInLinkHref,
-    }))
+    dispatch(
+      showSignInModalAction({
+        signInLinkHref,
+      }),
+    )
   }
   const signInIframeRef = useRef<HTMLIFrameElement>(null)
   useEffect(() => {
@@ -199,16 +199,19 @@ export const AppHeader = ({
           />
         )}
         <IconContainer>
-          <Button
-            flavour="borderless"
-            neutral
-            themeType="dark"
-            className="btn"
-            data-toggle="modal"
-            data-target="#helpModal"
-            icon="question"
-            title="Need help?"
-          />
+          <Documentation app="agent">
+            {(toggle: any) => (
+              <Button
+                flavour="borderless"
+                neutral
+                themeType="dark"
+                className="btn"
+                icon="question"
+                onClick={toggle}
+                title="Need help?"
+              />
+            )}
+          </Documentation>
         </IconContainer>
         <IconContainer>
           <Button
