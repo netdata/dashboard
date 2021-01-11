@@ -61,25 +61,26 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
   return data
 }
 
-export const getGroupedBoxes = (data: ChartData, postAggregationMethod: string) => {
+export const getGroupedBoxes = (
+  data: ChartData,
+  postAggregationMethod: string,
+  groupBy: string,
+  postGroupBy: string,
+) => {
   if ("post_aggregated_data" in data.result) {
     const { result, keys } = data as any
     const { post_aggregated_data: postAggregatedData } = result
-    const { k8s_container_id: k8sContainerIds, k8s_namespace: k8sNamespace } = keys
 
     return postAggregatedData[postAggregationMethod].reduce(
-      (acc: any, value: any, index: number) => {
-        const containerId = k8sContainerIds[index]
-        return {
-          ...acc,
-          [k8sNamespace[index]]: acc[k8sNamespace[index]]
-            ? {
-              labels: [...acc[k8sNamespace[index]].labels, containerId],
-              data: [...acc[k8sNamespace[index]].data, value],
-            }
-            : { labels: [containerId], data: [value] },
-        }
-      },
+      (acc: any, value: any, index: number) => ({
+        ...acc,
+        [keys[groupBy][index]]: acc[keys[groupBy][index]]
+          ? {
+            labels: [...acc[keys[groupBy][index]].labels, keys[postGroupBy]],
+            data: [...acc[keys[groupBy][index]].data, value],
+          }
+          : { labels: [keys[postGroupBy]], data: [value] },
+      }),
       {},
     )
   }

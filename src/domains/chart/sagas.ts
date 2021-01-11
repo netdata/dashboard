@@ -194,6 +194,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       const groupedBoxes = getGroupedBoxes(
         (data as unknown) as ChartData,
         postAggregationMethod as string,
+        groupBy as string,
+        postGroupBy as string,
       )
 
       const chartData = {
