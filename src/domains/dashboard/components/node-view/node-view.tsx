@@ -90,7 +90,7 @@ const SubSection = memo(({
             commonAttributesOverrides={commonAttributesOverrides}
           />
         )}
-        {menuName !== "kubernetes" && submenuNames.flatMap(
+        {!menuName.startsWith("kubernetes") && submenuNames.flatMap(
           (submenu) => menu.submenus[submenu].charts
             .concat().sort(prioritySort) // shallow clone, sort by priority
             .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
