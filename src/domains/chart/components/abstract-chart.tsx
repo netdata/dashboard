@@ -21,6 +21,7 @@ import { D3pieChart } from "./lib-charts/d3pie-chart"
 import { PeityChart } from "./lib-charts/peity-chart"
 import { GoogleChart } from "./lib-charts/google-chart"
 import { TextOnly } from "./lib-charts/text-only"
+import { GroupBoxes } from "./lib-charts/group-box-chart"
 
 interface Props {
   attributes: Attributes
@@ -258,6 +259,10 @@ export const AbstractChart = ({
         chartElementId={chartElementId}
       />
     )
+  }
+
+  if (chartLibrary === "groupbox") {
+    return <GroupBoxes chartData={chartData} />
   }
 
   return (

@@ -61,6 +61,32 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
   return data
 }
 
+export const getGroupedBoxes = (
+  data: ChartData,
+  postAggregationMethod: string,
+  groupBy: string,
+  postGroupBy: string,
+) => {
+  if ("post_aggregated_data" in data.result) {
+    const { result, keys } = data as any
+    const { post_aggregated_data: postAggregatedData } = result
+
+    return postAggregatedData[postAggregationMethod].reduce(
+      (acc: any, value: any, index: number) => ({
+        ...acc,
+        [keys[groupBy][index]]: acc[keys[groupBy][index]]
+          ? {
+            labels: [...acc[keys[groupBy][index]].labels, keys[postGroupBy]],
+            data: [...acc[keys[groupBy][index]].data, value],
+          }
+          : { labels: [keys[postGroupBy]], data: [value] },
+      }),
+      {},
+    )
+  }
+  return null
+}
+
 const emptyArray: number[] = []
 export const transformResults = (data: ChartData, format: string, shouldRevertFlip:boolean) => {
   if (format === "array" && data.format === "json") {

@@ -14,7 +14,7 @@ import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
-import { fillMissingData, transformResults } from "utils/fill-missing-data"
+import { fillMissingData, transformResults, getGroupedBoxes } from "utils/fill-missing-data"
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
 } from "components/notifications"
@@ -95,7 +95,8 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
     host, chart, format, points, group, gtime, options,
-    after, before, dimensions, aggrMethod, dimensionsAggrMethod = "sum", nodeIDs, httpMethod,
+    after, before, dimensions, labels, postGroupBy, postAggregationMethod,
+    aggrMethod, dimensionsAggrMethod = "sum", nodeIDs, httpMethod,
     groupBy = "dimension", // group by node or dimension
     // props for the store
     fetchDataParams, id, cancelTokenSource,
@@ -133,7 +134,10 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const agentOptions = shouldAddFakeFlip
     ? agentOptionsOriginal.concat("flip") : agentOptionsOriginal
 
-  const groupValue = groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`
+  const groups = [
+    groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`,
+    postGroupBy && `label=${postGroupBy}`,
+  ].filter(Boolean)
 
   const axiosOptions = httpMethod === "POST" ? {
     // used by cloud's room-overview
@@ -142,6 +146,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
         nodeIDs,
         context: chart,
         dimensions: dimensions ? dimensions.split(/['|]/) : undefined,
+        labels,
       },
       after,
       before,
@@ -149,13 +154,14 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       group,
       gtime,
       agent_options: agentOptions,
+      ...(postAggregationMethod && { post_aggregation_methods: [postAggregationMethod] }),
       aggregations: [groupBy !== "dimension" && {
         method: dimensionsAggrMethod,
-        groupBy: ["chart", groupValue],
+        groupBy: ["chart", ...groups],
       },
       {
         method: aggrMethod,
-        groupBy: [groupValue],
+        groupBy: groups,
       }].filter(Boolean),
     },
   } : {
@@ -178,11 +184,25 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       fetchDataResponseChannel.put(fetchDataAction.failure({ id }))
     } else {
       const { fillMissingPoints } = fetchDataParams
-      const chartData = transformResults(
-        ((data as unknown) as ChartData),
+
+      const transformedResults = transformResults(
+        (data as unknown) as ChartData,
         format,
         shouldAddFakeFlip,
       )
+
+      const groupedBoxes = getGroupedBoxes(
+        (data as unknown) as ChartData,
+        postAggregationMethod as string,
+        groupBy as string,
+        postGroupBy as string,
+      )
+
+      const chartData = {
+        ...transformedResults,
+        ...(groupedBoxes && { groupedBoxes }),
+      }
+
       fetchDataResponseChannel.put(fetchDataAction.success({
         chartData: fillMissingPoints
           ? fillMissingData(chartData as ChartData, fillMissingPoints)

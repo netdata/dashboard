@@ -306,6 +306,9 @@ export const ChartWithLoader = ({
           after: after || null,
           before: before || null,
           dimensions: attributes.dimensions,
+          labels: attributes.labels,
+          postGroupBy: attributes.postGroupBy,
+          postAggregationMethod: attributes.postAggregationMethod,
           aggrMethod: attributes.aggrMethod,
           // @ts-ignore
           dimensionsAggrMethod: dimensionsAggrMethodMap[attributes.dimensionsAggrMethod]

@@ -38,6 +38,9 @@ export interface FetchDataUrlParams {
   after: number | null
   before?: number | null
   dimensions?: string
+  labels?: {[key: string]: string}
+  postGroupBy?: string
+  postAggregationMethod?: string
   aggrMethod?: string
   dimensionsAggrMethod?: string
   nodeIDs?: string[]
