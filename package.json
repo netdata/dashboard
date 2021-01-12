@@ -22,7 +22,7 @@
     "@rmwc/menu": "^5.7.2",
     "@rmwc/theme": "^6.1.4",
     "@rmwc/tooltip": "^5.7.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^3.4.1",
     "bootstrap-slider": "^10.6.2",
     "bootstrap-table": "^1.11.2",
