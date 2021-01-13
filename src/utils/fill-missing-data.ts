@@ -21,8 +21,8 @@ export const getCorrectedPoints = ({
   points,
 }: GetCorrectedPointsArg) => {
   const nowInSeconds = Math.round(new Date().valueOf() / 1000)
-  const afterAbsolute = after > 0 ? after : (nowInSeconds + after)
-  const beforeAbsolute = before > 0 ? before : (nowInSeconds + before)
+  const afterAbsolute = after > 0 ? after : nowInSeconds + after
+  const beforeAbsolute = before > 0 ? before : nowInSeconds + before
 
   if (afterAbsolute < firstEntry) {
     // take into account first_entry
@@ -42,8 +42,9 @@ export const addPointsDygraph = (data: DygraphData, nrOfPointsToFill: number) =>
   }
   const firstAddedTimestamp = data.result.data[0][0] - nrOfPointsToFill * viewUpdateEvery
   const emptyPoint = tail(data.result.labels).map(() => null)
-  const nulls = new Array(nrOfPointsToFill).fill(null)
-    .map((_, i) => ([firstAddedTimestamp + i * viewUpdateEvery, ...emptyPoint]))
+  const nulls = new Array(nrOfPointsToFill)
+    .fill(null)
+    .map((_, i) => [firstAddedTimestamp + i * viewUpdateEvery, ...emptyPoint])
   return {
     ...data,
     after: data.after - viewUpdateEvery * nrOfPointsToFill,
@@ -62,33 +63,36 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
 }
 
 export const getGroupedBoxes = (
-  data: ChartData,
+  payload: ChartData,
   postAggregationMethod: string,
   groupBy: string,
-  postGroupBy: string,
+  postGroupBy: string
 ) => {
-  if ("post_aggregated_data" in data.result) {
-    const { result, keys } = data as any
-    const { post_aggregated_data: postAggregatedData } = result
+  if ("post_aggregated_data" in payload.result) {
+    const { result, keys } = payload as any
+    const { post_aggregated_data: postAggregatedData, data } = result
+    const postAggregated = postAggregatedData[postAggregationMethod]
+    const groupValues = keys[groupBy]
+    const postGroupValues = keys[postGroupBy]
 
-    return postAggregatedData[postAggregationMethod].reduce(
-      (acc: any, value: any, index: number) => ({
-        ...acc,
-        [keys[groupBy][index]]: acc[keys[groupBy][index]]
-          ? {
-            labels: [...acc[keys[groupBy][index]].labels, keys[postGroupBy]],
-            data: [...acc[keys[groupBy][index]].data, value],
-          }
-          : { labels: [keys[postGroupBy]], data: [value] },
-      }),
-      {},
-    )
+    const postGroupData = groupValues.reduce((acc: any, postGroupValue: string, index: number) => {
+      if (!(postGroupValue in acc)) {
+        acc[postGroupValue] = { labels: [], data: [], postAggregatedData: [] }
+      }
+      const boxes = acc[postGroupValue]
+      boxes.labels.push(postGroupValues[index])
+      boxes.data.push(data[index])
+      boxes.postAggregatedData.push(postAggregated[index])
+      return acc
+    }, {})
+
+    return { labels: Object.keys(postGroupData), data: Object.values(postGroupData) }
   }
   return null
 }
 
 const emptyArray: number[] = []
-export const transformResults = (data: ChartData, format: string, shouldRevertFlip:boolean) => {
+export const transformResults = (data: ChartData, format: string, shouldRevertFlip: boolean) => {
   if (format === "array" && data.format === "json") {
     if (Array.isArray(data.result)) return data
 
@@ -101,10 +105,7 @@ export const transformResults = (data: ChartData, format: string, shouldRevertFl
       format: "array",
       result: dataResult.reduce((acc: number[], pointData: number[]) => {
         pointData.shift()
-        return [
-          ...acc,
-          sum(pointData),
-        ]
+        return [...acc, sum(pointData)]
       }, emptyArray),
     }
   }
@@ -154,17 +155,13 @@ export const mapDefaultAggrMethod = (unit: string): string => {
   if (avgUnits[unit.toLowerCase()]) {
     return "avg"
   }
-  const avgUnitsRegExes: any = [
-    ".*%.*",
-    ".*/operation",
-    ".*/run",
-    ".*/ run",
-    ".*/request",
-  ]
-  if (avgUnitsRegExes.some((regEx: string) => {
-    const regExpression = RegExp(regEx, "i")
-    return regExpression.test(unit.toLowerCase())
-  })) {
+  const avgUnitsRegExes: any = [".*%.*", ".*/operation", ".*/run", ".*/ run", ".*/request"]
+  if (
+    avgUnitsRegExes.some((regEx: string) => {
+      const regExpression = RegExp(regEx, "i")
+      return regExpression.test(unit.toLowerCase())
+    })
+  ) {
     return "avg"
   }
   return "sum"

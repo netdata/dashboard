@@ -21,7 +21,7 @@ import { D3pieChart } from "./lib-charts/d3pie-chart"
 import { PeityChart } from "./lib-charts/peity-chart"
 import { GoogleChart } from "./lib-charts/google-chart"
 import { TextOnly } from "./lib-charts/text-only"
-import { GroupBoxes } from "./lib-charts/group-box-chart"
+import { KubernetesGroupBoxes } from "./lib-charts/group-box-chart"
 
 interface Props {
   attributes: Attributes
@@ -262,7 +262,15 @@ export const AbstractChart = ({
   }
 
   if (chartLibrary === "groupbox") {
-    return <GroupBoxes chartData={chartData} />
+    return (
+      <KubernetesGroupBoxes
+        chartData={chartData}
+        chartMetadata={chartMetadata}
+        attributes={attributes}
+        viewAfter={viewAfterForCurrentData}
+        viewBefore={viewBeforeForCurrentData}
+      />
+    )
   }
 
   return (

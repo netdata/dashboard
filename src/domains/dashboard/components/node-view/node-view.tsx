@@ -78,6 +78,7 @@ const SubSection = memo(({
         chartsMetadata,
         onAttributesChange,
         host,
+        nodeIDs,
       })}
       <div className="netdata-chart-row">
         {shouldDisplayHeadMain && (
