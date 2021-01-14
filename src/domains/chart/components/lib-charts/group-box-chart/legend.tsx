@@ -18,14 +18,14 @@ const Legend = ({ children }: LegendProps) => (
       <LinearColorScaleBar />
       <TextNano>100%</TextNano>
     </Flex>
-    <Flex gap={2} alignItems="center">
+    {/* <Flex gap={2} alignItems="center">
       <TextNano strong>Alarms</TextNano>
       <Flex width="12px" height="12px" background="error" round />
     </Flex>
     <Flex gap={2} alignItems="center">
       <TextNano strong>Warnings</TextNano>
       <Flex width="12px" height="12px" background="warning" round />
-    </Flex>
+    </Flex> */}
   </Flex>
 )
 

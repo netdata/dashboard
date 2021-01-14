@@ -1,9 +1,7 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import React, { useMemo } from "react"
-import { H5, H6, Text, Flex, Icon } from "@netdata/netdata-ui"
-import styled from "styled-components"
-import Container from "@netdata/netdata-ui/lib/components/drops/tooltip/container"
+import { H5, H6, Text, Flex, Icon, DropContainer } from "@netdata/netdata-ui"
 import { useDateTime } from "utils/date-time"
 import { ChartMetadata } from "domains/chart/chart-types"
 import { Attributes } from "../../../utils/transformDataAttributes"
@@ -17,8 +15,13 @@ interface Props {
 
 const Section = ({ title, children }) => {
   return (
-    <Flex gap={3} column>
-      <H6 color="border">{title}</H6>
+    <Flex
+      gap={3}
+      padding={[3, 0, 0]}
+      border={{ side: "top", color: ["gray", "shuttleGray"] }}
+      column
+    >
+      <H6 color={["gray", "aluminium"]}>{title}</H6>
       <Flex gap={2} column>
         {children}
       </Flex>
@@ -30,9 +33,15 @@ const Item = ({ icon, title, secondary }) => {
   return (
     <Flex gap={1} alignItems="start">
       <Flex width="22px" height="22px">
-        <Icon name={icon} color="text" margin={[0, 1, 0, 0]} width="22px" height="22px" />
+        <Icon
+          name={icon}
+          color={["white", "pure"]}
+          margin={[0, 1, 0, 0]}
+          width="22px"
+          height="22px"
+        />
       </Flex>
-      <Text>{title}</Text>
+      <Text color={["white", "pure"]}>{title}</Text>
       {secondary && (
         <Text color="border" wordBreak="break-all">
           {secondary}
@@ -42,33 +51,35 @@ const Item = ({ icon, title, secondary }) => {
   )
 }
 
-const StyledContainer = styled(Container)`
-  background: rgba(18, 36, 50, 0.9);
-`
-
-// const GroupTooltip = ({ attributes, groupedBoxes, groupIndex, index, chartMetadata }) => {
-//   const { getName, nodeIDs } = attributes
-//   const label = groupedBoxes.data[groupIndex].labels[index]
-//   const { k8s_cluster_id: clusterId, k8s_namespace: namespace } = chartMetadata.chartLabels
-//   return (
-//     <StyledContainer align="top" padding={[2, 4]} width="320px" height={{ max: "420px" }} gap={6}>
-//       <H5>{label}</H5>
-//       <Flex column gap={7} overflow={{ vertical: "auto" }}>
-//         <Section title="Parent">
-//           <Item icon="cluster" title="Cluster" secondary={clusterId} />
-//         </Section>
-//         <Section title="Nodes">
-//           {nodeIDs.map((nodeId) => (
-//             <Item icon="nodes_hollow" title={getName(nodeId)} />
-//           ))}
-//         </Section>
-//         <Section title="Namespace">
-//           <Item icon="cluster_spaces" title={namespace} />
-//         </Section>
-//       </Flex>
-//     </StyledContainer>
-//   )
-// }
+const GroupTooltip = ({ label, attributes, chartMetadata }) => {
+  const { getName, nodeIDs } = attributes
+  const { k8s_cluster_id: clusterId, k8s_namespace: namespace } = chartMetadata.chartLabels
+  return (
+    <DropContainer
+      align="top"
+      background={["transparent", "popover"]}
+      padding={[2, 4]}
+      width="320px"
+      height={{ max: "420px" }}
+      gap={6}
+    >
+      <H5>{label}</H5>
+      <Flex column gap={7} overflow={{ vertical: "auto" }}>
+        <Section title="Parent">
+          <Item icon="cluster" title="Cluster" secondary={clusterId} />
+        </Section>
+        <Section title="Nodes">
+          {nodeIDs.map((nodeId) => (
+            <Item icon="nodes_hollow" title={getName(nodeId)} />
+          ))}
+        </Section>
+        <Section title="Namespace">
+          <Item icon="cluster_spaces" title={namespace} />
+        </Section>
+      </Flex>
+    </DropContainer>
+  )
+}
 
 const BoxTooltip = ({ label, chartMetadata, viewBefore, viewAfter, ...rest }: any) => {
   const { localeDateString, localeTimeString } = useDateTime()
@@ -80,15 +91,18 @@ const BoxTooltip = ({ label, chartMetadata, viewBefore, viewAfter, ...rest }: an
   } = chartMetadata.chartLabels
 
   return (
-    <StyledContainer
+    <DropContainer
       align="top"
+      background={["transparent", "popover"]}
       padding={[3, 4]}
       width="320px"
       height={{ max: "420px" }}
-      gap={6}
+      gap={3}
       {...rest}
     >
-      <H5 wordBreak="break-all">{label}</H5>
+      <H5 color={["white", "pure"]} wordBreak="break-all">
+        {label}
+      </H5>
       <Flex column gap={7} overflow={{ vertical: "auto" }}>
         <Section title="Cluster">
           <Item icon="cluster" title="Cluster" secondary={clusterId} />
@@ -109,7 +123,7 @@ const BoxTooltip = ({ label, chartMetadata, viewBefore, viewAfter, ...rest }: an
           />
         </Section>
       </Flex>
-    </StyledContainer>
+    </DropContainer>
   )
 }
 
@@ -120,7 +134,7 @@ const Kubernetes = ({
   viewAfter,
   viewBefore,
 }: any) => {
-  const renderTooltip = ({ group, groupIndex, index }, props) => {
+  const renderBoxTooltip = ({ groupIndex, index }) => {
     const label = groupedBoxes.data[groupIndex].labels[index]
     return (
       <BoxTooltip
@@ -128,9 +142,13 @@ const Kubernetes = ({
         chartMetadata={chartMetadata}
         viewBefore={viewBefore}
         viewAfter={viewAfter}
-        {...props}
       />
     )
+  }
+
+  const renderGroupTooltip = ({ groupIndex }) => {
+    const label = groupedBoxes.labels[groupIndex]
+    return <GroupTooltip label={label} attributes={attributes} chartMetadata={chartMetadata} />
   }
 
   const chartData = useMemo(() => {
@@ -143,7 +161,14 @@ const Kubernetes = ({
     }
   }, [groupedBoxes])
 
-  return <GroupBoxes id={id} chartData={chartData} renderTooltip={renderTooltip} />
+  return (
+    <GroupBoxes
+      id={id}
+      chartData={chartData}
+      renderBoxTooltip={renderBoxTooltip}
+      renderGroupTooltip={renderGroupTooltip}
+    />
+  )
 }
 
 export default Kubernetes

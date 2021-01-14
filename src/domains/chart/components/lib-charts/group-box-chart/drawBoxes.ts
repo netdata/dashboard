@@ -54,9 +54,11 @@ export default (el, { onMouseover, onMouseout }) => {
       .style("opacity", 0.9)
       .style("fill", (value) => colorScale(data)(value))
       .on("mouseover", (value, index, boxes) => {
+        select(boxes[index]).style("stroke", "#DCE2E8")
         onMouseover({ value, index, target: boxes[index], boxes })
       })
       .on("mouseout", (value, index, boxes) => {
+        select(boxes[index]).style("stroke", "")
         onMouseout({ value, index, target: boxes[index], boxes })
       })
 

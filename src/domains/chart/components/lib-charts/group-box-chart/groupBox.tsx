@@ -1,7 +1,6 @@
 // @ts-nocheck
-import React, { useRef, useLayoutEffect, Fragment, useState } from "react"
-import { Drop, Flex } from "@netdata/netdata-ui"
-import Container from "@netdata/netdata-ui/lib/components/drops/tooltip/container"
+import React, { useRef, useLayoutEffect, Fragment, useState, useCallback } from "react"
+import { Drop } from "@netdata/netdata-ui"
 import drawBoxes from "./drawBoxes"
 
 interface GroupboxData {
@@ -18,38 +17,21 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
   const boxesRef = useRef()
 
   const [hover, setHover] = useState(null)
-  const [, setDropHover] = useState(false)
-  const [, setBoxHover] = useState(false)
+  const dropHoverRef = useRef(false)
+  const boxHoverRef = useRef(false)
 
-  // const onMouseout = () => {
-  //   requestAnimationFrame(() => {
-  //     setDropHover((state) => {
-  //       if (!state) setHover(null)
-  //     })
-  //   })
-  // }
+  const closeDrop = () =>
+    requestAnimationFrame(() => !dropHoverRef.current && !boxHoverRef.current && setHover(null))
 
   useLayoutEffect(() => {
     boxesRef.current = drawBoxes(svgRef.current, {
       onMouseover: (props) => {
-        setDropHover((state) => {
-          if (state) {
-            return
-          }
-          setBoxHover(true)
-          setHover(props)
-        })
+        boxHoverRef.current = true
+        setHover(props)
       },
       onMouseout: () => {
-        setBoxHover(false)
-        requestAnimationFrame(() => {
-          setDropHover((state) => {
-            if (!state) {
-              setHover(null)
-            }
-            return state
-          })
-        })
+        boxHoverRef.current = false
+        closeDrop()
       },
     })
     return () => boxesRef.current.clear()
@@ -59,6 +41,15 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
     boxesRef.current.update(data)
   }, [data])
 
+  const onMouseEnter = useCallback(() => {
+    dropHoverRef.current = true
+  }, [])
+
+  const onMouseLeave = useCallback(() => {
+    dropHoverRef.current = false
+    closeDrop()
+  }, [])
+
   return (
     <Fragment>
       <svg ref={svgRef} />
@@ -66,20 +57,8 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
         <Drop
           align={{ bottom: "top" }}
           target={hover.target}
-          onMouseEnter={() => {
-            setDropHover(true)
-          }}
-          onMouseLeave={() => {
-            setDropHover(false)
-            requestAnimationFrame(() => {
-              setBoxHover((state) => {
-                if (!state) {
-                  setHover(null)
-                }
-                return state
-              })
-            })
-          }}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {renderTooltip(hover)}
         </Drop>
