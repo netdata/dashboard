@@ -16,7 +16,7 @@
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
     "@material/menu-surface": "^1.0.0",
-    "@netdata/netdata-ui": "^1.2.5",
+    "@netdata/netdata-ui": "^1.2.7",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
