@@ -26,7 +26,12 @@ const BoxPopover = ({ label, chartMetadata, attributes, viewBefore, viewAfter, .
       <DateSection after={viewAfter} before={viewBefore} />
       <Section title="Metrics" noBorder>
         {attributes.relatedCharts.map(({ chartMetadata }, index) => (
-          <ChartOverview key={chartMetadata.id} attributes={attributes} relatedIndex={index} />
+          <ChartOverview
+            key={chartMetadata.id}
+            id={`${label}|${attributes.id}|${chartMetadata.id}|overview`}
+            attributes={attributes}
+            relatedIndex={index}
+          />
         ))}
       </Section>
     </Container>

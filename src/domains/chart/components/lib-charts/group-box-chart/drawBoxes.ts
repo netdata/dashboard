@@ -18,6 +18,12 @@ const getXPosition = (numOfColumns) => {
 
 const getYPosition = (numOfColumns) => (_, index) => Math.floor(index / numOfColumns) * cellSize
 
+export const getWidth = (data) => {
+  const numOfRows = getRows(data)
+  const numOfColumns = getColumns(numOfRows)
+  return Math.ceil(numOfColumns) * cellSize
+}
+
 const getCanvasAttributes = (data) => {
   const numOfRows = getRows(data)
   const numOfColumns = getColumns(numOfRows)
@@ -26,9 +32,10 @@ const getCanvasAttributes = (data) => {
   return { width, height, columns: Math.ceil(numOfColumns) }
 }
 
-const colorScale = (values) => scaleLog()
-  .domain(extent(values, (value) => value))
-  .range(["#C6E3F6", "#0E9AFF"])
+const colorScale = (values) =>
+  scaleLog()
+    .domain(extent(values, (value) => value))
+    .range(["#C6E3F6", "#0E9AFF"])
 
 export default (el, { onMouseover, onMouseout }) => {
   const svg = select(el)

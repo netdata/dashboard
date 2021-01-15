@@ -1,20 +1,23 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef, useContext } from "react"
+import React, { useRef, useContext, useLayoutEffect, useState } from "react"
 import { ChartContainer } from "domains/chart/components/chart-container"
 import { ThemeContext } from "styled-components"
 import { Flex, getColor } from "@netdata/netdata-ui"
 import ChartOverview from "./chartOverview"
 
-const Chart = ({ attributes, relatedIndex }) => {
+const Chart = ({ id, attributes, relatedIndex }) => {
   const theme = useContext(ThemeContext)
   const chartContainerRef = useRef()
+  const [, repaint] = useState()
+
+  useLayoutEffect(() => {
+    repaint(true)
+  }, [])
 
   const { chartMetadata, attributes: relatedChartAttributes } = attributes.relatedCharts[
     relatedIndex
   ]
-
-  const id = `${attributes.id}|${chartMetadata.id}`
 
   const chartAttributes = {
     id: chartMetadata.id,
@@ -47,7 +50,7 @@ const Chart = ({ attributes, relatedIndex }) => {
           />
         )}
       </div>
-      <ChartOverview attributes={attributes} relatedIndex={relatedIndex} />
+      <ChartOverview id={id} attributes={attributes} relatedIndex={relatedIndex} />
     </Flex>
   )
 }

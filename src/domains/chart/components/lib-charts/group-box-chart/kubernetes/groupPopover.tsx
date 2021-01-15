@@ -29,14 +29,19 @@ const Context = ({ chartMetadata, attributes }) => {
   )
 }
 
-const Metrics = ({ attributes, viewBefore, viewAfter }) => {
+const Metrics = ({ label, attributes, viewBefore, viewAfter }) => {
   return (
     <Fragment>
       <DateSection after={viewAfter} before={viewBefore} />
       <Section title="Metrics" noBorder>
         <Flex gap={3} column>
           {attributes.relatedCharts.map(({ chartMetadata }, index) => (
-            <Chart key={chartMetadata.id} attributes={attributes} relatedIndex={index} />
+            <Chart
+              key={chartMetadata.id}
+              id={`${label}|${attributes.id}|${chartMetadata.id}`}
+              attributes={attributes}
+              relatedIndex={index}
+            />
           ))}
         </Flex>
       </Section>
@@ -90,7 +95,12 @@ const GroupPopover = ({ label, attributes, chartMetadata, viewBefore, viewAfter,
       <Tabs value={view} onChange={setView}>
         {view === "context" && <Context chartMetadata={chartMetadata} attributes={attributes} />}
         {view === "metrics" && (
-          <Metrics attributes={attributes} viewBefore={viewBefore} viewAfter={viewAfter} />
+          <Metrics
+            label={label}
+            attributes={attributes}
+            viewBefore={viewBefore}
+            viewAfter={viewAfter}
+          />
         )}
       </Tabs>
     </Container>

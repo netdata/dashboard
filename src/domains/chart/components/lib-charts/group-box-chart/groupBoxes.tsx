@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 // @ts-nocheck
-import React, { useRef } from "react"
+import React, { useRef, useMemo } from "react"
 import styled from "styled-components"
 import { Flex, TextMicro, Popover, getColor } from "@netdata/netdata-ui"
 import GroupBox from "./groupBox"
+import { getWidth } from "./drawBoxes"
 import Legend from "./legend"
 import getAlign from "./getAlign"
 
@@ -13,7 +14,11 @@ interface GroupBoxWrapperProps {
 }
 
 const Title = styled(TextMicro)`
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   cursor: default;
+
   &:hover {
     font-weight: bold;
     color: ${getColor("textFocus")};
@@ -30,6 +35,8 @@ const GroupBoxWrapper = ({
   const ref = useRef()
   const align = ref.current && getAlign(ref.current)
 
+  const style = useMemo(() => ({ width: `${getWidth(data.data)}px` }), [data])
+
   const boxPopover =
     renderBoxPopover &&
     ((props, boxAlign) => renderBoxPopover({ group: label, groupIndex, align: boxAlign, ...props }))
@@ -40,7 +47,7 @@ const GroupBoxWrapper = ({
   return (
     <Flex column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
       <Popover content={groupPopover} align={align} plain>
-        <Title ref={ref}>
+        <Title ref={ref} style={style}>
           {label} ({data.data.length})
         </Title>
       </Popover>

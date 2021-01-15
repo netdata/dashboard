@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef } from "react"
+import React, { useRef, useLayoutEffect, useState } from "react"
 import { Flex, Text } from "@netdata/netdata-ui"
 import { netdataDashboard } from "domains/dashboard/utils/netdata-dashboard"
 import { ChartContainer } from "domains/chart/components/chart-container"
@@ -28,14 +28,17 @@ const getUnitSign = (unit) => {
   return unit === "percentage" ? "%" : ` ${unit.replace(/milliseconds/, "ms")}`
 }
 
-const ChartOverview = ({ attributes, relatedIndex }) => {
+const ChartOverview = ({ id, attributes, relatedIndex }) => {
   const chartContainerRef = useRef()
+  const [, repaint] = useState()
+
+  useLayoutEffect(() => {
+    repaint(true)
+  }, [])
 
   const { chartMetadata, attributes: relatedChartAttributes } = attributes.relatedCharts[
     relatedIndex
   ]
-
-  const id = `${attributes.id}|${chartMetadata.id}`
 
   const chartAttributes = {
     id: chartMetadata.id,
