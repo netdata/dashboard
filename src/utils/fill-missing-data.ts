@@ -86,7 +86,11 @@ export const getGroupedBoxes = (
       return acc
     }, {})
 
-    return { labels: Object.keys(postGroupData), data: Object.values(postGroupData) }
+    const labels = Object.keys(postGroupData).sort(
+      (a, b) => postGroupData[b].data.length - postGroupData[a].data.length,
+    )
+
+    return { labels, data: labels.map((label) => postGroupData[label]) }
   }
   return null
 }

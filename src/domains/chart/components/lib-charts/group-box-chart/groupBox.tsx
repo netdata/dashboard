@@ -1,7 +1,9 @@
+/* eslint-disable react/jsx-fragments */
 // @ts-nocheck
 import React, { useRef, useLayoutEffect, Fragment, useState, useCallback } from "react"
 import { Drop } from "@netdata/netdata-ui"
 import drawBoxes from "./drawBoxes"
+import getAlign from "./getAlign"
 
 interface GroupboxData {
   data: number[]
@@ -10,6 +12,11 @@ interface GroupboxData {
 
 interface GroupBoxProps {
   data: GroupboxData[]
+}
+
+const aligns = {
+  top: { bottom: "top" },
+  bottom: { top: "bottom" },
 }
 
 const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
@@ -50,17 +57,19 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
     closeDrop()
   }, [])
 
+  const align = hover && getAlign(hover.target)
+
   return (
     <Fragment>
       <svg ref={svgRef} />
-      {renderTooltip && hover && (
+      {hover && renderTooltip && (
         <Drop
-          align={{ bottom: "top" }}
+          align={aligns[align]}
           target={hover.target}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
-          {renderTooltip(hover)}
+          {renderTooltip(hover, align)}
         </Drop>
       )}
     </Fragment>
