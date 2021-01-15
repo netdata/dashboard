@@ -75,11 +75,11 @@ export const getGroupedBoxes = (
     const groupValues = keys[groupBy]
     const postGroupValues = keys[postGroupBy]
 
-    const postGroupData = groupValues.reduce((acc: any, postGroupValue: string, index: number) => {
-      if (!(postGroupValue in acc)) {
-        acc[postGroupValue] = { labels: [], data: [], postAggregatedData: [] }
+    const postGroupData = groupValues.reduce((acc: any, groupValue: string, index: number) => {
+      if (!(groupValue in acc)) {
+        acc[groupValue] = { labels: [], data: [], postAggregatedData: [] }
       }
-      const boxes = acc[postGroupValue]
+      const boxes = acc[groupValue]
       boxes.labels.push(postGroupValues[index])
       boxes.data.push(data[index])
       boxes.postAggregatedData.push(postAggregated[index])
@@ -87,7 +87,7 @@ export const getGroupedBoxes = (
     }, {})
 
     const labels = Object.keys(postGroupData).sort(
-      (a, b) => postGroupData[b].data.length - postGroupData[a].data.length,
+      (a, b) => postGroupData[b].data.length - postGroupData[a].data.length
     )
 
     return { labels, data: labels.map((label) => postGroupData[label]) }

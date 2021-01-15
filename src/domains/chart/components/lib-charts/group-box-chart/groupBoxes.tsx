@@ -57,16 +57,18 @@ const GroupBoxes = ({
 }: any) => (
   <Flex column width="100%" height="100%" gap={4} padding={[4, 2]}>
     <Flex flexWrap overflow={{ vertical: "auto" }} flex>
-      {labels.map((label, index) => (
-        <GroupBoxWrapper
-          key={label}
-          label={label}
-          groupIndex={index}
-          data={data[index]}
-          renderGroupPopover={renderGroupPopover}
-          renderBoxPopover={renderBoxPopover}
-        />
-      ))}
+      {labels.map((label, index) => {
+        return data[index].data.length ? (
+          <GroupBoxWrapper
+            key={label}
+            label={label}
+            groupIndex={index}
+            data={data[index]}
+            renderGroupPopover={renderGroupPopover}
+            renderBoxPopover={renderBoxPopover}
+          />
+        ) : null
+      })}
     </Flex>
     <Legend>{id}</Legend>
   </Flex>

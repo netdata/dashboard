@@ -20,6 +20,12 @@ interface Props {
   chartData: any
   attributes: Attributes
   chartMetadata: ChartMetadata
+  hoveredRow: number
+  hoveredX: number | null
+}
+
+const getBoxesData = ({ data, postAggregatedData }, hoveredRow) => {
+  return hoveredRow === -1 || hoveredRow > data.length ? postAggregatedData : data[hoveredRow] || []
 }
 
 const Kubernetes = ({
@@ -28,6 +34,8 @@ const Kubernetes = ({
   attributes,
   viewAfter,
   viewBefore,
+  hoveredRow,
+  hoveredX,
 }: any) => {
   const renderBoxPopover = ({ groupIndex, index, align }) => {
     const label = groupedBoxes.data[groupIndex].labels[index]
@@ -60,12 +68,15 @@ const Kubernetes = ({
   const chartData = useMemo(() => {
     return {
       ...groupedBoxes,
-      data: groupedBoxes.data.map(({ labels, postAggregatedData }) => ({
-        labels,
-        data: postAggregatedData,
-      })),
+      data: groupedBoxes.data.map((groupedBox) => {
+        const data = getBoxesData(groupedBox, hoveredRow)
+        return {
+          labels: groupedBox.labels,
+          data,
+        }
+      }),
     }
-  }, [groupedBoxes])
+  }, [groupedBoxes, hoveredRow])
 
   return (
     <GroupBoxes
