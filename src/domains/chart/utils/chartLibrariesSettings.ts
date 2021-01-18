@@ -1,9 +1,17 @@
 import classNames from "classnames"
 import { Attributes } from "./transformDataAttributes"
 
-export type ChartLibraryName = "dygraph" | "sparkline" | "peity" | "google"
-// | "d3"
-  | "d3pie" | "easypiechart" | "gauge" | "textonly"
+export type ChartLibraryName =
+  | "dygraph"
+  | "sparkline"
+  | "peity"
+  | "google"
+  // | "d3"
+  | "d3pie"
+  | "easypiechart"
+  | "gauge"
+  | "textonly"
+  | "groupbox"
 export interface ChartLibraryConfig {
   aspectRatio?: number
   format: string
@@ -313,6 +321,15 @@ export const chartLibrariesSettings: ChartLibrariesSettings = {
     pixelsPerPoint: () => 3,
     trackColors: false,
     // update: window.NETDATA.textOnlyUpdate,
+    xssRegexIgnore: new RegExp("^/api/v1/data.result$"),
+  },
+  groupbox: {
+    containerClass: () => "netdata-container",
+    hasLegend: () => false,
+    options: () => "absolute",
+    format: "json",
+    trackColors: false,
+    pixelsPerPoint: () => 3,
     xssRegexIgnore: new RegExp("^/api/v1/data.result$"),
   },
 }

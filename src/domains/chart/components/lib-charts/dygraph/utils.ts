@@ -84,3 +84,20 @@ export const getDygraphFillAlpha = (
   : dygraphChartType === "stacked"
     ? window.NETDATA.options.current.color_fill_opacity_stacked
     : window.NETDATA.options.current.color_fill_opacity_area)
+
+
+// https://github.com/danvk/dygraphs/blob/master/src/iframe-tarp.js#L1-L23
+// On mouseUp dygraphs put rectangles above all iframes so mouseUp can be properly intercepted.
+// this causes a problem with some analytics iframes that place themselves in regions where they
+// aren't visible anyway (for example hubspot iframe on Cloud), and this creates a problematic
+// horizontal scrollbar to appear. This function filters those "rectangles" (tarps) to omit
+// elements with unreachable "left" styles
+export const hackDygraphIFrameTarps = (tarps: HTMLDivElement[]): HTMLDivElement[] => (
+  tarps.filter((element: HTMLDivElement) => {
+    const isOutsideReasonableViewport = Number(element.style.left.replace("px", "")) > 10000
+    if (isOutsideReasonableViewport) {
+      element.parentNode!.removeChild(element)
+    }
+    return !isOutsideReasonableViewport
+  })
+)

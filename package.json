@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "2.12.2",
+  "version": "2.12.5",
   "homepage": ".",
   "main": "./lib/src/index-npm.js",
   "files": [
@@ -16,13 +16,13 @@
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
     "@material/menu-surface": "^1.0.0",
-    "@netdata/netdata-ui": "^1.2.0",
+    "@netdata/netdata-ui": "^1.2.5",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
     "@rmwc/theme": "^6.1.4",
     "@rmwc/tooltip": "^5.7.2",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^3.4.1",
     "bootstrap-slider": "^10.6.2",
     "bootstrap-table": "^1.11.2",

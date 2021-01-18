@@ -89,9 +89,12 @@ export interface StaticAttributes {
   unitsCommon?: string
   unitsDesired?: string
   aggrMethod?: string
+  labels?: {[key: string]: string}
+  postGroupBy?: string
   dimensionsAggrMethod?: string
+  postAggregationMethod?: string
+  selectedChart?: string
   groupBy?: string
-  timeWindowAggrMethod?: string
   nodeIDs?: string[]
   colors?: string
   commonColors?: string
@@ -331,8 +334,11 @@ const getAttributesMap = (): AttributesMap => ({
   unitsCommon: { key: "common-units" },
   unitsDesired: { key: "desired-units" },
   aggrMethod: { key: "aggr-method" },
-  timeWindowAggrMethod: { key: "time-window-aggr-method" },
+  labels: { key: "labels" },
+  postGroupBy: { key: "post-group-by" },
+  postAggregationMethod: { key: "post-aggregation-method" },
   dimensionsAggrMethod: { key: "dimensions-aggr-method" },
+  selectedChart: { key: "selected-chart" },
   groupBy: { key: "group-by" },
   nodeIDs: { key: "node-ids" },
   colors: { key: "colors" },
