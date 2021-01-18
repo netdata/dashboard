@@ -1,6 +1,8 @@
 /* eslint-disable react/jsx-fragments */
 // @ts-nocheck
-import React, { useRef, useLayoutEffect, Fragment, useState, useCallback } from "react"
+import React, {
+  useRef, useLayoutEffect, Fragment, useState, useCallback,
+} from "react"
 import { Drop } from "@netdata/netdata-ui"
 import drawBoxes from "./drawBoxes"
 import getAlign from "./getAlign"
@@ -20,18 +22,17 @@ const aligns = {
 }
 
 const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
-  const svgRef = useRef()
+  const canvasRef = useRef()
   const boxesRef = useRef()
 
   const [hover, setHover] = useState(null)
   const dropHoverRef = useRef(false)
   const boxHoverRef = useRef(false)
 
-  const closeDrop = () =>
-    requestAnimationFrame(() => !dropHoverRef.current && !boxHoverRef.current && setHover(null))
+  const closeDrop = () => requestAnimationFrame(() => !dropHoverRef.current && !boxHoverRef.current && setHover(null))
 
   useLayoutEffect(() => {
-    boxesRef.current = drawBoxes(svgRef.current, {
+    boxesRef.current = drawBoxes(canvasRef.current, {
       onMouseover: (props) => {
         boxHoverRef.current = true
         setHover(props)
@@ -61,7 +62,7 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
 
   return (
     <Fragment>
-      <svg ref={svgRef} />
+      <canvas ref={canvasRef} />
       {hover && renderTooltip && (
         <Drop
           align={aligns[align]}
