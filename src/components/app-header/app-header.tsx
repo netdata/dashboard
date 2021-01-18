@@ -56,6 +56,7 @@ interface Props {
   hasSignInHistory: boolean
   onEnoughWaitingForIframe: () => void
   setIsOffline: (v: boolean) => void
+  signInUrl: string
 }
 export const AppHeader = ({
   cloudBaseURL,
@@ -66,6 +67,7 @@ export const AppHeader = ({
   hasSignInHistory,
   onEnoughWaitingForIframe,
   setIsOffline,
+  signInUrl,
 }: Props) => {
   const snapshot = useSelector(selectSnapshot)
   const hostname = snapshot ? snapshot.hostname : chartsMetadata.hostname
@@ -89,8 +91,7 @@ export const AppHeader = ({
   )
 
   const redirectURI = encodeURIComponent(window.location.href)
-  // eslint-disable-next-line max-len
-  const signInLinkHref = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}&redirect_uri=${redirectURI}`
+  const signInLinkHref = `${signInUrl}&redirect_uri=${redirectURI}`
 
   const [helloFromSignIn] = useListenToPostMessage<HelloFromSignInPayload>("hello-from-sign-in")
   const helloFromSignInRef = useRef(helloFromSignIn)
