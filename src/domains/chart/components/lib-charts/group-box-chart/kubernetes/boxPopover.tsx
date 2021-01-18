@@ -1,8 +1,12 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import React from "react"
 import { Flex } from "@netdata/netdata-ui"
-import Container, { Section, Item } from "./popover"
+import Popover, { Separator, Header } from "./popover"
+import Item from "./item"
+import Section from "./section"
 import ChartOverview from "./chartOverview"
 import DateSection from "./dateSection"
 
@@ -15,26 +19,29 @@ const BoxPopover = ({ label, chartMetadata, attributes, viewBefore, viewAfter, .
   } = chartMetadata.chartLabels
 
   return (
-    <Container title={label} {...rest}>
-      <Flex height="1px" width="100%" background={["gray", "shuttleGray"]} />
-      <Section title="Cluster">
-        <Item icon="cluster" title="Cluster" secondary={clusterId} />
-        <Item icon="services" title="Service" secondary={controllerName} />
-        <Item icon="cluster_spaces" title="Namespace" secondary={namespace} />
-        <Item icon="pod" title="Pod" secondary={podName} />
-      </Section>
-      <DateSection after={viewAfter} before={viewBefore} />
-      <Section title="Metrics" noBorder>
-        {attributes.relatedCharts.map(({ chartMetadata }, index) => (
-          <ChartOverview
-            key={chartMetadata.id}
-            id={`${label}|${attributes.id}|${chartMetadata.id}|overview`}
-            attributes={attributes}
-            relatedIndex={index}
-          />
-        ))}
-      </Section>
-    </Container>
+    <Popover gap={3} {...rest}>
+      <Header>{label}</Header>
+      <Separator />
+      <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} column>
+        <Section title="Cluster">
+          <Item icon="cluster" title="Cluster" secondary={clusterId} />
+          <Item icon="services" title="Service" secondary={controllerName} />
+          <Item icon="cluster_spaces" title="Namespace" secondary={namespace} />
+          <Item icon="pod" title="Pod" secondary={podName} />
+        </Section>
+        <DateSection after={viewAfter} before={viewBefore} />
+        <Section title="Metrics" noBorder>
+          {attributes.relatedCharts.map(({ chartMetadata: metadata }, index) => (
+            <ChartOverview
+              key={metadata.id}
+              id={`${label}|${attributes.id}|${metadata.id}|overview`}
+              attributes={attributes}
+              relatedIndex={index}
+            />
+          ))}
+        </Section>
+      </Flex>
+    </Popover>
   )
 }
 

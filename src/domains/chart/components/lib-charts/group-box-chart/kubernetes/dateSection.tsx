@@ -2,7 +2,8 @@
 // @ts-nocheck
 import React from "react"
 import { useDateTime } from "utils/date-time"
-import { Section, Item } from "./popover"
+import Item from "./item"
+import Section from "./section"
 
 const DateItem = ({ date, title }) => {
   const { localeDateString, localeTimeString } = useDateTime()

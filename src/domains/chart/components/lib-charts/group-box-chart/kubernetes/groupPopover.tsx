@@ -1,86 +1,23 @@
-/* eslint-disable react/jsx-fragments */
+/* eslint-disable object-curly-newline */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { Fragment, useState } from "react"
-import { Flex, Button } from "@netdata/netdata-ui"
-import styled from "styled-components"
-import Container, { Section, Item } from "./popover"
-import DateSection from "./dateSection"
-import Chart from "./chart"
+import React, { useState } from "react"
+import { Flex } from "@netdata/netdata-ui"
+import Popover, { Separator, Header } from "./popover"
+import Tabs from "./tabs"
+import Metrics from "./metrics"
+import Context from "./context"
+import { labelIds } from "./labels"
+import List from "./list"
 
-const Context = ({ chartMetadata, attributes }) => {
-  const { getName, nodeIDs } = attributes
-  const { k8s_cluster_id: clusterId, k8s_namespace: namespace } = chartMetadata.chartLabels
-
+const TabsContainer = ({ label, value, onChange, children }) => {
   return (
-    <Fragment>
-      <Section title="Parent">
-        <Item icon="cluster" title="Cluster" secondary={clusterId} />
-      </Section>
-      <Section title="Nodes">
-        {nodeIDs.map((nodeId) => (
-          <Item icon="nodes_hollow" title={getName(nodeId)} />
-        ))}
-      </Section>
-      <Section title="Namespace" noBorder>
-        <Item icon="cluster_spaces" title={namespace} />
-      </Section>
-    </Fragment>
-  )
-}
-
-const Metrics = ({ label, attributes, viewBefore, viewAfter }) => {
-  return (
-    <Fragment>
-      <DateSection after={viewAfter} before={viewBefore} />
-      <Section title="Metrics" noBorder>
-        <Flex gap={3} column>
-          {attributes.relatedCharts.map(({ chartMetadata }, index) => (
-            <Chart
-              key={chartMetadata.id}
-              id={`${label}|${attributes.id}|${chartMetadata.id}`}
-              attributes={attributes}
-              relatedIndex={index}
-            />
-          ))}
-        </Flex>
-      </Section>
-    </Fragment>
-  )
-}
-
-const TabButton = styled(Button).attrs(({ active }) => ({
-  flavour: "borderless",
-  neutral: true,
-  themeType: "dark",
-  className: "btn",
-  disabled: active,
-}))`
-  &&& {
-    height: initial;
-    width: initial;
-    padding: 2px 20px;
-    ${({ active }) => active && `border-bottom: 3px solid #fdfdfd;`}
-    color: ${({ active }) => (active ? "#FDFDFD" : "#93A3B0")}
-  }
-`
-
-const Tabs = ({ value, onChange, children }) => {
-  return (
-    <Flex column gap={5}>
-      <Flex border={{ side: "bottom", color: ["gray", "shuttleGray"] }}>
-        <TabButton
-          label="Context"
-          active={value === "context"}
-          onClick={() => onChange("context")}
-        />
-        <TabButton
-          label="Metrics"
-          active={value === "metrics"}
-          onClick={() => onChange("metrics")}
-        />
-      </Flex>
-      <Flex column gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }}>
+    <Flex height="100%" column>
+      <Header>{label}</Header>
+      <Tabs value={value} onChange={onChange} margin={[4, 0, 0, 0]} />
+      <Separator />
+      <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} margin={[4, 0, 0, 0]}>
         {children}
       </Flex>
     </Flex>
@@ -90,20 +27,32 @@ const Tabs = ({ value, onChange, children }) => {
 const GroupPopover = ({ label, attributes, chartMetadata, viewBefore, viewAfter, ...rest }) => {
   const [view, setView] = useState("context")
 
+  const isLabelView = labelIds.includes(view)
+
   return (
-    <Container title={label} {...rest}>
-      <Tabs value={view} onChange={setView}>
-        {view === "context" && <Context chartMetadata={chartMetadata} attributes={attributes} />}
-        {view === "metrics" && (
-          <Metrics
-            label={label}
-            attributes={attributes}
-            viewBefore={viewBefore}
-            viewAfter={viewAfter}
-          />
-        )}
-      </Tabs>
-    </Container>
+    <Popover {...rest}>
+      {isLabelView && (
+        <List
+          labelId={view}
+          chartMetadata={chartMetadata}
+          attributes={attributes}
+          onBack={() => setView("context")}
+        />
+      )}
+      {!isLabelView && (
+        <TabsContainer label={label} value={view} onChange={setView}>
+          {view === "context" && <Context attributes={attributes} onExpand={setView} />}
+          {view === "metrics" && (
+            <Metrics
+              label={label}
+              attributes={attributes}
+              viewAfter={viewAfter}
+              viewBefore={viewBefore}
+            />
+          )}
+        </TabsContainer>
+      )}
+    </Popover>
   )
 }
 
