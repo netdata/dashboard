@@ -52,6 +52,7 @@ interface Props {
   hasSignInHistory: boolean
   isOffline: boolean
   isSignedIn: boolean
+  signInUrl: string
 }
 export const SpacePanel = ({
   chartsMetadata,
@@ -59,6 +60,7 @@ export const SpacePanel = ({
   hasSignInHistory,
   isOffline,
   isSignedIn,
+  signInUrl,
 }: Props) => {
   const dispatch = useDispatch()
   const panelIsActive = useSelector(selectSpacePanelIsActive)
@@ -82,11 +84,6 @@ export const SpacePanel = ({
 
   const registry = useSelector(selectRegistry)
   const isUsingGlobalRegistry = useSelector(selectIsUsingGlobalRegistry)
-
-  const name = encodeURIComponent(registry.hostname)
-  const origin = encodeURIComponent(`${window.location.origin}/`)
-  // eslint-disable-next-line max-len
-  const cloudSignInUrl = `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=$${name}&origin=${origin}`
 
   const machinesArray = registry?.registryMachinesArray || []
 
@@ -131,7 +128,7 @@ export const SpacePanel = ({
                     Do you know that you can manage a lot of nodes with Netdata Cloud?
                   </S.BottomPanelText>
                   <S.SignInButton
-                    href={cloudSignInUrl}
+                    href={signInUrl}
                   >
                     Sign In to Cloud
                   </S.SignInButton>

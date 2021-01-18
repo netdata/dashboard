@@ -2,6 +2,8 @@ import { prop, path } from "ramda"
 import { createSelector } from "reselect"
 
 import { AppStateT } from "store/app-state"
+import { utmUrlSuffix } from "utils"
+import { alwaysEndWithSlash } from "utils/server-detection"
 
 import { GetKeyArguments, getKeyForCommonColorsState } from "./reducer"
 import { storeKey } from "./constants"
@@ -62,9 +64,12 @@ export const selectSignInUrl = createSelector(
   selectCloudBaseUrl,
   (registry, cloudBaseURL) => {
     const name = encodeURIComponent(registry.hostname)
-    const origin = encodeURIComponent(`${window.location.origin}/`)
+    const origin = encodeURIComponent(
+      alwaysEndWithSlash(window.location.origin + window.location.pathname),
+    )
     // not adding redirect_url - it needs to always be based on newest href
-    return `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}`
+    // eslint-disable-next-line max-len
+    return `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}${utmUrlSuffix}`
   },
 )
 

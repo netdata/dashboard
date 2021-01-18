@@ -175,6 +175,7 @@ const App: React.FC = () => {
               isSignedIn={isSignedIn}
               cloudBaseURL={cloudBaseURL}
               chartsMetadata={chartsMetadata}
+              signInUrl={signInUrl}
             />
           )}
           <AppHeader
@@ -186,6 +187,7 @@ const App: React.FC = () => {
             hasSignInHistory={hasSignInHistory}
             onEnoughWaitingForIframe={handleEnoughWaitingForIframe}
             setIsOffline={setIsOffline}
+            signInUrl={signInUrl}
           />
           <div className="App">
             {hasFetchDependencies && haveDOMReadyForParsing && (
