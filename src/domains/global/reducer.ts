@@ -6,6 +6,7 @@ import { isMainJs } from "utils/env"
 import { RegistryMachine } from "domains/global/sagas"
 import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
 import { fetchInfoAction } from "domains/chart/actions"
+import { InfoPayload } from "./__mocks__/info-mock"
 import {
   requestCommonColorsAction,
   setGlobalChartUnderlayAction,
@@ -92,6 +93,7 @@ export type StateT = {
     isAgentClaimed: boolean | null
     isACLKAvailable: boolean | null
     hasStartedInfo: boolean
+    fullInfoPayload: InfoPayload | null
     isFetchingHello: boolean
     machineGuid: string | null
     personGuid: string | null
@@ -144,6 +146,7 @@ export const initialState: StateT = {
     isACLKAvailable: null,
     hasStartedInfo: false,
     isFetchingHello: false,
+    fullInfoPayload: null,
     machineGuid: null,
     personGuid: null,
     registryMachines: null,
@@ -429,7 +432,7 @@ globalReducer.on(fetchInfoAction, (state) => ({
   },
 }))
 globalReducer.on(fetchInfoAction.success, (state, {
-  isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable,
+  isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable, fullInfoPayload,
 }) => ({
   ...state,
   registry: {
@@ -439,6 +442,7 @@ globalReducer.on(fetchInfoAction.success, (state, {
     isCloudEnabled,
     isAgentClaimed,
     isACLKAvailable,
+    fullInfoPayload,
   },
 }))
 
