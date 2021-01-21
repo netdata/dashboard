@@ -1,6 +1,6 @@
-import { uniq } from "ramda"
+import { uniq, prop, filter } from "ramda"
 import {
-  spawn, take, put, takeEvery, call, delay,
+  spawn, take, put, takeEvery, call, delay, select,
 } from "redux-saga/effects"
 import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
@@ -9,6 +9,7 @@ import { Action } from "redux-act"
 import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
 import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
+import { fetchInfoAction } from "domains/chart/actions"
 
 import {
   fetchHelloAction,
@@ -25,6 +26,8 @@ import {
 } from "./actions"
 import { alarmsSagas } from "./alarms-sagas"
 import { MASKED_DATA } from "./constants"
+import { selectFullInfoPayload } from "./selectors"
+import { InfoPayload } from "./__mocks__/info-mock"
 
 const windowFocusChannel = channel()
 
@@ -74,22 +77,75 @@ const injectGTM = (machineGuid: string) => {
   /* eslint-enable */
 }
 
-const injectPosthog = (machineGuid: string) => {
+function* waitForFullInfoPayload() {
+  return (yield take(fetchInfoAction.success)).payload.fullInfoPayload
+}
+
+function* injectPosthog(machineGuid: string) {
   if (window.posthog) {
     return
   }
+  const info: InfoPayload = (yield select(selectFullInfoPayload))
+    || (yield call(waitForFullInfoPayload))
+    || {}
+
   /* eslint-disable */
   // @ts-ignore
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   /* eslint-enable */
   window.posthog.init("zR4pStMtxgP3wJ27vIjQJvZNXwMWqZlzP0x4dKbHOHg", { api_host: "https://app.posthog.com" })
-  window.posthog.register({
-    distinct_id: machineGuid,
-    $ip: "127.0.0.1",
-    $current_url: "agent dashboard",
-    $pathname: "netdata-dashboard",
-    $host: "dashboard.netdata.io",
-  })
+  window.posthog.register(
+    // remove properties for with unavailable values
+    filter((value) => value !== undefined && value !== null,
+      {
+        distinct_id: machineGuid,
+        $ip: "127.0.0.1",
+        $current_url: "agent dashboard",
+        $pathname: "netdata-dashboard",
+        $host: "dashboard.netdata.io",
+        netdata_version: info.version,
+        mirrored_host_count: info.mirrored_hosts?.length,
+        alarms_normal: info.alarms?.normal,
+        alarms_warning: info.alarms?.warning,
+        alarms_critical: info.alarms.critical,
+        host_os_name: info.os_name,
+        host_os_id: info.os_id,
+        host_os_id_like: info.os_id_like,
+        host_os_version: info.os_version,
+        host_os_version_id: info.os_version_id,
+        host_os_detection: info.os_detection,
+        system_cores_total: info.cores_total,
+        system_total_disk_space: info.total_disk_space,
+        system_cpu_freq: info.cpu_freq,
+        system_ram_total: info.ram_total,
+        system_kernel_name: info.kernel_name,
+        system_kernel_version: info.kernel_version,
+        system_architecture: info.architecture,
+        system_vitrualization: info.virtualization,
+        system_virt_detection: info.virt_detection,
+        system_container: info.container,
+        system_container_detection: info.container_detection,
+        container_os_name: info.container_os_name,
+        container_os_id: info.container_os_id,
+        container_os_id_like: info.container_os_id_like,
+        container_os_version: info.container_os_version,
+        container_os_version_id: info.container_os_version_id,
+        host_collectors_count: info.collectors.length,
+        host_cloud_enabled: info["cloud-enabled"],
+        host_cloud_available: info["cloud-available"],
+        host_agent_claimed: info["agent-claimed"],
+        host_aclk_available: info["aclk-available"],
+        // eslint-disable-next-line camelcase
+        host_is_parent: info.host_labels?._is_parent,
+        mirrored_hosts_reachable: info.mirrored_hosts_status
+          .filter(({ reachable }) => reachable).length,
+        mirrored_hosts_unreachable: info.mirrored_hosts_status
+          .filter(({ reachable }) => !reachable).length,
+        host_collector_modules: info.collectors.map(prop("module")).join("|"),
+        host_collector_plugins: info.collectors.map(prop("plugin")).join("|"),
+        host_is_k8s_node: info.is_k8s_node,
+      }),
+  )
 }
 
 export type PersonUrl = [
@@ -249,7 +305,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
 
   if (response.data.anonymous_statistics) {
     injectGTM(response.data.machine_guid)
-    injectPosthog(response.data.machine_guid)
+    yield spawn(injectPosthog, response.data.machine_guid)
   }
 
   // now make access call - max_redirects, callback, etc...

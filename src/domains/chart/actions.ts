@@ -2,6 +2,7 @@ import { createAction } from "redux-act"
 import { CancelTokenSource, Method } from "axios"
 
 import { createRequestAction } from "utils/createRequestAction"
+import { InfoPayload } from "domains/global/__mocks__/info-mock"
 
 import { storeKey } from "./constants"
 import { ChartData, ChartMetadata } from "./chart-types"
@@ -124,6 +125,7 @@ export interface FetchInfoSuccessPayload {
   isCloudEnabled: boolean
   isAgentClaimed: boolean
   isACLKAvailable: boolean
+  fullInfoPayload: InfoPayload
 }
 export const fetchInfoAction = createRequestAction<
   FetchInfoPayload,
