@@ -1,0 +1,98 @@
+const infoMock = {
+  version: "v1.28.0-156-g72555a4b",
+  uid: "cb92ecbc-5696-11eb-8003-4c32759d745d",
+  mirrored_hosts: [
+    "MBP.lan",
+  ],
+  mirrored_hosts_status: [
+    {
+      guid: "cb92ecbc-5696-11eb-8003-4c32759d745d",
+      reachable: true,
+      claim_id: null,
+    },
+  ],
+  alarms: {
+    normal: 19,
+    warning: 0,
+    critical: 0,
+  },
+  os_name: "mac",
+  os_id: "macOS",
+  os_id_like: "mac",
+  os_version: "11.1",
+  os_version_id: "unknown",
+  os_detection: "sw_vers",
+  cores_total: "unknown",
+  total_disk_space: "827912752",
+  cpu_freq: "unknown",
+  ram_total: "2147483648",
+  container_os_name: "none",
+  container_os_id: "none",
+  container_os_id_like: "none",
+  container_os_version: "none",
+  container_os_version_id: "none",
+  is_k8s_node: "false",
+  kernel_name: "Darwin",
+  kernel_version: "20.2.0",
+  architecture: "x86_64",
+  virtualization: "none",
+  virt_detection: "none",
+  container: "unknown",
+  container_detection: "none",
+  host_labels: {
+    _os_name: "mac",
+    _os_version: "11.1",
+    _kernel_version: "20.2.0",
+    _system_cores: "unknown",
+    _system_cpu_freq: "unknown",
+    _system_ram_total: "2147483648",
+    _system_disk_space: "827912752",
+    _architecture: "x86_64",
+    _virtualization: "none",
+    _container: "unknown",
+    _container_detection: "none",
+    _virt_detection: "none",
+    _is_k8s_node: "false",
+    _is_parent: "false",
+  },
+  collectors: [
+    {
+      plugin: "macos",
+      module: "iokit",
+    },
+    {
+      plugin: "cups.plugin",
+      module: "",
+    },
+    {
+      plugin: "idlejitter.plugin",
+      module: "",
+    },
+    {
+      plugin: "macos",
+      module: "sysctl",
+    },
+    {
+      plugin: "statsd.plugin",
+      module: "stats",
+    },
+    {
+      plugin: "netdata",
+      module: "stats",
+    },
+    {
+      plugin: "macos",
+      module: "mach_smi",
+    },
+    {
+      plugin: "web",
+      module: "stats",
+    },
+  ],
+  "cloud-enabled": true,
+  "cloud-available": true,
+  "agent-claimed": false,
+  "aclk-available": false,
+}
+
+export type InfoPayload = typeof infoMock

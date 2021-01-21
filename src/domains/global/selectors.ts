@@ -86,6 +86,7 @@ export const selectIsCloudEnabled = createSelector(
   (registry) => registry.isCloudEnabled && !registry.isHelloCallError,
 )
 export const selectHasFetchedInfo = createSelector(selectRegistry, prop("hasFetchedInfo"))
+export const selectFullInfoPayload = createSelector(selectRegistry, prop("fullInfoPayload"))
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,

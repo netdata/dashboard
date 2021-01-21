@@ -353,7 +353,7 @@ function* fetchInfoSaga({ payload }: Action<FetchInfoPayload>) {
     isACLKAvailable = data?.["aclk-available"] || false
 
     yield put(fetchInfoAction.success({
-      isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable,
+      isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable, fullInfoPayload: data,
     }))
 
     if (isCloudEnabled && (wasCloudAvailable === null) && !isCloudAvailable) {
