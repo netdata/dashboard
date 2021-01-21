@@ -1,77 +1,86 @@
+/* eslint-disable no-param-reassign */
 // @ts-nocheck
 import { scaleLinear, extent } from "d3"
-
-const cellSize = 13.5
-const aspectRatio = Math.round(16 / 9)
-
-const getRows = (data) => Math.sqrt(data.length / aspectRatio)
-const getColumns = (rows) => rows * aspectRatio
-
-const makeXPosition = (numOfColumns) => {
-  let col = 1
-  return (_, index) => {
-    if (col && !(index % numOfColumns)) col = 1
-    else col += 1
-    return col * cellSize - cellSize
-  }
-}
-
-const makeYPosition = (numOfColumns) => (_, index) => Math.floor(index / numOfColumns) * cellSize
+import { cellSize, cellBoxSize, getRows, getColumns, getXPosition, getYPosition } from "./utilities"
+import registerEvents from "./events"
 
 export const getWidth = (data) => {
-  const numOfRows = getRows(data)
-  const numOfColumns = getColumns(numOfRows)
-  return Math.ceil(numOfColumns) * cellSize
+  const rows = getRows(data)
+  const columns = getColumns(rows)
+  return Math.ceil(columns) * cellSize
 }
 
 const getCanvasAttributes = (data) => {
-  const numOfRows = getRows(data)
-  const numOfColumns = getColumns(numOfRows)
-  const width = Math.ceil(numOfColumns) * cellSize
-  const height = Math.ceil(numOfRows) * cellSize + cellSize
-  return { width, height, columns: Math.ceil(numOfColumns) }
+  const rows = getRows(data)
+  const columns = getColumns(rows)
+  const width = Math.ceil(columns) * cellSize
+  const height = Math.ceil(rows) * cellSize + cellSize
+  return { width, height, columns: Math.ceil(columns) }
 }
 
-const getCanvas = (el) => {
-  const canvas = el
-  const ctx = canvas.getContext("2d")
+const makeGetColor = (values) =>
+  scaleLinear()
+    .domain(extent(values, (value) => value))
+    .range(["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"])
 
-  const clearCanvas = (width, height) => {
-    ctx.clearRect(0, 0, width, height)
-    ctx.beginPath()
+export default (el, { onMouseenter, onMouseout }) => {
+  const canvas = el.getContext("2d")
+
+  let activeBox = -1
+  let deactivateBox = () => {}
+  let activateBox = {}
+  let clearEvents = () => {}
+
+  const clear = () => {
+    deactivateBox()
+    clearEvents()
+    canvas.clearRect(0, 0, el.width, el.height)
+    canvas.beginPath()
   }
-
-  return {
-    ctx,
-    canvas,
-    clearCanvas,
-  }
-}
-
-const makeGetColor = (values) => scaleLinear()
-  .domain(extent(values, (value) => value))
-  .range(["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"])
-
-
-export default (el, { onMouseover, onMouseout }) => {
-  const { ctx, canvas, clearCanvas } = getCanvas(el)
 
   const update = ({ data }) => {
     const { width, height, columns } = getCanvasAttributes(data)
-    canvas.width = width
-    canvas.height = height
-    const getXPosition = makeXPosition(columns)
-    const getYPosition = makeYPosition(columns)
+    el.width = width
+    el.height = height
+    clear()
+    clearEvents()
     const getColor = makeGetColor(data)
 
-    clearCanvas(width, height)
-    data.forEach((value, index) => {
-      ctx.fillStyle = getColor(value)
-      ctx.fillRect(getXPosition(value, index), getYPosition(value, index), cellSize - 1.5, cellSize - 1.5)
-    })
+    const drawBox = (value, index) => {
+      canvas.fillStyle = getColor(value)
+      canvas.fillRect(
+        getXPosition(columns, index),
+        getYPosition(columns, index),
+        cellBoxSize,
+        cellBoxSize
+      )
+    }
+
+    data.forEach(drawBox)
+
+    clearEvents = registerEvents(el, columns, data.length, { onMouseenter, onMouseout })
+
+    deactivateBox = () => {
+      if (activeBox !== -1) drawBox(data[activeBox], activeBox)
+    }
+
+    activateBox = (index) => {
+      deactivateBox()
+      activeBox = index
+
+      const offsetX = getXPosition(columns, index)
+      const offsetY = getYPosition(columns, index)
+
+      canvas.lineWidth = 1
+      canvas.strokeStyle = "#fff"
+      canvas.strokeRect(offsetX + 1, offsetY + 1, cellBoxSize - 2, cellBoxSize - 2)
+    }
   }
 
-  const clear = () => clearCanvas(canvas.width, canvas.height)
-
-  return { clear, update }
+  return {
+    clear,
+    update,
+    activateBox: (index) => activateBox(index),
+    deactivateBox: () => deactivateBox(),
+  }
 }

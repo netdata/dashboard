@@ -28,7 +28,7 @@ const getUnitSign = (unit) => {
   return unit === "percentage" ? "%" : ` ${unit.replace(/milliseconds/, "ms")}`
 }
 
-const ChartOverview = ({ id, attributes, relatedIndex }) => {
+const ChartOverview = ({ id, attributes, relatedIndex, labels }) => {
   const chartContainerRef = useRef()
   const [, repaint] = useState()
 
@@ -49,6 +49,7 @@ const ChartOverview = ({ id, attributes, relatedIndex }) => {
     dimensions: relatedChartAttributes.dimensions,
     aggrMethod: relatedChartAttributes.aggrMethod,
     textOnlySuffix: getUnitSign(chartMetadata.units),
+    labels,
   }
 
   const icon = netdataDashboard.menuIcon(chartMetadata)

@@ -8,7 +8,7 @@ import Chart from "./chart"
 import DateSection from "./dateSection"
 
 const Metrics = ({ label, attributes, viewAfter, viewBefore }) => (
-  <Flex gap={3} column>
+  <Flex gap={3} column width="100%">
     <DateSection after={viewAfter} before={viewBefore} />
     <Section title="Metrics" noBorder>
       <Flex gap={3} column>
@@ -18,6 +18,7 @@ const Metrics = ({ label, attributes, viewAfter, viewBefore }) => (
             id={`${label}|${attributes.id}|${chartMetadata.id}`}
             attributes={attributes}
             relatedIndex={index}
+            label={label}
           />
         ))}
       </Flex>

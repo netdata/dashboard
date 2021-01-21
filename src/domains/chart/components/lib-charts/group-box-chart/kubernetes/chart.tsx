@@ -6,7 +6,7 @@ import { ThemeContext } from "styled-components"
 import { Flex, getColor } from "@netdata/netdata-ui"
 import ChartOverview from "./chartOverview"
 
-const Chart = ({ id, attributes, relatedIndex }) => {
+const Chart = ({ label, id, attributes, relatedIndex }) => {
   const theme = useContext(ThemeContext)
   const chartContainerRef = useRef()
   const [, repaint] = useState()
@@ -18,6 +18,11 @@ const Chart = ({ id, attributes, relatedIndex }) => {
   const { chartMetadata, attributes: relatedChartAttributes } = attributes.relatedCharts[
     relatedIndex
   ]
+
+  const labels = {
+    k8s_cluster_id: [chartMetadata.chartLabels.k8s_cluster_id],
+    [attributes.groupBy]: [label],
+  }
 
   const chartAttributes = {
     id: chartMetadata.id,
@@ -36,6 +41,7 @@ const Chart = ({ id, attributes, relatedIndex }) => {
     nodeIDs: attributes.nodeIDs,
     dimensions: relatedChartAttributes.dimensions,
     aggrMethod: relatedChartAttributes.aggrMethod,
+    labels,
   }
 
   return (
@@ -50,7 +56,7 @@ const Chart = ({ id, attributes, relatedIndex }) => {
           />
         )}
       </div>
-      <ChartOverview id={id} attributes={attributes} relatedIndex={relatedIndex} />
+      <ChartOverview id={id} attributes={attributes} relatedIndex={relatedIndex} labels={labels} />
     </Flex>
   )
 }

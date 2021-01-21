@@ -1,8 +1,6 @@
 /* eslint-disable react/jsx-fragments */
 // @ts-nocheck
-import React, {
-  useRef, useLayoutEffect, Fragment, useState, useCallback,
-} from "react"
+import React, { useRef, useLayoutEffect, Fragment, useState, useCallback, useEffect } from "react"
 import { Drop } from "@netdata/netdata-ui"
 import drawBoxes from "./drawBoxes"
 import getAlign from "./getAlign"
@@ -29,13 +27,24 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
   const dropHoverRef = useRef(false)
   const boxHoverRef = useRef(false)
 
-  const closeDrop = () => requestAnimationFrame(() => !dropHoverRef.current && !boxHoverRef.current && setHover(null))
+  const closeDrop = () =>
+    requestAnimationFrame(() => {
+      if (!dropHoverRef.current && !boxHoverRef.current) {
+        boxesRef.current.deactivateBox()
+        setHover(null)
+      }
+    })
 
   useLayoutEffect(() => {
     boxesRef.current = drawBoxes(canvasRef.current, {
-      onMouseover: (props) => {
+      onMouseenter: ({ index, ...rect }) => {
         boxHoverRef.current = true
-        setHover(props)
+        setHover({
+          target: { getBoundingClientRect: () => rect },
+          index,
+          rect,
+        })
+        boxesRef.current.activateBox(index)
       },
       onMouseout: () => {
         boxHoverRef.current = false
@@ -70,7 +79,7 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
         >
-          {renderTooltip(hover, align)}
+          {renderTooltip(hover.index, align)}
         </Drop>
       )}
     </Fragment>

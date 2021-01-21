@@ -42,7 +42,7 @@ const Context = ({ attributes, onExpand }) => {
   )
 
   return (
-    <Flex gap={3} column>
+    <Flex gap={3} column width="100%">
       <LabelSection labelId="k8s_cluster_id" chartMetadata={selectedChartMetadata} />
       {labelIds.map((labelId, index) => (
         <LabelsSection

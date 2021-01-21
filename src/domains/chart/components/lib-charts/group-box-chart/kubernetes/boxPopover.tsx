@@ -10,13 +10,27 @@ import Section from "./section"
 import ChartOverview from "./chartOverview"
 import DateSection from "./dateSection"
 
-const BoxPopover = ({ label, chartMetadata, attributes, viewBefore, viewAfter, ...rest }: any) => {
+const BoxPopover = ({
+  label,
+  groupedLabel,
+  chartMetadata,
+  attributes,
+  viewBefore,
+  viewAfter,
+  ...rest
+}: any) => {
   const {
     k8s_cluster_id: clusterId,
     k8s_namespace: namespace,
     k8s_controller_name: controllerName,
     k8s_pod_name: podName,
   } = chartMetadata.chartLabels
+
+  const labels = {
+    k8s_cluster_id: [clusterId],
+    [attributes.groupBy]: [groupedLabel],
+    [attributes.postGroupBy]: [label],
+  }
 
   return (
     <Popover gap={3} {...rest}>
@@ -37,6 +51,7 @@ const BoxPopover = ({ label, chartMetadata, attributes, viewBefore, viewAfter, .
               id={`${label}|${attributes.id}|${metadata.id}|overview`}
               attributes={attributes}
               relatedIndex={index}
+              labels={labels}
             />
           ))}
         </Section>

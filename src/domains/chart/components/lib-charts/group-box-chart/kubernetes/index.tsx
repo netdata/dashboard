@@ -2,9 +2,12 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
 import React, { useMemo } from "react"
+import { Flex } from "@netdata/netdata-ui"
 import { ChartMetadata } from "domains/chart/chart-types"
 // import { Attributes } from "../../../utils/transformDataAttributes"
+import { ChartTimeframe } from "domains/chart/components/chart-legend-bottom"
 import GroupBoxes from "domains/chart/components/lib-charts/group-box-chart/groupBoxes"
+import Legend from "domains/chart/components/lib-charts/group-box-chart/legend"
 import GroupPopover from "./groupPopover"
 import BoxPopover from "./boxPopover"
 
@@ -21,19 +24,27 @@ const getBoxesData = ({ data, postAggregatedData }, hoveredRow) => {
 }
 
 const Kubernetes = ({
-  chartData: { id, groupedBoxes },
+  chartData,
   chartMetadata,
   attributes,
   viewAfter,
   viewBefore,
   hoveredRow,
   hoveredX,
+  showUndefined,
 }: any) => {
+  const {
+    id,
+    groupedBoxes: { data, labels },
+  } = chartData
+
   const renderBoxPopover = ({ groupIndex, index, align }) => {
-    const label = groupedBoxes.data[groupIndex].labels[index]
+    const groupedLabel = labels[groupIndex]
+    const label = data[groupIndex].labels[index]
     return (
       <BoxPopover
         align={align}
+        groupedLabel={groupedLabel}
         label={label}
         chartMetadata={chartMetadata}
         attributes={attributes}
@@ -44,7 +55,7 @@ const Kubernetes = ({
   }
 
   const renderGroupPopover = ({ groupIndex, align }) => {
-    const label = groupedBoxes.labels[groupIndex]
+    const label = labels[groupIndex]
     return (
       <GroupPopover
         align={align}
@@ -57,27 +68,34 @@ const Kubernetes = ({
     )
   }
 
-  const chartData = useMemo(
-    () => ({
-      ...groupedBoxes,
-      data: groupedBoxes.data.map((groupedBox) => {
-        const data = getBoxesData(groupedBox, hoveredRow)
-        return {
-          labels: groupedBox.labels,
-          data,
-        }
-      }),
-    }),
-    [groupedBoxes, hoveredRow]
+  const groupedBoxesData = useMemo(
+    () =>
+      data.map((groupedBox) => ({
+        labels: groupedBox.labels,
+        data: getBoxesData(groupedBox, hoveredRow),
+      })),
+    [data, hoveredRow]
   )
 
   return (
-    <GroupBoxes
-      id={id}
-      chartData={chartData}
-      renderBoxPopover={renderBoxPopover}
-      renderGroupPopover={renderGroupPopover}
-    />
+    <Flex column width="100%" height="100%" gap={4} padding={[4, 2]}>
+      <GroupBoxes
+        data={groupedBoxesData}
+        labels={labels}
+        renderBoxPopover={renderBoxPopover}
+        renderGroupPopover={renderGroupPopover}
+      />
+      <Flex justifyContent="between">
+        <Legend>{id}</Legend>
+        <ChartTimeframe
+          chartMetadata={chartMetadata}
+          showUndefined={showUndefined}
+          hoveredX={hoveredX}
+          viewBefore={viewBefore}
+          chartData={chartData}
+        />
+      </Flex>
+    </Flex>
   )
 }
 

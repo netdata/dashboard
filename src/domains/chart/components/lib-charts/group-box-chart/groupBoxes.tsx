@@ -5,7 +5,6 @@ import styled from "styled-components"
 import { Flex, TextMicro, Popover, getColor } from "@netdata/netdata-ui"
 import GroupBox from "./groupBox"
 import { getWidth } from "./drawBoxes"
-import Legend from "./legend"
 import getAlign from "./getAlign"
 
 interface GroupBoxWrapperProps {
@@ -13,15 +12,19 @@ interface GroupBoxWrapperProps {
   title: string
 }
 
-const Title = styled(TextMicro)`
-  overflow-x: hidden;
-  text-overflow: ellipsis;
+const Title = styled.span`
   white-space: nowrap;
-  cursor: default;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+`
 
+const Label = styled(Flex).attrs({
+  as: TextMicro,
+  gap: 1,
+})`
+  cursor: default;
   &:hover {
     font-weight: bold;
-    color: ${getColor("textFocus")};
   }
 `
 
@@ -35,11 +38,11 @@ const GroupBoxWrapper = ({
   const ref = useRef()
   const align = ref.current && getAlign(ref.current)
 
-  const style = useMemo(() => ({ width: `${getWidth(data.data)}px` }), [data])
+  const style = useMemo(() => ({ maxWidth: `${getWidth(data.data)}px` }), [data])
 
   const boxPopover =
     renderBoxPopover &&
-    ((props, boxAlign) => renderBoxPopover({ group: label, groupIndex, align: boxAlign, ...props }))
+    ((index, boxAlign) => renderBoxPopover({ group: label, groupIndex, align: boxAlign, index }))
 
   const groupPopover =
     renderGroupPopover && (() => renderGroupPopover({ group: label, groupIndex, align }))
@@ -47,37 +50,42 @@ const GroupBoxWrapper = ({
   return (
     <Flex column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
       <Popover content={groupPopover} align={align} plain>
-        <Title ref={ref} style={style}>
-          {label} ({data.data.length})
-        </Title>
+        {({ isOpen, ref: popoverRef, ...rest }) => {
+          return (
+            <Label
+              ref={(el) => {
+                ref.current = el
+                popoverRef(el)
+              }}
+              strong={isOpen}
+              style={style}
+              {...rest}
+            >
+              <Title>{label}</Title>
+              {data.data.length > 3 && <span>({data.data.length})</span>}
+            </Label>
+          )
+        }}
       </Popover>
       <GroupBox data={data} renderTooltip={boxPopover} />
     </Flex>
   )
 }
 
-const GroupBoxes = ({
-  id,
-  chartData: { data, labels },
-  renderBoxPopover,
-  renderGroupPopover,
-}: any) => (
-  <Flex column width="100%" height="100%" gap={4} padding={[4, 2]}>
-    <Flex flexWrap overflow={{ vertical: "auto" }} flex>
-      {labels.map((label, index) => {
-        return data[index].data.length ? (
-          <GroupBoxWrapper
-            key={label}
-            label={label}
-            groupIndex={index}
-            data={data[index]}
-            renderGroupPopover={renderGroupPopover}
-            renderBoxPopover={renderBoxPopover}
-          />
-        ) : null
-      })}
-    </Flex>
-    <Legend>{id}</Legend>
+const GroupBoxes = ({ data, labels, renderBoxPopover, renderGroupPopover }: any) => (
+  <Flex flexWrap overflow={{ vertical: "auto" }} flex>
+    {labels.map((label, index) => {
+      return data[index].data.length ? (
+        <GroupBoxWrapper
+          key={label}
+          label={label}
+          groupIndex={index}
+          data={data[index]}
+          renderGroupPopover={renderGroupPopover}
+          renderBoxPopover={renderBoxPopover}
+        />
+      ) : null
+    })}
   </Flex>
 )
 
