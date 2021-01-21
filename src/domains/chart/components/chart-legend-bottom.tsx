@@ -15,7 +15,7 @@ interface Props {
   dimensionNames: string[]
   hoveredRow: number
   hoveredX: number | null
-  legendFormatValue: (value: number | string | null) => (number | string)
+  legendFormatValue: (value: number | string | null) => number | string
   onDimensionClick: (clickedDimensionName: string, event: React.MouseEvent) => void
   selectedDimensions: string[]
   showLatestOnBlur: boolean
@@ -23,6 +23,32 @@ interface Props {
   viewBefore: number
   legendToolbox: JSX.Element
   resizeHandler: React.ReactNode
+}
+
+export const ChartTimeframe = ({
+  chartMetadata,
+  showUndefined,
+  hoveredX,
+  viewBefore,
+  chartData,
+}: any) => {
+  const { localeDateString, localeTimeString } = useDateTime()
+
+  const legendDate = new Date(hoveredX || viewBefore)
+
+  return (
+    <div>
+      <span title={legendPluginModuleString(true, chartMetadata)}>
+        {showUndefined
+          ? legendPluginModuleString(false, chartMetadata)
+          : localeDateString(legendDate)}
+      </span>
+      <S.DateTimeSeparator>|</S.DateTimeSeparator>
+      <span title={legendResolutionTooltip(chartData, chartMetadata)}>
+        {showUndefined ? chartMetadata.context.toString() : localeTimeString(legendDate)}
+      </span>
+    </div>
+  )
 }
 
 export const ChartLegendBottom = ({
@@ -43,41 +69,25 @@ export const ChartLegendBottom = ({
 }: Props) => {
   const showUndefined = hoveredRow === -1 && !showLatestOnBlur
 
-  const legendDate = new Date(hoveredX || viewBefore)
-
-  const { localeDateString, localeTimeString } = useDateTime()
-
   return (
     <S.LegendContainer>
       <S.LegendFirstRow>
-        <S.LegendUnit>
-          {unitsCurrent}
-        </S.LegendUnit>
-        <div>
-          <span
-            title={legendPluginModuleString(true, chartMetadata)}
-          >
-            {showUndefined
-              ? legendPluginModuleString(false, chartMetadata)
-              : localeDateString(legendDate)}
-          </span>
-          <S.DateTimeSeparator>|</S.DateTimeSeparator>
-          <span
-            title={legendResolutionTooltip(chartData, chartMetadata)}
-          >
-            {showUndefined
-              ? chartMetadata.context.toString()
-              : localeTimeString(legendDate)}
-          </span>
-        </div>
+        <S.LegendUnit>{unitsCurrent}</S.LegendUnit>
+        <ChartTimeframe
+          chartMetadata={chartMetadata}
+          showUndefined={showUndefined}
+          hoveredX={hoveredX}
+          viewBefore={viewBefore}
+          chartData={chartData}
+        />
       </S.LegendFirstRow>
       <S.LegendSecondRow>
         <S.LegendItems>
           {dimensionNames.map((dimensionName, i) => {
             const color = colors[dimensionName]
 
-            const isSelected = selectedDimensions.length === 0
-              || selectedDimensions.includes(dimensionName)
+            const isSelected =
+              selectedDimensions.length === 0 || selectedDimensions.includes(dimensionName)
 
             let value
             if (showUndefined) {
@@ -100,16 +110,9 @@ export const ChartLegendBottom = ({
                 isDisabled={!isSelected}
                 key={dimensionName}
               >
-                <S.DimensionIcon
-                  title={dimensionName}
-                  color={color}
-                />
-                <S.DimensionLabel>
-                  {dimensionName}
-                </S.DimensionLabel>
-                <S.DimensionValue>
-                  {isSelected && legendFormatValue(value)}
-                </S.DimensionValue>
+                <S.DimensionIcon title={dimensionName} color={color} />
+                <S.DimensionLabel>{dimensionName}</S.DimensionLabel>
+                <S.DimensionValue>{isSelected && legendFormatValue(value)}</S.DimensionValue>
               </S.DimensionItem>
             )
           })}

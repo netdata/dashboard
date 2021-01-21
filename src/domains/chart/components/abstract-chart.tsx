@@ -271,6 +271,7 @@ export const AbstractChart = ({
         viewBefore={viewBeforeForCurrentData}
         hoveredRow={hoveredRow}
         hoveredX={hoveredX}
+        showUndefined={showUndefined}
       />
     )
   }
