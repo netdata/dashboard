@@ -3928,6 +3928,7 @@ function dashboardSettingsSetup() {
         sync_option('sync_selection');
         sync_option('sync_pan_and_zoom');
 
+        sync_option('legend_below');
         theme_sync_option('netdata_theme_control');
         sync_option('show_help');
         sync_option('pan_and_zoom_data_padding');
@@ -3999,6 +4000,12 @@ function dashboardSettingsSetup() {
     });
     $('#units_temp').change(function () {
         setOption('temperature', $(this).prop('checked') ? 'celsius' : 'fahrenheit');
+    });
+
+    $('#legend_below').change(function () {
+        setOption('legend_below', $(this).prop('checked'));
+        // reloading for now, it's much easier than rebuilding charts bootstraping in main.js
+        netdataReload();
     });
 
     $('#show_help').change(function () {
