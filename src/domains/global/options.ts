@@ -6,7 +6,7 @@ export const SYNC_PAN_AND_ZOOM = "sync_pan_and_zoom"
 export const STOP_UPDATES_WHEN_FOCUS_IS_LOST = "stop_updates_when_focus_is_lost"
 export const DESTROY_ON_HIDE = "destroy_on_hide"
 export const THEME = "theme"
-export const LEGEND_BELOW = "legend_below"
+export const LEGEND_RIGHT = "legend_right"
 
 export const themeLocalStorageKey = "netdataTheme"
 
@@ -26,7 +26,7 @@ export interface Options {
   [SYNC_PAN_AND_ZOOM]: boolean
 
   // visual options
-  [LEGEND_BELOW]: boolean
+  [LEGEND_RIGHT]: boolean
   [THEME]: DashboardTheme
   show_help: boolean
   pan_and_zoom_data_padding: boolean
@@ -66,7 +66,7 @@ export const INITIAL_OPTIONS: Options = {
   [SYNC_PAN_AND_ZOOM]: true,
 
   // visual options
-  [LEGEND_BELOW]: true,
+  [LEGEND_RIGHT]: false,
   [THEME]: "slate",
   // when enabled the charts will show some help
   // when there's no bootstrap, we can't show it
@@ -126,7 +126,7 @@ export const getOptionsMergedWithLocalStorage = (): Options => {
 }
 
 export const optionsMergedWithLocalStorage = getOptionsMergedWithLocalStorage()
-export const initialLegendBelow = optionsMergedWithLocalStorage[LEGEND_BELOW]
+export const initialLegendRight = optionsMergedWithLocalStorage[LEGEND_RIGHT]
 
 export const clearLocalStorage = () => {
   const localStorageKeys = Object.keys(localStorage)
