@@ -1,6 +1,6 @@
 import { mapObjIndexed, mergeAll, isEmpty } from "ramda"
 import { Method } from "axios"
-import { initialLegendBelow } from "domains/global/options"
+import { initialLegendRight } from "domains/global/options"
 import { ChartLibraryName } from "./chartLibrariesSettings"
 
 type OutputValue = string | boolean | number | null | undefined | any[]
@@ -581,5 +581,5 @@ export const getAttributes = (node: Element): Attributes => {
 }
 
 export const defaultAttributes: Partial<Attributes> = {
-  legendPosition: initialLegendBelow ? "bottom" : "right",
+  legendPosition: initialLegendRight ? "right" : "bottom",
 }
