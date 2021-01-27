@@ -96,6 +96,7 @@ export interface ChartMetadata {
 export interface ChartEnriched extends ChartMetadata {
   menu: string
   menu_pattern: string
+  sectionTitle: string
   submenu: string
 }
 

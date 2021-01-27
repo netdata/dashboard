@@ -49,6 +49,13 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
         || chartEnriched.id.match(/.*[._/-:]kvm[._/-:]*/)
       ) {
         chartEnriched.menu_pattern = "cgqemu"
+      } else if (parts.length === 1) {
+        // composite-charts
+        // override complex title generation in menuTitle()
+        // We cannot change it in dashboard_info.js because it needs to be dynamic,
+        // ie. when used for k8s dashboard-info.js' title should be still an empty string
+        chartEnriched.sectionTitle = "cgroups"
+        chartEnriched.menu_pattern = "cgroup"
       } else {
         chartEnriched.menu_pattern = "cgroup"
       }
