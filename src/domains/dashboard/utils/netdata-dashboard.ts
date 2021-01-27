@@ -146,6 +146,9 @@ export const netdataDashboard = {
   },
 
   menuTitle(chart: ChartEnriched) {
+    if (chart.sectionTitle) {
+      return chart.sectionTitle
+    }
     if (typeof chart.menu_pattern !== "undefined") {
       const type = chart.type || chart.id.split(".")[0]
       return (`${this.anyAttribute(this.menu, "title", chart.menu_pattern, chart.menu_pattern)
