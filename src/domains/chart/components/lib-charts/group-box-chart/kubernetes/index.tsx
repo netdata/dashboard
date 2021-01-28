@@ -1,15 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable comma-dangle */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useMemo } from "react"
+import React, { useMemo, useEffect } from "react"
 import { Flex } from "@netdata/netdata-ui"
+import { usePrevious } from "react-use"
 import { ChartMetadata } from "domains/chart/chart-types"
 // import { Attributes } from "../../../utils/transformDataAttributes"
 import { ChartTimeframe } from "domains/chart/components/chart-legend-bottom"
 import GroupBoxes from "domains/chart/components/lib-charts/group-box-chart/groupBoxes"
 import Legend from "domains/chart/components/lib-charts/group-box-chart/legend"
-import GroupPopover from "./groupPopover"
-import BoxPopover from "./boxPopover"
+import transform from "./transform"
+import Popover from "./popover"
 
 interface Props {
   chartData: any
@@ -17,10 +19,6 @@ interface Props {
   chartMetadata: ChartMetadata
   hoveredRow: number
   hoveredX: number | null
-}
-
-const getBoxesData = ({ data, postAggregatedData }, hoveredRow) => {
-  return hoveredRow === -1 || hoveredRow > data.length ? postAggregatedData : data[hoveredRow] || []
 }
 
 const Kubernetes = ({
@@ -33,20 +31,26 @@ const Kubernetes = ({
   hoveredX,
   showUndefined,
 }: any) => {
+  const { filteredRows } = attributes
+  const { data: groupBoxData, labels, chartLabels } = useMemo(
+    () => transform(chartData, filteredRows),
+    [filteredRows, chartData]
+  )
+
   const {
     id,
-    groupedBoxes: { data, labels },
+    result: { data },
   } = chartData
 
   const renderBoxPopover = ({ groupIndex, index, align }) => {
-    const groupedLabel = labels[groupIndex]
-    const label = data[groupIndex].labels[index]
+    const postGroupLabel = groupBoxData[groupIndex].labels[index]
     return (
-      <BoxPopover
+      <Popover
         align={align}
-        groupedLabel={groupedLabel}
-        label={label}
-        chartMetadata={chartMetadata}
+        title={postGroupLabel}
+        groupLabel={labels[groupIndex]}
+        postGroupLabel={postGroupLabel}
+        chartLabels={groupBoxData[groupIndex].chartLabels[index]}
         attributes={attributes}
         viewBefore={viewBefore}
         viewAfter={viewAfter}
@@ -57,25 +61,29 @@ const Kubernetes = ({
   const renderGroupPopover = ({ groupIndex, align }) => {
     const label = labels[groupIndex]
     return (
-      <GroupPopover
+      <Popover
         align={align}
-        label={label}
+        title={label}
+        groupLabel={label}
+        chartLabels={chartLabels[groupIndex]}
         attributes={attributes}
-        chartMetadata={chartMetadata}
         viewBefore={viewBefore}
         viewAfter={viewAfter}
       />
     )
   }
 
-  const groupedBoxesData = useMemo(
-    () =>
-      data.map((groupedBox) => ({
+  const groupedBoxesData = useMemo(() => {
+    return groupBoxData.map((groupedBox) => {
+      return {
         labels: groupedBox.labels,
-        data: getBoxesData(groupedBox, hoveredRow),
-      })),
-    [data, hoveredRow]
-  )
+        data:
+          hoveredRow === -1 || hoveredRow > data.length
+            ? groupedBox.postAggregated
+            : groupedBox.indexes.map((index) => data[hoveredRow][index]) || [],
+      }
+    })
+  }, [data, groupBoxData, hoveredRow])
 
   return (
     <Flex column width="100%" height="100%" gap={4} padding={[4, 2]}>

@@ -62,39 +62,6 @@ export const fillMissingData = (data: ChartData, nrOfPointsToFill: number) => {
   return data
 }
 
-export const getGroupedBoxes = (
-  payload: ChartData,
-  postAggregationMethod: string,
-  groupBy: string,
-  postGroupBy: string
-) => {
-  if ("post_aggregated_data" in payload.result) {
-    const { result, keys } = payload as any
-    const { post_aggregated_data: postAggregatedData, data } = result
-    const postAggregated = postAggregatedData[postAggregationMethod]
-    const groupValues = keys[groupBy]
-    const postGroupValues = keys[postGroupBy]
-
-    const postGroupData = groupValues.reduce((acc: any, groupValue: string, index: number) => {
-      if (!(groupValue in acc)) {
-        acc[groupValue] = { labels: [], data: [], postAggregatedData: [] }
-      }
-      const boxes = acc[groupValue]
-      boxes.labels.push(postGroupValues[index])
-      boxes.data.push(data[index])
-      boxes.postAggregatedData.push(postAggregated[index])
-      return acc
-    }, {})
-
-    const labels = Object.keys(postGroupData).sort(
-      (a, b) => postGroupData[b].data.length - postGroupData[a].data.length
-    )
-
-    return { labels, data: labels.map((label) => postGroupData[label]) }
-  }
-  return null
-}
-
 const emptyArray: number[] = []
 export const transformResults = (data: ChartData, format: string, shouldRevertFlip: boolean) => {
   if (format === "array" && data.format === "json") {

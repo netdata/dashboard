@@ -94,7 +94,9 @@ export interface StaticAttributes {
   postGroupBy?: string
   dimensionsAggrMethod?: string
   postAggregationMethod?: string
+  aggrGroups?: string[]
   selectedChart?: string
+  filteredRows?: string[] | null
   groupBy?: string
   nodeIDs?: string[]
   colors?: string
@@ -339,7 +341,9 @@ const getAttributesMap = (): AttributesMap => ({
   postGroupBy: { key: "post-group-by" },
   postAggregationMethod: { key: "post-aggregation-method" },
   dimensionsAggrMethod: { key: "dimensions-aggr-method" },
+  aggrGroups: { key: "aggrGroups" },
   selectedChart: { key: "selected-chart" },
+  filteredRows: { key: "filtered-rows" },
   groupBy: { key: "group-by" },
   nodeIDs: { key: "node-ids" },
   colors: { key: "colors" },

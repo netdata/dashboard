@@ -14,7 +14,7 @@ import { axiosInstance } from "utils/api"
 import { alwaysEndWithSlash, serverDefault } from "utils/server-detection"
 import { getFetchStream } from "utils/netdata-sdk"
 import { isMainJs } from "utils/env"
-import { fillMissingData, transformResults, getGroupedBoxes } from "utils/fill-missing-data"
+import { fillMissingData, transformResults } from "utils/fill-missing-data"
 import {
   showCloudInstallationProblemNotification, showCloudConnectionProblemNotification,
 } from "components/notifications"
@@ -94,10 +94,11 @@ const [fetchMetrics$] = getFetchStream(
 function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const {
     // props for api
-    host, chart, format, points, group, gtime, options,
+    host, context, chart, format, points, group, gtime, options,
     after, before, dimensions, labels, postGroupBy, postAggregationMethod,
     aggrMethod, dimensionsAggrMethod = "sum", nodeIDs, httpMethod,
-    groupBy = "dimension", // group by node or dimension
+    groupBy = "dimension", // group by node, dimension, or label keys
+    aggrGroups = [],
     // props for the store
     fetchDataParams, id, cancelTokenSource,
   } = payload
@@ -134,9 +135,10 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const agentOptions = shouldAddFakeFlip
     ? agentOptionsOriginal.concat("flip") : agentOptionsOriginal
 
-  const groups = [
+  const groupValues = [
     groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`,
     postGroupBy && `label=${postGroupBy}`,
+    ...aggrGroups.map((value: string) => `label=${value}`),
   ].filter(Boolean)
 
   const axiosOptions = httpMethod === "POST" ? {
@@ -144,7 +146,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     data: {
       filter: {
         nodeIDs,
-        context: chart,
+        context,
         dimensions: dimensions ? dimensions.split(/['|]/) : undefined,
         labels,
       },
@@ -157,11 +159,11 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       ...(postAggregationMethod && { post_aggregation_methods: [postAggregationMethod] }),
       aggregations: [groupBy !== "dimension" && {
         method: dimensionsAggrMethod,
-        groupBy: ["chart", ...groups],
+        groupBy: ["chart", ...groupValues],
       },
       {
         method: aggrMethod,
-        groupBy: groups,
+        groupBy: groupValues,
       }].filter(Boolean),
     },
   } : {
@@ -191,16 +193,17 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
         shouldAddFakeFlip,
       )
 
-      const groupedBoxes = getGroupedBoxes(
-        (data as unknown) as ChartData,
-        postAggregationMethod as string,
-        groupBy as string,
-        postGroupBy as string,
-      )
-
       const chartData = {
         ...transformedResults,
-        ...(groupedBoxes && { groupedBoxes }),
+        // @ts-ignore
+        ...(("post_aggregated_data" in data.result) && {
+          postAggregationMethod,
+          groupBy,
+          postGroupBy,
+          aggrGroups,
+          // @ts-ignore
+          postAggregated: data.result.post_aggregated_data[postAggregationMethod],
+        }),
       }
 
       fetchDataResponseChannel.put(fetchDataAction.success({

@@ -35,6 +35,7 @@ const SnapshotLoader = ({
     dispatch(fetchDataForSnapshotAction.request({
       // properties to be passed to API
       host,
+      context: attributes.id, 
       chart: attributes.id,
       format: chartSettings.format,
       points: snapshotDataPoints as number,

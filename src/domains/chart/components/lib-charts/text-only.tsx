@@ -15,23 +15,16 @@ export const TextOnly = ({
   chartElementClassName,
   chartElementId,
 }: Props) => {
-  const {
-    textOnlyDecimalPlaces = 1,
-    textOnlyPrefix = "",
-    textOnlySuffix = "",
-  } = attributes
+  const { textOnlyDecimalPlaces = 1, textOnlyPrefix = "", textOnlySuffix = "" } = attributes
 
   // Round based on number of decimal places to show
   const precision = 10 ** textOnlyDecimalPlaces
   const value = Math.round(chartData.result[0] * precision) / precision
 
-  const textContent = textOnlyPrefix + value + textOnlySuffix
+  const textContent = chartData.result.length === 0 ? "" : textOnlyPrefix + value + textOnlySuffix
 
   return (
-    <div
-      id={chartElementId}
-      className={chartElementClassName}
-    >
+    <div id={chartElementId} className={chartElementClassName}>
       {textContent}
     </div>
   )

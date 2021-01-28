@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-fragments */
 // @ts-nocheck
-import React, { useRef, useLayoutEffect, Fragment, useState, useCallback, useEffect } from "react"
+import React, { useRef, useLayoutEffect, Fragment, useState, useCallback } from "react"
 import { Drop } from "@netdata/netdata-ui"
 import drawBoxes from "./drawBoxes"
 import getAlign from "./getAlign"
@@ -20,6 +21,7 @@ const aligns = {
 }
 
 const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
+  const dataRef = useRef()
   const canvasRef = useRef()
   const boxesRef = useRef()
 
@@ -27,12 +29,14 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
   const dropHoverRef = useRef(false)
   const boxHoverRef = useRef(false)
 
+  const close = () => {
+    boxesRef.current.deactivateBox()
+    setHover(null)
+  }
+
   const closeDrop = () =>
     requestAnimationFrame(() => {
-      if (!dropHoverRef.current && !boxHoverRef.current) {
-        boxesRef.current.deactivateBox()
-        setHover(null)
-      }
+      if (!dropHoverRef.current && !boxHoverRef.current) close()
     })
 
   useLayoutEffect(() => {
@@ -55,6 +59,14 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
   }, [])
 
   useLayoutEffect(() => {
+    if (
+      hover &&
+      dataRef.current &&
+      dataRef.current.labels[hover.index] !== data.labels[hover.index]
+    ) {
+      close()
+    }
+    dataRef.current = data
     boxesRef.current.update(data)
   }, [data])
 

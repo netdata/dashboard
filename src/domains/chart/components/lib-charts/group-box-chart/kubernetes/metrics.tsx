@@ -7,7 +7,7 @@ import Section from "./section"
 import Chart from "./chart"
 import DateSection from "./dateSection"
 
-const Metrics = ({ label, attributes, viewAfter, viewBefore }) => (
+const Metrics = ({ groupLabel, postGroupLabel, attributes, viewAfter, viewBefore }) => (
   <Flex gap={3} column width="100%">
     <DateSection after={viewAfter} before={viewBefore} />
     <Section title="Metrics" noBorder>
@@ -15,10 +15,11 @@ const Metrics = ({ label, attributes, viewAfter, viewBefore }) => (
         {attributes.relatedCharts.map(({ chartMetadata }, index) => (
           <Chart
             key={chartMetadata.id}
-            id={`${label}|${attributes.id}|${chartMetadata.id}`}
+            id={[groupLabel, postGroupLabel, attributes.id, chartMetadata.id].join("|")}
             attributes={attributes}
             relatedIndex={index}
-            label={label}
+            groupLabel={groupLabel}
+            postGroupLabel={postGroupLabel}
           />
         ))}
       </Flex>

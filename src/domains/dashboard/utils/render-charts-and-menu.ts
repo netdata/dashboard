@@ -43,8 +43,12 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
 
     case "cgroup":
       // eslint-disable-next-line camelcase
-      if (hasKubernetes && chartEnriched.chartLabels?.k8s_cluster_id) {
-        chartEnriched.menu = `kubernetes ${chartEnriched.chartLabels.k8s_cluster_id}`
+      const clusterId = hasKubernetes 
+        && chartEnriched.chartLabels?.k8s_cluster_id 
+        && chartEnriched.chartLabels.k8s_cluster_id[0]
+
+      if (clusterId) {
+        chartEnriched.menu = `kubernetes ${clusterId}`
       } else if (chartEnriched.id.match(/.*[._/-:]qemu[._/-:]*/)
         || chartEnriched.id.match(/.*[._/-:]kvm[._/-:]*/)
       ) {

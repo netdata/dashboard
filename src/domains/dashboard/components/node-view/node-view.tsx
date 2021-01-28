@@ -73,6 +73,7 @@ const SubSection = memo(({
         menuName,
         chartIds: submenuNames
           .flatMap((name: string) => menu.submenus[name].charts)
+          .sort(prioritySort)
           .map((chart: any) => chart.id) as string[],
         chartsAttributes: attributesOverrides,
         chartsMetadata,

@@ -1,24 +1,23 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable comma-dangle */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React from "react"
+import React, { memo } from "react"
 import { Flex } from "@netdata/netdata-ui"
 import Item from "./item"
 import Section from "./section"
-import labels, { labelIds, getLabelValues } from "./labels"
+import getLabel, { labelIds } from "./getLabel"
 
-const LabelsSection = ({ labelId, attributes, chartMetadata, onExpand, ...rest }) => {
-  const { title, icon } = labels[labelId]
-
-  // todo: will be fixed once the backend returns an array
-  const items = getLabelValues(chartMetadata, attributes, labelId)
+const LabelsSection = ({ labelId, items, onExpand, ...rest }) => {
+  const { title, icon } = getLabel(labelId)
   const sliced = items.slice(0, 3)
   const expandable = items.length > 3
 
+  const text = expandable ? `${title} (${items.length})` : title
   return (
-    <Section title={`${title} (${items.length})`} onExpand={expandable && onExpand} {...rest}>
+    <Section title={text} onExpand={expandable && onExpand} {...rest}>
       {sliced.map((item) => (
         <Item key={item} icon={icon} title={item} />
       ))}
@@ -26,36 +25,34 @@ const LabelsSection = ({ labelId, attributes, chartMetadata, onExpand, ...rest }
   )
 }
 
-const LabelSection = ({ labelId, chartMetadata }) => {
-  const { icon, title } = labels[labelId]
-  const label = chartMetadata.chartLabels[labelId]
-  return (
-    <Section title={title}>
-      <Item icon={icon} title={label} />
-    </Section>
-  )
+const getLabelIds = (chartLabels) => {
+  chartLabels = { ...chartLabels }
+  const predefinedLabelIds = labelIds.reduce((acc, labelId) => {
+    if (!(labelId in chartLabels)) return acc
+
+    delete chartLabels[labelId]
+    return [...acc, labelId]
+  }, [])
+
+  return [...predefinedLabelIds, ...Object.keys(chartLabels)]
 }
 
-const Context = ({ attributes, onExpand }) => {
-  const { chartMetadata: selectedChartMetadata } = attributes.relatedCharts.find(
-    (r) => r.chartMetadata.id === attributes.selectedChart
-  )
+const Context = ({ chartLabels, onExpand }) => {
+  const ids = getLabelIds(chartLabels)
 
   return (
     <Flex gap={3} column width="100%">
-      <LabelSection labelId="k8s_cluster_id" chartMetadata={selectedChartMetadata} />
-      {labelIds.map((labelId, index) => (
+      {ids.map((id, index) => (
         <LabelsSection
-          key={labelId}
-          labelId={labelId}
-          attributes={attributes}
-          chartMetadata={selectedChartMetadata}
-          onExpand={() => onExpand(labelId)}
-          noBorder={index === labelIds.length - 1}
+          key={id}
+          labelId={id}
+          items={chartLabels[id]}
+          onExpand={() => onExpand(id)}
+          noBorder={index === ids.length - 1}
         />
       ))}
     </Flex>
   )
 }
 
-export default Context
+export default memo(Context)

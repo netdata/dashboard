@@ -297,6 +297,7 @@ export const ChartWithLoader = ({
         fetchDataAction.request({
           // properties to be passed to API
           host,
+          context: actualChartMetadata.context,
           chart: actualChartMetadata.id,
           format: chartSettings.format,
           points: correctedPoints || points,
@@ -310,6 +311,7 @@ export const ChartWithLoader = ({
           postGroupBy: attributes.postGroupBy,
           postAggregationMethod: attributes.postAggregationMethod,
           aggrMethod: attributes.aggrMethod,
+          aggrGroups: attributes.aggrGroups,
           // @ts-ignore
           dimensionsAggrMethod: dimensionsAggrMethodMap[attributes.dimensionsAggrMethod]
             || attributes.dimensionsAggrMethod,

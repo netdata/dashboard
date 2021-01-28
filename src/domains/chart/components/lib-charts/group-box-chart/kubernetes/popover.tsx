@@ -1,16 +1,17 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React from "react"
-import { H5, Flex, DropContainer } from "@netdata/netdata-ui"
+import React, { useState } from "react"
+import { Flex, DropContainer } from "@netdata/netdata-ui"
+import Separator from "./separator"
+import Header from "./header"
+import Tabs from "./tabs"
+import Metrics from "./metrics"
+import Context from "./context"
+import List from "./list"
 
-export const Header = (props) => <H5 color={["white", "pure"]} wordBreak="break-all" {...props} />
-
-export const Separator = () => (
-  <Flex height="1px" width="100%" background={["gray", "shuttleGray"]} />
-)
-
-const Popover = (props) => (
+const Container = (props) => (
   <DropContainer
     background={["transparent", "popover"]}
     padding={[2, 4]}
@@ -19,5 +20,60 @@ const Popover = (props) => (
     {...props}
   />
 )
+
+const TabsContainer = ({ label, value, onChange, children }) => {
+  return (
+    <Flex height="100%" column>
+      <Header>{label}</Header>
+      <Tabs value={value} onChange={onChange} margin={[4, 0, 0, 0]} />
+      <Separator />
+      <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} margin={[4, 0, 0, 0]}>
+        {children}
+      </Flex>
+    </Flex>
+  )
+}
+
+const Popover = ({
+  title,
+  groupLabel,
+  postGroupLabel,
+  chartLabels,
+  attributes,
+  viewBefore,
+  viewAfter,
+  ...rest
+}) => {
+  const [view, setView] = useState("context")
+
+  const isLabelView = view !== "context" && view !== "metrics"
+
+  return (
+    <Container {...rest}>
+      {isLabelView && (
+        <List
+          labelId={view}
+          items={chartLabels[view]}
+          attributes={attributes}
+          onBack={() => setView("context")}
+        />
+      )}
+      {!isLabelView && (
+        <TabsContainer label={title} value={view} onChange={setView}>
+          {view === "context" && <Context chartLabels={chartLabels} onExpand={setView} />}
+          {view === "metrics" && (
+            <Metrics
+              groupLabel={groupLabel}
+              postGroupLabel={postGroupLabel}
+              attributes={attributes}
+              viewAfter={viewAfter}
+              viewBefore={viewBefore}
+            />
+          )}
+        </TabsContainer>
+      )}
+    </Container>
+  )
+}
 
 export default Popover

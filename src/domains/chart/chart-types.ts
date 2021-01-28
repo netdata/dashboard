@@ -71,7 +71,7 @@ export interface ChartMetadata {
     [key: string]: Dimension
   }
   chartLabels?: {
-    [key: string]: string
+    [key: string]: string[]
   }
   duration: number
   enabled: boolean

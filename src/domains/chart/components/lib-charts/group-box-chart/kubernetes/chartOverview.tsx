@@ -1,22 +1,11 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef, useLayoutEffect, useState } from "react"
-import { Flex, Text } from "@netdata/netdata-ui"
-import { netdataDashboard } from "domains/dashboard/utils/netdata-dashboard"
-import { ChartContainer } from "domains/chart/components/chart-container"
+import React from "react"
 import styled from "styled-components"
-
-const StyledChartContainer = styled(Text)`
-  .netdata-container {
-    display: initial;
-  }
-  .netdata-chart {
-    display: initial;
-    position: initial;
-    top: initial;
-    left: initial;
-  }
-`
+import { Flex, Text } from "@netdata/netdata-ui"
+import { useSelector } from "store/redux-separate-context"
+import { netdataDashboard } from "domains/dashboard/utils/netdata-dashboard"
+import { selectChartData } from "domains/chart/selectors"
 
 const Title = styled(Text)`
   text-overflow: ellipsis;
@@ -28,49 +17,30 @@ const getUnitSign = (unit) => {
   return unit === "percentage" ? "%" : ` ${unit.replace(/milliseconds/, "ms")}`
 }
 
-const ChartOverview = ({ id, attributes, relatedIndex, labels }) => {
-  const chartContainerRef = useRef()
-  const [, repaint] = useState()
+const ChartSummary = ({ id, chartMetadata }) => {
+  const chartData = useSelector((state: AppStateT) => selectChartData(state, { id }))
 
-  useLayoutEffect(() => {
-    repaint(true)
-  }, [])
+  if (!chartData || chartData.result.length === 0) return null
 
-  const { chartMetadata, attributes: relatedChartAttributes } = attributes.relatedCharts[
-    relatedIndex
-  ]
+  const value = Math.round(chartData.result[chartData.result.length - 1] * 10) / 10
+  const unit = getUnitSign(chartMetadata.units)
+  return (
+    <Text color={["white", "pure"]} margin={[0, 0, 0, "auto"]}>
+      {value}
+      {unit}
+    </Text>
+  )
+}
 
-  const chartAttributes = {
-    id: chartMetadata.id,
-    chartLibrary: "textonly",
-    httpMethod: "POST",
-    host: attributes.host,
-    nodeIDs: attributes.nodeIDs,
-    dimensions: relatedChartAttributes.dimensions,
-    aggrMethod: relatedChartAttributes.aggrMethod,
-    textOnlySuffix: getUnitSign(chartMetadata.units),
-    labels,
-  }
-
+const ChartOverview = ({ id, chartMetadata }) => {
   const icon = netdataDashboard.menuIcon(chartMetadata)
-  const title = chartMetadata.id.replace(/cgroup\./, "")
+  const title = chartMetadata.context.replace(/cgroup\./, "")
 
   return (
-    <Flex justifyContent="between" gap={2}>
+    <Flex gap={2}>
       <Text color={["white", "pure"]} dangerouslySetInnerHTML={{ __html: icon }} />
       <Title color={["white", "pure"]}>{title}</Title>
-      <StyledChartContainer color={["white", "pure"]} margin={[0, 0, 0, "auto"]}>
-        <div ref={chartContainerRef}>
-          {chartContainerRef.current && (
-            <ChartContainer
-              chartUuid={id}
-              attributes={chartAttributes}
-              chartMetadata={chartMetadata}
-              portalNode={chartContainerRef.current}
-            />
-          )}
-        </div>
-      </StyledChartContainer>
+      <ChartSummary id={id} chartMetadata={chartMetadata} />
     </Flex>
   )
 }

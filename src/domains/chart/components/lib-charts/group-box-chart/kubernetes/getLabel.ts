@@ -10,14 +10,11 @@ const labels = {
   k8s_container_name: { icon: "container", title: "Container" },
 }
 
-const [, ...labelIds] = Object.keys(labels)
+export const labelIds = Object.keys(labels)
 
-export { labelIds }
-
-export const getLabelValues = (chartMetadata, attributes, labelId) => {
-  return labelId === "k8s_node_name"
-    ? attributes.nodeIDs.map(attributes.getName)
-    : [chartMetadata.chartLabels[labelId]]
+export default (id) => {
+  if (id in labels) return labels[id]
+  // k8s_custom_label -> Custom Label
+  const title = id.replace(/_./g, (word) => ` ${word[1].toUpperCase()}`).replace(/^k8s /, "")
+  return { title, icon: "node" }
 }
-
-export default labels

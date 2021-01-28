@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef, useContext, useLayoutEffect, useState } from "react"
+import React, { useRef, useContext, useLayoutEffect, useState, memo, useEffect } from "react"
 import { ChartContainer } from "domains/chart/components/chart-container"
 import { ThemeContext } from "styled-components"
 import { Flex, getColor } from "@netdata/netdata-ui"
 import ChartOverview from "./chartOverview"
 
-const Chart = ({ label, id, attributes, relatedIndex }) => {
+const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => {
   const theme = useContext(ThemeContext)
   const chartContainerRef = useRef()
   const [, repaint] = useState()
@@ -20,8 +20,9 @@ const Chart = ({ label, id, attributes, relatedIndex }) => {
   ]
 
   const labels = {
-    k8s_cluster_id: [chartMetadata.chartLabels.k8s_cluster_id],
-    [attributes.groupBy]: [label],
+    k8s_cluster_id: [chartMetadata.chartLabels.k8s_cluster_id[0]],
+    [attributes.groupBy]: [groupLabel],
+    ...(postGroupLabel && { [attributes.postGroupBy]: [postGroupLabel] }),
   }
 
   const chartAttributes = {
@@ -35,6 +36,7 @@ const Chart = ({ label, id, attributes, relatedIndex }) => {
     sparklineLineColor: getColor("border")({ theme }),
     sparklineFillColor: getColor("disabled")({ theme }),
     sparklineSpotRadius: 0,
+    sparklineDisableTooltips: true,
 
     httpMethod: "POST",
     host: attributes.host,
@@ -56,9 +58,9 @@ const Chart = ({ label, id, attributes, relatedIndex }) => {
           />
         )}
       </div>
-      <ChartOverview id={id} attributes={attributes} relatedIndex={relatedIndex} labels={labels} />
+      <ChartOverview id={id} chartMetadata={chartMetadata} />
     </Flex>
   )
 }
 
-export default Chart
+export default memo(Chart)

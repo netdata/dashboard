@@ -4,9 +4,10 @@
 import React from "react"
 import { Flex, Button, makeFlex } from "@netdata/netdata-ui"
 import styled from "styled-components"
-import { Separator, Header } from "./popover"
+import Separator from "./separator"
+import Header from "./header"
 import Item from "./item"
-import labels, { getLabelValues } from "./labels"
+import getLabel from "./getLabel"
 
 const StyledButton = styled(makeFlex(Button)).attrs({
   flavour: "borderless",
@@ -30,9 +31,8 @@ const StyledButton = styled(makeFlex(Button)).attrs({
   }
 `
 
-const List = ({ labelId, chartMetadata, attributes, onBack }) => {
-  const { title, icon } = labels[labelId]
-  const items = getLabelValues(chartMetadata, attributes, labelId)
+const List = ({ labelId, items, onBack }) => {
+  const { title, icon } = getLabel(labelId)
 
   return (
     <Flex height="100%" gap={3} column>
