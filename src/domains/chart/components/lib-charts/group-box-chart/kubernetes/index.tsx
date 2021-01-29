@@ -90,7 +90,7 @@ const Kubernetes = ({
         data:
           hoveredRow === -1 || hoveredRow > data.length || !(hoveredRow in data)
             ? groupedBox.postAggregated
-            : groupedBox.indexes.map((index) => data[hoveredRow][index]) || [],
+            : groupedBox.indexes.map((index) => data[hoveredRow][index + 1]) || [],
       }
     })
   }, [data, groupBoxData, hoveredRow])
