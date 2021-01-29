@@ -42,9 +42,10 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
       break
 
     case "cgroup":
-      // eslint-disable-next-line camelcase
-      const clusterId = hasKubernetes 
-        && chartEnriched.chartLabels?.k8s_cluster_id 
+      // eslint-disable-next-line no-case-declarations
+      const clusterId = hasKubernetes
+        // eslint-disable-next-line camelcase
+        && chartEnriched.chartLabels?.k8s_cluster_id
         && chartEnriched.chartLabels.k8s_cluster_id[0]
 
       if (clusterId) {

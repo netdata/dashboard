@@ -1,8 +1,12 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable object-curly-newline */
+/* eslint-disable arrow-body-style */
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/jsx-one-expression-per-line */
 // @ts-nocheck
 import React, { useRef, useMemo } from "react"
 import styled from "styled-components"
-import { Flex, TextMicro, Popover, getColor } from "@netdata/netdata-ui"
+import { Flex, TextMicro, Popover } from "@netdata/netdata-ui"
 import GroupBox from "./groupBox"
 import { getWidth } from "./drawBoxes"
 import getAlign from "./getAlign"
@@ -50,22 +54,20 @@ const GroupBoxWrapper = ({
   return (
     <Flex column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
       <Popover content={groupPopover} align={align} plain>
-        {({ isOpen, ref: popoverRef, ...rest }) => {
-          return (
-            <Label
-              ref={(el) => {
-                ref.current = el
-                popoverRef(el)
-              }}
-              strong={isOpen}
-              style={style}
-              {...rest}
-            >
-              <Title>{label}</Title>
-              {data.data.length > 3 && <span>({data.data.length})</span>}
-            </Label>
-          )
-        }}
+        {({ isOpen, ref: popoverRef, ...rest }) => (
+          <Label
+            ref={(el) => {
+              ref.current = el
+              popoverRef(el)
+            }}
+            strong={isOpen}
+            style={style}
+            {...rest}
+          >
+            <Title>{label}</Title>
+            {data.data.length > 3 && <span>({data.data.length})</span>}
+          </Label>
+        )}
       </Popover>
       <GroupBox data={data} renderTooltip={boxPopover} />
     </Flex>

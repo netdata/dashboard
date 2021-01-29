@@ -1,3 +1,6 @@
+/* eslint-disable operator-linebreak */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable object-curly-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/jsx-fragments */
 // @ts-nocheck

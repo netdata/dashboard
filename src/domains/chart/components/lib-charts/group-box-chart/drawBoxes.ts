@@ -1,3 +1,6 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable comma-dangle */
+/* eslint-disable implicit-arrow-linebreak */
 /* eslint-disable no-param-reassign */
 // @ts-nocheck
 import { scaleLinear, extent } from "d3"

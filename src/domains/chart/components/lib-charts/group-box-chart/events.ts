@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable no-param-reassign */
 // @ts-nocheck
 import { cellSize, cellBoxSize, getXPosition, getYPosition } from "./utilities"

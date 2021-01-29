@@ -86,8 +86,8 @@ export const ChartLegendBottom = ({
           {dimensionNames.map((dimensionName, i) => {
             const color = colors[dimensionName]
 
-            const isSelected =
-              selectedDimensions.length === 0 || selectedDimensions.includes(dimensionName)
+            const isSelected = selectedDimensions.length === 0
+              || selectedDimensions.includes(dimensionName)
 
             let value
             if (showUndefined) {

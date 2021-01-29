@@ -1,6 +1,7 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef, useContext, useLayoutEffect, useState, memo, useEffect } from "react"
+import React, { useRef, useContext, useLayoutEffect, useState, memo } from "react"
 import { ChartContainer } from "domains/chart/components/chart-container"
 import { ThemeContext } from "styled-components"
 import { Flex, getColor } from "@netdata/netdata-ui"

@@ -25,13 +25,11 @@ export const TabButton = styled(Button).attrs(({ active }) => ({
   }
 `
 
-const Tabs = ({ value, onChange, ...rest }) => {
-  return (
-    <Flex {...rest}>
-      <TabButton label="Context" active={value === "context"} onClick={() => onChange("context")} />
-      <TabButton label="Metrics" active={value === "metrics"} onClick={() => onChange("metrics")} />
-    </Flex>
-  )
-}
+const Tabs = ({ value, onChange, ...rest }) => (
+  <Flex {...rest}>
+    <TabButton label="Context" active={value === "context"} onClick={() => onChange("context")} />
+    <TabButton label="Metrics" active={value === "metrics"} onClick={() => onChange("metrics")} />
+  </Flex>
+)
 
 export default Tabs

@@ -1,3 +1,5 @@
+/* eslint-disable arrow-body-style */
+/* eslint-disable object-curly-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable comma-dangle */
 /* eslint-disable react/prop-types */
@@ -24,10 +26,9 @@ export default (chartData, filteredRows) => {
     boxes.labels.push(postGroupValues[index])
     boxes.postAggregated.push(postAggregated[index])
 
-    const chartLabels = aggrGroups.reduce(
-      (acc, label) => (keys[label][index] ? { ...acc, [label]: [keys[label][index]] } : acc),
-      {}
-    )
+    const chartLabels = aggrGroups.reduce((labelsAcc, label) => {
+      return keys[label][index] ? { ...labelsAcc, [label]: [keys[label][index]] } : labelsAcc
+    }, {})
     boxes.chartLabels.push(chartLabels)
     return acc
   }, {})
@@ -41,11 +42,9 @@ export default (chartData, filteredRows) => {
   const groupChartLabels = groupData.map((boxes) => {
     return aggrGroups.reduce((acc, label) => {
       const groupLabels = new Set(
-        boxes.chartLabels.reduce(
-          (accChartLabels: any, chartLabels: any) =>
-            chartLabels[label] ? [...accChartLabels, ...chartLabels[label]] : accChartLabels,
-          []
-        )
+        boxes.chartLabels.reduce((accChartLabels, chartLabels) => {
+          return chartLabels[label] ? [...accChartLabels, ...chartLabels[label]] : accChartLabels
+        }, [])
       )
       return groupLabels.size === 0 ? acc : { ...acc, [label]: Array.from(groupLabels) }
     }, {})

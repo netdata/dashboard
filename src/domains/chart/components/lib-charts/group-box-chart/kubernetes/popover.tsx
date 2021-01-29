@@ -21,18 +21,16 @@ const Container = (props) => (
   />
 )
 
-const TabsContainer = ({ label, value, onChange, children }) => {
-  return (
-    <Flex height="100%" column>
-      <Header>{label}</Header>
-      <Tabs value={value} onChange={onChange} margin={[4, 0, 0, 0]} />
-      <Separator />
-      <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} margin={[4, 0, 0, 0]}>
-        {children}
-      </Flex>
+const TabsContainer = ({ label, value, onChange, children }) => (
+  <Flex height="100%" column>
+    <Header>{label}</Header>
+    <Tabs value={value} onChange={onChange} margin={[4, 0, 0, 0]} />
+    <Separator />
+    <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} margin={[4, 0, 0, 0]}>
+      {children}
     </Flex>
-  )
-}
+  </Flex>
+)
 
 const Popover = ({
   title,
