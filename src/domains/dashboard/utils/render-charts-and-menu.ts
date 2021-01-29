@@ -85,6 +85,17 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
       }
       break
 
+    case "prometheus": {
+      if (parts.length === 1) {
+        // composite-charts
+        const familyPart = chart.family.split("_")[0]
+        chartEnriched.menu = `prometheus ${familyPart}`
+      } else {
+        chartEnriched.menu_pattern = "prometheus"
+      }
+      break
+    }
+
     case "smartd":
     case "web":
       if (parts.length > 2 && parts[1] === "log") {
