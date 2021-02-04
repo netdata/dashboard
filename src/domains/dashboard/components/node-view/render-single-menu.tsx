@@ -25,10 +25,18 @@ export const renderSingleMenu = ({
   const menuID = name2id(`menu_${menuName}`)
   const submenuNames = sortObjectByPriority(menu.submenus)
 
+  const getEventName = (value: string) => {
+    return value.startsWith("Kubernetes") ? "k8s" : value.replace(/[^\w]/g, "-").toLowerCase()
+  }
+
   const onMenuClick = (event: React.MouseEvent) => {
     handleScrollToId(event)
-    const name = menu.title.replace(/[^\w]/g, "-").toLowerCase()
-    reportEvent("metric-sidebar", `click-${name}`)
+    reportEvent("metric-sidebar", `click-${getEventName(menu.title)}`)
+  }
+
+  const onSubmenuClick = (event: React.MouseEvent, title: string) => {
+    handleScrollToId(event)
+    reportEvent("metric-sidebar", `click-${getEventName(menu.title)}`, getEventName(title))
   }
 
   // currentChart could be either just menu name "menu_ipv4"
@@ -75,7 +83,8 @@ export const renderSingleMenu = ({
               <a
                 className="node-view__sidebar-link"
                 href={`#${submenuID}`}
-                onClick={handleScrollToId}
+                // @ts-ignore
+                onClick={(e) => onSubmenuClick(e, submenu.title)}
               >
                 {submenu.title}
               </a>

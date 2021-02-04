@@ -1,7 +1,10 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React, { useRef, useContext, useLayoutEffect, useState, memo } from "react"
+import React, { useRef, useContext, useLayoutEffect, useState, memo, useMemo } from "react"
+import { throttle } from "throttle-debounce"
 import { ChartContainer } from "domains/chart/components/chart-container"
 import { ThemeContext } from "styled-components"
 import { Flex, getColor } from "@netdata/netdata-ui"
@@ -10,6 +13,8 @@ import ChartOverview from "./chartOverview"
 const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => {
   const theme = useContext(ThemeContext)
   const chartContainerRef = useRef()
+  const [displayedIndex, setDisplayedIndex] = useState()
+  const setDisplayedIndexThrottled = useMemo(() => throttle(400, setDisplayedIndex), [])
   const [, repaint] = useState()
 
   useLayoutEffect(() => {
@@ -20,32 +25,35 @@ const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => 
     relatedIndex
   ]
 
-  const labels = {
-    k8s_cluster_id: [chartMetadata.chartLabels.k8s_cluster_id[0]],
-    [attributes.groupBy]: [groupLabel],
-    ...(postGroupLabel && { [attributes.postGroupBy]: [postGroupLabel] }),
-  }
+  const chartAttributes = useMemo(
+    () => ({
+      id: chartMetadata.id,
 
-  const chartAttributes = {
-    id: chartMetadata.id,
+      width: "100%",
+      height: "60px",
 
-    width: "100%",
-    height: "60px",
+      chartLibrary: "sparkline",
+      sparklineLineWidth: "2px",
+      sparklineLineColor: getColor("border")({ theme }),
+      sparklineFillColor: getColor("disabled")({ theme }),
+      sparklineSpotRadius: 0,
+      sparklineDisableTooltips: true,
+      sparklineOnHover: (event) => setDisplayedIndexThrottled(event?.x),
 
-    chartLibrary: "sparkline",
-    sparklineLineWidth: "2px",
-    sparklineLineColor: getColor("border")({ theme }),
-    sparklineFillColor: getColor("disabled")({ theme }),
-    sparklineSpotRadius: 0,
-    sparklineDisableTooltips: true,
+      httpMethod: "POST",
+      host: attributes.host,
+      nodeIDs: attributes.nodeIDs,
+      dimensions: relatedChartAttributes.dimensions,
+      aggrMethod: relatedChartAttributes.aggrMethod,
 
-    httpMethod: "POST",
-    host: attributes.host,
-    nodeIDs: attributes.nodeIDs,
-    dimensions: relatedChartAttributes.dimensions,
-    aggrMethod: relatedChartAttributes.aggrMethod,
-    labels,
-  }
+      labels: {
+        k8s_cluster_id: [chartMetadata.chartLabels.k8s_cluster_id[0]],
+        [attributes.groupBy]: [groupLabel],
+        ...(postGroupLabel && { [attributes.postGroupBy]: [postGroupLabel] }),
+      },
+    }),
+    [chartMetadata, attributes]
+  )
 
   return (
     <Flex gap={2} column>
@@ -59,7 +67,7 @@ const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => 
           />
         )}
       </div>
-      <ChartOverview id={id} chartMetadata={chartMetadata} />
+      <ChartOverview id={id} chartMetadata={chartMetadata} displayedIndex={displayedIndex} />
     </Flex>
   )
 }

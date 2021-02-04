@@ -138,7 +138,6 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
   const groupValues = [
     groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`,
     postGroupBy && `label=${postGroupBy}`,
-    ...aggrGroups.map((value: string) => `label=${value}`),
   ].filter(Boolean)
 
   const axiosOptions = httpMethod === "POST" ? {
@@ -164,6 +163,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       {
         method: aggrMethod,
         groupBy: groupValues,
+        ...(aggrGroups.length && { labels: aggrGroups }),
       }].filter(Boolean),
     },
   } : {

@@ -63,6 +63,7 @@ const SubSection = memo(({
   commonAttributesOverrides,
   nodeIDs = emptyNodeIDs,
 }: SubSectionProps) => {
+  const disableHeads = menuName.startsWith("Kubernetes")
   const submenuNames = sortObjectByPriority(menu.submenus)
 
   return (
@@ -92,7 +93,7 @@ const SubSection = memo(({
             commonAttributesOverrides={commonAttributesOverrides}
           />
         )}
-        {!menuName.startsWith("Kubernetes") && submenuNames.flatMap(
+        {!disableHeads && submenuNames.flatMap(
           (submenu) => menu.submenus[submenu].charts
             .concat().sort(prioritySort) // shallow clone, sort by priority
             .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
@@ -116,6 +117,7 @@ const SubSection = memo(({
         )}
       </div>
       {submenuNames.map(renderSubmenuName({
+        disableHeads,
         chartsMetadata,
         renderCustomElementForDygraph,
         onAttributesChange,

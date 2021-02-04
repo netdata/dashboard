@@ -6,7 +6,7 @@
 // @ts-nocheck
 
 export default (chartData, filteredRows) => {
-  const { keys, groupBy, postGroupBy, aggrGroups, postAggregated } = chartData
+  const { keys, labels: labelValues, groupBy, postGroupBy, aggrGroups, postAggregated } = chartData
   const groupValues = keys[groupBy]
   const postGroupValues = keys[postGroupBy]
   const indexes = filteredRows || [...Array(groupValues.length)].map((v, index) => index)
@@ -27,7 +27,9 @@ export default (chartData, filteredRows) => {
     boxes.postAggregated.push(postAggregated[index])
 
     const chartLabels = aggrGroups.reduce((labelsAcc, label) => {
-      return keys[label][index] ? { ...labelsAcc, [label]: [keys[label][index]] } : labelsAcc
+      return labelValues[label][index]
+        ? { ...labelsAcc, [label]: labelValues[label][index] }
+        : labelsAcc
     }, {})
     boxes.chartLabels.push(chartLabels)
     return acc

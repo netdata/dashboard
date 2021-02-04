@@ -1,7 +1,7 @@
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/prop-types */
 // @ts-nocheck
-import React from "react"
+import React, { memo } from "react"
 import styled from "styled-components"
 import { Flex, Text } from "@netdata/netdata-ui"
 import { useSelector } from "store/redux-separate-context"
@@ -18,22 +18,23 @@ const getUnitSign = (unit) => {
   return unit === "percentage" ? "%" : ` ${unit.replace(/milliseconds/, "ms")}`
 }
 
-const ChartSummary = ({ id, chartMetadata }) => {
+const ChartValue = ({ id, chartMetadata, displayedIndex }) => {
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id }))
 
   if (!chartData || chartData.result.length === 0) return null
 
-  const value = Math.round(chartData.result[chartData.result.length - 1] * 10) / 10
+  const index = typeof displayedIndex === "number" ? displayedIndex : chartData.result.length - 1
   const unit = getUnitSign(chartMetadata.units)
+
   return (
-    <Text color={["white", "pure"]} margin={[0, 0, 0, "auto"]}>
-      {value}
+    <Text wordBreak="keep-all" color={["white", "pure"]} margin={[0, 0, 0, "auto"]}>
+      {chartData.result[index]}
       {unit}
     </Text>
   )
 }
 
-const ChartOverview = ({ id, chartMetadata }) => {
+const ChartOverview = ({ id, chartMetadata, displayedIndex }) => {
   const icon = netdataDashboard.menuIcon(chartMetadata)
   const title = chartMetadata.context.replace(/cgroup\./, "")
 
@@ -41,9 +42,9 @@ const ChartOverview = ({ id, chartMetadata }) => {
     <Flex gap={2}>
       <Text color={["white", "pure"]} dangerouslySetInnerHTML={{ __html: icon }} />
       <Title color={["white", "pure"]}>{title}</Title>
-      <ChartSummary id={id} chartMetadata={chartMetadata} />
+      <ChartValue id={id} chartMetadata={chartMetadata} displayedIndex={displayedIndex} />
     </Flex>
   )
 }
 
-export default ChartOverview
+export default memo(ChartOverview)
