@@ -1,3 +1,6 @@
+/* eslint-disable indent */
+/* eslint-disable operator-linebreak */
+/* eslint-disable comma-dangle */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable consistent-return */
 import "jquery-sparkline"
@@ -204,6 +207,7 @@ export const SparklineChart = ({
   // update chart
   useEffect(() => {
     if ($chartElement) {
+      // @ts-ignore
       $chartElement.sparkline(chartData.result, {
         ...sparklineOptions.current,
         width: Math.floor(width * widthRatio),
