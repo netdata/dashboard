@@ -30,6 +30,7 @@ export interface FetchDataParams {
 export interface FetchDataUrlParams {
   host: string
   chart: string
+  context: string
   format: string
   points: number
   group: string
@@ -42,6 +43,7 @@ export interface FetchDataUrlParams {
   postGroupBy?: string
   postAggregationMethod?: string
   aggrMethod?: string
+  aggrGroups?: string[]
   dimensionsAggrMethod?: string
   nodeIDs?: string[]
   httpMethod?: Method

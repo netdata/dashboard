@@ -1,7 +1,10 @@
+/* eslint-disable indent */
+/* eslint-disable operator-linebreak */
+/* eslint-disable comma-dangle */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable consistent-return */
 import "jquery-sparkline"
-import React, {
-  useRef, useEffect, useState,
-} from "react"
+import React, { useRef, useEffect, useState } from "react"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
@@ -21,7 +24,8 @@ interface TimeWindowCorrection {
   widthRatio?: number
 }
 const getForceTimeWindowCorrection = (
-  chartData: EasyPieChartData, viewRange: TimeRange,
+  chartData: EasyPieChartData,
+  viewRange: TimeRange
 ): TimeWindowCorrection => {
   const requestedAfter = convertToTimestamp(viewRange[0])
   const requestedBefore = convertToTimestamp(viewRange[1])
@@ -59,8 +63,8 @@ interface Props {
   isRemotelyControlled: boolean
   orderedColors: string[]
   unitsCurrent: string
-  viewAfterForCurrentData: number,
-  viewBeforeForCurrentData: number,
+  viewAfterForCurrentData: number
+  viewBeforeForCurrentData: number
 }
 export const SparklineChart = ({
   attributes,
@@ -78,7 +82,7 @@ export const SparklineChart = ({
 
   // update width, height automatically each time
   const [$chartElement, set$chartElement] = useState()
-  const sparklineOptions = useRef<{[key: string]: any}>()
+  const sparklineOptions = useRef<{ [key: string]: any }>()
 
   const { paddingLeftPercentage = undefined, widthRatio = 1 } = attributes.forceTimeWindow
     ? getForceTimeWindowCorrection(chartData, [viewAfterForCurrentData, viewBeforeForCurrentData])
@@ -86,12 +90,11 @@ export const SparklineChart = ({
 
   // create chart
   useEffect(() => {
-    const {
-      sparklineLineColor = orderedColors[0],
-    } = attributes
-    const defaultFillColor = chartMetadata.chart_type === "line"
-      ? window.NETDATA.themes.current.background
-      : colorLuminance(sparklineLineColor, window.NETDATA.chartDefaults.fill_luminance)
+    const { sparklineLineColor = orderedColors[0] } = attributes
+    const defaultFillColor =
+      chartMetadata.chart_type === "line"
+        ? window.NETDATA.themes.current.background
+        : colorLuminance(sparklineLineColor, window.NETDATA.chartDefaults.fill_luminance)
     const chartTitle = attributes.title || chartMetadata.title
 
     const emptyStringIfDisable = (x: string | undefined) => (x === "disable" ? "" : x)
@@ -158,38 +161,67 @@ export const SparklineChart = ({
     }
     sparklineOptions.current = sparklineInitOptions
 
-    if (chartElement.current && !$chartElement) {
-      const $element = window.$(chartElement.current)
-      const { width, height } = chartContainerElement.getBoundingClientRect()
+    if (!chartElement.current || $chartElement) return
 
-      set$chartElement(() => $element)
+    const $element = window.$(chartElement.current)
+    const { width, height } = chartContainerElement.getBoundingClientRect()
 
-      // @ts-ignore
-      $element.sparkline(chartData.result, {
-        ...sparklineOptions.current,
-        width: Math.floor(width * widthRatio),
-        height: Math.floor(height),
-      })
+    set$chartElement(() => $element)
+
+    // @ts-ignore
+    $element.sparkline(chartData.result, {
+      ...sparklineOptions.current,
+      width: Math.floor(width * widthRatio),
+      height: Math.floor(height),
+    })
+  }, [
+    $chartElement,
+    attributes,
+    chartContainerElement,
+    chartData.result,
+    chartMetadata,
+    orderedColors,
+    unitsCurrent,
+    widthRatio,
+  ])
+
+  const { sparklineOnHover } = attributes
+  useEffect(() => {
+    if (!$chartElement || !sparklineOnHover) return
+
+    const onLeave = () => sparklineOnHover(null)
+    const onChange = ({ sparklines: [sparkline] }: any) => {
+      const { x, y } = sparkline.getCurrentRegionFields()
+      sparklineOnHover({ x, y })
     }
-  }, [$chartElement, attributes, chartContainerElement, chartData.result, chartMetadata,
-    orderedColors, unitsCurrent, widthRatio])
 
+    // @ts-ignore
+    $chartElement.bind("sparklineRegionChange", onChange).bind("mouseleave", onLeave)
+    return () => {
+      // @ts-ignore
+      $chartElement.unbind("sparklineRegionChange", onChange).unbind("mouseleave", onLeave)
+    }
+  }, [$chartElement, sparklineOnHover])
+
+  const { width, height } = chartContainerElement.getBoundingClientRect()
   // update chart
   useEffect(() => {
     if ($chartElement) {
-      const { width, height } = chartContainerElement.getBoundingClientRect()
+      // @ts-ignore
       $chartElement.sparkline(chartData.result, {
         ...sparklineOptions.current,
         width: Math.floor(width * widthRatio),
         height: Math.floor(height),
       })
     }
-  })
+  }, [width, height, $chartElement])
 
-  const style = paddingLeftPercentage ? {
-    textAlign: "initial" as "initial", // :) typescript
-    paddingLeft: paddingLeftPercentage,
-  } : undefined
+  const style = paddingLeftPercentage
+    ? {
+        textAlign: "initial" as "initial", // :) typescript
+        paddingLeft: paddingLeftPercentage,
+      }
+    : undefined
 
   return (
     <div ref={chartElement} id={chartElementId} className={chartElementClassName} style={style} />

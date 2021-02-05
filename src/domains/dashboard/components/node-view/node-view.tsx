@@ -63,6 +63,7 @@ const SubSection = memo(({
   commonAttributesOverrides,
   nodeIDs = emptyNodeIDs,
 }: SubSectionProps) => {
+  const disableHeads = menuName.startsWith("Kubernetes")
   const submenuNames = sortObjectByPriority(menu.submenus)
 
   return (
@@ -73,11 +74,13 @@ const SubSection = memo(({
         menuName,
         chartIds: submenuNames
           .flatMap((name: string) => menu.submenus[name].charts)
+          .sort(prioritySort)
           .map((chart: any) => chart.id) as string[],
         chartsAttributes: attributesOverrides,
         chartsMetadata,
         onAttributesChange,
         host,
+        nodeIDs,
       })}
       <div className="netdata-chart-row">
         {shouldDisplayHeadMain && (
@@ -90,7 +93,7 @@ const SubSection = memo(({
             commonAttributesOverrides={commonAttributesOverrides}
           />
         )}
-        {!menuName.startsWith("kubernetes") && submenuNames.flatMap(
+        {!disableHeads && submenuNames.flatMap(
           (submenu) => menu.submenus[submenu].charts
             .concat().sort(prioritySort) // shallow clone, sort by priority
             .flatMap((chart) => generateHeadCharts("mainheads", chart, duration))
@@ -114,6 +117,7 @@ const SubSection = memo(({
         )}
       </div>
       {submenuNames.map(renderSubmenuName({
+        disableHeads,
         chartsMetadata,
         renderCustomElementForDygraph,
         onAttributesChange,

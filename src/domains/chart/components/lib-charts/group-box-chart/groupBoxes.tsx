@@ -1,41 +1,94 @@
-import React, { useMemo } from "react"
-import { Flex, TextMicro } from "@netdata/netdata-ui"
+/* eslint-disable operator-linebreak */
+/* eslint-disable object-curly-newline */
+/* eslint-disable arrow-body-style */
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/jsx-one-expression-per-line */
+// @ts-nocheck
+import React, { useRef, useMemo } from "react"
+import styled from "styled-components"
+import { Flex, TextMicro, Popover } from "@netdata/netdata-ui"
 import GroupBox from "./groupBox"
-import Legend from "./legend"
+import { getWidth } from "./drawBoxes"
+import getAlign from "./getAlign"
 
 interface GroupBoxWrapperProps {
   data: any
   title: string
 }
 
-const GroupBoxWrapper = ({ data, title }: GroupBoxWrapperProps) => {
-  const total = useMemo(() => data.data.length, [data])
+const Title = styled.span`
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+`
+
+const Label = styled(Flex).attrs({
+  as: TextMicro,
+  gap: 1,
+})`
+  cursor: default;
+  &:hover {
+    font-weight: bold;
+  }
+`
+
+const GroupBoxWrapper = ({
+  data,
+  label,
+  groupIndex,
+  renderGroupPopover,
+  renderBoxPopover,
+}: GroupBoxWrapperProps) => {
+  const ref = useRef()
+  const align = ref.current && getAlign(ref.current)
+
+  const style = useMemo(() => ({ maxWidth: `${getWidth(data.data)}px` }), [data])
+
+  const boxPopover =
+    renderBoxPopover &&
+    ((index, boxAlign) => renderBoxPopover({ group: label, groupIndex, align: boxAlign, index }))
+
+  const groupPopover =
+    renderGroupPopover && (() => renderGroupPopover({ group: label, groupIndex, align }))
+
   return (
     <Flex column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
-      <TextMicro>
-        {title}
-        {" "}
-(
-        {total}
-)
-      </TextMicro>
-      <GroupBox data={data} />
+      <Popover content={groupPopover} align={align} plain>
+        {({ isOpen, ref: popoverRef, ...rest }) => (
+          <Label
+            ref={(el) => {
+              ref.current = el
+              popoverRef(el)
+            }}
+            strong={isOpen}
+            style={style}
+            {...rest}
+          >
+            <Title>{label}</Title>
+            {data.data.length > 3 && <span>({data.data.length})</span>}
+          </Label>
+        )}
+      </Popover>
+      <GroupBox data={data} renderTooltip={boxPopover} />
     </Flex>
   )
 }
 
-const GroupBoxes = React.memo(({ chartData }: any) => {
-  const { groupedBoxes, id } = chartData
-  return (
-    <Flex column width="100%" height="100%" gap={4} padding={[4, 2]}>
-      <Flex flexWrap overflow={{ vertical: "auto" }}>
-        {Object.keys(groupedBoxes).map((key) => (
-          <GroupBoxWrapper key={key} title={key} data={groupedBoxes[key]} />
-        ))}
-      </Flex>
-      <Legend>{id}</Legend>
-    </Flex>
-  )
-})
+const GroupBoxes = ({ data, labels, renderBoxPopover, renderGroupPopover }: any) => (
+  <Flex flexWrap overflow={{ vertical: "auto" }} flex>
+    {labels.map((label, index) => {
+      return data[index].data.length ? (
+        <GroupBoxWrapper
+          key={label}
+          label={label}
+          groupIndex={index}
+          data={data[index]}
+          renderGroupPopover={renderGroupPopover}
+          renderBoxPopover={renderBoxPopover}
+        />
+      ) : null
+    })}
+  </Flex>
+)
 
-export { GroupBoxes }
+export default GroupBoxes

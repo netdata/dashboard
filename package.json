@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "2.13.4",
+  "version": "2.13.6",
   "homepage": ".",
   "main": "./lib/src/index-npm.js",
   "files": [
@@ -16,7 +16,7 @@
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
     "@material/menu-surface": "^1.0.0",
-    "@netdata/netdata-ui": "^1.2.5",
+    "@netdata/netdata-ui": "^1.2.16",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
@@ -58,6 +58,7 @@
     "resize-observer-polyfill": "^1.5.1",
     "rxjs": "^6.5.4",
     "tableexport.jquery.plugin": "^1.6.7",
+    "throttle-debounce": "^3.0.1",
     "typeface-ibm-plex-sans": "0.0.75",
     "typescript": "^3.7.3",
     "use-debounce": "^5.2.0",

@@ -33,6 +33,7 @@ export const chartCommonMax = (family: string, context: string, units: string) =
 )
 
 interface RenderSubmenuNameArg {
+  disableHeads: boolean
   chartsMetadata: ChartsMetadata
   duration: number
   dropdownMenu?: DropdownMenu
@@ -47,6 +48,7 @@ interface RenderSubmenuNameArg {
   commonAttributesOverrides?: Partial<Attributes>
 }
 export const renderSubmenuName = ({
+  disableHeads,
   chartsMetadata,
   dropdownMenu,
   duration,
@@ -87,7 +89,7 @@ export const renderSubmenuName = ({
         />
       )}
       <div className="netdata-chart-row">
-        {chartsSorted
+        {!disableHeads && chartsSorted
           .flatMap((chart) => generateHeadCharts("heads", chart, duration))
           .map(parseChartString)
           .map((attributes: Attributes | null) => attributes && (

@@ -1,66 +1,89 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable comma-dangle */
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable no-param-reassign */
 // @ts-nocheck
-import { scaleLog, extent, select } from "d3"
+import { scaleLinear, extent } from "d3"
+import { cellSize, cellBoxSize, getRows, getColumns, getXPosition, getYPosition } from "./utilities"
+import registerEvents from "./events"
 
-export const numOfColumns = 32
-export const cellSize = 13.5
-
-export const getRows = (data) => Math.ceil(data.length / numOfColumns)
-
-export const getXPosition = () => {
-  let col = 1
-  return (_, index) => {
-    if (col && !(index % numOfColumns)) col = 1
-    else col += 1
-    return col * cellSize - cellSize
-  }
+export const getWidth = (data) => {
+  const rows = getRows(data)
+  const columns = getColumns(rows)
+  return Math.ceil(columns) * cellSize
 }
 
-export const getYPosition = (_, index) => Math.floor(index / numOfColumns) * cellSize
-
-export const getCanvasSize = (data) => {
-  const numOfRows = getRows(data)
-  const width = numOfRows === 1 ? data.length * cellSize : numOfColumns * cellSize
-  const height = numOfRows * cellSize + cellSize
-  return { width, height }
+const getCanvasAttributes = (data) => {
+  const rows = getRows(data)
+  const columns = getColumns(rows)
+  const width = Math.ceil(columns) * cellSize
+  const height = Math.ceil(rows) * cellSize + cellSize
+  return { width, height, columns: Math.ceil(columns) }
 }
 
-export const colorScale = (values) => scaleLog()
-  .domain(extent(values, (value) => value))
-  .range(["#C6E3F6", "#0E9AFF"])
+const makeGetColor = (values) =>
+  scaleLinear()
+    .domain(extent(values, (value) => value))
+    .range(["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"])
 
-export const drawBoxes = (el) => {
-  const svg = select(el)
+export default (el, { onMouseenter, onMouseout }) => {
+  const canvas = el.getContext("2d")
 
-  const rerender = ({ data }) => {
-    const { width, height } = getCanvasSize(data)
-    svg.attr("width", width)
-    svg.attr("height", height)
+  let activeBox = -1
+  let deactivateBox = () => {}
+  let activateBox = {}
+  let clearEvents = () => {}
 
-    const update = svg.selectAll("rect").data(data)
-    const enter = update
-      .enter()
-      .append("rect")
-      .style("fill", (value) => colorScale(data)(value))
-    update
-      .merge(enter)
-      .attr("rx", 2)
-      .attr("ry", 2)
-      .attr("x", getXPosition())
-      .attr("y", getYPosition)
-      .attr("width", cellSize - 1.5)
-      .attr("height", cellSize - 1.5)
-      .style("opacity", 0.9)
-      .transition()
-      .duration(1000)
-      .style("fill", (value) => colorScale(data)(value))
-
-    update.exit().remove()
+  const clear = () => {
+    deactivateBox()
+    clearEvents()
+    canvas.clearRect(0, 0, el.width, el.height)
+    canvas.beginPath()
   }
 
-  const clear = () => svg.remove()
+  const update = ({ data }) => {
+    const { width, height, columns } = getCanvasAttributes(data)
+    el.width = width
+    el.height = height
+    clear()
+    clearEvents()
+    const getColor = makeGetColor(data)
+
+    const drawBox = (value, index) => {
+      canvas.fillStyle = getColor(value)
+      canvas.fillRect(
+        getXPosition(columns, index),
+        getYPosition(columns, index),
+        cellBoxSize,
+        cellBoxSize
+      )
+    }
+
+    data.forEach(drawBox)
+
+    clearEvents = registerEvents(el, columns, data.length, { onMouseenter, onMouseout })
+
+    deactivateBox = () => {
+      if (activeBox !== -1) drawBox(data[activeBox], activeBox)
+    }
+
+    activateBox = (index) => {
+      deactivateBox()
+      activeBox = index
+
+      const offsetX = getXPosition(columns, index)
+      const offsetY = getYPosition(columns, index)
+
+      canvas.lineWidth = 1
+      canvas.strokeStyle = "#fff"
+      canvas.strokeRect(offsetX + 1, offsetY + 1, cellBoxSize - 2, cellBoxSize - 2)
+    }
+  }
 
   return {
     clear,
-    rerender,
+    update,
+    activateBox: (index) => activateBox(index),
+    deactivateBox: () => deactivateBox(),
   }
 }
