@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable react/destructuring-assignment */
 /* eslint-disable operator-linebreak */
 /* eslint-disable arrow-body-style */
 /* eslint-disable react/prop-types */
