@@ -3,6 +3,8 @@ import {
   useCallback, useState, useMemo, useRef,
 } from "react"
 
+import { useSelector } from "store/redux-separate-context"
+import { selectTemperatureSetting, selectSecondsAsTimeSetting } from "domains/global/selectors"
 import { unitsConversionCreator } from "utils/units-conversion"
 import { safeEqualCheck } from "utils/safe-equal-check"
 
@@ -103,8 +105,6 @@ interface Arguments {
   unitsCommon: string | undefined,
   unitsDesired: string,
   uuid: string,
-  temperatureSetting: "celsius" | "fahrenheit"
-  secondsAsTimeSetting: boolean
 }
 export const useFormatters = ({
   attributes,
@@ -113,9 +113,10 @@ export const useFormatters = ({
   unitsCommon,
   unitsDesired,
   uuid,
-  temperatureSetting,
-  secondsAsTimeSetting,
 }: Arguments) => {
+  const temperatureSetting = useSelector(selectTemperatureSetting)
+  const secondsAsTimeSetting = useSelector(selectSecondsAsTimeSetting)
+
   // previously _unitsConversion
   const [convertUnits, setConvertUnits] = useState<Converter>(() => identity)
 
