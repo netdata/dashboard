@@ -788,6 +788,11 @@ code {
     direction: rtl;
     overflow: hidden;
     pointer-events: none;
+    color: var(--color-border);
+}
+.dygraph__history-tip--centered {
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .dygraph__history-tip-content {
@@ -795,4 +800,14 @@ code {
     white-space: nowrap;
     direction: ltr;
     pointer-events: auto;
+    text-align: center;
+}
+
+.dygraph__history-tip-content a {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.dygraph__history-tip-header {
+    font-weight: 700;
 }
