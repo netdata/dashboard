@@ -53,6 +53,7 @@ import {
   netdataCallback,
   updateLocaleFunctions,
 } from "./main"
+import { GlobalColors } from "./global.colors"
 
 if (!window.netdataNoFontAwesome) {
   // @ts-ignore
@@ -152,6 +153,7 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={mapTheme(theme)}>
+      <GlobalColors />
       {hasFetchDependencies && (
         // this needs to render after dynamic css files are loaded, otherwise netdata-ui
         // styling will have smaller priority than bootstrap css
