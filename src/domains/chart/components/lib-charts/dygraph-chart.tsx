@@ -415,6 +415,7 @@ export const DygraphChart = ({
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
     updateChartPanOrZoom,
+    updatePrecededPosition,
     viewAfter,
     viewBefore,
   })
@@ -426,10 +427,12 @@ export const DygraphChart = ({
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.updateChartPanOrZoom = updateChartPanOrZoom
+    propsRef.current.updatePrecededPosition = updatePrecededPosition
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
   }, [chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
-    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
+    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateChartPanOrZoom, updatePrecededPosition,
+    viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -512,7 +515,7 @@ export const DygraphChart = ({
         },
 
         underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
-          updatePrecededPosition(g)
+          propsRef.current.updatePrecededPosition(g)
 
           // the chart is about to be drawn
           // this function renders global highlighted time-frame
@@ -836,7 +839,7 @@ export const DygraphChart = ({
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     hasEmptyData, hiddenLabelsElementId, isFakeStacked,
     orderedColors, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    xAxisDateString, xAxisTimeString, updatePrecededPosition])
+    xAxisDateString, xAxisTimeString])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
