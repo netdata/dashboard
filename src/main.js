@@ -43,6 +43,7 @@ import { serverDefault } from './utils/server-detection';
 import { name2id } from './utils/name-2-id';
 import { isProperTimezone } from './utils/date-time';
 import { NETDATA_REGISTRY_SERVER } from './utils';
+import { isDemo } from "./utils/is-demo"
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from './domains/chart/utils/legend-utils';
 import { defaultAttributes } from './domains/chart/utils/transformDataAttributes';
 
@@ -66,9 +67,6 @@ var netdataRegistry = true;
 var netdataServer = undefined;
 var netdataServerStatic = undefined;
 var netdataCheckXSS = undefined;
-
-// control the welcome modal and analytics
-var this_is_demo = null;
 
 let reduxStore
 
@@ -275,7 +273,6 @@ window.urlOptions = {
 
                 netdataShowAlarms = false;
                 netdataRegistry = false;
-                this_is_demo = false;
                 break;
 
             case 'live':
@@ -893,30 +890,6 @@ function renderMyNetdataMenu(machinesArray) {
     gotoServerInit();
 }
 
-function isdemo() {
-    if (this_is_demo !== null) {
-        return this_is_demo;
-    }
-    this_is_demo = false;
-
-    try {
-        if (typeof document.location.hostname === 'string') {
-            if (document.location.hostname.endsWith('.my-netdata.io') ||
-              document.location.hostname.endsWith('.mynetdata.io') ||
-              document.location.hostname.endsWith('.netdata.rocks') ||
-              document.location.hostname.endsWith('.netdata.ai') ||
-              document.location.hostname.endsWith('.netdata.live') ||
-              document.location.hostname.endsWith('.firehol.org') ||
-              document.location.hostname.endsWith('.netdata.online') ||
-              document.location.hostname.endsWith('.netdata.cloud')) {
-                this_is_demo = true;
-            }
-        }
-    }
-    catch (error) {
-    }
-    return this_is_demo;
-}
 
 function netdataURL(url, forReload) {
     if (typeof url === 'undefined')
@@ -4187,7 +4160,7 @@ function runOnceOnDashboardWithjQuery() {
     $('#sidebar')
         .affix({
             offset: {
-                top: (isdemo()) ? 150 : 0,
+                top: (isDemo) ? 150 : 0,
                 bottom: 0
             }
         })
@@ -4493,7 +4466,7 @@ function finalizePage() {
     $(".shorten").shorten();
     enableTooltipsAndPopovers();
 
-    if (isdemo()) {
+    if (isDemo) {
         // do not to give errors on netdata demo servers for 60 seconds
         NETDATA.options.current.retries_on_data_failures = 60;
 
@@ -4585,7 +4558,7 @@ export const netdataPrepCallback = () => {
     //     }
     // });
 
-    if (isdemo()) {
+    if (isDemo) {
         document.getElementById('masthead').style.display = 'block';
     } else {
         if (urlOptions.update_always === true) {
