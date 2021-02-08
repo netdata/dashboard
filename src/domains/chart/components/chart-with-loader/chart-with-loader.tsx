@@ -415,7 +415,7 @@ export const ChartWithLoader = ({
 
   return (
     <>
-      {hasEmptyData && (
+      {hasEmptyData && attributes.chartLibrary !== "dygraph" && (
         <Loader key={`${hasEmptyData}`} hasEmptyData={hasEmptyData} containerNode={portalNode} />
       )}
       <Chart

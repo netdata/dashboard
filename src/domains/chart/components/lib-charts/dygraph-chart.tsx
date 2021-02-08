@@ -48,6 +48,7 @@ import "./dygraph-chart.css"
 
 import useProceededChart from "../../hooks/use-proceeded-chart"
 import ProceededChartDisclaimer from "./proceeded-chart-disclaimer"
+import { useEmptyDataPlaceholder } from "./dygraph/empty-placeholder"
 
 // This is the threshold above which we assume chart shown duration has changed
 const timeframeThreshold = 5000
@@ -66,6 +67,7 @@ interface GetInitialDygraphOptions {
   chartMetadata: ChartMetadata,
   chartSettings: ChartLibraryConfig,
   dimensionsVisibility: boolean[]
+  hasEmptyData: boolean
   hiddenLabelsElementId: string,
   isFakeStacked: boolean,
   orderedColors: string[],
@@ -81,6 +83,7 @@ const getInitialDygraphOptions = ({
   chartMetadata,
   chartSettings,
   dimensionsVisibility,
+  hasEmptyData,
   hiddenLabelsElementId,
   isFakeStacked,
   orderedColors,
@@ -256,6 +259,9 @@ const getInitialDygraphOptions = ({
         drawAxis: isSparkline ? false : dygraphDrawYAxis,
         // axisLabelFormatter is added on the updates
         axisLabelFormatter(y: Date | number) {
+          if (hasEmptyData) {
+            return ""
+          }
           const formatter = setMinMax([
             // @ts-ignore
             // eslint-disable-next-line no-underscore-dangle
@@ -279,9 +285,6 @@ interface Props {
   chartElementId: string
   chartLibrary: ChartLibraryName
   chartUuid: string
-  colors: {
-    [key: string]: string
-  }
   dimensionsVisibility: boolean[]
   hasEmptyData: boolean
   hasLegend: boolean
@@ -305,20 +308,16 @@ interface Props {
   viewBefore: number
 }
 export const DygraphChart = ({
-  attributes,
-  chartData,
   chartMetadata,
   chartElementClassName,
   chartElementId,
   chartLibrary,
-  // colors,
   chartUuid,
   dimensionsVisibility,
   hasEmptyData,
   hasLegend,
   isRemotelyControlled,
   onUpdateChartPanAndZoom,
-  orderedColors,
   immediatelyDispatchPanAndZoom,
 
   hoveredRow,
@@ -327,9 +326,15 @@ export const DygraphChart = ({
   setHoveredX,
   setMinMax,
   unitsCurrent,
-  viewAfter,
-  viewBefore,
+  ...rest
 }: Props) => {
+  const {
+    attributes, chartData, orderedColors, viewAfter, viewBefore,
+  } = useEmptyDataPlaceholder({
+    ...rest,
+    hasEmptyData,
+  })
+
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
 
   const { xAxisDateString, xAxisTimeString } = useDateTime()
@@ -436,13 +441,14 @@ export const DygraphChart = ({
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
-    if (chartElement && chartElement.current && !dygraphInstance.current && !hasEmptyData) {
+    if (chartElement && chartElement.current && !dygraphInstance.current) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
         chartMetadata,
         chartSettings,
         dimensionsVisibility,
+        hasEmptyData,
         hiddenLabelsElementId,
         isFakeStacked,
         orderedColors,
@@ -934,6 +940,7 @@ export const DygraphChart = ({
       chartMetadata,
       chartSettings,
       dimensionsVisibility,
+      hasEmptyData,
       hiddenLabelsElementId,
       isFakeStacked,
       orderedColors,
