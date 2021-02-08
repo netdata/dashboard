@@ -8,6 +8,7 @@ import { Action } from "redux-act"
 
 import { NETDATA_REGISTRY_SERVER } from "utils"
 import { axiosInstance } from "utils/api"
+import { isDemo } from "utils/is-demo"
 import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
 import { fetchInfoAction } from "domains/chart/actions"
 
@@ -47,6 +48,8 @@ export function* watchWindowFocusChannel() {
   }
 }
 
+const hasPosthogFeatureFlag = !!localStorage.getItem("posthog-dev")
+
 const injectGTM = (machineGuid: string) => {
   // @ts-ignore
   if (document.querySelector("script[src^=\"https://www.googletagmanager.com/gtm.js\"]")) {
@@ -82,7 +85,7 @@ function* waitForFullInfoPayload() {
 }
 
 function* injectPosthog(machineGuid: string) {
-  if (window.posthog) {
+  if (!(isDemo || hasPosthogFeatureFlag) || window.posthog) {
     return
   }
   const info: InfoPayload = (yield select(selectFullInfoPayload))
