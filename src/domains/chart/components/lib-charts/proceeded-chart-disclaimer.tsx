@@ -19,10 +19,13 @@ const ProceededChartDisclaimer = forwardRef(
       data-testid="proceededChartDisclaimer"
     >
       <span className="dygraph__history-tip-content">
-        <span className="dygraph__history-tip-header">Want to see more historical metrics?</span>
+        <span className="dygraph__history-tip-header">
+          No Data
+          <br />
+          Want to see more historical metrics?
+        </span>
         <br />
         Configure Netdata&apos;s
-        <br />
         <a
           href="https://docs.netdata.cloud/docs/configuration-guide/#increase-the-metrics-retention-period"
           target="_blank"

@@ -784,6 +784,7 @@ code {
     top: 50%;
     transform: translateY(-50%);
     display: none; /* overriden in js */
+    margin-top: -30px;
     margin-right: 25px;
     direction: rtl;
     overflow: hidden;
@@ -804,6 +805,7 @@ code {
 }
 
 .dygraph__history-tip-content a {
+    margin-left: 6px;
     color: var(--color-primary);
     text-decoration: underline;
 }

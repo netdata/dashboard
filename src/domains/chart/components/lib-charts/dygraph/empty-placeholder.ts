@@ -1,4 +1,6 @@
-import { useMemo } from "react"
+import { useContext, useMemo } from "react"
+import { ThemeContext } from "styled-components"
+
 import { DygraphData } from "domains/chart/chart-types"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 
@@ -17,6 +19,8 @@ export const useEmptyDataPlaceholder = (args: Args): Args => {
   const {
     attributes, chartData, hasEmptyData, viewAfter, viewBefore,
   } = args
+  const themeContext = useContext(ThemeContext)
+
   return useMemo(() => {
     if (!hasEmptyData) {
       return args
@@ -45,7 +49,7 @@ export const useEmptyDataPlaceholder = (args: Args): Args => {
         },
       },
       hasEmptyData,
-      orderedColors: ["#F2F4F6"],
+      orderedColors: [themeContext.colors.disabled],
       viewAfter,
       viewBefore,
     }
