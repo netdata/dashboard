@@ -101,12 +101,12 @@ function* injectPosthog(machineGuid: string) {
     // remove properties for with unavailable values
     filter((value) => value !== undefined && value !== null,
       {
-        distinct_id: machineGuid,
         $ip: "127.0.0.1",
         $current_url: "agent dashboard",
         $pathname: "netdata-dashboard",
         $host: "dashboard.netdata.io",
         netdata_version: info.version,
+        netdata_machine_guid: machineGuid,
         mirrored_host_count: info.mirrored_hosts?.length,
         alarms_normal: info.alarms?.normal,
         alarms_warning: info.alarms?.warning,
