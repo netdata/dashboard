@@ -30,31 +30,45 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
 
   const [hover, setHover] = useState(null)
   const dropHoverRef = useRef(false)
-  const boxHoverRef = useRef(false)
+  const boxHoverRef = useRef(-1)
+  const timeoutId = useRef()
 
   const close = () => {
     boxesRef.current.deactivateBox()
     setHover(null)
+    dropHoverRef.current = false
+    boxHoverRef.current = -1
   }
 
   const closeDrop = () =>
     requestAnimationFrame(() => {
-      if (!dropHoverRef.current && !boxHoverRef.current) close()
+      setHover((currentHover) => {
+        if (
+          !dropHoverRef.current &&
+          (boxHoverRef.current === -1 || boxHoverRef.current !== currentHover?.index)
+        ) {
+          close()
+        }
+        return currentHover
+      })
     })
 
   useLayoutEffect(() => {
     boxesRef.current = drawBoxes(canvasRef.current, {
       onMouseenter: ({ index, ...rect }) => {
-        boxHoverRef.current = true
-        setHover({
-          target: { getBoundingClientRect: () => rect },
-          index,
-          rect,
-        })
+        boxHoverRef.current = index
         boxesRef.current.activateBox(index)
+        timeoutId.current = setTimeout(() => {
+          setHover({
+            target: { getBoundingClientRect: () => rect },
+            index,
+            rect,
+          })
+        }, 600)
       },
       onMouseout: () => {
-        boxHoverRef.current = false
+        boxHoverRef.current = -1
+        clearTimeout(timeoutId.current)
         closeDrop()
       },
     })
@@ -86,7 +100,7 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
 
   return (
     <Fragment>
-      <canvas ref={canvasRef} />
+      <canvas data-testid="groupBox" ref={canvasRef} />
       {hover && renderTooltip && (
         <Drop
           align={aligns[align]}

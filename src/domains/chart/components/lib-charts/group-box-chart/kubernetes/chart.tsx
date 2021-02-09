@@ -56,8 +56,12 @@ const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => 
   )
 
   return (
-    <Flex gap={2} column>
-      <div ref={chartContainerRef} style={{ height: "60px", width: "100%" }}>
+    <Flex gap={2} column data-testid="k8sPopoverChart">
+      <div
+        ref={chartContainerRef}
+        style={{ height: "60px", width: "100%" }}
+        data-testid="k8sPopoverChart-container"
+      >
         {chartContainerRef.current && (
           <ChartContainer
             chartUuid={id}
@@ -67,7 +71,12 @@ const Chart = ({ groupLabel, postGroupLabel, id, attributes, relatedIndex }) => 
           />
         )}
       </div>
-      <ChartOverview id={id} chartMetadata={chartMetadata} displayedIndex={displayedIndex} />
+      <ChartOverview
+        id={id}
+        aggrMethod={chartAttributes.aggrMethod}
+        chartMetadata={chartMetadata}
+        displayedIndex={displayedIndex}
+      />
     </Flex>
   )
 }

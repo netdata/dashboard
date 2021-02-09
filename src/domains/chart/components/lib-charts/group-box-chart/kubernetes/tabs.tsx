@@ -13,6 +13,7 @@ export const TabButton = styled(Button).attrs(({ active }) => ({
   themeType: "dark",
   className: "btn",
   disabled: active,
+  "data-testid": "k8sPopoverChart-tab",
 }))`
   &&& {
     height: initial;
@@ -26,7 +27,7 @@ export const TabButton = styled(Button).attrs(({ active }) => ({
 `
 
 const Tabs = ({ value, onChange, ...rest }) => (
-  <Flex {...rest}>
+  <Flex data-testid="k8sPopoverChart-tabs" {...rest}>
     <TabButton label="Context" active={value === "context"} onClick={() => onChange("context")} />
     <TabButton label="Metrics" active={value === "metrics"} onClick={() => onChange("metrics")} />
   </Flex>

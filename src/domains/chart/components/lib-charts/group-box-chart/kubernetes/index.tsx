@@ -103,7 +103,7 @@ const Kubernetes = ({
         renderBoxPopover={renderBoxPopover}
         renderGroupPopover={renderGroupPopover}
       />
-      <Flex justifyContent="between">
+      <Flex data-testid="legend-container" justifyContent="between">
         <Legend>{id}</Legend>
         <ChartTimeframe
           chartMetadata={chartMetadata}

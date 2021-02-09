@@ -31,18 +31,33 @@ const StyledButton = styled(makeFlex(Button)).attrs({
   }
 `
 
-const List = ({ labelId, items, onBack }) => {
+const List = ({ labelId, items, onBack, onItemClick }) => {
   const { title, icon } = getLabel(labelId)
 
   return (
-    <Flex height="100%" gap={3} column>
+    <Flex height="100%" gap={3} data-testid="k8sPopoverList" column>
       <Header>
-        <StyledButton label={`${title} (${items.length})`} icon="chevron_left" onClick={onBack} />
+        <StyledButton
+          label={`${title} (${items.length})`}
+          icon="chevron_left"
+          onClick={onBack}
+          data-testid="k8sPopoverList-back"
+        />
       </Header>
       <Separator />
-      <Flex gap={3} overflow={{ vertical: "auto", horizontal: "hidden" }} column>
+      <Flex
+        gap={3}
+        overflow={{ vertical: "auto", horizontal: "hidden" }}
+        column
+        data-testid="k8sPopoverList-container"
+      >
         {items.map((item) => (
-          <Item key={item} icon={icon} title={item} />
+          <Item
+            key={item}
+            icon={icon}
+            title={item}
+            onClick={onItemClick && (() => onItemClick(item))}
+          />
         ))}
       </Flex>
     </Flex>

@@ -52,10 +52,11 @@ const GroupBoxWrapper = ({
     renderGroupPopover && (() => renderGroupPopover({ group: label, groupIndex, align }))
 
   return (
-    <Flex column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
+    <Flex data-testid="groupBoxWrapper" column alignItems="start" gap={1} margin={[0, 4, 0, 0]}>
       <Popover content={groupPopover} align={align} plain>
         {({ isOpen, ref: popoverRef, ...rest }) => (
           <Label
+            data-testid="groupBoxWrapper-title"
             ref={(el) => {
               ref.current = el
               popoverRef(el)
@@ -75,7 +76,7 @@ const GroupBoxWrapper = ({
 }
 
 const GroupBoxes = ({ data, labels, renderBoxPopover, renderGroupPopover }: any) => (
-  <Flex flexWrap overflow={{ vertical: "auto" }} flex>
+  <Flex data-testid="groupBoxes" flexWrap overflow={{ vertical: "auto" }} flex>
     {labels.map((label, index) => {
       return data[index].data.length ? (
         <GroupBoxWrapper

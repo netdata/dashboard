@@ -46,19 +46,24 @@ const Popover = ({
 
   const isLabelView = view !== "context" && view !== "metrics"
 
+  const { onNodeClick } = attributes
+
   return (
-    <Container {...rest}>
+    <Container data-testid="k8sPopover" {...rest}>
       {isLabelView && (
         <List
           labelId={view}
           items={chartLabels[view]}
           attributes={attributes}
           onBack={() => setView("context")}
+          onItemClick={view === "k8s_node_name" && onNodeClick}
         />
       )}
       {!isLabelView && (
         <TabsContainer label={title} value={view} onChange={setView}>
-          {view === "context" && <Context chartLabels={chartLabels} onExpand={setView} />}
+          {view === "context" && (
+            <Context chartLabels={chartLabels} onExpand={setView} onNodeClick={onNodeClick} />
+          )}
           {view === "metrics" && (
             <Metrics
               groupLabel={groupLabel}
