@@ -8,10 +8,10 @@ import Chart from "./chart"
 import DateSection from "./dateSection"
 
 const Metrics = ({ groupLabel, postGroupLabel, attributes, viewAfter, viewBefore }) => (
-  <Flex gap={3} column width="100%">
+  <Flex gap={3} column width="100%" data-testid="k8sPopoverMetrics">
     <DateSection after={viewAfter} before={viewBefore} />
     <Section title="Metrics" noBorder>
-      <Flex gap={3} column>
+      <Flex gap={3} column data-testid="k8sPopoverMetrics-container">
         {attributes.relatedCharts.map(({ chartMetadata }, index) => (
           <Chart
             key={chartMetadata.id}

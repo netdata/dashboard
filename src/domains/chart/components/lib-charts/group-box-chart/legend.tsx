@@ -11,7 +11,7 @@ const LinearColorScaleBar = styled(Flex).attrs({ width: "120px", height: "12px",
 `
 
 const Legend = ({ children }: LegendProps) => (
-  <Flex gap={4} alignItems="center">
+  <Flex data-testid="groupBox-legend" gap={4} alignItems="center">
     <TextNano strong>{children}</TextNano>
     <Flex gap={2} alignItems="center">
       <TextNano>0%</TextNano>

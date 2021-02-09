@@ -37,14 +37,15 @@ const Section = ({ title, onExpand, children, noBorder }) => (
     padding={[0, 0, 3]}
     border={!noBorder && { side: "bottom", color: ["gray", "shuttleGray"] }}
     column
+    data-testid="k8sPopoverSection"
   >
-    <Flex justifyContent="between">
+    <Flex justifyContent="between" data-testid="k8sPopoverSection-header">
       <H6 color={["gray", "aluminium"]} wordBreak="break-all">
         {title}
       </H6>
       {onExpand && <ExpandButton onClick={onExpand} />}
     </Flex>
-    <Flex gap={4} column>
+    <Flex gap={4} column data-testid="k8sPopoverSection-content">
       {children}
     </Flex>
   </Flex>

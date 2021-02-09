@@ -41,7 +41,7 @@ const Context = ({ chartLabels, onExpand }) => {
   const ids = getLabelIds(chartLabels)
 
   return (
-    <Flex gap={3} column width="100%">
+    <Flex gap={3} column width="100%" data-testid="k8sPopoverContext">
       {ids.map((id, index) => (
         <LabelsSection
           key={id}

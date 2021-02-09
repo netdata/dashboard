@@ -47,7 +47,7 @@ const Popover = ({
   const isLabelView = view !== "context" && view !== "metrics"
 
   return (
-    <Container {...rest}>
+    <Container data-testid="k8sPopover" {...rest}>
       {isLabelView && (
         <List
           labelId={view}
