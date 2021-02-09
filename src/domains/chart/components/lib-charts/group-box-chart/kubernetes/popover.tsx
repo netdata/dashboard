@@ -40,7 +40,6 @@ const Popover = ({
   attributes,
   viewBefore,
   viewAfter,
-  onNodeClick,
   ...rest
 }) => {
   const [view, setView] = useState("context")
