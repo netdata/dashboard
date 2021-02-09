@@ -10,7 +10,7 @@ import Item from "./item"
 import Section from "./section"
 import getLabel, { labelIds } from "./getLabel"
 
-const LabelsSection = ({ labelId, items, onExpand, ...rest }) => {
+const LabelsSection = ({ labelId, items, onExpand, onItemClick, ...rest }) => {
   const { title, icon } = getLabel(labelId)
   const sliced = items.slice(0, 3)
   const expandable = items.length > 3
@@ -19,7 +19,12 @@ const LabelsSection = ({ labelId, items, onExpand, ...rest }) => {
   return (
     <Section title={text} onExpand={expandable && onExpand} {...rest}>
       {sliced.map((item) => (
-        <Item key={item} icon={icon} title={item} />
+        <Item
+          key={item}
+          icon={icon}
+          title={item}
+          onClick={onItemClick && (() => onItemClick(item))}
+        />
       ))}
     </Section>
   )
@@ -37,7 +42,7 @@ const getLabelIds = (chartLabels) => {
   return [...predefinedLabelIds, ...Object.keys(chartLabels)]
 }
 
-const Context = ({ chartLabels, onExpand }) => {
+const Context = ({ chartLabels, onExpand, onNodeClick }) => {
   const ids = getLabelIds(chartLabels)
 
   return (
@@ -49,6 +54,7 @@ const Context = ({ chartLabels, onExpand }) => {
           items={chartLabels[id]}
           onExpand={() => onExpand(id)}
           noBorder={index === ids.length - 1}
+          onItemClick={id === "k8s_node_name" && onNodeClick}
         />
       ))}
     </Flex>

@@ -31,7 +31,7 @@ const StyledButton = styled(makeFlex(Button)).attrs({
   }
 `
 
-const List = ({ labelId, items, onBack }) => {
+const List = ({ labelId, items, onBack, onItemClick }) => {
   const { title, icon } = getLabel(labelId)
 
   return (
@@ -52,7 +52,12 @@ const List = ({ labelId, items, onBack }) => {
         data-testid="k8sPopoverList-container"
       >
         {items.map((item) => (
-          <Item key={item} icon={icon} title={item} />
+          <Item
+            key={item}
+            icon={icon}
+            title={item}
+            onClick={onItemClick && (() => onItemClick(item))}
+          />
         ))}
       </Flex>
     </Flex>

@@ -40,11 +40,14 @@ const Popover = ({
   attributes,
   viewBefore,
   viewAfter,
+  onNodeClick,
   ...rest
 }) => {
   const [view, setView] = useState("context")
 
   const isLabelView = view !== "context" && view !== "metrics"
+
+  const { onNodeClick } = attributes
 
   return (
     <Container data-testid="k8sPopover" {...rest}>
@@ -54,11 +57,14 @@ const Popover = ({
           items={chartLabels[view]}
           attributes={attributes}
           onBack={() => setView("context")}
+          onItemClick={view === "k8s_node_name" && onNodeClick}
         />
       )}
       {!isLabelView && (
         <TabsContainer label={title} value={view} onChange={setView}>
-          {view === "context" && <Context chartLabels={chartLabels} onExpand={setView} />}
+          {view === "context" && (
+            <Context chartLabels={chartLabels} onExpand={setView} onNodeClick={onNodeClick} />
+          )}
           {view === "metrics" && (
             <Metrics
               groupLabel={groupLabel}
