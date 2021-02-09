@@ -1974,7 +1974,7 @@ function alarmsUpdateModal() {
                 searchAlign: 'left',
                 showColumns: true,
                 showExport: true,
-                exportDataType: 'basic',
+                exportDataType: 'all',
                 exportOptions: {
                     fileName: 'netdata_alarm_log'
                 },
