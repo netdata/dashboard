@@ -1679,11 +1679,13 @@ function alarmsUpdateModal() {
             }
 
             var t = new Date(timestamp * 1000);
-            var now = new Date();
 
-            if (t.toDateString() === now.toDateString()) {
-                return t.toLocaleTimeString();
-            }
+            // commented out to always have date+time, to have consistent exports
+            // var now = new Date();
+
+            // if (t.toDateString() === now.toDateString()) {
+            //     return t.toLocaleTimeString();
+            // }
 
             return t.toLocaleDateString() + space + t.toLocaleTimeString();
         }
