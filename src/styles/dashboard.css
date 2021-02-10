@@ -1,9 +1,4 @@
 /* SPDX-License-Identfier: GPL-3.0-or-later */
-:root {
-    --color-main: #35414A;
-    --color-primary: #00ab44;
-    --color-border: #93a3b0;
-}
 
 html,
 body {
@@ -771,10 +766,16 @@ body {
     top: 50%;
     transform: translateY(-50%);
     display: none; /* overriden in js */
+    margin-top: -30px;
     margin-right: 25px;
     direction: rtl;
     overflow: hidden;
     pointer-events: none;
+    color: var(--color-border);
+}
+.dygraph__history-tip--centered {
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .dygraph__history-tip-content {
@@ -782,4 +783,15 @@ body {
     white-space: nowrap;
     direction: ltr;
     pointer-events: auto;
+    text-align: center;
+}
+
+.dygraph__history-tip-content a {
+    margin-left: 6px;
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+.dygraph__history-tip-header {
+    font-weight: 700;
 }

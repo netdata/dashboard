@@ -284,7 +284,6 @@ export const AbstractChart = ({
       chartElementClassName={chartElementClassName}
       chartElementId={chartElementId}
       chartLibrary={chartLibrary}
-      colors={colors}
       chartUuid={chartUuid}
       dimensionsVisibility={dimensionsVisibility}
       hasEmptyData={hasEmptyData}
