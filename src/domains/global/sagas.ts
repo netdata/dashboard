@@ -328,9 +328,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
       registryMachines,
       registryMachinesArray,
     }))
-    window.netdataRegistryCallback(registryMachinesArray)
-  } else {
-    window.netdataRegistryCallback()
   }
 
   yield put(accessRegistrySuccessAction({

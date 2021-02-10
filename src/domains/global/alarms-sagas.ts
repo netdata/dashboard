@@ -253,10 +253,6 @@ function* alarmsLoop(serverDefault: string) {
   while (true) {
     const activeAlarms = (yield call(get, "active", serverDefault)) as ActiveAlarms
     if (activeAlarms) {
-      if (window.alarmsCallback) {
-        // connect to old main.js (update old header)
-        window.alarmsCallback(activeAlarms)
-      }
       yield put(updateActiveAlarmsAction({ activeAlarms }))
       if (
         hasGivenNotificationPermissions()

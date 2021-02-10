@@ -5,8 +5,6 @@
 /* global NETDATA */
 
 import { identity, memoizeWith } from "ramda"
-// netdata snapshot data
-import { MASKED_DATA } from 'domains/global/constants';
 import {
     centerAroundHighlightAction,
     chartsMetadataRequestSuccess,
@@ -19,7 +17,6 @@ import {
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
-    updatePersonUrlsAction,
 } from './domains/global/actions';
 import {
     createSelectOption,
@@ -95,10 +92,6 @@ const getFromRegistry = (prop) => {
     const registry = selectRegistry(reduxStore.getState())
     return registry?.[prop]
 }
-
-const isUsingGlobalRegistry = () => (
-  getFromRegistry("registryServer") === NETDATA_REGISTRY_SERVER
-)
 
 function verifyURL(s) {
     if (typeof (s) === 'string' && (s.startsWith('http://') || s.startsWith('https://'))) {
@@ -301,9 +294,6 @@ window.urlOptions = {
     },
 
     netdataHighlightCallback: function (status, after, before) {
-        //console.log(2);
-        //console.log(new Error().stack);
-
         if (status === true && (after === null || before === null || after <= 0 || before <= 0 || after >= before)) {
             status = false;
             after = 0;
@@ -537,360 +527,6 @@ function saveObjectToClient(data, filename) {
     saveTextToClient(JSON.stringify(data), filename);
 }
 
-// -----------------------------------------------------------------------------
-// registry call back to render my-netdata menu
-
-function toggleExpandIcon(svgEl) {
-    if (svgEl.getAttribute('data-icon') === 'caret-down') {
-        svgEl.setAttribute('data-icon', 'caret-up');
-    } else {
-        svgEl.setAttribute('data-icon', 'caret-down');
-    }
-}
-
-window.toggleAgentItem = function(e, guid) {
-    e.stopPropagation();
-    e.preventDefault();
-
-    toggleExpandIcon(e.currentTarget.children[0]);
-
-    const el = document.querySelector(`.agent-alternate-urls.agent-${guid}`);
-    if (el) {
-        el.classList.toggle('collapsed');
-    }
-}
-
-// When you stream metrics from netdata to netdata, the recieving netdata now
-// has multiple host databases. It's own, and multiple mirrored. Mirrored databases
-// can be accessed with <http://localhost:19999/host/NAME/>
-function renderStreamedHosts(options) {
-    let html = `<div class="info-item">Databases streamed to this agent</div>`;
-
-    var base = document.location.origin.toString() + document.location.pathname.toString();
-    if (base.endsWith("/host/" + options.hostname + "/")) {
-        base = base.substring(0, base.length - ("/host/" + options.hostname + "/").toString().length);
-    }
-
-    if (base.endsWith("/")) {
-        base = base.substring(0, base.length - 1);
-    }
-
-    var master = options.hosts[0].hostname;
-    // We sort a clone of options.hosts, to keep the master as the first element
-    // for future calls.
-    var sorted = options.hosts.slice(0).sort(function (a, b) {
-        if (a.hostname === master) {
-            return -1;
-        }
-        return naturalSortCompare(a.hostname, b.hostname);
-    });
-
-    let displayedDatabases = false;
-
-    for (var s of sorted) {
-        let url, icon;
-        const hostname = s.hostname;
-
-        if (myNetdataMenuFilterValue !== "") {
-            if (!hostname.includes(myNetdataMenuFilterValue)) {
-                continue;
-            }
-        }
-
-        displayedDatabases = true;
-
-        if (hostname === master) {
-            url = `${base}/`;
-            icon = 'home';
-        } else {
-            url = `${base}/host/${hostname}/`;
-            icon = 'window-restore';
-        }
-
-        html += (
-          `<div class="agent-item">
-                <a class="registry_link" href="${url}#" onClick="return gotoHostedModalHandler('${url}');">
-                    <i class="fas fa-${icon}" style="color: #999;"></i>
-                </a>
-                <span class="__title" onClick="return gotoHostedModalHandler('${url}');">
-                    <a class="registry_link" href="${url}#">${hostname}</a>
-                </span>
-                <div></div>
-            </div>`
-        )
-    }
-
-    if (!displayedDatabases) {
-        html += (
-          `<div class="info-item">
-                <i class="fas fa-filter"></i>
-                <span style="margin-left: 8px">no databases match the filter criteria.<span>
-            </div>`
-        )
-    }
-
-    return html;
-}
-
-function renderMachines(machinesArray) {
-    let html = `<div class="info-item">My nodes</div>`;
-
-    if (machinesArray === null) {
-        let ret = loadLocalStorage("registryCallback");
-        if (ret) {
-            machinesArray = JSON.parse(ret);
-            console.log("failed to contact the registry - loaded registry data from browser local storage");
-        }
-    }
-
-    let found = false;
-    let displayedAgents = false;
-
-    const maskedURL = MASKED_DATA;
-
-    if (machinesArray) {
-        saveLocalStorage("registryCallback", JSON.stringify(machinesArray));
-
-        var machines = machinesArray.sort(function (a, b) {
-            return naturalSortCompare(a.name, b.name);
-        });
-
-        for (var machine of machines) {
-            found = true;
-
-            if (myNetdataMenuFilterValue !== "") {
-                if (!machine.name.includes(myNetdataMenuFilterValue)) {
-                    continue;
-                }
-            }
-
-            displayedAgents = true;
-
-            const alternateUrlItems = (
-              `<div class="agent-alternate-urls agent-${machine.guid} collapsed">
-                ${machine.alternateUrls.reduce((str, url) => {
-                    if (url === maskedURL) {
-                        return str
-                    }
-
-                    return str + (
-                      `<div class="agent-item agent-item--alternate">
-                                <div></div>
-                                <a href="${url}" title="${url}">${truncateString(url, 64)}</a>
-                                <a href="#" onclick="deleteRegistryModalHandler('${machine.guid}', '${machine.name}', '${url}'); return false;">
-                                    <i class="fas fa-trash" style="color: #777;"></i>
-                                </a>
-                            </div>`
-                    )
-                },
-                ''
-              )}
-                </div>`
-            )
-
-            html += (
-              `<div class="agent-item agent-${machine.guid}">
-                    <i class="fas fa-chart-bar" color: #fff"></i>
-                    <span class="__title" onClick="return gotoServerModalHandler('${machine.guid}');">
-                        <a class="registry_link" href="${machine.url}#">${machine.name}</a>
-                    </span>
-                    <a href="#" onClick="toggleAgentItem(event, '${machine.guid}');">
-                        <i class="fas fa-caret-down" style="color: #999"></i>
-                    </a>
-                </div>
-                ${alternateUrlItems}`
-            )
-        }
-
-        if (found && (!displayedAgents)) {
-            html += (
-              `<div class="info-item">
-                    <i class="fas fa-filter"></i>
-                    <span style="margin-left: 8px">zero nodes are matching the filter value.<span>
-                </div>`
-            )
-        }
-    }
-
-    if (!found) {
-        if (machines) {
-            html += (
-              `<div class="info-item">
-                    <a href="https://github.com/netdata/netdata/tree/master/registry#netdata-registry" target="_blank">Your nodes list is empty</a>
-                </div>`
-            )
-        } else {
-            html += (
-              `<div class="info-item">
-                    <a href="https://github.com/netdata/netdata/tree/master/registry#netdata-registry" target="_blank">Failed to contact the registry</a>
-                </div>`
-            )
-        }
-
-        html += `<hr />`;
-        html += `<div class="info-item">Demo netdata nodes</div>`;
-
-        const demoServers = [
-            { url: "//london.netdata.rocks/default.html", title: "UK - London (DigitalOcean.com)" },
-            { url: "//newyork.netdata.rocks/default.html", title: "US - New York (DigitalOcean.com)" },
-            { url: "//sanfrancisco.netdata.rocks/default.html", title: "US - San Francisco (DigitalOcean.com)" },
-            { url: "//atlanta.netdata.rocks/default.html", title: "US - Atlanta (CDN77.com)" },
-            { url: "//frankfurt.netdata.rocks/default.html", title: "Germany - Frankfurt (DigitalOcean.com)" },
-            { url: "//toronto.netdata.rocks/default.html", title: "Canada - Toronto (DigitalOcean.com)" },
-            { url: "//singapore.netdata.rocks/default.html", title: "Japan - Singapore (DigitalOcean.com)" },
-            { url: "//bangalore.netdata.rocks/default.html", title: "India - Bangalore (DigitalOcean.com)" },
-
-        ]
-
-        for (var server of demoServers) {
-            html += (
-              `<div class="agent-item">
-                    <i class="fas fa-chart-bar" style="color: #fff"></i>
-                    <a href="${server.url}">${server.title}</a>
-                    <div></div>
-                </div>
-                `
-            );
-        }
-    }
-
-    return html;
-}
-
-function setMyNetdataMenu(html) {
-    const el = document.getElementById('my-netdata-dropdown-content')
-    el.innerHTML = html;
-}
-
-function clearMyNetdataMenu() {
-    setMyNetdataMenu(`<div class="agent-item" style="white-space: nowrap">
-        <i class="fas fa-hourglass-half"></i>
-        Loading, please wait...
-        <div></div>
-    </div>`);
-}
-
-function errorMyNetdataMenu() {
-    setMyNetdataMenu(`<div class="agent-item" style="white-space: nowrap">
-        <i class="fas fa-exclamation-triangle" style="color: red"></i>
-        Cannot load known netdata agents from netdata.cloud!
-        <div></div>
-    </div>`);
-}
-
-window.openAuthenticatedUrl = (url) => {
-    if (isSignedIn()) {
-        window.open(url);
-    } else {
-        window.open(`${getFromRegistry("cloudBaseURL")}/account/sign-in-agent?id=${getFromRegistry("machineGuid")}&name=${encodeURIComponent(getFromRegistry("hostname"))}&origin=${encodeURIComponent(window.location.origin + "/")}&redirect_uri=${encodeURIComponent(window.location.origin + "/" + url)}`);
-    }
-}
-
-const isRegistryEnabled = () => (!isUsingGlobalRegistry() && !isSignedIn())
-
-function renderMyNetdataMenu(machinesArray) {
-    const el = document.getElementById('my-netdata-dropdown-content');
-    el.classList.add(`theme-${netdataTheme}`);
-
-    if (machinesArray == registryAgents) {
-        console.log("Rendering my-netdata menu from registry");
-    } else {
-        console.log("Rendering my-netdata menu from netdata.cloud", machinesArray);
-    }
-
-    let html = '';
-
-    if (!isSignedIn()) {
-        if (!isRegistryEnabled()) {
-            html += (
-              `<div class="info-item" style="white-space: nowrap">
-                    <span>Please <a href="#" onclick="signInDidClick(event); return false">sign in to netdata.cloud</a> to view your nodes!</span>
-                    <div></div>
-                </div>
-                <hr />`
-            );
-        }
-    }
-
-    if (isSignedIn()) {
-        html += (
-          `<div class="filter-control">
-                <input 
-                    id="my-netdata-menu-filter-input"
-                    type="text" 
-                    placeholder="filter nodes..."
-                    autofocus
-                    autocomplete="off"
-                    value="${myNetdataMenuFilterValue}" 
-                    onkeydown="myNetdataFilterDidChange(event)"
-                />
-                <span class="filter-control__clear" onclick="myNetdataFilterClearDidClick(event)"><i class="fas fa-times"></i><span>
-            </div>
-            <hr />`
-        );
-    }
-
-    // options.hosts = [
-    //     {
-    //         hostname: "streamed1",
-    //     },
-    //     {
-    //         hostname: "streamed2",
-    //     },
-    // ]
-
-    if (options.hosts.length > 1) {
-        html += `<div id="my-netdata-menu-streamed">${renderStreamedHosts(options)}</div><hr />`;
-    }
-
-    if (isSignedIn() || isRegistryEnabled()) {
-        html += `<div id="my-netdata-menu-machines">${renderMachines(machinesArray)}</div><hr />`;
-    }
-
-    if (!isSignedIn()) {
-        html += (
-          `<div class="agent-item">
-                <i class="fas fa-tv"></i>
-                <a onClick="openAuthenticatedUrl('console.html');" target="_blank">Nodes<sup class="beta"> beta</sup></a>
-                <div></div>
-            </div>
-            <div class="agent-item">
-                <i class="fas fa-cog""></i>
-                <a href="#" onclick="switchRegistryModalHandler(); return false;">Switch Identity</a>
-                <div></div>
-            </div>
-            <div class="agent-item">
-                <i class="fas fa-question-circle""></i>
-                <a href="https://github.com/netdata/netdata/tree/master/registry#netdata-registry" target="_blank">What is this?</a>
-                <div></div>
-            </div>`
-        )
-    } else {
-        html += (
-          `<div class="agent-item">
-                <i class="fas fa-tv"></i>
-                <a onclick="openAuthenticatedUrl('console.html');" target="_blank">Nodes<sup class="beta"> beta</sup></a>
-                <div></div>
-            </div>
-            <div class="agent-item">
-                <i class="fas fa-sync"></i>
-                <a href="#" onclick="showSyncModal(); return false">Synchronize with netdata.cloud</a>
-                <div></div>
-            </div>
-            <div class="agent-item">
-                <i class="fas fa-question-circle""></i>
-                <a href="https://netdata.cloud/about" target="_blank">What is this?</a>
-                <div></div>
-            </div>`
-        )
-    }
-
-    el.innerHTML = html;
-
-    gotoServerInit();
-}
-
-
 function netdataURL(url, forReload) {
     if (typeof url === 'undefined')
     // url = document.location.toString();
@@ -1000,43 +636,28 @@ window.gotoServerModalHandler = function gotoServerModalHandler(guid) {
         gotoServerValidateUrl(count++, guid, url);
     }
 
-    if (!isSignedIn()) {
-        // When the registry is enabled, if the user's known URLs are not working
-        // we consult the registry to get additional URLs.
-        setTimeout(function () {
-            if (gotoServerStop === false) {
-                document.getElementById('gotoServerResponse').innerHTML = '<b>Added all the known URLs for this machine.</b>';
-                NETDATA.registrySearch(guid, getFromRegistry, function (data) {
-                    // console.log(data);
-                    len = data.urls.length;
-                    while (len--) {
-                        var url = data.urls[len][1];
-                        // console.log(url);
-                        if (typeof checked[url] === 'undefined') {
-                            gotoServerValidateRemaining++;
-                            checked[url] = true;
-                            gotoServerValidateUrl(count++, guid, url);
-                        }
+    // When the registry is enabled, if the user's known URLs are not working
+    // we consult the registry to get additional URLs.
+    setTimeout(function () {
+        if (gotoServerStop === false) {
+            document.getElementById('gotoServerResponse').innerHTML = '<b>Added all the known URLs for this machine.</b>';
+            NETDATA.registrySearch(guid, getFromRegistry, function (data) {
+                // console.log(data);
+                len = data.urls.length;
+                while (len--) {
+                    var url = data.urls[len][1];
+                    // console.log(url);
+                    if (typeof checked[url] === 'undefined') {
+                        gotoServerValidateRemaining++;
+                        checked[url] = true;
+                        gotoServerValidateUrl(count++, guid, url);
                     }
-                });
-            }
-        }, 2000);
-    }
+                }
+            });
+        }
+    }, 2000);
 
     return false;
-}
-
-function gotoServerInit() {
-    $(".registry_link").on('click', function (e) {
-        if (e.which === 2) {
-            e.preventDefault();
-            gotoServerMiddleClick = true;
-        } else {
-            gotoServerMiddleClick = false;
-        }
-
-        return true;
-    });
 }
 
 window.switchRegistryModalHandler = () => {
@@ -1105,36 +726,15 @@ window.notifyForDeleteRegistry = () => {
     const responseEl = document.getElementById('deleteRegistryResponse');
 
     if (deleteRegistryUrl) {
-        if (isSignedIn()) {
-            deleteCloudAgentURL(deleteRegistryGuid, deleteRegistryUrl)
-            .then((count) => {
-                if (!count) {
-                    responseEl.innerHTML = "<b>Sorry, this command was rejected by netdata.cloud!</b>";
-                    return;
-                }
-                NETDATA.registryDelete(getFromRegistry, serverDefault, deleteRegistryUrl, function (result) {
-                    if (result === null) {
-                        console.log("Received error from registry", result);
-                    }
-
-                    deleteRegistryUrl = null;
-                    $('#deleteRegistryModal').modal('hide');
-                    // NETDATA.registry.init();
-                    reduxStore.dispatch(resetRegistry())
-                });
-            });
-        } else {
-            NETDATA.registryDelete(getFromRegistry, serverDefault, deleteRegistryUrl, function (result) {
-                if (result !== null) {
-                    deleteRegistryUrl = null;
-                    $('#deleteRegistryModal').modal('hide');
-                    // NETDATA.registry.init();
-                    reduxStore.dispatch(resetRegistry())
-                } else {
-                    responseEl.innerHTML = "<b>Sorry, this command was rejected by the registry server!</b>";
-                }
-            });
-        }
+        NETDATA.registryDelete(getFromRegistry, serverDefault, deleteRegistryUrl, function (result) {
+            if (result !== null) {
+                deleteRegistryUrl = null;
+                $('#deleteRegistryModal').modal('hide');
+                reduxStore.dispatch(resetRegistry())
+            } else {
+                responseEl.innerHTML = "<b>Sorry, this command was rejected by the registry server!</b>";
+            }
+        });
     }
 }
 
@@ -2053,8 +1653,6 @@ function alarmsUpdateModal() {
     const callback = (data) => {
         options.alarm_families = [];
 
-        alarmsCallback(data);
-
         if (data === null) {
             document.getElementById('alarms_active').innerHTML =
               document.getElementById('alarms_all').innerHTML =
@@ -2782,26 +2380,6 @@ function alarmsUpdateModal() {
     }))
 }
 
-window.alarmsCallback = (data) => {
-    var count = 0, x;
-    for (x in data.alarms) {
-        if (!data.alarms.hasOwnProperty(x)) {
-            continue;
-        }
-
-        var alarm = data.alarms[x];
-        if (alarm.status === 'WARNING' || alarm.status === 'CRITICAL') {
-            count++;
-        }
-    }
-
-    if (count > 0) {
-        document.getElementById('alarms_count_badge').innerHTML = count.toString();
-    } else {
-        document.getElementById('alarms_count_badge').innerHTML = '';
-    }
-}
-
 function initializeDynamicDashboardWithData(data) {
     if (data !== null) {
         options.hostname = data.hostname;
@@ -2816,17 +2394,7 @@ function initializeDynamicDashboardWithData(data) {
         }
 
         // update the dashboard hostname
-        document.getElementById('hostname').innerHTML = '<span id="hostnametext">' + options.hostname + ((window.netdataSnapshotData !== null) ? ' (snap)' : '').toString() + '</span>&nbsp;&nbsp;<strong class="caret">';
-        document.getElementById('hostname').href = tmpSnapshotData?.server || serverDefault;
         document.getElementById('netdataVersion').innerHTML = options.version;
-
-        if (window.netdataSnapshotData !== null) {
-            $('#alarmsButton').hide();
-            $('#updateButton').hide();
-            // $('#loadButton').hide();
-            $('#saveButton').hide();
-            $('#printButton').hide();
-        }
 
         // update the dashboard title
         document.title = options.hostname + ' netdata dashboard';
@@ -2846,9 +2414,6 @@ function initializeDynamicDashboardWithData(data) {
 
         // render all charts
         renderChartsAndMenu(data);
-
-        // Ensure MyNetdata menu is rendered with latest host info #5370
-        renderMyNetdataMenu(isSignedIn() ? cloudAgents : registryAgents);
     }
 }
 
@@ -2890,8 +2455,6 @@ function loadCustomDashboardInfo(url, callback) {
 }
 
 function initializeChartsAndCustomInfo() {
-    NETDATA.alarms.callback = alarmsCallback;
-
     loadDashboardInfo().then(() => {
         // download all the charts the server knows
         NETDATA.chartRegistry.downloadAll(initializeConfig.url, function (data) {
@@ -2939,21 +2502,13 @@ function initializeDynamicDashboard(newReduxStore) {
         initializeConfig.url = serverDefault;
     }
 
-
-    // initialize clickable alarms
-    NETDATA.alarms.chart_div_offset = -50;
-    NETDATA.alarms.chart_div_id_prefix = 'chart_';
-    NETDATA.alarms.chart_div_animation_duration = 0;
-
-    NETDATA.pause(function () {
-        if (typeof netdataCheckXSS !== 'undefined' && netdataCheckXSS === true) {
-            //$("#loadOverlay").css("display","none");
-            document.getElementById('netdataXssModalServer').innerText = initializeConfig.url;
-            $('#xssModal').modal('show');
-        } else {
-            initializeChartsAndCustomInfo();
-        }
-    });
+    if (typeof netdataCheckXSS !== 'undefined' && netdataCheckXSS === true) {
+        //$("#loadOverlay").css("display","none");
+        document.getElementById('netdataXssModalServer').innerText = initializeConfig.url;
+        $('#xssModal').modal('show');
+    }  else {
+        initializeChartsAndCustomInfo();
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -3096,8 +2651,6 @@ window.notifyForUpdate = (force) => {
             save = true;
             var compare = 'https://learn.netdata.cloud/docs/agent/changelog/';
             versionLog('<p><big><strong>New version of netdata available!</strong></big></p><p>Latest version: <b><code>' + sha2 + '</code></b></p><p><a href="' + compare + '" target="_blank">Click here for the changes log</a> and<br/><a href="https://github.com/netdata/netdata/tree/master/packaging/installer/UPDATE.md" target="_blank">click here for directions on updating</a> your netdata installation.</p><p>We suggest to review the changes log for new features you may be interested, or important bug fixes you may need.<br/>Keeping your netdata updated is generally a good idea.</p>');
-
-            document.getElementById('update_badge').innerHTML = '!';
         }
 
         if (save) {
@@ -3563,8 +3116,6 @@ function saveSnapshotModalInit() {
         }
 
         var view = Math.round(saveSnapshotViewDuration / Math.round($(document.getElementById('charts_div')).width() / 2));
-
-        // console.log('view duration: ' + saveSnapshotViewDuration + ', min: ' + min + ', max: ' + max + ', view: ' + view);
 
         if (max < 10) {
             max = 10;
@@ -4228,38 +3779,6 @@ function runOnceOnDashboardWithjQuery() {
     // ------------------------------------------------------------------------
     // my-netdata menu
 
-    Ps.initialize(document.getElementById('my-netdata-dropdown-content'), {
-        wheelSpeed: 1,
-        wheelPropagation: false,
-        swipePropagation: false,
-        minScrollbarLength: null,
-        maxScrollbarLength: null,
-        useBothWheelAxes: false,
-        suppressScrollX: true,
-        suppressScrollY: false,
-        scrollXMarginOffset: 0,
-        scrollYMarginOffset: 0,
-        theme: 'default'
-    });
-
-    $('#myNetdataDropdownParent')
-        .on('show.bs.dropdown', function () {
-            var hash = urlOptions.genHash();
-            $('.registry_link').each(function (idx) {
-                this.setAttribute('href', this.getAttribute("href").replace(/#.*$/, hash));
-            });
-
-            NETDATA.pause(function () {
-            });
-        })
-        .on('shown.bs.dropdown', function () {
-            Ps.update(document.getElementById('my-netdata-dropdown-content'));
-            myNetdataMenuDidShow();
-        })
-        .on('hidden.bs.dropdown', function () {
-            NETDATA.unpause();
-        });
-
     $('#deleteRegistryModal')
         .on('hidden.bs.modal', function () {
             deleteRegistryGuid = null;
@@ -4411,10 +3930,7 @@ function runOnceOnDashboardWithjQuery() {
                                 if (openTags.length > 0) {
                                     // I have unclosed tags
 
-                                    //console.log('They were open tags');
-                                    //console.log(openTags);
                                     for (var j = 0; j < openTags.length; j++) {
-                                        //console.log('Cierro tag ' + openTags[j]);
                                         bag += '</' + openTags[j] + '>'; // Close all tags that were opened
 
                                         // You could shift the tag from the stack to check if you end with an empty stack, that means you have closed all open tags
@@ -4500,7 +4016,6 @@ function finalizePage() {
 
     NETDATA.onresizeCallback = function () {
         Ps.update(document.getElementById('sidebar'));
-        Ps.update(document.getElementById('my-netdata-dropdown-content'));
     };
     NETDATA.onresizeCallback();
 
@@ -4510,15 +4025,6 @@ function finalizePage() {
             before: window.netdataSnapshotData.before_ms,
         }))
     }
-
-    //if (urlOptions.nowelcome !== true) {
-    //    setTimeout(function () {
-    //        $('#welcomeModal').modal();
-    //    }, 2000);
-    //}
-
-    // var netdataEnded = performance.now();
-    // console.log('start up time: ' + (netdataEnded - netdataStarted).toString() + ' ms');
 }
 
 window.resetDashboardOptions = () => {
@@ -4536,28 +4042,6 @@ window.resetDashboardOptions = () => {
 // callback to add the dashboard info to the
 // parallel javascript downloader in netdata
 export const netdataPrepCallback = () => {
-    // NETDATA.requiredCSS.push({
-    //     url: NETDATA.serverStatic + 'css/bootstrap-toggle-2.2.2.min.css',
-    //     isAlreadyLoaded: function () {
-    //         return false;
-    //     }
-    // });
-    //
-    // NETDATA.requiredJs.push({
-    //     url: NETDATA.serverStatic + 'lib/bootstrap-toggle-2.2.2.min.js',
-    //     isAlreadyLoaded: function () {
-    //         return false;
-    //     }
-    // });
-    //
-    // NETDATA.requiredJs.push({
-    //     url: NETDATA.serverStatic + 'dashboard_info.js?v20181019-1',
-    //     async: false,
-    //     isAlreadyLoaded: function () {
-    //         return false;
-    //     }
-    // });
-
     if (isDemo) {
         document.getElementById('masthead').style.display = 'block';
     } else {
@@ -4568,8 +4052,6 @@ export const netdataPrepCallback = () => {
 };
 
 window.selected_server_timezone = function (timezone, status) {
-    //console.log('called with timezone: ' + timezone + ", status: " + ((typeof status === 'undefined')?'undefined':status).toString());
-
     // clear the error
     document.getElementById('timezone_error_message').innerHTML = '';
 
@@ -4624,399 +4106,7 @@ window.selected_server_timezone = function (timezone, status) {
     return false;
 };
 
-// our entry point
-// var netdataStarted = performance.now();
-
 export var netdataCallback = initializeDynamicDashboard;
-
-// =================================================================================================
-// netdata.cloud
-
-let registryAgents = [];
-
-let cloudAgents = [];
-
-let myNetdataMenuFilterValue = "";
-
-let cloudAccountID = null;
-
-let cloudAccountName = null;
-
-let cloudToken = null;
-
-/// Enforces a maximum string length while retaining the prefix and the postfix of
-/// the string.
-function truncateString(str, maxLength) {
-    if (str.length <= maxLength) {
-        return str;
-    }
-
-    const spanLength = Math.floor((maxLength - 3) / 2);
-    return `${str.substring(0, spanLength)}...${str.substring(str.length - spanLength)}`;
-}
-
-// -------------------------------------------------------------------------------------------------
-// netdata.cloud API Client
-// -------------------------------------------------------------------------------------------------
-
-function isValidAgent(a) {
-    return a.urls != null && a.urls.length > 0;
-}
-
-// https://github.com/netdata/hub/issues/146
-function getCloudAccountAgents() {
-    if (!isSignedIn()) {
-        return [];
-    }
-
-    return fetch(
-        `${getFromRegistry("cloudBaseURL")}/api/v1/accounts/${cloudAccountID}/agents`,
-        {
-            method: "GET",
-            mode: "cors",
-            headers: {
-                "Authorization": `Bearer ${cloudToken}`
-            }
-        }
-    ).then((response) => {
-        if (!response.ok) {
-            throw Error("Cannot fetch known accounts");
-        }
-        return response.json();
-    }).then((payload) => {
-        const agents = payload.result ? payload.result.agents : null;
-
-        if (!agents) {
-            return [];
-        }
-
-        return agents.filter((a) => isValidAgent(a)).map((a) => {
-            return {
-                "guid": a.id,
-                "name": a.name,
-                "url": a.urls[0],
-                "alternateUrls": a.urls
-            }
-        })
-    }).catch(function (error) {
-        console.log(error);
-        return null;
-    });
-}
-
-/** Updates the lastAccessTime and accessCount properties of the agent for the account. */
-function touchAgent() {
-    if (!isSignedIn()) {
-        return [];
-    }
-
-    const touchUrl = `${getFromRegistry("cloudBaseURL")}/api/v1/agents/${getFromRegistry("machineGuid")}/touch?account_id=${cloudAccountID}`;
-    return fetch(
-        touchUrl,
-        {
-            method: "post",
-            body: "",
-            mode: "cors",
-            headers: {
-                "Authorization": `Bearer ${cloudToken}`
-            }
-        }
-    ).then((response) => {
-        if (!response.ok) {
-            throw Error("Cannot touch agent" + JSON.stringify(response));
-        }
-        return response.json();
-    }).then((payload) => {
-
-    }).catch(function (error) {
-        console.log(error);
-        return null;
-    });
-}
-
-// https://github.com/netdata/hub/issues/128
-function postCloudAccountAgents(agentsToSync) {
-    if (!isSignedIn()) {
-        return [];
-    }
-
-    const maskedURL = MASKED_DATA;
-
-    const agents = agentsToSync.map((a) => {
-        const urls = a.alternateUrls.filter((url) => url != maskedURL);
-
-        return {
-            "id": a.guid,
-            "name": a.name,
-            "urls": urls
-        }
-    }).filter((a) => isValidAgent(a))
-
-    const payload = {
-        "accountID": cloudAccountID,
-        "agents": agents,
-        "merge": false,
-    };
-
-    return fetch(
-        `${getFromRegistry("cloudBaseURL")}/api/v1/accounts/${cloudAccountID}/agents`,
-        {
-            method: "POST",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": `Bearer ${cloudToken}`
-            },
-            body: JSON.stringify(payload)
-        }
-    ).then((response) => {
-        return response.json();
-    }).then((payload) => {
-        const agents = payload.result ? payload.result.agents : null;
-
-        if (!agents) {
-            return [];
-        }
-
-        return agents.filter((a) => isValidAgent(a)).map((a) => {
-            return {
-                "guid": a.id,
-                "name": a.name,
-                "url": a.urls[0],
-                "alternateUrls": a.urls
-            }
-        })
-    });
-}
-
-function deleteCloudAgentURL(agentID, url) {
-    if (!isSignedIn()) {
-        return [];
-    }
-
-    return fetch(
-        `${getFromRegistry("cloudBaseURL")}/api/v1/accounts/${cloudAccountID}/agents/${agentID}/url?value=${encodeURIComponent(url)}`,
-        {
-            method: "DELETE",
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8",
-                "Authorization": `Bearer ${cloudToken}`
-            },
-        }
-    ).then((response) => {
-        return response.json();
-    }).then((payload) => {
-        const count = payload.result ? payload.result.count : 0;
-        return count;
-    });
-}
-
-// -------------------------------------------------------------------------------------------------
-
-window.signInDidClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!isUsingGlobalRegistry()) {
-        // If user is using a private registry, request his consent for
-        // synchronizing with cloud.
-        showSignInModal();
-        return;
-    }
-
-    signIn();
-}
-
-function shouldShowSignInBanner() {
-    if (isSignedIn()) {
-        return false;
-    }
-
-    return localStorage.getItem("signInBannerClosed") != "true";
-}
-
-
-window.signOutDidClick = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    signOut();
-};
-
-// -------------------------------------------------------------------------------------------------
-
-function updateMyNetdataAfterFilterChange() {
-    const machinesEl = document.getElementById("my-netdata-menu-machines")
-    machinesEl.innerHTML = renderMachines(cloudAgents);
-
-    if (options.hosts.length > 1) {
-        const streamedEl = document.getElementById("my-netdata-menu-streamed")
-        streamedEl.innerHTML = renderStreamedHosts(options);
-    }
-}
-
-function myNetdataMenuDidShow() {
-    const filterEl = document.getElementById("my-netdata-menu-filter-input");
-    if (filterEl) {
-        filterEl.focus();
-    }
-}
-
-window.myNetdataFilterDidChange = (e) => {
-    const inputEl = e.target;
-    setTimeout(() => {
-        myNetdataMenuFilterValue = inputEl.value;
-        updateMyNetdataAfterFilterChange();
-    }, 1);
-}
-
-function myNetdataFilterClearDidClick(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const inputEl = document.getElementById("my-netdata-menu-filter-input");
-    inputEl.value = "";
-    myNetdataMenuFilterValue = "";
-
-    updateMyNetdataAfterFilterChange();
-
-    inputEl.focus();
-}
-
-// -------------------------------------------------------------------------------------------------
-
-function clearCloudVariables() {
-    cloudAccountID = null;
-    cloudAccountName = null;
-    cloudToken = null;
-}
-
-function clearCloudLocalStorageItems() {
-    localStorage.removeItem("cloud.baseURL");
-    localStorage.removeItem("cloud.agentID");
-    localStorage.removeItem("cloud.sync");
-}
-
-function signIn() {
-    const url = `${getFromRegistry("cloudBaseURL")}/account/sign-in-agent?id=${getFromRegistry("machineGuid")}&name=${encodeURIComponent(getFromRegistry("hostname"))}&origin=${encodeURIComponent(window.location.origin + "/")}`;
-    window.open(url);
-}
-
-function signOut() {
-    cloudSSOSignOut();
-}
-
-function renderAccountUI() {
-    if (!getFromRegistry("isCloudEnabled")) {
-        return
-    }
-
-    const container = document.getElementById("account-menu-container");
-    if (isSignedIn()) {
-        container.removeAttribute("title");
-        container.removeAttribute("data-original-title");
-        container.removeAttribute("data-placement");
-        container.innerHTML = (
-            `<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span id="amc-account-name"></span> <strong class="caret"></strong></a>
-            <ul id="cloud-menu" class="dropdown-menu scrollable-menu inpagemenu" role="menu">   
-                <li>
-                    <a onclick="openAuthenticatedUrl('console.html');" target="_blank" class="btn">
-                    <i class="fas fa-tv"></i>&nbsp;&nbsp;<span class="hidden-sm hidden-md">Nodes<sup class="beta"> beta</sup></span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#" class="btn" onclick="signOutDidClick(event); return false">
-                    <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;<span class="hidden-sm hidden-md">Sign Out</span>
-                    </a>
-                </li>
-            </ul>`
-        )
-        document.getElementById("amc-account-name").textContent = cloudAccountName; // Anti-XSS
-    } else {
-        container.setAttribute("data-original-title", "sign in");
-        container.setAttribute("data-placement", "bottom");
-        container.innerHTML = (
-            `<a href="#" class="btn sign-in-btn theme-${netdataTheme}" onclick="signInDidClick(event); return false">
-                <i class="fas fa-sign-in-alt"></i>&nbsp;<span class="hidden-sm hidden-md">Sign In</span>
-            </a>`
-        )
-    }
-}
-
-function handleMessage(e) {
-    switch (e.data.type) {
-        case "sign-in":
-            handleSignInMessage(e);
-            break;
-
-        case "sign-out":
-            handleSignOutMessage(e);
-            break;
-
-        default:
-            return;
-    }
-}
-
-function handleSignInMessage(e) {
-    localStorage.setItem("cloud.baseURL", getFromRegistry("cloudBaseURL"));
-
-    cloudAccountID = e.data.accountID;
-    cloudAccountName = e.data.accountName;
-    cloudToken = e.data.token;
-
-    netdataRegistryCallback(registryAgents);
-    if (e.data.redirectURI && !window.location.href.includes(e.data.redirectURI)) {
-        window.location.replace(e.data.redirectURI);
-    }
-}
-
-function handleSignOutMessage(e) {
-    clearCloudVariables();
-    renderAccountUI();
-    renderMyNetdataMenu(registryAgents);
-}
-
-function isSignedIn() {
-    return cloudToken != null && cloudAccountID != null;
-}
-
-
-// If merging is needed returns the merged agents set, otherwise returns null.
-function mergeAgents(cloud, local) {
-    let dirty = false;
-
-    const union = new Map();
-
-    for (const cagent of cloud) {
-        union.set(cagent.guid, cagent);
-    }
-
-    for (const lagent of local) {
-        const cagent = union.get(lagent.guid);
-        if (cagent) {
-            for (const u of lagent.alternateUrls) {
-                if (u === MASKED_DATA) { // TODO: temp until registry is updated.
-                    continue;
-                }
-
-                if (!cagent.alternateUrls.includes(u)) {
-                    dirty = true;
-                    cagent.alternateUrls.push(u);
-                }
-            }
-        } else {
-            dirty = true;
-            union.set(lagent.guid, lagent);
-        }
-    }
-
-    if (dirty) {
-        return Array.from(union.values());
-    }
-
-    return null;
-}
 
 window.showSignInModal = function() {
     document.getElementById("sim-registry").innerHTML = getFromRegistry("registryServer");
@@ -5026,143 +4116,4 @@ window.showSignInModal = function() {
 window.explicitlySignIn = () => {
     $("#signInModal").modal("hide");
     reduxStore.dispatch(explicitlySignInAction())
-    // signIn();
 };
-
-window.showSyncModal = () => {
-    document.getElementById("sync-registry-modal-registry").innerHTML = getFromRegistry("registryServer");
-    $("#syncRegistryModal").modal("show");
-};
-
-window.explicitlySyncAgents = () => {
-    $("#syncRegistryModal").modal("hide");
-
-    const json = localStorage.getItem("cloud.sync");
-    const sync = json ? JSON.parse(json) : {};
-    delete sync[cloudAccountID];
-    localStorage.setItem("cloud.sync", JSON.stringify(sync));
-
-    // NETDATA.registry.init();
-};
-
-function syncAgents(callback) {
-    const json = localStorage.getItem("cloud.sync");
-    const sync = json ? JSON.parse(json) : {};
-
-    const currentAgent = {
-        guid: getFromRegistry("machineGuid"),
-        name: getFromRegistry("hostname"),
-        url: serverDefault,
-        alternateUrls: [serverDefault],
-    }
-
-    const localAgents = sync[cloudAccountID]
-        ? [currentAgent]
-        : registryAgents.concat([currentAgent]);
-
-    console.log("Checking if sync is needed.", localAgents);
-
-    const agentsToSync = mergeAgents(cloudAgents, localAgents);
-
-    if ((!sync[cloudAccountID]) || agentsToSync) {
-        sync[cloudAccountID] = new Date().getTime();
-        localStorage.setItem("cloud.sync", JSON.stringify(sync));
-    }
-
-    if (agentsToSync) {
-        console.log("Synchronizing with netdata.cloud.");
-
-        postCloudAccountAgents(agentsToSync).then((agents) => {
-            // TODO: clear syncTime on error!
-            cloudAgents = agents;
-            callback(cloudAgents);
-        });
-
-        return
-    }
-
-    callback(cloudAgents);
-}
-
-let isCloudSSOInitialized = false;
-
-function cloudSSOInit() {
-    return;
-    const iframeEl = document.getElementById("ssoifrm");
-    const cloudBaseURL = getFromRegistry("cloudBaseURL")
-    const machineGuid = getFromRegistry("machineGuid")
-    const url = `${cloudBaseURL}/account/sso-agent?id=${machineGuid}`;
-    iframeEl.src = url;
-    isCloudSSOInitialized = true;
-}
-
-function cloudSSOSignOut() {
-    const iframe = document.getElementById("ssoifrm");
-    const url = `${getFromRegistry("cloudBaseURL")}/account/sign-out-agent`;
-    iframe.src = url;
-}
-
-function initCloud() {
-    const cloudBaseURL = getFromRegistry("cloudBaseURL")
-
-    if (!getFromRegistry("isCloudEnabled")) {
-        clearCloudVariables();
-        clearCloudLocalStorageItems();
-        return;
-    }
-
-    if (cloudBaseURL != localStorage.getItem("cloud.baseURL")) {
-        clearCloudVariables();
-        clearCloudLocalStorageItems();
-        if (cloudBaseURL) {
-            localStorage.setItem("cloud.baseURL", cloudBaseURL);
-        }
-    }
-
-    if (!isCloudSSOInitialized) {
-        cloudSSOInit();
-    }
-
-    touchAgent();
-    renderAccountUI();
-}
-
-// This callback is called after NETDATA.registry is initialized.
-window.netdataRegistryCallback = (machinesArray) => {
-    localStorage.setItem("cloud.agentID", getFromRegistry("machineGuid"));
-
-    initCloud();
-
-    registryAgents = machinesArray || [];
-
-    if (isSignedIn()) {
-        // We call getCloudAccountAgents() here because it requires that
-        // NETDATA.registry is initialized.
-        clearMyNetdataMenu();
-        getCloudAccountAgents().then((agents) => {
-            if (!agents) {
-                errorMyNetdataMenu();
-                return;
-            }
-            cloudAgents = agents;
-            syncAgents((agents) => {
-                const agentsMap = {}
-                for (const agent of agents) {
-                    agentsMap[agent.guid] = agent;
-                }
-
-                reduxStore.dispatch(updatePersonUrlsAction({
-                    personGuid: getFromRegistry("personGuid"),
-                    registryMachines: agentsMap,
-                    registryMachinesArray: agents,
-                }))
-
-                renderMyNetdataMenu(agents);
-            });
-        });
-    } else {
-        renderMyNetdataMenu(machinesArray)
-    }
-};
-
-window.addEventListener("message", handleMessage, false);
