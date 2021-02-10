@@ -412,10 +412,14 @@ export const ChartWithLoader = ({
       </>
     )
   }
+  const displayEmptyDataLoader = hasEmptyData
+    && (attributes.chartLibrary !== "dygraph"
+      || chartData.first_entry * 1000 < fetchDataParams.viewRange[0]
+    )
 
   return (
     <>
-      {hasEmptyData && attributes.chartLibrary !== "dygraph" && (
+      {displayEmptyDataLoader && (
         <Loader key={`${hasEmptyData}`} hasEmptyData={hasEmptyData} containerNode={portalNode} />
       )}
       <Chart

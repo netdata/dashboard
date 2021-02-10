@@ -22,7 +22,7 @@ export const useEmptyDataPlaceholder = (args: Args): Args => {
   const themeContext = useContext(ThemeContext)
 
   return useMemo(() => {
-    if (!hasEmptyData) {
+    if (!hasEmptyData || (chartData.first_entry * 1000 <= viewBefore)) {
       return args
     }
 

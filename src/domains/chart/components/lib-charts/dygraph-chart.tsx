@@ -441,7 +441,7 @@ export const DygraphChart = ({
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
-    if (chartElement && chartElement.current && !dygraphInstance.current) {
+    if (chartElement?.current && !dygraphInstance.current && chartData.result.data.length) {
       const dygraphOptionsStatic = getInitialDygraphOptions({
         attributes,
         chartData,
