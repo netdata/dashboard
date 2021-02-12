@@ -3713,7 +3713,7 @@ function runOnceOnDashboardWithjQuery() {
     $('#sidebar')
         .affix({
             offset: {
-                top: (isDemo) ? 150 : 0,
+                top: 0,
                 bottom: 0
             }
         })

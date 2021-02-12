@@ -77,36 +77,35 @@
         <div id="navbar-highlight-content" class="navbar-highlight-content"></div>
     </div>
 
-    <div id="masthead" style="display: none;">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-7">
-                    <h1>Netdata
-                        <p class="lead">Real-time performance monitoring, in the greatest possible detail</p>
-                    </h1>
-                </div>
-                <div class="col-md-5">
-                    <div class="well well-lg">
+    <div class="container">
+        <div class="row">
+            <div class="charts-body" role="main">
+                <div id="masthead" style="display: none;">
+                    <div class="container">
                         <div class="row">
-                        <div class="col-md-6">
-                            <b>Drag</b> charts to pan.
-                            <b>Shift + wheel</b> on them, to zoom in and out.
-                            <b>Double-click</b> on them, to reset.
-                            <b>Hover</b> on them too!
+                            <div class="col-md-7">
+                                <h1>Netdata
+                                    <p class="lead">Real-time performance monitoring, in the greatest possible detail</p>
+                                </h1>
                             </div>
-                        <div class="col-md-6">
-                            <div class="netdata-container" data-netdata="system.intr" data-chart-library="dygraph" data-dygraph-theme="sparkline" data-dygraph-type="line" data-dygraph-strokewidth="3" data-dygraph-smooth="true" data-dygraph-highlightcirclesize="6" data-after="-90" data-height="60px" data-colors="#C66"></div>
+                            <div class="col-md-5">
+                                <div class="well well-lg">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <b>Drag</b> charts to pan.
+                                            <b>Shift + wheel</b> on them, to zoom in and out.
+                                            <b>Double-click</b> on them, to reset.
+                                            <b>Hover</b> on them too!
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="netdata-container" data-netdata="system.cpu" data-dimensions="user" data-chart-library="dygraph" data-dygraph-theme="sparkline" data-dygraph-type="line" data-dygraph-strokewidth="3" data-dygraph-smooth="true" data-dygraph-highlightcirclesize="6" data-after="-90" data-height="60px" data-colors="#C66"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="charts-body" role="main">
                 <div id="charts_div"></div>
             </div>
             <div class="sidebar-body hidden-xs hidden-sm hidden-print" id="sidebar-body" role="complementary">
