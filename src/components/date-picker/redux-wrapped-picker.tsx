@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { selectGlobalPanAndZoom, selectDefaultAfter } from "domains/global/selectors"
@@ -53,6 +53,17 @@ export const ReduxWrappedPicker = ({ tagging }: Props) => {
       )
     }
   }
+
+  useEffect(() => {
+    const { start, end } = pickedValues
+    if (window.urlOptions) {
+      if (window.urlOptions.after !== start || window.urlOptions.before !== end) {
+        const isPanAndZoom = start > 0
+        window.urlOptions.netdataPanAndZoomCallback(isPanAndZoom, start, end)
+      }
+    }
+  }, [pickedValues])
+
   return (
     <Picker
       isOpen={isOpen}

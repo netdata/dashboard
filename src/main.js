@@ -14,6 +14,7 @@ import {
     resetGlobalPanAndZoomAction,
     resetOptionsAction,
     resetRegistry,
+    setDefaultAfterAction,
     setGlobalChartUnderlayAction,
     setGlobalPanAndZoomAction,
     setOptionAction,
@@ -141,10 +142,8 @@ window.urlOptions = {
     genHash: function (forReload) {
         var hash = urlOptions.hash;
 
-        if (urlOptions.pan_and_zoom === true) {
-            hash += ';after=' + urlOptions.after.toString() +
-              ';before=' + urlOptions.before.toString();
-        }
+        hash += ';after=' + urlOptions.after.toString() +
+          ';before=' + urlOptions.before.toString();
 
         if (urlOptions.highlight === true) {
             hash += ';highlight_after=' + urlOptions.highlight_after.toString() +
@@ -3960,22 +3959,20 @@ function runOnceOnDashboardWithjQuery() {
 }
 
 function finalizePage() {
-    // resize all charts - without starting the background thread
-    // this has to be done while NETDATA is paused
-    // if we ommit this, the affix menu will be wrong, since all
-    // the Dom elements are initially zero-sized
-    NETDATA.parseDom();
-
-    // ------------------------------------------------------------------------
-
-    if (urlOptions.pan_and_zoom === true) {
+    if (urlOptions.after < 0) {
+        reduxStore.dispatch(setDefaultAfterAction({ after: urlOptions.after }))
+    } else if (urlOptions.pan_and_zoom === true) {
         reduxStore.dispatch(setGlobalPanAndZoomAction({
             after: urlOptions.after,
             before: urlOptions.before,
         }))
     }
 
-    // ------------------------------------------------------------------------
+    // resize all charts - without starting the background thread
+    // this has to be done while NETDATA is paused
+    // if we ommit this, the affix menu will be wrong, since all
+    // the Dom elements are initially zero-sized
+    NETDATA.parseDom();
 
     // let it run (update the charts)
     NETDATA.unpause();

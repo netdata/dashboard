@@ -5,11 +5,8 @@ import { Action } from "redux-act"
 
 import {
   clearHighlightAction,
-  resetGlobalPanAndZoomAction,
   SetGlobalChartUnderlayAction,
   setGlobalChartUnderlayAction,
-  SetGlobalPanAndZoomAction,
-  setGlobalPanAndZoomAction,
 } from "domains/global/actions"
 import {
   explicitlySignInAction,
@@ -19,35 +16,6 @@ import {
 import { setHashParams, getHashParams, removeHashParams } from "utils/hash-utils"
 
 export const LOCAL_STORAGE_NEEDS_SYNC = "LOCAL-STORAGE-NEEDS-SYNC"
-
-function setGlobalPanAndZoomSaga({ payload }: Action<SetGlobalPanAndZoomAction>) {
-  const { after, before } = payload
-  if (window.urlOptions) {
-    // additional check to prevent loop, after setting initial state from url
-    if (window.urlOptions.after !== after || window.urlOptions.before !== before) {
-      window.urlOptions.netdataPanAndZoomCallback(true, after, before)
-    }
-  }
-  // TODO: Set hash params also for window?
-  // else {
-  //   const hashParams = getHashParams()
-  //   const afterString = Math.round(after).toString()
-  //   const beforeString = Math.round(before).toString()
-  //   if (hashParams.after !== afterString || hashParams.before !== beforeString) {
-  //     setHashParams({ after: afterString, before: beforeString })
-  //   }
-  // }
-}
-
-function resetGlobalPanAndZoomSaga() {
-  if (window.urlOptions) {
-    window.urlOptions.netdataPanAndZoomCallback(false, 0, 0)
-  }
-  // TODO: Set hash params also for window?
-  // else {
-  //   removeHashParams(["after", "before"])
-  // }
-}
 
 function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAction>) {
   const { after, before } = payload
@@ -90,8 +58,6 @@ function* showSignInSaga({ payload }: Action<ShowSignInModalAction>) {
 }
 
 export function* mainJsSagas() {
-  yield takeEvery(setGlobalPanAndZoomAction, setGlobalPanAndZoomSaga)
-  yield takeEvery(resetGlobalPanAndZoomAction, resetGlobalPanAndZoomSaga)
   yield takeEvery(setGlobalChartUnderlayAction, setGlobalChartUnderlaySaga)
   yield takeEvery(clearHighlightAction, clearHighlightSaga)
   yield takeEvery(showSignInModalAction, showSignInSaga)
