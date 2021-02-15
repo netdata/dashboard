@@ -20,11 +20,9 @@ export const ListHeaderContainer = styled.div``
 export const ListItem = styled.div`
   width: 100%;
   max-width: 100%;
-  height: ${getSizeBy(4)};
   display: flex;
-  flex-flow: row nowrap;
   align-items: center;
-  padding-left: ${getSizeBy(4)};
+  padding: ${getSizeBy(0.5)} 0 ${getSizeBy(0.5)} ${getSizeBy(3)};
   overflow: hidden;
 `
 
@@ -33,7 +31,6 @@ export const NodeLink = styled(Text)`
   overflow: hidden;
   text-overflow: ellipsis;
   min-width: 0;
-  white-space: nowrap;
   color: inherit;
   &:hover {
     color: inherit
@@ -43,7 +40,7 @@ export const NodeLink = styled(Text)`
 export const StyledIcon = styled(Icon)`
   flex-shrink: 0;
   flex-grow: 0;
-  margin-right: ${getSizeBy(2)};
+  margin-right: ${getSizeBy(1)};
   fill: ${getColor(["gray", "arsenic"])};
 `
 
