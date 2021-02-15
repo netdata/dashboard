@@ -115,6 +115,19 @@ $CLOUD_SECONDARY_HEADER_HEIGHT: 64px;
     max-height: calc(100vh - #{$CLOUD_HEADER_HEIGHT} - #{$CLOUD_SECONDARY_HEADER_HEIGHT});
     overflow: auto;
     flex: 0 1 auto;
+
+    width: 230px;
+    @media (min-width: 992px) {
+      width: 240px;
+    }
+
+    @media (min-width: 1200px) {
+      width: 250px;
+    }
+
+    @media (min-width: 1360px) {
+      width: 300px;
+    }
   }
 
   &__sidebar-menu-li,
