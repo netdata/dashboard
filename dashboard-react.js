@@ -377,6 +377,12 @@ NETDATA.globalPanAndZoom = {
 }
 NETDATA.unpause = () => {}
 
+const chartsMetadataPromise = new Promise((resolve) => {
+  window.chartsMetadataFetched = (data) => {
+    resolve(data)
+  }
+})
+
 
 // ----------------------------------------------------------------------------------------------------------------
 // XSS checks
@@ -528,23 +534,17 @@ NETDATA.chartRegistry = {
     if (window.netdataSnapshotData !== null) {
       got_data(host, window.netdataSnapshotData.charts, callback);
     } else {
-      $.ajax({
-        url: host + '/api/v1/charts',
-        async: true,
-        cache: false,
-        xhrFields: {withCredentials: true} // required for the cookie
-      })
-      .done(function (data) {
-        data = NETDATA.xss.checkOptional('/api/v1/charts', data);
-        got_data(host, data, callback);
-      })
-      .fail(function () {
-        NETDATA.error(405, host + '/api/v1/charts');
+      chartsMetadataPromise
+        .then((data) => {
+          got_data(host, data, callback);
+        })
+        .catch(() => {
+          NETDATA.error(405, host + '/api/v1/charts');
 
-        if (typeof callback === 'function') {
-          callback(null);
-        }
-      });
+          if (typeof callback === 'function') {
+            callback(null);
+          }
+        })
     }
   }
 };
