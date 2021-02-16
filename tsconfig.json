@@ -1,22 +1,40 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "baseUrl": "src",
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
+    "checkJs": false,
+    "outDir": "./lib",
+    "sourceMap": true,
+    "inlineSources": true,
+    "sourceRoot": "/",
+    "noImplicitAny": false,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
     "module": "esnext",
+    "target": "es2018",
+    "jsx": "react",
+    "preserveSymlinks": true,
     "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": false,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react",
-    "declaration": true,
-    "outDir": "./lib"
+    "declaration": true
   },
-  "include": ["src"]
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "/node_modules/",
+    "./jest",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ]
 }

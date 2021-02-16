@@ -100,7 +100,8 @@
     "node-sass": "^4.14.1",
     "svg-sprite-loader": "^4.2.1",
     "svgo": "^1.3.2",
-    "svgo-loader": "^2.2.1"
+    "svgo-loader": "^2.2.1",
+    "tscpaths": "0.0.9"
   },
   "scripts": {
     "start": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco start",
@@ -113,9 +114,10 @@
     "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
     "clean": "./node_modules/rimraf/bin.js ./lib",
     "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
-    "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts",
+    "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts && npm run resolveAlias",
     "eject": "react-scripts eject",
-    "prepare": "install-peers && npm run ts-bundle"
+    "prepare": "install-peers && npm run ts-bundle",
+    "resolveAlias": "tscpaths -p tsconfig.json -s ./src -o ./lib/src"
   },
   "jest": {
     "transformIgnorePatterns": [

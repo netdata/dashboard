@@ -1,52 +1,37 @@
 module.exports = {
-  "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "react-hooks",
-  ],
-  "env": {
-    "browser": true,
+  parser: "babel-eslint",
+  parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
+    ecmaVersion: 2018,
+    sourceType: "module",
   },
-  "extends": [
-    "airbnb",
-  ],
-  "rules" : {
-    "indent": ["error", 2, { "SwitchCase": 1 }],
-    "semi": ["error", "never"],
-    "@typescript-eslint/semi": ["error", "never"],
-    "quotes": ["error", "double"],
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [
-          ".tsx"
-        ]
-      }
-    ],
-    "no-underscore-dangle": ["error", { "allow": ["__REDUX_DEVTOOLS_EXTENSION__"] }],
-    "import/prefer-default-export": 0,
-    "@typescript-eslint/no-unused-vars": "error",
+  plugins: ["react", "react-hooks"],
+  env: {
+    browser: true,
+  },
+  extends: ["eslint:recommended", "plugin:react/recommended"],
+  rules: {
+    "no-underscore-dangle": ["error", { allow: ["__REDUX_DEVTOOLS_EXTENSION__"] }],
+    "react/prop-types": [0],
     "react-hooks/rules-of-hooks": "error",
-    "react-hooks/exhaustive-deps": "warn",
-    "max-len": ["error", {
-      "code": 100,
-      "ignorePattern": "http([\s\S]*?)"
-    }]
+    "react/display-name": 0,
   },
-  "settings": {
+  settings: {
     "import/resolver": {
-      "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
-        "paths": ["src"]
-      }
-    }
+      node: {
+        extensions: [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
+        paths: ["src"],
+      },
+    },
   },
-  "overrides": [
+  overrides: [
     {
-      "files": ["*.test.*"],
-      "env": {
-        "jest": true,
-      }
-    }
-  ]
+      files: ["*.test.*"],
+      env: {
+        jest: true,
+      },
+    },
+  ],
 }
