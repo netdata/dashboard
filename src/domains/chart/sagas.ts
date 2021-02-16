@@ -96,7 +96,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     // props for api
     host, context, chart, format, points, group, gtime, options,
     after, before, dimensions, labels, postGroupBy, postAggregationMethod,
-    aggrMethod, dimensionsAggrMethod = "sum", nodeIDs, httpMethod,
+    aggrMethod, dimensionsAggrMethod, nodeIDs, httpMethod,
     groupBy = "dimension", // group by node, dimension, or label keys
     aggrGroups = [],
     // props for the store
@@ -157,7 +157,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
       agent_options: agentOptions,
       ...(postAggregationMethod && { post_aggregation_methods: [postAggregationMethod] }),
       aggregations: [groupBy !== "dimension" && {
-        method: dimensionsAggrMethod,
+        method: dimensionsAggrMethod || "sum",
         groupBy: ["chart", ...groupValues],
       },
       {
