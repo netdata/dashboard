@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/src/*": ["./src/*"],
+      "utils/*": ["./src/utils/*"],
+      "utils/utils": ["./src/utils/utils.ts"],
+      "components/*": ["./src/components/*"],
+      "domains/*": ["./src/domains/*"],
+      "store": ["./src/store"],
+      "store/*": ["./src/store/*"],
+      "types/*": ["./src/types/*"],
+      "fonts/*": ["./src/fonts/*"],
+      "hooks/*": ["./src/hooks/*"],
+      "styles/*": ["./src/styles/*"],
+      "vendor/*": ["./src/vendor/*"],
+      "services/*": ["./src/services/*"],
+      "dynamic-imports/*": ["./src/dynamic-imports/*"]
+    }
+  }
+}
+
