@@ -1,6 +1,6 @@
 import React from "react"
 import { Button } from "@netdata/netdata-ui"
-import { getIframeSrc } from "utils"
+import { getIframeSrc } from "utils/utils"
 import { useSelector } from "store/redux-separate-context"
 import { selectIsCloudEnabled } from "domains/global/selectors"
 

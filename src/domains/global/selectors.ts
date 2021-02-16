@@ -2,7 +2,7 @@ import { prop, path } from "ramda"
 import { createSelector } from "reselect"
 
 import { AppStateT } from "store/app-state"
-import { utmUrlSuffix } from "utils"
+import { utmUrlSuffix } from "utils/utils"
 import { alwaysEndWithSlash } from "utils/server-detection"
 
 import { GetKeyArguments, getKeyForCommonColorsState } from "./reducer"

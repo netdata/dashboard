@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react"
 
-import { getIframeSrc } from "utils"
+import { getIframeSrc } from "utils/utils"
 import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
 
 interface Props {
