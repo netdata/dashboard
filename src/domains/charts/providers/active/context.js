@@ -1,0 +1,15 @@
+import React, { createContext, useMemo } from "react"
+
+export const ActiveMenuContext = createContext({
+  menuId: "",
+  subMenuId: "",
+})
+
+export const ActiveMenuProvider = ({ menuId = "", subMenuId = "", children }) => {
+  const value = useMemo(() => ({ menuId, subMenuId }), [menuId, subMenuId])
+  return <ActiveMenuContext.Provider value={value}>{children}</ActiveMenuContext.Provider>
+}
+
+export const ActiveMenuConsumer = ({ children }) => (
+  <ActiveMenuContext.Consumer>{activeMenu => children(activeMenu)}</ActiveMenuContext.Consumer>
+)

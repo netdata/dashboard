@@ -4,7 +4,7 @@ export default (
   hasKubernetes
 ) => {
   const subMenuId = family || "all"
-  const clusterId = hasKubernetes && chartLabels?.k8s_cluster_id && chartLabels.k8s_cluster_id[0]
+  const clusterId = hasKubernetes && chartLabels?.k8s_cluster_id?.[0]
 
   const [type] = id.split(".")
   const parts = type.split("_")
