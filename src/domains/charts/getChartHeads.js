@@ -4,21 +4,15 @@ import { parseChartString } from "@/src/domains/dashboard/utils/parse-chart-stri
 export default (type, chartIds, getChart) => {
   const charts = {}
   const ids = []
-  chartIds
-    .reduce(
-      (acc, chartId) => [
-        ...acc,
-        ...generateHeadCharts(type, getChart(chartId), 0).map((head, index) => ({
-          ...parseChartString(head),
-          id: `${type}|${chartId}|${index}`,
-        })),
-      ],
-      []
-    )
-    .forEach(chart => {
-      charts[chart.id] = chart
-      ids.push(chart.id)
+
+  chartIds.forEach(chartId => {
+    generateHeadCharts(type, getChart(chartId), 0).forEach((head, index) => {
+      const id = `${type}|${chartId}|${index}`
+      const chart = { ...parseChartString(head), id }
+      charts[id] = chart
+      ids.push(id)
     })
+  })
 
   return [charts, ids]
 }
