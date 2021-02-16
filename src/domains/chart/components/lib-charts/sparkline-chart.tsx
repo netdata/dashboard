@@ -9,7 +9,7 @@ import React, { useRef, useEffect, useState } from "react"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { colorLuminance } from "domains/chart/utils/color-luminance"
-import { MS_IN_SECOND } from "utils"
+import { MS_IN_SECOND } from "utils/utils"
 import { TimeRange } from "types/common"
 
 const convertToTimestamp = (number: number) => {

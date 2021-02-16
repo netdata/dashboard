@@ -6,7 +6,7 @@ import { channel } from "redux-saga"
 import { AxiosResponse } from "axios"
 import { Action } from "redux-act"
 
-import { NETDATA_REGISTRY_SERVER } from "utils"
+import { NETDATA_REGISTRY_SERVER } from "utils/utils"
 import { axiosInstance } from "utils/api"
 import { isDemo } from "utils/is-demo"
 import { sidePanelTransitionTimeInSeconds } from "components/space-panel/settings"
@@ -247,6 +247,9 @@ export const parsePersonUrls: ParsePersonUrls = (personUrls) => {
         lastTimestamp: 0,
         accesses: 0,
         alternateUrls: [],
+        guid: "",
+        url: "",
+        name: ""
       }
       const isNewer = existingObj.lastTimestamp < lastTimestamp
       const extended: RegistryMachine = {

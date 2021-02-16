@@ -5,7 +5,7 @@ import { createReducer } from "redux-act"
 
 import { setOptionAction } from "domains/global/actions"
 import { SYNC_PAN_AND_ZOOM } from "domains/global/options"
-import { useNewKeysOnlyIfDifferent } from "utils"
+import { useNewKeysOnlyIfDifferent } from "utils/utils"
 
 import {
   fetchDataAction,
