@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable function-paren-newline */
 /* eslint-disable comma-dangle */
-import React, { useRef } from "react"
+import React, { useRef, useCallback } from "react"
 import { useToggle } from "react-use"
 
 const useProceededChart = (
@@ -11,7 +12,7 @@ const useProceededChart = (
 
   const ref = useRef<HTMLElement>(null)
 
-  const updatePosition = (g: Dygraph) => {
+  const updatePosition = useCallback((g: Dygraph) => {
     const { x } = g.getArea()
     const distance = g.toDomXCoord(propsRef.current.chartData.first_entry * 1000)
     const hasProceeded = distance > x
@@ -23,7 +24,7 @@ const useProceededChart = (
       ref.current.style.right = `calc(100% - ${distance}px)`
       ref.current.style.top = `${height / 2}px`
     }
-  }
+  }, [])
 
   return [proceeded, ref, updatePosition]
 }
