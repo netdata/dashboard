@@ -74,8 +74,10 @@ export const renderSubmenuName = ({
       className="dashboard-section-container"
       id={submenuID}
       key={submenuName}
+      data-menuid={menuName}
+      data-submenuid={submenuName}      
     >
-      <h2 id={submenuID}>
+      <h2 id={submenuID} data-menuid={menuName} data-submenuid={submenuName}>
         {submenu.title}
       </h2>
       {submenuInfo && (
