@@ -1,4 +1,12 @@
 module.exports = {
+  env: {
+    browser: true,
+    commonjs: true,
+    es6: true,
+    jest: true,
+    node: true,
+  },
+  extends: ["eslint:recommended", "plugin:react/recommended"],
   parser: "babel-eslint",
   parserOptions: {
     ecmaFeatures: {
@@ -8,30 +16,9 @@ module.exports = {
     sourceType: "module",
   },
   plugins: ["react", "react-hooks"],
-  env: {
-    browser: true,
-  },
-  extends: ["eslint:recommended", "plugin:react/recommended"],
   rules: {
-    "no-underscore-dangle": ["error", { allow: ["__REDUX_DEVTOOLS_EXTENSION__"] }],
     "react/prop-types": [0],
     "react-hooks/rules-of-hooks": "error",
     "react/display-name": 0,
   },
-  settings: {
-    "import/resolver": {
-      node: {
-        extensions: [".js", ".jsx", ".ts", ".tsx", ".d.ts"],
-        paths: ["src"],
-      },
-    },
-  },
-  overrides: [
-    {
-      files: ["*.test.*"],
-      env: {
-        jest: true,
-      },
-    },
-  ],
 }

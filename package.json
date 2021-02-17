@@ -111,7 +111,7 @@
     "start:dashboard": "REACT_APP_IS_MAIN_DASHBOARD=true npm run start",
     "build": "REACT_APP_IS_MAIN_DASHBOARD=true REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true craco build",
     "test": "REACT_APP_SHOULD_USE_DEFAULT_CONTEXT=true react-scripts test --env=jest-environment-jsdom-fourteen --watchAll=false",
-    "lint": "eslint --ext .jsx,.js,.tsx,.ts .",
+    "lint": "",
     "clean": "./node_modules/rimraf/bin.js ./lib",
     "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
     "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts && npm run resolveAlias",
@@ -122,7 +122,22 @@
   "jest": {
     "transformIgnorePatterns": [
       "node_modules/(?!@netdata/netdata-ui)/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "@/src/(.*)$": "<rootDir>/src/$1",
+      "^test/(.*)$": "<rootDir>/src/test/$1",
+      "^utils/(.*)$": "<rootDir>/src/utils/$1",
+      "^components/(.*)$": "<rootDir>/src/components/$1",
+      "^domains/(.*)$": "<rootDir>/src/domains/$1",
+      "^store/(.*)$": "<rootDir>/src/store/$1",
+      "^types/(.*)$": "<rootDir>/src/types/$1",
+      "^fonts/(.*)$": "<rootDir>/src/fonts/$1",
+      "^hooks/(.*)$": "<rootDir>/src/hooks/$1",
+      "^styles/(.*)$": "<rootDir>/src/styles/$1",
+      "^vendor/(.*)$": "<rootDir>/src/vendor/$1",
+      "^services/(.*)$": "<rootDir>/src/services/$1",
+      "^dynamic-imports/(.*)$": "<rootDir>/src/dynamic-imports/$1"
+    }
   },
   "browserslist": {
     "production": [
