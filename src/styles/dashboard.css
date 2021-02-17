@@ -216,14 +216,15 @@ body {
 
 .netdata-chart-legend {
     position: absolute; /* within .netdata-container */
-    top: 0;
+    top: 26px;
+    bottom: 18px;
     right: 0;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
     text-overflow: ellipsis;
     line-height: 14px;
     display: block;
     width: 140px; /* --legend-width */
-    height: calc(100% - 15px); /* 10px for the resize handler and 5px for the top margin */
     font-size: 10px;
     margin-top: 5px;
     text-align: left;
@@ -768,7 +769,6 @@ body {
 
 .dygraph__history-tip {
     position: absolute;
-    top: 50%;
     transform: translateY(-50%);
     display: none; /* overriden in js */
     margin-right: 25px;

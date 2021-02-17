@@ -88,6 +88,18 @@ export const SparklineChart = ({
     ? getForceTimeWindowCorrection(chartData, [viewAfterForCurrentData, viewBeforeForCurrentData])
     : {}
 
+  const updateSparklineValues = () => {
+    if (!$chartElement) return
+
+    const { width, height } = chartContainerElement.getBoundingClientRect()
+    // @ts-ignore
+    $chartElement.sparkline(chartData.result, {
+      ...sparklineOptions.current,
+      width: Math.floor(width * widthRatio),
+      height: Math.floor(height),
+    })
+  }
+
   // create chart
   useEffect(() => {
     const { sparklineLineColor = orderedColors[0] } = attributes
@@ -163,17 +175,7 @@ export const SparklineChart = ({
 
     if (!chartElement.current || $chartElement) return
 
-    const $element = window.$(chartElement.current)
-    const { width, height } = chartContainerElement.getBoundingClientRect()
-
-    set$chartElement(() => $element)
-
-    // @ts-ignore
-    $element.sparkline(chartData.result, {
-      ...sparklineOptions.current,
-      width: Math.floor(width * widthRatio),
-      height: Math.floor(height),
-    })
+    set$chartElement(() => window.$(chartElement.current))
   }, [
     $chartElement,
     attributes,
@@ -203,18 +205,8 @@ export const SparklineChart = ({
     }
   }, [$chartElement, sparklineOnHover])
 
-  const { width, height } = chartContainerElement.getBoundingClientRect()
   // update chart
-  useEffect(() => {
-    if ($chartElement) {
-      // @ts-ignore
-      $chartElement.sparkline(chartData.result, {
-        ...sparklineOptions.current,
-        width: Math.floor(width * widthRatio),
-        height: Math.floor(height),
-      })
-    }
-  }, [width, height, $chartElement])
+  useEffect(updateSparklineValues, [$chartElement, chartData.result])
 
   const style = paddingLeftPercentage
     ? {

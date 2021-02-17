@@ -377,10 +377,6 @@ export const DygraphChart = ({
   // state.dygraph_last_touch_end in old dashboard
   const dygraphLastTouchEnd = useRef<undefined | number>()
 
-  const [
-    isProceeded, precededChartRef, updatePrecededPosition,
-  ] = useProceededChart(chartData.first_entry)
-
   const dispatch = useDispatch()
   const isSyncPanAndZoom = useSelector(selectSyncPanAndZoom)
 
@@ -418,6 +414,11 @@ export const DygraphChart = ({
     viewAfter,
     viewBefore,
   })
+
+  const [
+    isProceeded, precededChartRef, updatePrecededPosition,
+  ] = useProceededChart(chartElement, propsRef)
+
   useLayoutEffect(() => {
     propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
