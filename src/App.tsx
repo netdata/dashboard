@@ -17,6 +17,7 @@ import "bootstrap-toggle/css/bootstrap-toggle.min.css"
 
 import { useStore } from "react-redux"
 import "typeface-ibm-plex-sans"
+import "@fortawesome/fontawesome-free/js/all"
 
 import "styles/fonts.css"
 import { loadCss } from "utils/css-loader"
@@ -54,10 +55,6 @@ import {
   updateLocaleFunctions,
 } from "./main"
 
-if (!window.netdataNoFontAwesome) {
-  // @ts-ignore
-  import("vendor/fontawesome-all-5.0.1.min")
-}
 
 // support legacy code
 window.Ps = Ps
