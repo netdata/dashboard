@@ -13,7 +13,7 @@ import "../dashboard-react"
 import "./styles/bootstrap-3.3.7.css"
 import "./styles/dashboard.css"
 
-import "vendor/fontawesome-all-5.0.1.min"
+import "@fortawesome/fontawesome-free/js/all"
 
 window.Ps = Ps
 

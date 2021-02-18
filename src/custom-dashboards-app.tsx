@@ -20,7 +20,7 @@ if (!window.netdataNoBootstrap) {
 
 if (!window.netdataNoFontAwesome) {
   // @ts-ignore
-  import("vendor/fontawesome-all-5.0.1.min")
+  import("@fortawesome/fontawesome-free/js/all")
 }
 
 // support legacy code
