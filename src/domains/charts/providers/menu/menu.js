@@ -2,12 +2,12 @@ import React from "react"
 import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
 import { MenuGroupContainer } from "domains/charts/providers/menuGroup"
-import { ActiveMenuConsumer } from "domains/charts/providers/active"
-import { MenuConsumer } from "./context"
+import { withActiveMenu } from "domains/charts/providers/active"
+import { withMenu } from "./context"
 
-export const Menu = ({ ids, activeMenuId, onMenuGroupClick, onSubMenuClick, ...rest }) => (
+export const Menu = ({ menuIds, activeMenuId, onMenuGroupClick, onSubMenuClick, ...rest }) => (
   <Flex as="ul" role="complementary" column {...rest}>
-    {ids.map(id => {
+    {menuIds.map(id => {
       const active = activeMenuId === id
       return (
         <MenuGroupContainer
@@ -32,7 +32,7 @@ export const MenuSidebar = styled(Flex).attrs({
 `
 
 export const MenuSidebarContainer = ({
-  ids,
+  menuIds,
   activeMenuId,
   onMenuGroupClick,
   onSubMenuClick,
@@ -40,7 +40,7 @@ export const MenuSidebarContainer = ({
 }) => (
   <MenuSidebar {...rest}>
     <Menu
-      ids={ids}
+      menuIds={menuIds}
       activeMenuId={activeMenuId}
       onMenuGroupClick={onMenuGroupClick}
       onSubMenuClick={onSubMenuClick}
@@ -48,12 +48,4 @@ export const MenuSidebarContainer = ({
   </MenuSidebar>
 )
 
-export const SidebarContainer = props => (
-  <ActiveMenuConsumer>
-    {({ menuId }) => (
-      <MenuConsumer>
-        {ids => <MenuSidebarContainer ids={ids} activeMenuId={menuId} {...props} />}
-      </MenuConsumer>
-    )}
-  </ActiveMenuConsumer>
-)
+export const SidebarContainer = withActiveMenu(withMenu(MenuSidebarContainer))

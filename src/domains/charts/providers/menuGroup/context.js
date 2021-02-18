@@ -1,4 +1,4 @@
-import React, { createContext } from "react"
+import React, { createContext, useContext } from "react"
 
 export const MenuGroupContext = createContext({})
 
@@ -6,6 +6,7 @@ export const MenuGroupProvider = ({ menuGroups, children }) => (
   <MenuGroupContext.Provider value={menuGroups}>{children}</MenuGroupContext.Provider>
 )
 
-export const MenuGroupConsumer = ({ id, children }) => (
-  <MenuGroupContext.Consumer>{menuGroup => children(menuGroup[id])}</MenuGroupContext.Consumer>
-)
+export const withMenuGroup = Component => ({ id, ...rest }) => {
+  const menuGroups = useContext(MenuGroupContext)
+  return <Component {...menuGroups[id]} {...rest} />
+}

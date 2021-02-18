@@ -1,4 +1,4 @@
-import React, { createContext } from "react"
+import React, { createContext, useContext } from "react"
 
 export const ChartsContext = createContext({})
 export const GetChartContext = createContext({})
@@ -9,12 +9,8 @@ export const ChartsProvider = ({ charts, getChart, children }) => (
   </GetChartContext.Provider>
 )
 
-export const ChartsConsumer = ({ id, children }) => (
-  <GetChartContext>
-    {getChart => (
-      <ChartsContext.Consumer>
-        {charts => children(charts[id] || getChart(id))}
-      </ChartsContext.Consumer>
-    )}
-  </GetChartContext>
-)
+export const withChart = Component => ({ id, ...rest }) => {
+  const charts = useContext(ChartsContext)
+  const getChart = useContext(GetChartContext)
+  return <Component chart={charts[id] || getChart(id)} {...rest} />
+}

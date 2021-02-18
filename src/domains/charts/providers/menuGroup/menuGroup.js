@@ -2,7 +2,7 @@ import React from "react"
 import styled, { css } from "styled-components"
 import { Text, Flex, getColor } from "@netdata/netdata-ui"
 import { MenuItemContainer } from "domains/charts/providers/subMenu"
-import { MenuGroupConsumer } from "./context"
+import { withMenuGroup } from "./context"
 
 const MenuGroupLabel = styled(Text).attrs({ color: "border" })`
   font-weight: "500";
@@ -64,6 +64,7 @@ export const MenuGroup = ({
   active,
   onMenuGroupClick,
   onSubMenuClick,
+  height, // prevent height from rest propagation
   ...rest
 }) => (
   <Flex as="li" column {...rest}>
@@ -81,10 +82,4 @@ export const MenuGroup = ({
   </Flex>
 )
 
-export const MenuGroupContainer = ({ id, ...rest }) => (
-  <MenuGroupConsumer id={id}>
-    {({ icon, title, subMenuIds, link }) => (
-      <MenuGroup icon={icon} title={title} subMenuIds={subMenuIds} link={link} {...rest} />
-    )}
-  </MenuGroupConsumer>
-)
+export const MenuGroupContainer = withMenuGroup(MenuGroup)

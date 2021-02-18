@@ -1,4 +1,4 @@
-import React, { createContext, useMemo } from "react"
+import React, { createContext, useContext, useMemo } from "react"
 
 export const ActiveMenuContext = createContext({
   menuId: "",
@@ -13,3 +13,8 @@ export const ActiveMenuProvider = ({ menuId = "", subMenuId = "", children }) =>
 export const ActiveMenuConsumer = ({ children }) => (
   <ActiveMenuContext.Consumer>{activeMenu => children(activeMenu)}</ActiveMenuContext.Consumer>
 )
+
+export const withActiveMenu = Component => props => {
+  const { menuId, subMenuId } = useContext(ActiveMenuContext)
+  return <Component activeMenuId={menuId} activeSubMenuId={subMenuId} {...props} />
+}
