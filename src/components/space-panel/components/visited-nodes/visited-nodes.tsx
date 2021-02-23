@@ -3,6 +3,7 @@ import { CollapsibleList, SimpleListItem } from "@rmwc/list"
 import "@material/list/dist/mdc.list.css"
 import "@rmwc/list/collapsible-list.css"
 import "@rmwc/icon/icon.css"
+import truncateMiddle from "utils/truncateMiddle"
 import { naturalSortCompare } from "domains/dashboard/utils/sorting"
 import { MASKED_DATA } from "domains/global/constants"
 
@@ -15,18 +16,6 @@ import {
   NodeName,
   TrashIcon,
 } from "./styled"
-
-// Enforces a maximum string length while retaining the prefix and the postfix of
-// the string.
-const truncateString = (str: string, maxLength: number) => {
-  if (str.length <= maxLength) {
-    return str
-  }
-
-  const spanLength = Math.floor((maxLength - 3) / 2)
-  return `${str.substring(0, spanLength)}...${str.substring(str.length - spanLength)}`
-}
-
 
 interface NodeProps {
   alternateUrls: string[]
@@ -66,7 +55,7 @@ const Node = ({
         <NodeUrl
           href={url}
         >
-          {truncateString(url, 50)}
+          {truncateMiddle(url, 50)}
         </NodeUrl>
         <TrashIcon
           name="trashcan"

@@ -3,6 +3,7 @@ import React from "react"
 import classNames from "classnames"
 
 import { name2id } from "utils/name-2-id"
+import truncateMiddle from "utils/truncateMiddle"
 
 import { ReportEvent } from "types/report"
 
@@ -55,11 +56,12 @@ export const renderSingleMenu = ({
         className="node-view__sidebar-link"
         href={`#${menuID}`}
         onClick={onMenuClick}
+        title={menu.title}
       >
         {/* eslint-disable-next-line react/no-danger */}
         <span dangerouslySetInnerHTML={{ __html: menu.icon }} />
         {" "}
-        {menu.title}
+        {truncateMiddle(menu.title, 30)}
         {menu.correlationsMetadata && (
           ` (${menu.correlationsMetadata.scoredCount}/${menu.correlationsMetadata.totalCount})`
         )}
