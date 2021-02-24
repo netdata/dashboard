@@ -84,7 +84,7 @@ function* waitForFullInfoPayload() {
   return (yield take(fetchInfoAction.success)).payload.fullInfoPayload
 }
 
-function* injectPosthog(machineGuid: string) {
+function* injectPosthog(machineGuid: string, personGuid?: string) {
   if (!(isDemo || hasPosthogFeatureFlag) || window.posthog) {
     return
   }
@@ -96,7 +96,14 @@ function* injectPosthog(machineGuid: string) {
   // @ts-ignore
   !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
   /* eslint-enable */
-  window.posthog.init("mqkwGT0JNFqO-zX2t0mW6Tec9yooaVu7xCBlXtHnt5Y", { api_host: "https://posthog.netdata.cloud" })
+  window.posthog.init("mqkwGT0JNFqO-zX2t0mW6Tec9yooaVu7xCBlXtHnt5Y", {
+    api_host: "https://posthog.netdata.cloud",
+    loaded: (posthog: any) => {
+      if (personGuid) {
+        posthog.identify(personGuid)
+      }
+    },
+  })
   window.posthog.register(
     // remove properties for with unavailable values
     filter((value) => value !== undefined && value !== null,
@@ -308,7 +315,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
 
   if (response.data.anonymous_statistics) {
     injectGTM(response.data.machine_guid)
-    yield spawn(injectPosthog, response.data.machine_guid)
   }
 
   // now make access call - max_redirects, callback, etc...
@@ -319,6 +325,10 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     registryServer,
     url,
   })
+
+  if (response.data.anonymous_statistics) {
+    yield spawn(injectPosthog, response.data.machine_guid, accessRegistryResponse?.personGuid)
+  }
 
   if (accessRegistryResponse?.urls && accessRegistryResponse?.personGuid) {
     const personUrls = parsePersonUrls(accessRegistryResponse.urls)
