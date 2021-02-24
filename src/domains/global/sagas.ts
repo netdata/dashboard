@@ -105,7 +105,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
     },
   })
   window.posthog.register(
-    // remove properties for with unavailable values
+    // remove properties with unavailable values
     filter((value) => value !== undefined && value !== null,
       {
         $ip: "127.0.0.1",
@@ -114,6 +114,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         $host: "dashboard.netdata.io",
         netdata_version: info.version,
         netdata_machine_guid: machineGuid,
+        netdata_person_id: personGuid || "Unavailable",
         mirrored_host_count: info.mirrored_hosts?.length,
         alarms_normal: info.alarms?.normal,
         alarms_warning: info.alarms?.warning,
