@@ -71,10 +71,9 @@ const SubSection = memo(
         <div className="netdata-chart-row">
           {shouldDisplayHeadMain && (
             <HeadMain
-              charts={chartsMetadata.charts}
+              getChart={id => chartsMetadata.charts[id]}
               duration={duration}
               host={host}
-              chartsMetadata={chartsMetadata}
               nodeIDs={nodeIDs}
               commonAttributesOverrides={commonAttributesOverrides}
             />

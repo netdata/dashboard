@@ -101,16 +101,10 @@ export const renderSubmenuName = ({
                 ...commonAttributesOverrides,
                 aggrMethod: mapDefaultAggrMethod(chartsMetadata.charts[attributes.id].units),
                 host,
-                nodeIDs,
-                ...attributesOverrides[attributes.id],
+                nodeIDs
               }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
-              onAttributesChange={
-                (value: any) => onAttributesChange(
-                  { ...attributesOverrides, [attributes.id]: value },
-                )
-              }
             />
           ))}
       </div>
