@@ -9,13 +9,13 @@ const styledActive = css`
   color: ${getColor("key")};
 `
 
-const MenuItem = styled(TextSmall).attrs(({ active, title, link, href, children }) => ({
+const MenuItem = styled(TextSmall).attrs(({ active, title, link, children }) => ({
   as: "a",
   strong: active,
   padding: [0.5, 7],
   role: "listitem",
   children: title || children,
-  href: link || href,
+  href: `#${link}`,
 }))`
   &&& {
     text-decoration: none;
@@ -27,13 +27,8 @@ const MenuItem = styled(TextSmall).attrs(({ active, title, link, href, children 
     }
   }
 `
-export const withSubMenuActive = Component => ({ activeSubMenuId, chartSubMenuId, ...rest }) => (
-  <Component
-    active={chartSubMenuId === activeSubMenuId}
-    activeSubMenuId={activeSubMenuId}
-    chartSubMenuId={chartSubMenuId}
-    {...rest}
-  />
-)
+export const withSubMenuActive = Component => ({ activeSubMenuId, id, ...rest }) => {
+  return <Component active={id === activeSubMenuId} {...rest} />
+}
 
 export const MenuItemContainer = withActiveMenu(withSubMenu(withSubMenuActive(MenuItem)))

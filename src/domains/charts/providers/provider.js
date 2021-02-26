@@ -8,14 +8,37 @@ import {
   ActiveMenuProvider,
 } from "domains/charts/providers"
 
-const Provider = ({ activeMenuId, activeSubMenuId, chartIds, getChart, children }) => {
-  const { menusCollection, menuGroupsCollection, subMenusCollection, charts } = useMemo(
-    () => getMenu(chartIds, getChart),
-    [chartIds, getChart]
-  )
-
+const Provider = ({
+  container,
+  activeMenuId,
+  activeSubMenuId,
+  chartIds,
+  getChart,
+  getChartAttributes,
+  onAttributesChange,
+  dashboardAttributes,
+  hasKubernetes,
+  children,
+}) => {
+  const {
+    menusCollection,
+    menuGroupsCollection,
+    subMenusCollection,
+    menuChartsAttributes,
+  } = useMemo(() => getMenu(chartIds, getChart, { hasKubernetes }), [chartIds, getChart])
+  // console.log(menusCollection)
+  // console.log(menuGroupsCollection)
+  // console.log(subMenusCollection)
+  // console.log(menuChartsAttributes)
   return (
-    <ChartsProvider charts={charts} getChart={getChart}>
+    <ChartsProvider
+      container={container}
+      menuChartsAttributes={menuChartsAttributes}
+      getChartAttributes={getChartAttributes}
+      onAttributesChange={onAttributesChange}
+      getChart={getChart}
+      dashboardAttributes={dashboardAttributes}
+    >
       <MenuProvider menuIds={menusCollection}>
         <MenuGroupProvider menuGroups={menuGroupsCollection}>
           <SubMenuProvider subMenus={subMenusCollection}>

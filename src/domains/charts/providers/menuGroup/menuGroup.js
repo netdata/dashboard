@@ -64,13 +64,12 @@ export const MenuGroup = ({
   active,
   onMenuGroupClick,
   onSubMenuClick,
-  height, // prevent height from rest propagation
   ...rest
 }) => (
   <Flex as="li" column {...rest}>
     <MenuGroupItem
       icon={icon}
-      href={link}
+      href={`#${link}`}
       title={title}
       onClick={onMenuGroupClick}
       active={active}
@@ -82,4 +81,9 @@ export const MenuGroup = ({
   </Flex>
 )
 
-export const MenuGroupContainer = withMenuGroup(MenuGroup)
+export const MenuGroupContainer = withMenuGroup(MenuGroup, ({ icon, title, subMenuIds, link }) => ({
+  icon,
+  title,
+  subMenuIds,
+  link,
+}))

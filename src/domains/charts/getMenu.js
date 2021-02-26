@@ -3,23 +3,26 @@ import "@/src/dashboard_info"
 import { name2id } from "utils/name-2-id"
 import getChartMenu from "./getChartMenu"
 import getChartHeads from "./getChartHeads"
+import getMenuChartAttributes from "./getMenuChartAttributes"
 
-export default (chartIds, getChart) => {
+export default (chartIds, getChart, { hasKubernetes } = {}) => {
   const submenuNames = {}
 
-  const chartMenus = chartIds.reduce((acc, id) => {
-    acc[id] = getChartMenu(getChart(id), submenuNames)
-    return acc
-  }, {})
+  const chartMenus = {}
+  const menuChartsAttributes = {}
+  const menuGroups = {}
+  const menuGroupCharts = {}
+  const subMenus = {}
+
+  chartIds.forEach(id => {
+    const chart = getChart(id)
+    menuChartsAttributes[id] = getMenuChartAttributes(chart)
+    chartMenus[id] = getChartMenu(chart, submenuNames, hasKubernetes)
+  })
 
   const sortedChartIds = [...chartIds].sort(
     (a, b) => chartMenus[a].priority - chartMenus[b].priority
   )
-
-  const charts = {}
-  const menuGroups = {}
-  const menuGroupCharts = {}
-  const subMenus = {}
 
   sortedChartIds.forEach(id => {
     const menu = chartMenus[id]
@@ -49,19 +52,23 @@ export default (chartIds, getChart) => {
       )
     })
 
-    const [headCharts, headIds] = getChartHeads("mainheads", chartIds, getChart)
-    Object.assign(charts, headCharts)
+    const [attributes, headIds] = getChartHeads("mainheads", chartIds, getChart, {
+      forceTimeWindow: true,
+    })
+    Object.assign(menuChartsAttributes, attributes)
 
     acc[menuId] = {
+      id: menuId,
       menuPattern,
       priority: chartMenu.priority,
       headIds: headIds,
       subMenuIds,
+      subMenuChartIds: chartIds,
       title: netdataDashboard.menuTitle(chartMenu),
       icon: netdataDashboard.menuIcon(chartMenu),
       info: netdataDashboard.menuInfo(chartMenu),
       height: netdataDashboard.menuHeight(chartMenu) * 180,
-      link: `#${name2id(`menu_${menuId}`)}`,
+      link: `${name2id(`menu_${menuId}`)}`,
       // link: `#${encodeURIComponent(menuId)}`, // will be used once we refactor the node-view rendering
     }
 
@@ -81,8 +88,8 @@ export default (chartIds, getChart) => {
     const chartMenu = chartMenus[chartIds[0]]
     const { id, menuPattern, height } = menuGroupsCollection[chartMenu.id]
 
-    const [headCharts, headIds] = getChartHeads("heads", chartIds, getChart)
-    Object.assign(charts, headCharts)
+    const [attributes, headIds] = getChartHeads("heads", chartIds, getChart)
+    Object.assign(menuChartsAttributes, attributes)
 
     const menuKey = menuPattern || id
 
@@ -92,14 +99,14 @@ export default (chartIds, getChart) => {
         : netdataDashboard.submenuTitle(menuKey, chartMenu.subMenuId)
 
     acc[subMenuId] = {
+      id: subMenuId,
       priority: chartMenu.priority,
       chartIds,
       headIds,
       title,
       info: netdataDashboard.submenuInfo(menuKey, chartMenu.subMenuId),
       height: netdataDashboard.submenuHeight(menuKey, chartMenu.subMenuId, height),
-      chartSubMenuId: chartMenu.subMenuId,
-      link: `#${name2id(`menu_${chartMenu.id}_submenu_${chartMenu.subMenuId}`)}`,
+      link: `${name2id(`menu_${chartMenu.id}_submenu_${chartMenu.subMenuId}`)}`,
       // link: `#${encodeURIComponent(subMenuId)}`, // will be used once we refactor the node-view rendering
     }
 
@@ -115,5 +122,5 @@ export default (chartIds, getChart) => {
     )
   })
 
-  return { menusCollection, menuGroupsCollection, subMenusCollection, charts }
+  return { menusCollection, menuGroupsCollection, subMenusCollection, menuChartsAttributes }
 }
