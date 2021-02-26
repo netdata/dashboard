@@ -31,6 +31,8 @@ export { default as DashboardCharts } from "domains/dashboard/components/node-vi
 export { default as useCurrentChart } from "domains/dashboard/components/node-view/useCurrentChart"
 export { default as useMenu } from "domains/dashboard/components/node-view/useMenu"
 export * from "domains/dashboard/components/node-view/use-update-theme"
+export * from "domains/dashboard/components/head-main"
+export { default as VirtualizedDashboard } from "domains/dashboard/components/virtualized"
 
 export * from "domains/charts/providers"
 export { default as getChartHeads } from "domains/charts/getChartHeads"
@@ -83,8 +85,7 @@ import { RenderCustomElementForDygraph as RenderCustomElementForDygraph_ } from 
 export type RenderCustomElementForDygraph = RenderCustomElementForDygraph_
 
 import { AppStateT as AppStateT_ } from "store/app-state"
-import useCurrentChart from "./domains/dashboard/components/node-view/useCurrentChart"
-import getChartMenu from "./domains/charts/getChartMenu"
+
 export type DashboardStateT = AppStateT_
 
 /* eslint-enable import/first,import/newline-after-import */
