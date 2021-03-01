@@ -9,20 +9,10 @@ import {
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import List from "react-virtualized/dist/commonjs/List"
+import CellMeasurerWrapper from "./cellMeasurerWrapper"
+import retry from "./retry"
 
-const retry = (callback, times) => {
-  return new Promise(resolve => {
-    const innerRetry = remaining => {
-      if (remaining === 0) return resolve()
-      callback()
-      requestAnimationFrame(() => innerRetry(--remaining))
-    }
-
-    innerRetry(times)
-  })
-}
-
-const virtualized = ({ onActiveMenu, onActiveSubMenu, rowRender }) => {
+const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
   const { menuId: activeMenuId, subMenuId: activeSubMenuId } = useActiveMenu()
   const container = useContainer()
   const ids = useMenuIds()
@@ -46,31 +36,34 @@ const virtualized = ({ onActiveMenu, onActiveSubMenu, rowRender }) => {
       >
         {({ measure }) => {
           measures.current[id] = measure
-          return rowRender({ style, index, id, measure })
+          const Component = getComponent(id, index)
+
+          return (
+            <CellMeasurerWrapper style={style} index={index} id={id} measure={measure}>
+              <Component id={id} />
+            </CellMeasurerWrapper>
+          )
         }}
       </CellMeasurer>
     )
   }
 
   const instance = useMemo(() => {
-    const goToGroupMenu = id => {
-      const targetIndex = ids.indexOf(id)
-      if (targetIndex === -1) return Promise.reject()
+    const goToGroupMenu = async id => {
+      await retry(() => {
+        const targetIndex = ids.indexOf(id)
+        if (targetIndex !== -1) return ref.current.scrollToRow(targetIndex)
+      }, 5)
 
-      return retry(() => ref.current.scrollToRow(targetIndex), 5).then(() =>
-        retry(() => {
-          const target = container.querySelector(`[data-menuid="${id}"]`)
-          if (target) target.scrollIntoView()
-        }, 5)
-      )
+      await retry(() => {
+        const target = container.querySelector(`[data-menuid="${id}"]`)
+        if (target) target.scrollIntoView()
+      }, 5)
     }
 
     const goToSubMenu = id => {
-      goToGroupMenu()
       const target = container.querySelector(`[data-submenuid="${id}"]`)
-      if (target) {
-        target.scrollIntoView()
-      }
+      if (target) target.scrollIntoView()
     }
 
     const measure = id => measures.current[id]()
@@ -152,4 +145,4 @@ const virtualized = ({ onActiveMenu, onActiveSubMenu, rowRender }) => {
   )
 }
 
-export default memo(virtualized)
+export default memo(Virtualized)

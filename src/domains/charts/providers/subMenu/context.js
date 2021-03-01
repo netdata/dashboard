@@ -22,7 +22,7 @@ export const useSubMenu = (id, key) => {
   return key ? resource[key] : resource
 }
 
-export const withSubMenu = Component => ({ id, ...rest }) => {
+export const withSubMenu = (Component, select) => ({ id, ...rest }) => {
   const subMenus = useSubMenu(id)
-  return <Component {...subMenus} {...rest} />
+  return <Component {...(select ? select(subMenus) : subMenus)} {...rest} />
 }

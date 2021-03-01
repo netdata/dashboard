@@ -101,6 +101,7 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
 
     acc[subMenuId] = {
       id: subMenuId,
+      menuGroupId: id,
       priority: chartMenu.priority,
       chartIds,
       headIds,
