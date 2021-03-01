@@ -28,6 +28,7 @@ import {
 import { alarmsSagas } from "./alarms-sagas"
 import { MASKED_DATA } from "./constants"
 import { selectFullInfoPayload } from "./selectors"
+import { isAllowedReferrer } from "./utils"
 import { InfoPayload } from "./__mocks__/info-mock"
 
 const windowFocusChannel = channel()
@@ -104,6 +105,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
       }
     },
   })
+  const shouldMaskReferrer = !isDemo && !isAllowedReferrer(document.referrer)
   window.posthog.register(
     // remove properties with unavailable values
     filter((value) => value !== undefined && value !== null,
@@ -112,6 +114,12 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         $current_url: "agent dashboard",
         $pathname: "netdata-dashboard",
         $host: "dashboard.netdata.io",
+
+        $initial_referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
+        $initial_referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
+        $referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
+        $referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
+
         netdata_version: info.version,
         netdata_machine_guid: machineGuid,
         netdata_person_id: personGuid || "Unavailable",
