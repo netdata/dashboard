@@ -1,6 +1,11 @@
-import React, { memo, useMemo, useRef, forwardRef } from "react"
+import React, { memo, useMemo, useRef, useEffect } from "react"
 import { throttle } from "throttle-debounce"
-import { useMenuIds, useActiveMenu, useContainer } from "@/src/domains/charts/providers"
+import {
+  useMenuIds,
+  useActiveMenu,
+  useContainer,
+  useDispatchList,
+} from "@/src/domains/charts/providers"
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import List from "react-virtualized/dist/commonjs/List"
@@ -17,12 +22,13 @@ const retry = (callback, times) => {
   })
 }
 
-const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, parentRef) => {
+const virtualized = ({ onActiveMenu, onActiveSubMenu, rowRender }) => {
   const { menuId: activeMenuId, subMenuId: activeSubMenuId } = useActiveMenu()
   const container = useContainer()
   const ids = useMenuIds()
 
   const ref = useRef()
+  const measures = useRef({})
   const cache = useMemo(() => new CellMeasurerCache({ defaultHeight: 1000, fixedWidth: true }), [])
   const startIndexRef = useRef(null)
   const widthRef = useRef(0)
@@ -38,12 +44,15 @@ const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, pa
         rowIndex={index}
         width={widthRef.current}
       >
-        {({ measure }) => rowRender({ style, index, id, measure })}
+        {({ measure }) => {
+          measures.current[id] = measure
+          return rowRender({ style, index, id, measure })
+        }}
       </CellMeasurer>
     )
   }
 
-  parentRef.current = useMemo(() => {
+  const instance = useMemo(() => {
     const goToGroupMenu = id => {
       const targetIndex = ids.indexOf(id)
       if (targetIndex === -1) return Promise.reject()
@@ -64,8 +73,26 @@ const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, pa
       }
     }
 
-    return { goToGroupMenu, goToSubMenu }
+    const measure = id => measures.current[id]()
+
+    const resize = id => {
+      measure(id)
+      ref.current.forceUpdateGrid()
+    }
+
+    const resizeAll = () => {
+      cache.clearAll()
+      ref.current.forceUpdateGrid()
+    }
+
+    return { goToGroupMenu, goToSubMenu, measure, resize, resizeAll }
   }, [container, ids])
+
+  const dispatchList = useDispatchList()
+
+  useEffect(() => {
+    dispatchList(instance)
+  }, [instance])
 
   const onScroll = useMemo(
     () =>
@@ -89,11 +116,6 @@ const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, pa
     [container, activeSubMenuId]
   )
 
-  const resizeAll = () => {
-    cache.clearAll()
-    ref.current.recomputeRowHeights()
-  }
-
   const onRowsRendered = ({ startIndex }) => {
     const nextActiveMenuId = ids[startIndex]
     if (nextActiveMenuId !== activeMenuId) {
@@ -106,7 +128,7 @@ const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, pa
     <AutoSizer>
       {({ height, width }) => {
         if (widthRef.current && widthRef.current !== width) {
-          resizeAll()
+          instance.resizeAll()
         }
         widthRef.current = width
 
@@ -128,6 +150,6 @@ const virtualized = forwardRef(({ onActiveMenu, onActiveSubMenu, rowRender }, pa
       }}
     </AutoSizer>
   )
-})
+}
 
 export default memo(virtualized)

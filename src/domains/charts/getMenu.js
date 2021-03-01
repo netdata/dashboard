@@ -35,6 +35,7 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     subMenus[subMenuId].push(menu.chartId)
     menuGroups[menu.id].add(subMenuId)
     menuGroupCharts[menu.id].push(menu.chartId)
+    menuChartsAttributes[id].menuGroupId = menu.id
   })
 
   const menuGroupsCollection = Object.keys(menuGroups).reduce((acc, menuId) => {

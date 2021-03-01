@@ -19,6 +19,7 @@ export const GetChartAttributesContext = createContext({})
 export const DispatchChartAttributesContext = createContext({})
 export const MenuChartsAttributesContext = createContext({})
 export const DashboardAttributesContext = createContext({})
+export const ListContext = createContext(null)
 
 export const ChartsProvider = ({
   container,
@@ -58,7 +59,10 @@ export const useDispatchChartAttributes = id => {
 
 export const useContainer = () => useContext(ContainerContext)
 
-export const useDashboardAttributes = () => useContext(DashboardAttributesContext)
+export const useDashboardAttributes = key => {
+  const attributes = useContext(DashboardAttributesContext)
+  return key ? attributes[key] : attributes
+}
 
 export const useGetChart = () => useContext(GetChartContext)
 
@@ -68,8 +72,10 @@ export const useChart = (id, key) => {
   return key ? resource[key] : resource
 }
 
+export const useGetChartAttributes = () => useContext(GetChartAttributesContext)
+
 export const useChartAttributes = (id, key) => {
-  const getChartAttributes = useContext(GetChartAttributesContext)
+  const getChartAttributes = useGetChartAttributes()
   const resource = getChartAttributes(id)
   return key ? resource[key] : resource
 }

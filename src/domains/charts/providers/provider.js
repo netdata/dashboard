@@ -6,6 +6,7 @@ import {
   MenuGroupProvider,
   SubMenuProvider,
   ActiveMenuProvider,
+  ListProvider,
 } from "domains/charts/providers"
 
 const Provider = ({
@@ -43,7 +44,7 @@ const Provider = ({
         <MenuGroupProvider menuGroups={menuGroupsCollection}>
           <SubMenuProvider subMenus={subMenusCollection}>
             <ActiveMenuProvider menuId={activeMenuId} subMenuId={activeSubMenuId}>
-              {children}
+              <ListProvider>{children}</ListProvider>
             </ActiveMenuProvider>
           </SubMenuProvider>
         </MenuGroupProvider>

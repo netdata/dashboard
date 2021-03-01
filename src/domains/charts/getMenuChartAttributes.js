@@ -14,6 +14,7 @@ export default chart => {
   return {
     id,
     chartId: id,
+    menuGroupId: null,
     link: `chart_${name2id(id)}`,
     chartLibrary: "dygraph",
     width: "100%",
