@@ -111,9 +111,9 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
     filter((value) => value !== undefined && value !== null,
       {
         $ip: "127.0.0.1",
-        $current_url: "agent dashboard",
-        $pathname: "netdata-dashboard",
-        $host: "dashboard.netdata.io",
+        $current_url: isDemo ? null : "agent dashboard",
+        $pathname: isDemo ? null : "netdata-dashboard",
+        $host: isDemo ? null : "dashboard.netdata.io",
 
         $initial_referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
         $initial_referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
