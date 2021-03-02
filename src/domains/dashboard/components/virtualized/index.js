@@ -1,11 +1,6 @@
 import React, { memo, useMemo, useRef, useEffect } from "react"
 import { throttle } from "throttle-debounce"
-import {
-  useMenuIds,
-  useActiveMenu,
-  useContainer,
-  useDispatchList,
-} from "@/src/domains/charts/providers"
+import { useMenuIds, useContainer, useDispatchList } from "@/src/domains/charts/providers"
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import List from "react-virtualized/dist/commonjs/List"
@@ -13,14 +8,12 @@ import CellMeasurerWrapper from "./cellMeasurerWrapper"
 import retry from "./retry"
 
 const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
-  const { menuId: activeMenuId, subMenuId: activeSubMenuId } = useActiveMenu()
   const container = useContainer()
   const ids = useMenuIds()
 
   const ref = useRef()
   const measures = useRef({})
   const cache = useMemo(() => new CellMeasurerCache({ defaultHeight: 1000, fixedWidth: true }), [])
-  const startIndexRef = useRef(null)
   const widthRef = useRef(0)
 
   const rowRenderMeasurer = ({ index, parent, key, style }) => {
@@ -92,30 +85,31 @@ const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
       throttle(400, () => {
         if (!container) return
 
-        const menuGroupElement = container.querySelector(`[data-menuid="${startIndexRef.current}"]`)
-        if (!menuGroupElement) return
+        const { top: containerTop } = container.getBoundingClientRect()
 
-        const currentNode = Array.from(menuGroupElement.querySelectorAll("[data-submenuid]")).find(
-          el => el.getBoundingClientRect().top > 0
-        )
+        const firstVisibleElement = Array.from(
+          document.querySelectorAll("[data-submenuid],[data-menuid]")
+        ).find(el => el.getBoundingClientRect().top - containerTop > 0)
 
-        if (!currentNode) return
+        if (!firstVisibleElement) return
 
-        const nextSubMenuId = currentNode.getAttribute("data-submenuid")
-        if (activeSubMenuId !== nextSubMenuId) {
-          onActiveSubMenu(nextSubMenuId)
+        const menuGroupId = firstVisibleElement.getAttribute("data-menuid")
+        if (menuGroupId) {
+          onActiveSubMenu("")
+          onActiveMenu(menuGroupId)
+          return
         }
+
+        const subMenuId = firstVisibleElement.getAttribute("data-submenuid")
+        onActiveSubMenu(subMenuId)
       }),
-    [container, activeSubMenuId]
+    [container]
   )
 
-  const onRowsRendered = ({ startIndex }) => {
-    const nextActiveMenuId = ids[startIndex]
-    if (nextActiveMenuId !== activeMenuId) {
-      startIndexRef.current = nextActiveMenuId
-      onActiveMenu(nextActiveMenuId)
-    }
-  }
+  useEffect(() => {
+    const requestId = requestAnimationFrame(onScroll)
+    return () => cancelAnimationFrame(requestId)
+  }, [])
 
   return (
     <AutoSizer>
@@ -135,7 +129,6 @@ const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
             rowHeight={cache.rowHeight}
             rowRenderer={rowRenderMeasurer}
             width={width}
-            onRowsRendered={onRowsRendered}
             onScroll={onScroll}
             tabIndex={null}
           />
