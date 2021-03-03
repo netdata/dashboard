@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, forwardRef, useState, useLayoutEffect } from "react"
+import React, { useMemo, forwardRef } from "react"
 import { Flex } from "@netdata/netdata-ui"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
-import { withChartProps } from "domains/charts/providers/charts"
+import { withChartProps, useContainer } from "domains/charts/providers/charts"
 import useDuration from "./useDuration"
 
 export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, width, ...rest }) => {
@@ -26,16 +26,11 @@ export const ChartHeads = forwardRef((props, ref) => (
 ))
 
 export const ChartHeadsContainer = ({ ids, ...rest }) => {
-  const ref = useRef()
-  const [width, setWidth] = useState(0)
-
-  useLayoutEffect(() => {
-    const { width } = ref.current.getBoundingClientRect()
-    setWidth(width)
-  }, [])
+  const container = useContainer()
+  const { width } = container.getBoundingClientRect()
 
   return (
-    <ChartHeads ref={ref} {...rest}>
+    <ChartHeads {...rest}>
       {width > 0 && ids.map(id => <ChartHeadContainer key={id} id={id} width={width} />)}
     </ChartHeads>
   )

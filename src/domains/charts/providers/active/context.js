@@ -1,22 +1,26 @@
-import React, { createContext, useContext, useMemo } from "react"
+import React from "react"
+import { createContext } from "use-context-selector"
+import useContext from "@/src/hooks/useContextSelector"
 
-export const ActiveMenuContext = createContext({
-  menuId: "",
-  subMenuId: "",
-})
+export const ActiveMenuIdContext = createContext("")
+export const ActiveSubMenuIdContext = createContext("")
 
-export const ActiveMenuProvider = ({ menuId = "", subMenuId = "", children }) => {
-  const value = useMemo(() => ({ menuId, subMenuId }), [menuId, subMenuId])
-  return <ActiveMenuContext.Provider value={value}>{children}</ActiveMenuContext.Provider>
-}
-
-export const ActiveMenuConsumer = ({ children }) => (
-  <ActiveMenuContext.Consumer>{activeMenu => children(activeMenu)}</ActiveMenuContext.Consumer>
+export const ActiveMenuProvider = ({ menuId = "", subMenuId = "", children }) => (
+  <ActiveMenuIdContext.Provider value={menuId}>
+    <ActiveSubMenuIdContext.Provider value={subMenuId}>{children}</ActiveSubMenuIdContext.Provider>
+  </ActiveMenuIdContext.Provider>
 )
 
-export const useActiveMenu = () => useContext(ActiveMenuContext)
+export const useActiveMenuId = select => useContext(ActiveMenuIdContext, select)
 
-export const withActiveMenu = Component => props => {
-  const { menuId, subMenuId } = useContext(ActiveMenuContext)
-  return <Component activeMenuId={menuId} activeSubMenuId={subMenuId} {...props} />
+export const useActiveSubMenuId = select => useContext(ActiveSubMenuIdContext, select)
+
+export const withActiveMenuId = Component => props => {
+  const activeMenuId = useActiveMenuId()
+  return <Component activeMenuId={activeMenuId} {...props} />
+}
+
+export const withActiveSubMenuId = Component => props => {
+  const activeSubMenuId = useActiveSubMenuId()
+  return <Component activeSubMenuId={activeSubMenuId} {...props} />
 }

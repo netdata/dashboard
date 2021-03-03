@@ -8,15 +8,4 @@ export const ChartTitle = ({ title, ...rest }) => (
   </TextMicro>
 )
 
-export const ChartTitleContainer = withChart(ChartTitle, "title")
-
-// text-indent: 36px;
-// text-align: left;
-// position: absolute;
-// left: 0px;
-// top: 4px;
-// font-size: 11px;
-// font-weight: bold;
-// text-overflow: ellipsis;
-// overflow: hidden;
-// white-space: nowrap;
+export const ChartTitleContainer = withChart(ChartTitle, ({ title }) => ({ title }))

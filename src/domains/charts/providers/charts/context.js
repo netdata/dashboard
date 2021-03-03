@@ -1,4 +1,7 @@
-import React, { createContext, useContext } from "react"
+import React from "react"
+import { identity } from "ramda"
+import { createContext } from "use-context-selector"
+import useContext from "@/src/hooks/useContextSelector"
 
 // id
 // chartId
@@ -13,7 +16,7 @@ import React, { createContext, useContext } from "react"
 // colors
 // decimalDigits
 
-export const ContainerContext = createContext({})
+export const ContainerContext = React.createContext({})
 export const GetChartContext = createContext({})
 export const GetChartAttributesContext = createContext({})
 export const DispatchChartAttributesContext = createContext({})
@@ -45,10 +48,8 @@ export const ChartsProvider = ({
   </ContainerContext.Provider>
 )
 
-export const useMenuChartAttributes = (id, key) => {
-  const resource = useContext(MenuChartsAttributesContext)[id]
-  return key ? resource[key] : resource
-}
+export const useMenuChartAttributes = (id, selector = identity) =>
+  useContext(MenuChartsAttributesContext, state => selector(state[id]))
 
 export const useDispatchChartsAttributes = () => useContext(DispatchChartAttributesContext)
 
@@ -57,27 +58,25 @@ export const useDispatchChartAttributes = id => {
   return values => dispatchChartAttributes(state => ({ ...state, [id]: values }))
 }
 
-export const useContainer = () => useContext(ContainerContext)
+export const useContainer = () => React.useContext(ContainerContext)
 
-export const useDashboardAttributes = key => {
-  const attributes = useContext(DashboardAttributesContext)
-  return key ? attributes[key] : attributes
-}
+export const useDashboardAttributes = (selector = identity) =>
+  useContext(DashboardAttributesContext, selector)
 
 export const useGetChart = () => useContext(GetChartContext)
 
-export const useChart = (id, key) => {
+export const useChart = (id, selector = identity) => {
   const getChart = useGetChart()
   const resource = getChart(id)
-  return key ? resource[key] : resource
+  return selector(resource)
 }
 
 export const useGetChartAttributes = () => useContext(GetChartAttributesContext)
 
-export const useChartAttributes = (id, key) => {
+export const useChartAttributes = (id, selector = identity) => {
   const getChartAttributes = useGetChartAttributes()
   const resource = getChartAttributes(id)
-  return key ? resource[key] : resource
+  return selector(resource)
 }
 
 export const withChartProps = Component => ({ id, ...rest }) => {
@@ -97,12 +96,12 @@ export const withChartProps = Component => ({ id, ...rest }) => {
   )
 }
 
-export const withChart = (Component, key) => ({ id, ...rest }) => {
-  const chart = useChart(id, key)
-  return <Component {...(key ? { [key]: chart } : chart)} {...rest} />
+export const withChart = (Component, selector) => ({ id, ...rest }) => {
+  const chart = useChart(id, selector)
+  return <Component {...chart} {...rest} />
 }
 
-export const withMenuChartAttributes = (Component, key) => ({ id, ...rest }) => {
-  const menuChartsAttributes = useMenuChartAttributes(id, key)
-  return <Component {...(key ? { [key]: menuChartsAttributes } : menuChartsAttributes)} {...rest} />
+export const withMenuChartAttributes = (Component, selector) => ({ id, ...rest }) => {
+  const menuChartsAttributes = useMenuChartAttributes(id, selector)
+  return <Component {...menuChartsAttributes} {...rest} />
 }

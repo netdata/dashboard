@@ -9,4 +9,4 @@ export const ChartSubMenuTitle = ({ title, ...rest }) =>
     </H1>
   ) : null
 
-export const ChartSubMenuTitleContainer = withSubMenu(ChartSubMenuTitle)
+export const ChartSubMenuTitleContainer = withSubMenu(ChartSubMenuTitle, ({ title }) => ({ title }))

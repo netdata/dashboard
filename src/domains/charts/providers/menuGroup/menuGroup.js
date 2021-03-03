@@ -1,7 +1,8 @@
-import React from "react"
+import React, { useMemo } from "react"
 import styled, { css } from "styled-components"
 import { Text, Flex, getColor } from "@netdata/netdata-ui"
 import { MenuItemContainer } from "domains/charts/providers/subMenu"
+import { useActiveMenuId } from "domains/charts/providers/active"
 import { withMenuGroup } from "./context"
 
 const MenuGroupLabel = styled(Text).attrs({ color: "border" })`
@@ -44,19 +45,22 @@ export const MenuGroupItem = ({ icon, title, ...rest }) => (
   </Container>
 )
 
-export const SubMenus = ({ subMenuIds, onSubMenuClick, ...rest }) => (
-  <Flex column role="list" {...rest}>
-    {subMenuIds.map(id => (
-      <MenuItemContainer
-        key={id}
-        id={id}
-        onClick={onSubMenuClick && (e => onSubMenuClick(id, e))}
-      />
-    ))}
-  </Flex>
-)
+export const SubMenus = ({ subMenuIds, onSubMenuClick, ...rest }) => {
+  return (
+    <Flex column role="list" {...rest}>
+      {subMenuIds.map(id => (
+        <MenuItemContainer
+          key={id}
+          id={id}
+          onClick={onSubMenuClick && (e => onSubMenuClick(id, e))}
+        />
+      ))}
+    </Flex>
+  )
+}
 
 export const MenuGroup = ({
+  id,
   icon,
   title,
   subMenuIds,
@@ -65,25 +69,45 @@ export const MenuGroup = ({
   onMenuGroupClick,
   onSubMenuClick,
   ...rest
-}) => (
-  <Flex as="li" column {...rest}>
-    <MenuGroupItem
-      icon={icon}
-      href={`#${link}`}
-      title={title}
-      onClick={onMenuGroupClick}
-      active={active}
-      padding={[1, 5]}
-    />
-    {active && (
-      <SubMenus subMenuIds={subMenuIds} onSubMenuClick={onSubMenuClick} padding={[0, 0, 2, 0]} />
-    )}
-  </Flex>
-)
+}) => {
+  const menuGroupClick = useMemo(() => onMenuGroupClick && (e => onMenuGroupClick(id, e)), [
+    onMenuGroupClick,
+    id,
+  ])
+  const subMenuClick = useMemo(
+    () => onSubMenuClick && ((subMenuId, e) => onSubMenuClick(id, subMenuId, e)),
+    [onSubMenuClick, id]
+  )
 
-export const MenuGroupContainer = withMenuGroup(MenuGroup, ({ icon, title, subMenuIds, link }) => ({
-  icon,
-  title,
-  subMenuIds,
-  link,
-}))
+  return (
+    <Flex as="li" column {...rest}>
+      <MenuGroupItem
+        icon={icon}
+        href={`#${link}`}
+        title={title}
+        onClick={menuGroupClick}
+        active={active}
+        padding={[1, 5]}
+      />
+      {active && (
+        <SubMenus subMenuIds={subMenuIds} onSubMenuClick={subMenuClick} padding={[0, 0, 2, 0]} />
+      )}
+    </Flex>
+  )
+}
+
+export const withMenuActive = Component => ({ id, ...rest }) => {
+  const active = useActiveMenuId(state => id === state)
+  return <Component active={active} id={id} {...rest} />
+}
+
+export const MenuGroupContainer = withMenuGroup(
+  withMenuActive(MenuGroup),
+  ({ icon, title, subMenuIds, link, id }) => ({
+    icon,
+    title,
+    subMenuIds,
+    link,
+    id,
+  })
+)

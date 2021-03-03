@@ -13,4 +13,7 @@ export const ChartSubMenuDescription = ({ info, ...rest }) =>
     />
   ) : null
 
-export const ChartSubMenuDescriptionContainer = withSubMenu(ChartSubMenuDescription)
+export const ChartSubMenuDescriptionContainer = withSubMenu(
+  ChartSubMenuDescription,
+  ({ info }) => ({ info })
+)

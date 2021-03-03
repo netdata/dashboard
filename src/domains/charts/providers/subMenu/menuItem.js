@@ -1,7 +1,7 @@
-import React from "react"
+import React, { useMemo } from "react"
 import styled, { css } from "styled-components"
 import { TextSmall, getColor } from "@netdata/netdata-ui"
-import { withActiveMenu } from "domains/charts/providers/active"
+import { useActiveSubMenuId } from "domains/charts/providers/active"
 import { withSubMenu } from "./context"
 
 const styledActive = css`
@@ -27,8 +27,18 @@ const MenuItem = styled(TextSmall).attrs(({ active, title, link, children }) => 
     }
   }
 `
-export const withSubMenuActive = Component => ({ activeSubMenuId, id, ...rest }) => {
-  return <Component active={id === activeSubMenuId} {...rest} />
+
+const withMenuItemClick = Component => ({ id, onSubMenuClick, ...rest }) => {
+  const subMenuClick = useMemo(() => onSubMenuClick && (e => onSubMenuClick(id, e)), [
+    onSubMenuClick,
+    id,
+  ])
+  return <Component onClick={subMenuClick} id={id} {...rest} />
 }
 
-export const MenuItemContainer = withActiveMenu(withSubMenu(withSubMenuActive(MenuItem)))
+export const withSubMenuActive = Component => ({ id, ...rest }) => {
+  const active = useActiveSubMenuId(state => id === state)
+  return <Component active={active} id={id} {...rest} />
+}
+
+export const MenuItemContainer = withSubMenu(withSubMenuActive(withMenuItemClick(MenuItem)))

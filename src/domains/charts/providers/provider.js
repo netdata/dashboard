@@ -27,10 +27,7 @@ const Provider = ({
     subMenusCollection,
     menuChartsAttributes,
   } = useMemo(() => getMenu(chartIds, getChart, { hasKubernetes }), [chartIds, getChart])
-  // console.log(menusCollection)
-  // console.log(menuGroupsCollection)
-  // console.log(subMenusCollection)
-  // console.log(menuChartsAttributes)
+
   return (
     <ChartsProvider
       container={container}

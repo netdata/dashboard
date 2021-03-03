@@ -1,5 +1,7 @@
-import React, { createContext, useContext } from "react"
-
+import React from "react"
+import { identity } from "ramda"
+import { createContext } from "use-context-selector"
+import useContextSelector from "@/src/hooks/useContextSelector"
 // priority
 // chartIds
 // headIds
@@ -15,14 +17,15 @@ export const SubMenuProvider = ({ subMenus, children }) => (
   <SubMenuContext.Provider value={subMenus}>{children}</SubMenuContext.Provider>
 )
 
-export const useSubMenus = () => useContext(SubMenuContext)
+export const useSubMenus = selector => useContextSelector(SubMenuContext, selector)
 
-export const useSubMenu = (id, key) => {
-  const resource = useSubMenus()[id]
-  return key ? resource[key] : resource
+export const useSubMenu = (id, selector = identity) => {
+  return useSubMenus(state => {
+    return selector(state[id])
+  })
 }
 
 export const withSubMenu = (Component, select) => ({ id, ...rest }) => {
-  const subMenus = useSubMenu(id)
-  return <Component {...(select ? select(subMenus) : subMenus)} {...rest} />
+  const subMenus = useSubMenu(id, select)
+  return <Component {...subMenus} {...rest} />
 }

@@ -1,4 +1,7 @@
-import React, { createContext, useContext } from "react"
+import React from "react"
+import { identity } from "ramda"
+import { createContext } from "use-context-selector"
+import useContext from "@/src/hooks/useContextSelector"
 
 // menuPattern
 // priority
@@ -18,12 +21,10 @@ export const MenuGroupProvider = ({ menuGroups, children }) => (
 
 export const useMenuGroups = () => useContext(MenuGroupContext)
 
-export const useMenuGroup = (id, key) => {
-  const resource = useContext(MenuGroupContext)[id]
-  return key ? resource[key] : resource
-}
+export const useMenuGroup = (id, selector = identity) =>
+  useContext(MenuGroupContext, state => selector(state[id]))
 
 export const withMenuGroup = (Component, select) => ({ id, ...rest }) => {
-  const menuGroups = useMenuGroup(id)
-  return <Component {...(select ? select(menuGroups) : menuGroups)} {...rest} />
+  const menuGroups = useMenuGroup(id, select)
+  return <Component {...menuGroups} {...rest} />
 }
