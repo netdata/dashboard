@@ -6,7 +6,7 @@ const isSectionNodeVisible = node =>
 
 export default ({ ref, scrollableContainerRef, defaultChart, onChangeChart }) => {
   const [currentChart, setCurrentChart] = useState(defaultChart)
-  const [activeMenuId, setActiveMenuId] = useState("")
+  const [activeMenuGroupId, setActiveMenuGroupId] = useState("")
   const [activeSubMenuId, setActiveSubMenuId] = useState("")
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export default ({ ref, scrollableContainerRef, defaultChart, onChangeChart }) =>
       if (!currentNode) return
 
       const chartIdInMenu = currentNode.getAttribute("id")
-      setActiveMenuId(currentNode.getAttribute("data-menuid") || "")
+      setActiveMenuGroupId(currentNode.getAttribute("data-menuid") || "")
       setActiveSubMenuId(currentNode.getAttribute("data-submenuid") || "")
 
       setCurrentChart(chartIdInMenu)
@@ -40,5 +40,5 @@ export default ({ ref, scrollableContainerRef, defaultChart, onChangeChart }) =>
     }
   }, [scrollableContainerRef.current])
 
-  return [currentChart, activeMenuId, activeSubMenuId]
+  return [currentChart, activeMenuGroupId, activeSubMenuId]
 }

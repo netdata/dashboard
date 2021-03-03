@@ -4,7 +4,6 @@ export * from "./chartHead"
 export * from "./chartMenuGroup"
 export * from "./charts"
 export * from "./chartSubMenu"
-export * from "./menu"
 export * from "./menuGroup"
 export * from "./subMenu"
 

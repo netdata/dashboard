@@ -1,15 +1,15 @@
 import React, { memo, useMemo, useRef, useEffect } from "react"
 import { throttle } from "throttle-debounce"
-import { useMenuIds, useContainer, useDispatchList } from "@/src/domains/charts/providers"
+import { useMenuGroupIds, useContainer, useDispatchList } from "@/src/domains/charts/providers"
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import List from "react-virtualized/dist/commonjs/List"
 import CellMeasurerWrapper from "./cellMeasurerWrapper"
 import retry from "./retry"
 
-const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
+const Virtualized = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
   const container = useContainer()
-  const ids = useMenuIds()
+  const ids = useMenuGroupIds()
 
   const ref = useRef()
   const measures = useRef({})
@@ -42,7 +42,7 @@ const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
   }
 
   const instance = useMemo(() => {
-    const goToGroupMenu = async id => {
+    const goToMenuGroup = async id => {
       await retry(() => {
         const targetIndex = ids.indexOf(id)
         if (targetIndex !== -1) return ref.current.scrollToRow(targetIndex)
@@ -71,7 +71,7 @@ const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
       ref.current.forceUpdateGrid()
     }
 
-    return { goToGroupMenu, goToSubMenu, measure, resize, resizeAll }
+    return { goToMenuGroup, goToSubMenu, measure, resize, resizeAll }
   }, [container, ids])
 
   const dispatchList = useDispatchList()
@@ -95,13 +95,13 @@ const Virtualized = ({ onActiveMenu, onActiveSubMenu, getComponent }) => {
 
         const menuGroupId = firstVisibleElement.getAttribute("data-menuid")
         if (menuGroupId) {
-          onActiveSubMenu("")
-          onActiveMenu(menuGroupId)
+          onActiveSubMenuId("")
+          onActiveMenuGroupId(menuGroupId)
           return
         }
 
         const subMenuId = firstVisibleElement.getAttribute("data-submenuid")
-        onActiveSubMenu(subMenuId)
+        onActiveSubMenuId(subMenuId)
       }),
     [container]
   )

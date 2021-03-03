@@ -2,7 +2,7 @@ import React, { useMemo } from "react"
 import styled, { css } from "styled-components"
 import { Text, Flex, getColor } from "@netdata/netdata-ui"
 import { MenuItemContainer } from "domains/charts/providers/subMenu"
-import { useActiveMenuId } from "domains/charts/providers/active"
+import { useActiveMenuGroupId } from "domains/charts/providers/active"
 import { withMenuGroup } from "./context"
 
 const MenuGroupLabel = styled(Text).attrs({ color: "border" })`
@@ -97,7 +97,7 @@ export const MenuGroup = ({
 }
 
 export const withMenuActive = Component => ({ id, ...rest }) => {
-  const active = useActiveMenuId(state => id === state)
+  const active = useActiveMenuGroupId(state => id === state)
   return <Component active={active} id={id} {...rest} />
 }
 

@@ -11,19 +11,15 @@ import useContextSelector from "@/src/hooks/useContextSelector"
 // chartSubMenuId
 // link
 
-export const SubMenuContext = createContext({})
+export const SubMenuByIdContext = createContext({})
 
-export const SubMenuProvider = ({ subMenus, children }) => (
-  <SubMenuContext.Provider value={subMenus}>{children}</SubMenuContext.Provider>
+export const SubMenuByIdProvider = ({ subMenuById, children }) => (
+  <SubMenuByIdContext.Provider value={subMenuById}>{children}</SubMenuByIdContext.Provider>
 )
 
-export const useSubMenus = selector => useContextSelector(SubMenuContext, selector)
+export const useSubMenus = selector => useContextSelector(SubMenuByIdContext, selector)
 
-export const useSubMenu = (id, selector = identity) => {
-  return useSubMenus(state => {
-    return selector(state[id])
-  })
-}
+export const useSubMenu = (id, selector = identity) => useSubMenus(state => selector(state[id]))
 
 export const withSubMenu = (Component, select) => ({ id, ...rest }) => {
   const subMenus = useSubMenu(id, select)

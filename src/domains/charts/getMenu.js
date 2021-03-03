@@ -9,14 +9,14 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
   const submenuNames = {}
 
   const chartMenus = {}
-  const menuChartsAttributes = {}
+  const menuChartsAttributeById = {}
   const menuGroups = {}
   const menuGroupCharts = {}
   const subMenus = {}
 
   chartIds.forEach(id => {
     const chart = getChart(id)
-    menuChartsAttributes[id] = getMenuChartAttributes(chart)
+    menuChartsAttributeById[id] = getMenuChartAttributes(chart)
     chartMenus[id] = getChartMenu(chart, submenuNames, hasKubernetes)
   })
 
@@ -35,10 +35,10 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     subMenus[subMenuId].push(menu.chartId)
     menuGroups[menu.id].add(subMenuId)
     menuGroupCharts[menu.id].push(menu.chartId)
-    menuChartsAttributes[id].menuGroupId = menu.id
+    menuChartsAttributeById[id].menuGroupId = menu.id
   })
 
-  const menuGroupsCollection = Object.keys(menuGroups).reduce((acc, menuId) => {
+  const menuGroupById = Object.keys(menuGroups).reduce((acc, menuId) => {
     const chartIds = menuGroupCharts[menuId]
     const chartMenu = chartMenus[chartIds[0]]
     const firstChartId = chartIds.find(id => chartMenus[id].menuPattern)
@@ -56,7 +56,7 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     const [attributes, headIds] = getChartHeads("mainheads", chartIds, getChart, {
       forceTimeWindow: true,
     })
-    Object.assign(menuChartsAttributes, attributes)
+    Object.assign(menuChartsAttributeById, attributes)
 
     acc[menuId] = {
       id: menuId,
@@ -76,7 +76,7 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     return acc
   }, {})
 
-  const subMenusCollection = Object.keys(subMenus).reduce((acc, subMenuId) => {
+  const subMenuById = Object.keys(subMenus).reduce((acc, subMenuId) => {
     const chartIds = subMenus[subMenuId].sort((a, b) => {
       const chart1 = getChart(a)
       const chart2 = getChart(b)
@@ -87,10 +87,10 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     })
 
     const chartMenu = chartMenus[chartIds[0]]
-    const { id, menuPattern, height } = menuGroupsCollection[chartMenu.id]
+    const { id, menuPattern, height } = menuGroupById[chartMenu.id]
 
     const [attributes, headIds] = getChartHeads("heads", chartIds, getChart)
-    Object.assign(menuChartsAttributes, attributes)
+    Object.assign(menuChartsAttributeById, attributes)
 
     const menuKey = menuPattern || id
 
@@ -115,14 +115,14 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     return acc
   }, {})
 
-  const menusCollection = Object.keys(menuGroups).sort((a, b) => {
-    const menuGroup1 = menuGroupsCollection[a]
-    const menuGroup2 = menuGroupsCollection[b]
+  const menuGroupIds = Object.keys(menuGroups).sort((a, b) => {
+    const menuGroup1 = menuGroupById[a]
+    const menuGroup2 = menuGroupById[b]
     return (
       menuGroup1.priority - menuGroup2.priority ||
       a.localeCompare(b, undefined, { sensitivity: "accent" })
     )
   })
 
-  return { menusCollection, menuGroupsCollection, subMenusCollection, menuChartsAttributes }
+  return { menuGroupIds, menuGroupById, subMenuById, menuChartsAttributeById }
 }

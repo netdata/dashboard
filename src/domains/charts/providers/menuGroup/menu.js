@@ -1,13 +1,13 @@
 import React, { memo } from "react"
 import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
-import { MenuGroupContainer } from "domains/charts/providers/menuGroup"
 import { useContainer } from "domains/charts/providers/charts"
-import { withMenu } from "./context"
+import { withMenuGroupIds } from "./context"
+import { MenuGroupContainer } from "./menuGroup"
 
-export const Menu = memo(({ menuIds, onMenuGroupClick, onSubMenuClick, ...rest }) => (
+export const Menu = memo(({ menuGroupIds, onMenuGroupClick, onSubMenuClick, ...rest }) => (
   <Flex as="ul" role="complementary" column {...rest}>
-    {menuIds.map(id => (
+    {menuGroupIds.map(id => (
       <MenuGroupContainer
         key={id}
         id={id}
@@ -28,15 +28,24 @@ export const MenuSidebar = styled(Flex).attrs({
   max-height: calc(100vh - ${({ top }) => top});
 `
 
-export const MenuSidebarContainer = ({ menuIds, onMenuGroupClick, onSubMenuClick, ...rest }) => {
+export const MenuSidebarContainer = ({
+  menuGroupIds,
+  onMenuGroupClick,
+  onSubMenuClick,
+  ...rest
+}) => {
   const container = useContainer()
   const top = `${container.getBoundingClientRect().top}px`
 
   return (
     <MenuSidebar top={top} {...rest}>
-      <Menu menuIds={menuIds} onMenuGroupClick={onMenuGroupClick} onSubMenuClick={onSubMenuClick} />
+      <Menu
+        menuGroupIds={menuGroupIds}
+        onMenuGroupClick={onMenuGroupClick}
+        onSubMenuClick={onSubMenuClick}
+      />
     </MenuSidebar>
   )
 }
 
-export const SidebarContainer = memo(withMenu(MenuSidebarContainer))
+export const SidebarContainer = memo(withMenuGroupIds(MenuSidebarContainer))

@@ -2,16 +2,16 @@ import React, { useMemo } from "react"
 import getMenu from "../getMenu"
 import {
   ChartsProvider,
-  MenuProvider,
+  MenuGroupIdsProvider,
   MenuGroupProvider,
-  SubMenuProvider,
+  SubMenuByIdProvider,
   ActiveMenuProvider,
   ListProvider,
 } from "domains/charts/providers"
 
 const Provider = ({
   container,
-  activeMenuId,
+  activeMenuGroupId,
   activeSubMenuId,
   chartIds,
   getChart,
@@ -21,31 +21,29 @@ const Provider = ({
   hasKubernetes,
   children,
 }) => {
-  const {
-    menusCollection,
-    menuGroupsCollection,
-    subMenusCollection,
-    menuChartsAttributes,
-  } = useMemo(() => getMenu(chartIds, getChart, { hasKubernetes }), [chartIds, getChart])
+  const { menuGroupIds, menuGroupById, subMenuById, menuChartsAttributeById } = useMemo(
+    () => getMenu(chartIds, getChart, { hasKubernetes }),
+    [chartIds, getChart]
+  )
 
   return (
     <ChartsProvider
       container={container}
-      menuChartsAttributes={menuChartsAttributes}
+      menuChartsAttributeById={menuChartsAttributeById}
       getChartAttributes={getChartAttributes}
       onAttributesChange={onAttributesChange}
       getChart={getChart}
       dashboardAttributes={dashboardAttributes}
     >
-      <MenuProvider menuIds={menusCollection}>
-        <MenuGroupProvider menuGroups={menuGroupsCollection}>
-          <SubMenuProvider subMenus={subMenusCollection}>
-            <ActiveMenuProvider menuId={activeMenuId} subMenuId={activeSubMenuId}>
+      <MenuGroupIdsProvider ids={menuGroupIds}>
+        <MenuGroupProvider menuGroupById={menuGroupById}>
+          <SubMenuByIdProvider subMenuById={subMenuById}>
+            <ActiveMenuProvider menuGroupId={activeMenuGroupId} subMenuId={activeSubMenuId}>
               <ListProvider>{children}</ListProvider>
             </ActiveMenuProvider>
-          </SubMenuProvider>
+          </SubMenuByIdProvider>
         </MenuGroupProvider>
-      </MenuProvider>
+      </MenuGroupIdsProvider>
     </ChartsProvider>
   )
 }

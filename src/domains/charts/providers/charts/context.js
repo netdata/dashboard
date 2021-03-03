@@ -20,13 +20,13 @@ export const ContainerContext = React.createContext({})
 export const GetChartContext = createContext({})
 export const GetChartAttributesContext = createContext({})
 export const DispatchChartAttributesContext = createContext({})
-export const MenuChartsAttributesContext = createContext({})
+export const MenuChartsAttributeById = createContext({})
 export const DashboardAttributesContext = createContext({})
 export const ListContext = createContext(null)
 
 export const ChartsProvider = ({
   container,
-  menuChartsAttributes,
+  menuChartsAttributeById,
   getChartAttributes,
   onAttributesChange,
   getChart,
@@ -36,20 +36,20 @@ export const ChartsProvider = ({
   <ContainerContext.Provider value={container}>
     <DashboardAttributesContext.Provider value={dashboardAttributes}>
       <GetChartContext.Provider value={getChart}>
-        <MenuChartsAttributesContext.Provider value={menuChartsAttributes}>
+        <MenuChartsAttributeById.Provider value={menuChartsAttributeById}>
           <GetChartAttributesContext.Provider value={getChartAttributes}>
             <DispatchChartAttributesContext.Provider value={onAttributesChange}>
               {children}
             </DispatchChartAttributesContext.Provider>
           </GetChartAttributesContext.Provider>
-        </MenuChartsAttributesContext.Provider>
+        </MenuChartsAttributeById.Provider>
       </GetChartContext.Provider>
     </DashboardAttributesContext.Provider>
   </ContainerContext.Provider>
 )
 
 export const useMenuChartAttributes = (id, selector = identity) =>
-  useContext(MenuChartsAttributesContext, state => selector(state[id]))
+  useContext(MenuChartsAttributeById, state => selector(state[id]))
 
 export const useDispatchChartsAttributes = () => useContext(DispatchChartAttributesContext)
 
