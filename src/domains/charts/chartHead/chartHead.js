@@ -1,11 +1,11 @@
 import React, { useMemo, forwardRef } from "react"
 import { Flex } from "@netdata/netdata-ui"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
-import { withChartProps, useContainer } from "domains/charts/charts"
+import { withChartProps } from "domains/charts/charts"
 import useDuration from "./useDuration"
 
-export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, width, ...rest }) => {
-  const duration = useDuration(width, chart.update_every)
+export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, ...rest }) => {
+  const duration = useDuration(chart.update_every)
 
   const attributes = useMemo(
     () => ({
@@ -22,16 +22,13 @@ export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, width, 
 export const ChartHeadContainer = withChartProps(ChartHead)
 
 export const ChartHeads = forwardRef((props, ref) => (
-  <Flex justifyContent="center" ref={ref} {...props} />
+  <Flex justifyContent="center" alignItems="baseline" ref={ref} {...props} />
 ))
 
-export const ChartHeadsContainer = ({ ids, ...rest }) => {
-  const container = useContainer()
-  const { width } = container.getBoundingClientRect()
-
-  return (
-    <ChartHeads {...rest}>
-      {width > 0 && ids.map(id => <ChartHeadContainer key={id} id={id} width={width} />)}
-    </ChartHeads>
-  )
-}
+export const ChartHeadsContainer = ({ ids, ...rest }) => (
+  <ChartHeads {...rest}>
+    {ids.map(id => (
+      <ChartHeadContainer key={id} id={id} />
+    ))}
+  </ChartHeads>
+)
