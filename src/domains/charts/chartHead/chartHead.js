@@ -1,7 +1,7 @@
 import React, { useMemo, forwardRef } from "react"
 import { Flex } from "@netdata/netdata-ui"
 import { ChartWrapper } from "domains/dashboard/components/chart-wrapper"
-import { withChartProps, useContainer } from "domains/charts/providers/charts"
+import { withChartProps, useContainer } from "domains/charts/charts"
 import useDuration from "./useDuration"
 
 export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, width, ...rest }) => {

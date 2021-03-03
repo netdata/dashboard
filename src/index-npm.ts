@@ -35,10 +35,7 @@ export * from "domains/dashboard/components/head-main"
 export { default as HeadMainContainer } from "domains/dashboard/components/headMainContainer"
 export { default as VirtualizedDashboard } from "domains/dashboard/components/virtualized"
 
-export * from "domains/charts/providers"
-export { default as getChartHeads } from "domains/charts/getChartHeads"
-export { default as getChartMenu } from "domains/charts/getChartMenu"
-export { default as getMenu } from "domains/charts/getMenu"
+export * from "domains/charts"
 
 export { getNodeChartAttributes } from "utils/get-node-chart-attributes"
 

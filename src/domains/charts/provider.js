@@ -1,13 +1,10 @@
 import React, { useMemo } from "react"
-import getMenu from "../getMenu"
-import {
-  ChartsProvider,
-  MenuGroupIdsProvider,
-  MenuGroupProvider,
-  SubMenuByIdProvider,
-  ActiveMenuProvider,
-  ListProvider,
-} from "domains/charts/providers"
+import getMenu from "./getMenu"
+import { ChartsProvider } from "./charts"
+import { MenuGroupIdsProvider, MenuGroupProvider } from "./menuGroup"
+import { SubMenuByIdProvider } from "./subMenu"
+import { ActiveMenuProvider } from "./active"
+import { ListProvider } from "./list"
 
 const Provider = ({
   container,

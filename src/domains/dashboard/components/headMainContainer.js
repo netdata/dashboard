@@ -1,6 +1,6 @@
 import React, { memo } from "react"
-import { useContainer, useGetChart, useDashboardAttributes } from "domains/charts/providers/charts"
-import { ChartHeads, useChartHeadDuration } from "domains/charts/providers/chartHead"
+import { useContainer, useGetChart, useDashboardAttributes } from "domains/charts/charts"
+import { ChartHeads, useChartHeadDuration } from "domains/charts/chartHead"
 import { HeadMain } from "./head-main"
 
 const HeadMainContainer = props => {

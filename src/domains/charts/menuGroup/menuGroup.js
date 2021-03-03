@@ -1,8 +1,8 @@
 import React, { useMemo } from "react"
 import styled, { css } from "styled-components"
 import { Text, Flex, getColor } from "@netdata/netdata-ui"
-import { MenuItemContainer } from "domains/charts/providers/subMenu"
-import { useActiveMenuGroupId } from "domains/charts/providers/active"
+import { MenuItemContainer } from "domains/charts/subMenu"
+import { useActiveMenuGroupId } from "domains/charts/active"
 import { withMenuGroup } from "./context"
 
 const MenuGroupLabel = styled(Text).attrs({ color: "border" })`

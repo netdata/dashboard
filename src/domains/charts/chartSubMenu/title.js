@@ -1,6 +1,6 @@
 import React from "react"
 import { H1 } from "@netdata/netdata-ui"
-import { withSubMenu } from "domains/charts/providers/subMenu"
+import { withSubMenu } from "domains/charts/subMenu"
 
 export const ChartSubMenuTitle = ({ title, ...rest }) =>
   title ? (

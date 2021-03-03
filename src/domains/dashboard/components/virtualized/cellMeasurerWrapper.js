@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react"
-import { useList } from "domains/charts/providers"
+import { useList } from "domains/charts"
 
 const deffered = callback => {
   if (window.requestIdleCallback) {

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import styled, { css } from "styled-components"
 import { TextSmall, getColor } from "@netdata/netdata-ui"
-import { useActiveSubMenuId } from "domains/charts/providers/active"
+import { useActiveSubMenuId } from "domains/charts/active"
 import { withSubMenu } from "./context"
 
 const styledActive = css`

@@ -1,6 +1,6 @@
 import React from "react"
 import { H0, Flex } from "@netdata/netdata-ui"
-import { withMenuGroup } from "domains/charts/providers/menuGroup"
+import { withMenuGroup } from "domains/charts/menuGroup"
 
 export const ChartMenuGroupIcon = ({ icon, ...rest }) => (
   <span dangerouslySetInnerHTML={{ __html: icon }} {...rest} />

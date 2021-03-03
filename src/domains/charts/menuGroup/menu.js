@@ -1,7 +1,7 @@
 import React, { memo } from "react"
 import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
-import { useContainer } from "domains/charts/providers/charts"
+import { useContainer } from "domains/charts/charts"
 import { withMenuGroupIds } from "./context"
 import { MenuGroupContainer } from "./menuGroup"
 
