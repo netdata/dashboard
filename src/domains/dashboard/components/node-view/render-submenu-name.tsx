@@ -6,7 +6,7 @@ import { DropdownMenu } from "domains/chart/components/chart-dropdown"
 import { RenderCustomElementForDygraph } from "domains/chart/components/chart-with-loader"
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { ChartsMetadata } from "domains/global/types"
-import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT } from "utils"
+import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT } from "utils/utils"
 import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
 import { prioritySort } from "../../utils/sorting"
@@ -74,8 +74,10 @@ export const renderSubmenuName = ({
       className="dashboard-section-container"
       id={submenuID}
       key={submenuName}
+      data-menuid={menuName}
+      data-submenuid={submenuName}      
     >
-      <h2 id={submenuID}>
+      <h2 id={submenuID} data-menuid={menuName} data-submenuid={submenuName}>
         {submenu.title}
       </h2>
       {submenuInfo && (
@@ -99,16 +101,10 @@ export const renderSubmenuName = ({
                 ...commonAttributesOverrides,
                 aggrMethod: mapDefaultAggrMethod(chartsMetadata.charts[attributes.id].units),
                 host,
-                nodeIDs,
-                ...attributesOverrides[attributes.id],
+                nodeIDs
               }}
               key={`${attributes.id}-${attributes.dimensions}`}
               chartMetadata={chartsMetadata.charts[attributes.id]}
-              onAttributesChange={
-                (value: any) => onAttributesChange(
-                  { ...attributesOverrides, [attributes.id]: value },
-                )
-              }
             />
           ))}
       </div>

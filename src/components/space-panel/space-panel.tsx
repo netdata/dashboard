@@ -1,7 +1,7 @@
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 
-import { SPACE_PANEL_STATE } from "utils"
+import { SPACE_PANEL_STATE } from "utils/utils"
 import {
   selectIsCloudEnabled,
   selectIsUsingGlobalRegistry,

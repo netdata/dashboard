@@ -27,6 +27,16 @@ export { store as dashboardStore } from "store"
 export { ChartContainer } from "domains/chart/components/chart-container"
 
 export { NodeView } from "domains/dashboard/components/node-view"
+export { default as DashboardCharts } from "domains/dashboard/components/node-view/dashboardCharts"
+export { default as useCurrentChart } from "domains/dashboard/components/node-view/useCurrentChart"
+export { default as useMenu } from "domains/dashboard/components/node-view/useMenu"
+export * from "domains/dashboard/components/node-view/use-update-theme"
+export * from "domains/dashboard/components/head-main"
+export { default as HeadMainContainer } from "domains/dashboard/components/headMainContainer"
+export { default as VirtualizedDashboard } from "domains/dashboard/components/virtualized"
+
+export * from "domains/charts"
+
 export { getNodeChartAttributes } from "utils/get-node-chart-attributes"
 
 export {
@@ -45,9 +55,7 @@ export {
   selectDefaultAfter,
   selectGlobalPanAndZoom,
 } from "domains/global/selectors"
-export {
-  selectChartData,
-} from "domains/chart/selectors"
+export { selectChartData } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
 
 export { VersionControl } from "components/app-header/components/version-control"
@@ -71,12 +79,11 @@ export type ChartMetadata = ChartMetadata_
 import { ChartsMetadata as ChartsMetadata_ } from "domains/global/types"
 export type ChartsMetadata = ChartsMetadata_
 
-import {
-  RenderCustomElementForDygraph as RenderCustomElementForDygraph_,
-} from "domains/chart/components/chart-with-loader"
+import { RenderCustomElementForDygraph as RenderCustomElementForDygraph_ } from "domains/chart/components/chart-with-loader"
 export type RenderCustomElementForDygraph = RenderCustomElementForDygraph_
 
 import { AppStateT as AppStateT_ } from "store/app-state"
+
 export type DashboardStateT = AppStateT_
 
 /* eslint-enable import/first,import/newline-after-import */

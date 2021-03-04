@@ -9,7 +9,7 @@ import { netdataDashboard, options } from "domains/dashboard/utils/netdata-dashb
 import { name2id } from "utils/name-2-id"
 import { NODE_VIEW_DYGRAPH_TITLE_HEIGHT, DEFAULT_DASHBOARD_DURATION } from "./utils"
 
-export const getNodeChartAttributes = (metadata: ChartsMetadata, host: string) => {
+export const getNodeChartAttributes = (metadata: any, host: string) => {
   const menus = renderChartsAndMenu(metadata)
   const main = sortObjectByPriority(menus)
 

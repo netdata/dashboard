@@ -22,7 +22,7 @@ import {
 } from "domains/global/selectors"
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
-import { MS_IN_SECOND, isTimestamp } from "utils"
+import { MS_IN_SECOND, isTimestamp } from "utils/utils"
 
 import { resetChartPanAndZoomAction, setChartPanAndZoomAction } from "domains/chart/actions"
 

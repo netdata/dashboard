@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 
-import { MS_IN_SECOND } from "utils"
+import { MS_IN_SECOND } from "utils/utils"
 import { serverDefault } from "utils/server-detection"
 import { selectIsSnapshotMode, selectSnapshotOptions } from "domains/dashboard/selectors"
 import { selectGlobalPanAndZoom } from "domains/global/selectors"

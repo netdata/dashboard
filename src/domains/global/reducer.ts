@@ -1,7 +1,7 @@
 import { init, last, mergeAll } from "ramda"
 import { createReducer } from "redux-act"
 
-import { getInitialAfterFromWindow } from "utils"
+import { getInitialAfterFromWindow } from "utils/utils"
 import { isMainJs } from "utils/env"
 import { RegistryMachine } from "domains/global/sagas"
 import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
@@ -215,6 +215,7 @@ const createCommonColorsKeysSubstate = (
 
 globalReducer.on(
   requestCommonColorsAction,
+  //@ts-ignore
   (state, {
     chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames,
   }) => {

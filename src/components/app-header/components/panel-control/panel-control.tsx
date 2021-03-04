@@ -1,7 +1,7 @@
 import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 
-import { SPACE_PANEL_STATE } from "utils"
+import { SPACE_PANEL_STATE } from "utils/utils"
 import NetdataLogo from "./assets/netdata-logo.svg"
 import { LogoSection, LogoContainer, StyledButton } from "./styled"
 import { setSpacePanelStatusAction } from "../../../../domains/global/actions"

@@ -16,11 +16,10 @@ type Listener = {
 const createGlobalIntersectionObserver = () => {
   let listeners: Listener[] = []
   const globalHandler = (entries: IntersectionObserverEntry[]) => {
-    entries.forEach(({ intersectionRatio, target }) => {
-      const isVisible = intersectionRatio > 0
+    entries.forEach(({ isIntersecting, target }) => {
       const callback = listeners.find(({ element }) => element === target)?.callback
       if (callback) {
-        callback(isVisible)
+        callback(isIntersecting)
       }
     })
   }

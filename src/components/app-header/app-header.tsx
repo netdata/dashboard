@@ -11,7 +11,7 @@ import {
   selectIsCloudEnabled,
 } from "domains/global/selectors"
 
-import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils"
+import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils/utils"
 import { isDevelopmentEnv } from "utils/env"
 import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
 import { SvgIcon } from "components/svg-icon"
