@@ -1,6 +1,6 @@
 import React, { useState, memo } from "react"
+import { render, fireEvent } from "@testing-library/react"
 import { createContext } from "use-context-selector"
-import { render, fireEvent } from "testUtils"
 import useContextSelector from "./index"
 
 const Context = createContext()
