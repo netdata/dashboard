@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useRef, useEffect } from "react"
+import React, { memo, useMemo, useRef, useEffect, useCallback } from "react"
 import { throttle } from "throttle-debounce"
 import { useMenuGroupIds, useContainer, useDispatchList } from "@/src/domains/charts"
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
@@ -6,6 +6,29 @@ import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import List from "react-virtualized/dist/commonjs/List"
 import CellMeasurerWrapper from "./cellMeasurerWrapper"
 import retry from "./retry"
+
+const makeThrottleScroll = () =>
+  throttle(400, (container, onActiveSubMenuId, onActiveMenuGroupId) => {
+    if (!container) return
+
+    const { top: containerTop } = container.getBoundingClientRect()
+
+    const firstVisibleElement = Array.from(
+      document.querySelectorAll("[data-submenuid],[data-menuid]")
+    ).find(el => el.getBoundingClientRect().top - containerTop > 0)
+
+    if (!firstVisibleElement) return
+
+    const menuGroupId = firstVisibleElement.getAttribute("data-menuid")
+    if (menuGroupId) {
+      onActiveSubMenuId("")
+      onActiveMenuGroupId(menuGroupId)
+      return
+    }
+
+    const subMenuId = firstVisibleElement.getAttribute("data-submenuid")
+    onActiveSubMenuId(subMenuId)
+  })
 
 const Virtualized = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
   const container = useContainer()
@@ -80,31 +103,14 @@ const Virtualized = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) =
     dispatchList(instance)
   }, [instance])
 
-  const onScroll = useMemo(
-    () =>
-      throttle(400, () => {
-        if (!container) return
+  const throttleScrollRef = useRef()
 
-        const { top: containerTop } = container.getBoundingClientRect()
+  const onScroll = useMemo(() => {
+    if (throttleScrollRef.current) throttleScrollRef.current.cancel()
+    throttleScrollRef.current = makeThrottleScroll()
 
-        const firstVisibleElement = Array.from(
-          document.querySelectorAll("[data-submenuid],[data-menuid]")
-        ).find(el => el.getBoundingClientRect().top - containerTop > 0)
-
-        if (!firstVisibleElement) return
-
-        const menuGroupId = firstVisibleElement.getAttribute("data-menuid")
-        if (menuGroupId) {
-          onActiveSubMenuId("")
-          onActiveMenuGroupId(menuGroupId)
-          return
-        }
-
-        const subMenuId = firstVisibleElement.getAttribute("data-submenuid")
-        onActiveSubMenuId(subMenuId)
-      }),
-    [container]
-  )
+    return () => throttleScrollRef.current(container, onActiveSubMenuId, onActiveMenuGroupId)
+  }, [container, onActiveSubMenuId, onActiveMenuGroupId])
 
   useEffect(() => {
     const requestId = requestAnimationFrame(onScroll)

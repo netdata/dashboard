@@ -73,9 +73,10 @@ export const useChart = (id, selector = identity) => {
 
 export const useGetChartAttributes = () => useContext(GetChartAttributesContext)
 
+const emptyObject = {}
 export const useChartAttributes = (id, selector = identity) => {
   const getChartAttributes = useGetChartAttributes()
-  const resource = getChartAttributes(id)
+  const resource = getChartAttributes(id) || emptyObject
   return selector(resource)
 }
 
