@@ -5,13 +5,12 @@ import getChartMenu from "./getChartMenu"
 import getChartHeads from "./getChartHeads"
 import getMenuChartAttributes from "./getMenuChartAttributes"
 
-export default (chartIds, getChart, { hasKubernetes } = {}) => {
+export const getMenuInfo = (chartIds, getChart, hasKubernetes) => {
   const submenuNames = {}
-
   const chartMenus = {}
   const menuChartsAttributeById = {}
   const menuGroups = {}
-  const menuGroupCharts = {}
+  const menuGroupChartIds = {}
   const subMenus = {}
 
   chartIds.forEach(id => {
@@ -30,16 +29,36 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
 
     if (!subMenus[subMenuId]) subMenus[subMenuId] = []
     if (!menuGroups[menu.id]) menuGroups[menu.id] = new Set()
-    if (!menuGroupCharts[menu.id]) menuGroupCharts[menu.id] = []
+    if (!menuGroupChartIds[menu.id]) menuGroupChartIds[menu.id] = []
 
     subMenus[subMenuId].push(menu.chartId)
     menuGroups[menu.id].add(subMenuId)
-    menuGroupCharts[menu.id].push(menu.chartId)
+    menuGroupChartIds[menu.id].push(menu.chartId)
     menuChartsAttributeById[id].menuGroupId = menu.id
   })
 
+  return {
+    chartMenus,
+    menuChartsAttributeById,
+    menuGroups,
+    menuGroupChartIds,
+    subMenus,
+    submenuNames,
+  }
+}
+
+export default (chartIds, getChart, { hasKubernetes } = {}) => {
+  const {
+    chartMenus,
+    menuChartsAttributeById,
+    menuGroups,
+    menuGroupChartIds,
+    subMenus,
+    submenuNames,
+  } = getMenuInfo(chartIds, getChart, hasKubernetes)
+
   const menuGroupById = Object.keys(menuGroups).reduce((acc, menuId) => {
-    const chartIds = menuGroupCharts[menuId]
+    const chartIds = menuGroupChartIds[menuId]
     const chartMenu = chartMenus[chartIds[0]]
     const firstChartId = chartIds.find(id => chartMenus[id].menuPattern)
     const menuPattern = firstChartId ? chartMenus[firstChartId].menuPattern : ""

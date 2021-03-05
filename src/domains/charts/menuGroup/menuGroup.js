@@ -1,15 +1,15 @@
-import React, { useMemo } from "react"
+import React, { forwardRef, useMemo } from "react"
 import styled, { css } from "styled-components"
 import { Text, Flex, getColor } from "@netdata/netdata-ui"
 import { MenuItemContainer } from "domains/charts/subMenu"
-import { useActiveMenuGroupId } from "domains/charts/active"
+import { useMenuGroupActive } from "domains/charts/active"
 import { withMenuGroup } from "./context"
 
-const MenuGroupLabel = styled(Text).attrs({ color: "border" })`
+export const MenuGroupLabelWrapper = styled(Text).attrs({ color: "border" })`
   font-weight: "500";
 `
 
-const Icon = styled(MenuGroupLabel)`
+const Icon = styled(MenuGroupLabelWrapper)`
   svg {
     width: 20px;
     text-align: center;
@@ -18,7 +18,7 @@ const Icon = styled(MenuGroupLabel)`
 
 const styledActive = css`
   border-left: 2px solid ${getColor("key")};
-  ${MenuGroupLabel} {
+  ${MenuGroupLabelWrapper} {
     color: ${getColor("key")};
   }
 `
@@ -27,7 +27,7 @@ const Container = styled(Flex)`
   &&& {
     border-left: 2px solid transparent;
     ${props => props.active && styledActive}
-    ${props => props.active && `${MenuGroupLabel} { font-weight: bold; }`}
+    ${props => props.active && `${MenuGroupLabelWrapper} { font-weight: bold; }`}
 
     text-decoration: none;
     &:hover {
@@ -36,36 +36,45 @@ const Container = styled(Flex)`
   }
 `
 
+export const MenuGroupLabelContainer = withMenuGroup(MenuGroupLabelWrapper, ({ title }) => ({
+  children: title,
+}))
+
 export const MenuGroupIcon = ({ icon }) => <Icon dangerouslySetInnerHTML={{ __html: icon }} />
 
-export const MenuGroupItem = ({ icon, title, ...rest }) => (
-  <Container as="a" gap={2} {...rest}>
-    <MenuGroupIcon icon={icon} />
-    <MenuGroupLabel>{title}</MenuGroupLabel>
-  </Container>
+export const MenuGroupIconContainer = withMenuGroup(MenuGroupIcon, ({ icon }) => ({ icon }))
+
+export const MenuGroupItemWrapper = forwardRef((props, ref) => (
+  <Container ref={ref} as="a" gap={2} padding={[1, 5]} {...props}></Container>
+))
+
+export const MenuGroupItemContainer = withMenuGroup(MenuGroupItemWrapper, ({ link }) => ({
+  href: `#${link}`,
+}))
+
+export const MenuGroupItem = ({ id, ...rest }) => (
+  <MenuGroupItemContainer id={id} {...rest}>
+    <MenuGroupIconContainer id={id} />
+    <MenuGroupLabelContainer id={id} />
+  </MenuGroupItemContainer>
 )
 
-export const SubMenus = ({ subMenuIds, onSubMenuClick, ...rest }) => {
-  return (
-    <Flex column role="list" {...rest}>
-      {subMenuIds.map(id => (
-        <MenuItemContainer
-          key={id}
-          id={id}
-          onClick={onSubMenuClick && (e => onSubMenuClick(id, e))}
-        />
-      ))}
-    </Flex>
-  )
-}
+export const SubMenus = ({ subMenuIds, onSubMenuClick, ...rest }) => (
+  <Flex column role="list" padding={[0, 0, 2, 0]} {...rest}>
+    {subMenuIds.map(id => (
+      <MenuItemContainer key={id} id={id} onSubMenuClick={onSubMenuClick} />
+    ))}
+  </Flex>
+)
 
-export const MenuGroup = ({
+export const SubMenusContainer = withMenuGroup(SubMenus, ({ subMenuIds }) => ({ subMenuIds }))
+
+export const MenuGroupWrapper = forwardRef((props, ref) => (
+  <Flex as="li" column ref={ref} {...props} />
+))
+
+export const withMenuGroupClickHandlers = Component => ({
   id,
-  icon,
-  title,
-  subMenuIds,
-  link,
-  active,
   onMenuGroupClick,
   onSubMenuClick,
   ...rest
@@ -80,34 +89,20 @@ export const MenuGroup = ({
   )
 
   return (
-    <Flex as="li" column {...rest}>
-      <MenuGroupItem
-        icon={icon}
-        href={`#${link}`}
-        title={title}
-        onClick={menuGroupClick}
-        active={active}
-        padding={[1, 5]}
-      />
-      {active && (
-        <SubMenus subMenuIds={subMenuIds} onSubMenuClick={subMenuClick} padding={[0, 0, 2, 0]} />
-      )}
-    </Flex>
+    <Component id={id} onMenuGroupClick={menuGroupClick} onSubMenuClick={subMenuClick} {...rest} />
   )
 }
 
+export const MenuGroup = ({ id, active, onMenuGroupClick, onSubMenuClick, ...rest }) => (
+  <MenuGroupWrapper {...rest}>
+    <MenuGroupItem id={id} onClick={onMenuGroupClick} active={active} />
+    {active && <SubMenusContainer id={id} onSubMenuClick={onSubMenuClick} />}
+  </MenuGroupWrapper>
+)
+
 export const withMenuActive = Component => ({ id, ...rest }) => {
-  const active = useActiveMenuGroupId(state => id === state)
+  const active = useMenuGroupActive(id)
   return <Component active={active} id={id} {...rest} />
 }
 
-export const MenuGroupContainer = withMenuGroup(
-  withMenuActive(MenuGroup),
-  ({ icon, title, subMenuIds, link, id }) => ({
-    icon,
-    title,
-    subMenuIds,
-    link,
-    id,
-  })
-)
+export const MenuGroupContainer = withMenuActive(withMenuGroupClickHandlers(MenuGroup))

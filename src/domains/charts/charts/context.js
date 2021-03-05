@@ -48,8 +48,10 @@ export const ChartsProvider = ({
   </ContainerContext.Provider>
 )
 
+const emptyObject = {}
+
 export const useMenuChartAttributes = (id, selector = identity) =>
-  useContext(MenuChartsAttributeById, state => selector(state[id]))
+  useContext(MenuChartsAttributeById, state => selector(state[id] || emptyObject))
 
 export const useDispatchChartsAttributes = () => useContext(DispatchChartAttributesContext)
 
@@ -73,7 +75,6 @@ export const useChart = (id, selector = identity) => {
 
 export const useGetChartAttributes = () => useContext(GetChartAttributesContext)
 
-const emptyObject = {}
 export const useChartAttributes = (id, selector = identity) => {
   const getChartAttributes = useGetChartAttributes()
   const resource = getChartAttributes(id) || emptyObject

@@ -9,6 +9,6 @@ export * from "./subMenu"
 
 export { default as getChartHeads } from "./getChartHeads"
 export { default as getChartMenu } from "./getChartMenu"
-export { default as getMenu } from "./getMenu"
+export { default as getMenu, getMenuInfo } from "./getMenu"
 
 export { default as DashboardMenuProvider } from "./provider"
