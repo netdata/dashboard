@@ -6,7 +6,7 @@ import { withMenuGroupIds } from "./context"
 import { MenuGroupContainer } from "./menuGroup"
 
 export const MenuWrapper = forwardRef((props, ref) => (
-  <Flex as="ul" role="complementary" column ref={ref} {...props} />
+  <Flex as="ul" width="100%" role="complementary" column ref={ref} {...props} />
 ))
 
 export const Menu = memo(({ menuGroupIds, onMenuGroupClick, onSubMenuClick, ...rest }) => (

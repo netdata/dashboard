@@ -9,13 +9,15 @@ const styledActive = css`
   color: ${getColor("key")};
 `
 
-const MenuItem = styled(TextSmall).attrs(({ active, title, link, children }) => ({
+const MenuItem = styled(TextSmall).attrs(({ active, id, title, link, children }) => ({
   as: "a",
   strong: active,
   padding: [0.5, 7],
   role: "listitem",
   children: title || children,
   href: `#${link}`,
+  "data-sidebar-submenuid": id,
+  truncate: true,
 }))`
   &&& {
     text-decoration: none;

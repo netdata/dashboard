@@ -1,7 +1,23 @@
 import { useRef, useCallback, useLayoutEffect } from "react"
-import { useMenuGroups, useSubMenus, useList, useDispatchActive } from "@/src/domains/charts"
+import {
+  useMenuGroups,
+  useSubMenus,
+  useList,
+  useDispatchActive,
+  useContainer,
+} from "@/src/domains/charts"
+
+const getElement = action => (container, query) => {
+  const element = container.querySelector(query)
+  if (element) action(element)
+}
+const scrollIntoView =
+  "scrollIntoViewIfNeeded" in document.body
+    ? getElement(element => element.scrollIntoViewIfNeeded())
+    : getElement(element => element.scrollIntoView())
 
 export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialChartName }) => {
+  const container = useContainer()
   const list = useList()
   const menuGroups = useMenuGroups()
   const subMenus = useSubMenus()
@@ -12,7 +28,9 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
   const setActiveMenuGroupId = useCallback(
     id => {
       if (initialScrollRef.current) return
+
       setMenuGroupId(id)
+      scrollIntoView(container, `[data-sidebar-menugroupid="${id}"]`)
 
       if (id && menuGroups[id]) onChartNameChange(menuGroups[id].link)
     },
@@ -24,10 +42,11 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
       if (initialScrollRef.current) return
       setSubMenuId(id)
 
-      if (id && subMenus[id]) {
-        setMenuGroupId(subMenus[id].menuGroupId)
-        onChartNameChange(subMenus[id].link)
-      }
+      if (!(id in subMenus)) return
+
+      setMenuGroupId(subMenus[id].menuGroupId)
+      scrollIntoView(container, `[data-sidebar-submenuid="${id}"]`)
+      onChartNameChange(subMenus[id].link)
     },
     [subMenus]
   )

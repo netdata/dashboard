@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react"
+import { useLayoutEffect, useMemo } from "react"
 import {
   MenuGroupIdsContext,
   MenuGroupByIdContext,
@@ -67,7 +67,7 @@ export default ({ ref, measures, cache }) => {
     return { goToMenuGroup, goToSubMenu, goToChart, goToLink, measure, resize, resizeAll }
   }, [container])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatchList(list)
   }, [list])
 

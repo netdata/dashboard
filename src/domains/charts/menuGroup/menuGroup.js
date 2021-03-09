@@ -44,11 +44,12 @@ export const MenuGroupIcon = ({ icon }) => <Icon dangerouslySetInnerHTML={{ __ht
 
 export const MenuGroupIconContainer = withMenuGroup(MenuGroupIcon, ({ icon }) => ({ icon }))
 
-export const MenuGroupItemWrapper = forwardRef((props, ref) => (
-  <Container ref={ref} as="a" gap={2} padding={[1, 5]} {...props} />
+export const MenuGroupItemWrapper = forwardRef(({ id, ...rest }, ref) => (
+  <Container ref={ref} as="a" gap={2} padding={[1, 5]} data-sidebar-menugroupid={id} {...rest} />
 ))
 
-export const MenuGroupItemContainer = withMenuGroup(MenuGroupItemWrapper, ({ link }) => ({
+export const MenuGroupItemContainer = withMenuGroup(MenuGroupItemWrapper, ({ id, link }) => ({
+  id,
   href: `#${link}`,
 }))
 
