@@ -5,7 +5,7 @@ import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import VirtualizedList from "react-virtualized/dist/commonjs/List"
 import CellMeasurerWrapper from "./cellMeasurerWrapper"
-import retry from "./retry"
+import useMakeList from "./useMakeList"
 
 const makeThrottleScroll = () =>
   throttle(400, (container, onActiveSubMenuId, onActiveMenuGroupId) => {
@@ -64,50 +64,7 @@ const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
     )
   }
 
-  const instance = useMemo(() => {
-    const goToMenuGroup = async id => {
-      await retry(() => {
-        const targetIndex = ids.indexOf(id)
-        if (targetIndex !== -1) return ref.current.scrollToRow(targetIndex)
-      }, 5)
-
-      await retry(() => {
-        const target = container.querySelector(`[data-menuid="${id}"]`)
-        if (target) target.scrollIntoView()
-      }, 5)
-    }
-
-    const goToSubMenu = id => {
-      const target = container.querySelector(`[data-submenuid="${id}"]`)
-      if (target) target.scrollIntoView()
-    }
-
-    const goToChart = id => {
-      const target = container.querySelector(`[data-chartid="${id}"]`)
-      if (target) target.scrollIntoView()
-    }
-
-    const measure = id => measures.current[id]()
-
-    const resize = id => {
-      measure(id)
-      ref.current.forceUpdateGrid()
-    }
-
-    const resizeAll = () => {
-      cache.clearAll()
-      ref.current.forceUpdateGrid()
-    }
-
-    return { goToMenuGroup, goToSubMenu, goToChart, measure, resize, resizeAll }
-  }, [container, ids])
-
-  const dispatchList = useDispatchList()
-
-  useEffect(() => {
-    dispatchList(instance)
-  }, [instance])
-
+  const list = useMakeList({ ref, measures, cache })
   const throttleScrollRef = useRef()
 
   const onScroll = useMemo(() => {
@@ -126,7 +83,7 @@ const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
     <AutoSizer>
       {({ height, width }) => {
         if (widthRef.current && Math.abs(widthRef.current - width) > 15) {
-          instance.resizeAll()
+          list.resizeAll()
         }
         widthRef.current = width
 

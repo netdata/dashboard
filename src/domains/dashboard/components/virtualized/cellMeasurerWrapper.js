@@ -29,16 +29,17 @@ const Wrapper = ({ children, style, id }) => {
       timeoutId = setTimeout(() => {
         cancelDeffered = deffered(() => {
           if (
-            prevHeightRef.current &&
-            ref.current &&
-            Math.abs(prevHeightRef.current - ref.current.firstChild.clientHeight) > 10
+            !prevHeightRef.current ||
+            (prevHeightRef.current &&
+              ref.current &&
+              Math.abs(prevHeightRef.current - ref.current.firstChild.clientHeight) > 10)
           ) {
             list.resize(id)
           }
           prevHeightRef.current = ref.current.firstChild.clientHeight
           resize()
         })
-      }, 600)
+      }, 400)
     }
 
     resize()
@@ -50,7 +51,7 @@ const Wrapper = ({ children, style, id }) => {
   }, [id])
 
   return (
-    <div ref={ref} style={{ ...style, paddingRight: "212px" }}>
+    <div ref={ref} style={{ ...style, paddingRight: "232px" }}>
       {children}
     </div>
   )

@@ -7,6 +7,8 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
   const subMenus = useSubMenus()
   const { setMenuGroupId, setSubMenuId } = useDispatchActive()
 
+  const initialScrollRef = useRef(initialChartName)
+
   const setActiveMenuGroupId = useCallback(
     id => {
       if (initialScrollRef.current) return
@@ -30,28 +32,11 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
     [subMenus]
   )
 
-  const initialScrollRef = useRef(initialChartName)
   useLayoutEffect(() => {
     if (!initialScrollRef.current || !list) return
 
     initialScrollRef.current = null
-
-    const menuGroupId = Object.keys(menuGroups).find(id => menuGroups[id].link === initialChartName)
-    if (menuGroupId) {
-      list.goToMenuGroup(menuGroupId)
-      setActiveMenuGroupId(menuGroupId)
-      return
-    }
-
-    const subMenuId = Object.keys(subMenus).find(id => subMenus[id].link === initialChartName)
-    if (subMenuId) {
-      list.goToMenuGroup(subMenus[subMenuId].menuGroupId).then(() => {
-        list.goToSubMenu(subMenuId)
-        setActiveMenuGroupId(subMenus[subMenuId].menuGroupId)
-        setActiveSubMenuId(subMenuId)
-      })
-      return
-    }
+    list.goToLink(initialChartName)
   }, [list])
 
   const menuGroupClick = useCallback(
