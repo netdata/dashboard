@@ -1,19 +1,10 @@
 import React from "react"
-import { Text } from "@netdata/netdata-ui"
 import { withSubMenu } from "domains/charts/subMenu"
+import Description from "domains/charts/description"
 
-export const ChartSubMenuDescription = ({ info, ...rest }) =>
-  info ? (
-    <Text
-      as="p"
-      color="border"
-      role="document"
-      dangerouslySetInnerHTML={{ __html: info }}
-      {...rest}
-    />
-  ) : null
+export const ChartSubMenuDescription = props => <Description as="p" role="document" {...props} />
 
 export const ChartSubMenuDescriptionContainer = withSubMenu(
   ChartSubMenuDescription,
-  ({ info }) => ({ info })
+  ({ info }) => ({ children: info })
 )

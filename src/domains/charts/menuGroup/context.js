@@ -14,16 +14,15 @@ import useContext from "@/src/hooks/useContextSelector"
 // height
 // link
 
-export const MenuGroupById = createContext({})
+export const MenuGroupByIdContext = createContext({})
 
 export const MenuGroupProvider = ({ menuGroupById, children }) => (
-  <MenuGroupById.Provider value={menuGroupById}>{children}</MenuGroupById.Provider>
+  <MenuGroupByIdContext.Provider value={menuGroupById}>{children}</MenuGroupByIdContext.Provider>
 )
 
-export const useMenuGroups = () => useContext(MenuGroupById)
+export const useMenuGroups = selector => useContext(MenuGroupByIdContext, selector)
 
-export const useMenuGroup = (id, selector = identity) =>
-  useContext(MenuGroupById, state => selector(state[id]))
+export const useMenuGroup = (id, selector = identity) => useMenuGroups(state => selector(state[id]))
 
 export const withMenuGroup = (Component, select) => ({ id, ...rest }) => {
   const menuGroups = useMenuGroup(id, select)

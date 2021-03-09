@@ -1,11 +1,6 @@
-import React from "react"
-import { Text } from "@netdata/netdata-ui"
+import Description from "domains/charts/description"
 import { withMenuGroup } from "domains/charts/menuGroup"
 
-export const ChartMenuGroupDescription = ({ children, ...rest }) =>
-  children ? <Text color="border" dangerouslySetInnerHTML={{ __html: children }} {...rest} /> : null
-
-export const ChartMenuGroupDescriptionContainer = withMenuGroup(
-  ChartMenuGroupDescription,
-  ({ info }) => ({ children: info })
-)
+export const ChartMenuGroupDescriptionContainer = withMenuGroup(Description, ({ info }) => ({
+  children: info,
+}))

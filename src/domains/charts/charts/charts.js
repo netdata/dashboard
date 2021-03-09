@@ -24,7 +24,13 @@ export const ChartMenu = ({ id, menuChartAttributes, chartAttributes, chart }) =
   )
 
   return (
-    <div ref={ref} className="dashboardjs-chart" id={link} role="application">
+    <div
+      ref={ref}
+      className="dashboardjs-chart"
+      id={link}
+      role="application"
+      data-height={attributes.height}
+    >
       {container && (
         <ChartContainer
           attributes={attributes}
