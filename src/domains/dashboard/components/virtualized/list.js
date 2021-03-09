@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useRef, useEffect } from "react"
 import { throttle } from "throttle-debounce"
-import { useMenuGroupIds, useContainer, useDispatchList } from "@/src/domains/charts"
+import { useMenuGroupIds, useContainer } from "@/src/domains/charts"
 import CellMeasurer, { CellMeasurerCache } from "react-virtualized/dist/commonjs/CellMeasurer"
 import AutoSizer from "react-virtualized/dist/commonjs/AutoSizer"
 import VirtualizedList from "react-virtualized/dist/commonjs/List"

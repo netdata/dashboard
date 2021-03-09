@@ -36,7 +36,7 @@ const Wrapper = ({ children, style, id }) => {
           ) {
             list.resize(id)
           }
-          prevHeightRef.current = ref.current.firstChild.clientHeight
+          prevHeightRef.current = ref.current?.firstChild.clientHeight
           resize()
         })
       }, 400)

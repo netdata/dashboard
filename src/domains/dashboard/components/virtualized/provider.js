@@ -5,7 +5,14 @@ import { DashboardMenuProvider } from "@/src/domains/charts"
 import CSSVariables from "./cssVariables"
 
 export const ContentWrapper = props => (
-  <Flex column height="100%" padding={[2, 0, 2, 6]} className="node-view__container" {...props} />
+  <Flex
+    column
+    height="100%"
+    padding={[2, 0, 2, 6]}
+    overflow={{ horizontal: "hidden" }}
+    className="node-view__container"
+    {...props}
+  />
 )
 
 const Provider = ({
