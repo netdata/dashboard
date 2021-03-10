@@ -37,6 +37,11 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
       chartEnriched.menu = tmp
       break
 
+    case "cpufreq":
+    case "cpuidle":
+      chartEnriched.menu = 'cpu'
+      break
+
     case "apache":
       if (parts.length > 2 && parts[1] === "cache") {
         chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
