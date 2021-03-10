@@ -29,14 +29,18 @@ export default ({ ref, measures, cache }) => {
       }, 5)
     }
 
-    const goToSubMenu = id => {
-      const target = container.querySelector(`[data-submenuid="${id}"]`)
-      if (target) target.scrollIntoView()
+    const goToSubMenu = async id => {
+      await retry(() => {
+        const target = container.querySelector(`[data-submenuid="${id}"]`)
+        if (target) target.scrollIntoView()
+      }, 5)
     }
 
-    const goToChart = id => {
-      const target = container.querySelector(`[data-chartid="${id}"]`)
-      if (target) target.scrollIntoView()
+    const goToChart = async id => {
+      await retry(() => {
+        const target = container.querySelector(`[data-chartid="${id}"]`)
+        if (target) target.scrollIntoView()
+      }, 5)
     }
 
     const goToLink = link => {
