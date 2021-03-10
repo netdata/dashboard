@@ -1,10 +1,6 @@
-import React from "react"
-import { Text } from "@netdata/netdata-ui"
+import Description from "domains/charts/description"
 import { withMenuChartAttributes } from "./context"
 
-export const ChartDescription = ({ info, ...rest }) =>
-  info ? <Text color="border" dangerouslySetInnerHTML={{ __html: info }} {...rest} /> : null
-
-export const ChartDescriptionContainer = withMenuChartAttributes(ChartDescription, ({ info }) => ({
-  info,
+export const ChartDescriptionContainer = withMenuChartAttributes(Description, ({ info }) => ({
+  children: info,
 }))

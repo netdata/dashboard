@@ -1,5 +1,7 @@
-import React, { Fragment, useRef, useEffect } from "react"
+import React, { Fragment, useRef, useEffect, useCallback } from "react"
 import classNames from "classnames"
+import { useSelector } from "store/redux-separate-context"
+import { selectChartData } from "domains/chart/selectors"
 
 import { colorHex2Rgb } from "utils/color-hex-2-rgb"
 import { useDateTime } from "utils/date-time"
@@ -9,13 +11,12 @@ import { legendResolutionTooltip, legendPluginModuleString } from "../utils/lege
 import { ChartMetadata, DygraphData } from "../chart-types"
 
 interface Props {
-  chartData: DygraphData
+  chartUuid: string
   chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
     [key: string]: string
   }
-  dimensionNames: string[]
   hoveredRow: number
   hoveredX: number | null
   legendFormatValue: (value: number | string | null) => (number | string)
@@ -27,11 +28,10 @@ interface Props {
 }
 
 export const ChartLegendRight = ({
-  chartData,
+  chartUuid,
   chartMetadata,
   chartLibrary,
   colors,
-  dimensionNames,
   hoveredRow,
   hoveredX,
   legendFormatValue,
@@ -41,6 +41,11 @@ export const ChartLegendRight = ({
   unitsCurrent,
   viewBefore,
 }: Props) => {
+  const chartData = useSelector(
+    useCallback((state: any) => selectChartData(state, { id: chartUuid }), [chartUuid])
+  )
+  const { dimension_names: dimensionNames, dimension_ids: dimensionIds } = chartData
+
   // todo handle also this case:
   // const netdataLast = chartData.last_entry * 1000
   // const dataUpdateEvery = chartData.view_update_every * 1000
@@ -108,7 +113,8 @@ export const ChartLegendRight = ({
       <br />
       <div className="netdata-legend-series" ref={scrollbarRef}>
         <div className="netdata-legend-series-content">
-          {dimensionNames.map((dimensionName, i) => {
+          {dimensionIds.map((dimensionId, i) => {
+            const dimensionName = dimensionNames[i]
             // todo dimension could be a separate component
             const color = colors[dimensionName]
             const rgb = colorHex2Rgb(color)
@@ -128,7 +134,7 @@ export const ChartLegendRight = ({
             }
 
             return (
-              <Fragment key={dimensionName}>
+              <Fragment key={dimensionId}>
                 {i !== 0 && <br />}
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                 <span

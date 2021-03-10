@@ -33,7 +33,7 @@ export { default as useMenu } from "domains/dashboard/components/node-view/useMe
 export * from "domains/dashboard/components/node-view/use-update-theme"
 export * from "domains/dashboard/components/head-main"
 export { default as HeadMainContainer } from "domains/dashboard/components/headMainContainer"
-export { default as VirtualizedDashboard } from "domains/dashboard/components/virtualized"
+export * from "domains/dashboard/components/virtualized"
 
 export * from "domains/charts"
 

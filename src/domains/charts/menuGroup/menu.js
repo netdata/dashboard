@@ -1,12 +1,16 @@
-import React, { memo } from "react"
+import React, { memo, forwardRef } from "react"
 import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
 import { useContainer } from "domains/charts/charts"
 import { withMenuGroupIds } from "./context"
 import { MenuGroupContainer } from "./menuGroup"
 
+export const MenuWrapper = forwardRef((props, ref) => (
+  <Flex as="ul" width="100%" role="complementary" column ref={ref} {...props} />
+))
+
 export const Menu = memo(({ menuGroupIds, onMenuGroupClick, onSubMenuClick, ...rest }) => (
-  <Flex as="ul" role="complementary" column {...rest}>
+  <MenuWrapper {...rest}>
     {menuGroupIds.map(id => (
       <MenuGroupContainer
         key={id}
@@ -15,10 +19,12 @@ export const Menu = memo(({ menuGroupIds, onMenuGroupClick, onSubMenuClick, ...r
         onSubMenuClick={onSubMenuClick}
       />
     ))}
-  </Flex>
+  </MenuWrapper>
 ))
 
-export const MenuSidebar = styled(Flex).attrs({
+export const MenuContainer = withMenuGroupIds(Menu)
+
+const StyledMenuSidebar = styled(Flex).attrs({
   overflow: { vertical: "auto" },
 })`
   position: fixed;
@@ -28,24 +34,16 @@ export const MenuSidebar = styled(Flex).attrs({
   max-height: calc(100vh - ${({ top }) => top});
 `
 
-export const MenuSidebarContainer = ({
-  menuGroupIds,
-  onMenuGroupClick,
-  onSubMenuClick,
-  ...rest
-}) => {
+export const MenuSidebar = props => {
   const container = useContainer()
   const top = `${container.getBoundingClientRect().top}px`
-
-  return (
-    <MenuSidebar top={top} {...rest}>
-      <Menu
-        menuGroupIds={menuGroupIds}
-        onMenuGroupClick={onMenuGroupClick}
-        onSubMenuClick={onSubMenuClick}
-      />
-    </MenuSidebar>
-  )
+  return <StyledMenuSidebar top={top} {...props} />
 }
 
-export const SidebarContainer = memo(withMenuGroupIds(MenuSidebarContainer))
+export const MenuSidebarContainer = ({ onMenuGroupClick, onSubMenuClick, ...rest }) => (
+  <MenuSidebar {...rest}>
+    <MenuContainer onMenuGroupClick={onMenuGroupClick} onSubMenuClick={onSubMenuClick} />
+  </MenuSidebar>
+)
+
+export const SidebarContainer = memo(MenuSidebarContainer)

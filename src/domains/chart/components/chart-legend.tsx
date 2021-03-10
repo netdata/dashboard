@@ -1,5 +1,7 @@
-import React from "react"
+import React, { useCallback } from "react"
 
+import { useSelector } from "store/redux-separate-context"
+import { selectChartData } from "domains/chart/selectors"
 import { getNewSelectedDimensions } from "domains/chart/utils/legend-utils"
 import { Attributes } from "../utils/transformDataAttributes"
 import { ChartMetadata, DygraphData } from "../chart-types"
@@ -9,7 +11,7 @@ import { ChartLegendBottom } from "./chart-legend-bottom"
 
 interface Props {
   attributes: Attributes
-  chartData: DygraphData
+  chartUuid: string
   chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
@@ -17,7 +19,7 @@ interface Props {
   }
   hoveredRow: number
   hoveredX: number | null
-  legendFormatValue: (value: number | string | null) => (number | string)
+  legendFormatValue: (value: number | string | null) => number | string
   selectedDimensions: string[]
   setSelectedDimensions: (selectedDimensions: string[]) => void
   showLatestOnBlur: boolean
@@ -29,7 +31,7 @@ interface Props {
 
 export const ChartLegend = ({
   attributes,
-  chartData,
+  chartUuid,
   chartMetadata,
   chartLibrary,
   colors,
@@ -44,11 +46,17 @@ export const ChartLegend = ({
   legendToolbox,
   resizeHandler,
 }: Props) => {
+  const dimension_names = useSelector(
+    useCallback((state: any) => selectChartData(state, { id: chartUuid }).dimension_names, [
+      chartUuid,
+    ])
+  )
+
   const onDimensionClick = (clickedDimensionName: string, event: React.MouseEvent) => {
     event.preventDefault()
     const isModifierKeyPressed = event.shiftKey || event.ctrlKey
     const newSelectedDimensions = getNewSelectedDimensions({
-      allDimensions: chartData.dimension_names,
+      allDimensions: dimension_names,
       selectedDimensions,
       clickedDimensionName,
       isModifierKeyPressed,
@@ -59,11 +67,10 @@ export const ChartLegend = ({
   if (attributes.legendPosition === "bottom") {
     return (
       <ChartLegendBottom
-        chartData={chartData}
+        chartUuid={chartUuid}
         chartLibrary={chartLibrary}
         chartMetadata={chartMetadata}
         colors={colors}
-        dimensionNames={chartData.dimension_names}
         hoveredRow={hoveredRow}
         hoveredX={hoveredX}
         legendFormatValue={legendFormatValue}
@@ -80,11 +87,10 @@ export const ChartLegend = ({
 
   return (
     <ChartLegendRight
-      chartData={chartData}
+      chartUuid={chartUuid}
       chartLibrary={chartLibrary}
       chartMetadata={chartMetadata}
       colors={colors}
-      dimensionNames={chartData.dimension_names}
       hoveredRow={hoveredRow}
       hoveredX={hoveredX}
       legendFormatValue={legendFormatValue}

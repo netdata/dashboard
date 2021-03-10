@@ -1,6 +1,6 @@
 import React, { memo } from "react"
 import { useContainer, useGetChart, useDashboardAttributes } from "domains/charts/charts"
-import { ChartHeads, useChartHeadDuration } from "domains/charts/chartHead"
+import { ChartHeadsWrapper, useChartHeadDuration } from "domains/charts/chartHead"
 import { HeadMain } from "./head-main"
 
 const HeadMainContainer = props => {
@@ -11,7 +11,7 @@ const HeadMainContainer = props => {
   const { host, nodeIDs, ...restAttributes } = useDashboardAttributes()
 
   return (
-    <ChartHeads {...props}>
+    <ChartHeadsWrapper {...props}>
       <HeadMain
         getChart={getChart}
         duration={duration}
@@ -19,8 +19,8 @@ const HeadMainContainer = props => {
         nodeIDs={nodeIDs}
         commonAttributesOverrides={restAttributes}
       />
-    </ChartHeads>
+    </ChartHeadsWrapper>
   )
 }
 
-export default memo(HeadMainContainer, () => false)
+export default memo(HeadMainContainer)

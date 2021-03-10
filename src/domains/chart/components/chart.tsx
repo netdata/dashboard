@@ -457,7 +457,7 @@ export const Chart = memo(({
       {hasLegend(attributes) && (
         <ChartLegend
           attributes={attributes}
-          chartData={chartData as DygraphData}
+          chartUuid={chartUuid}
           chartMetadata={chartMetadata}
           chartLibrary={chartLibrary}
           colors={colors}

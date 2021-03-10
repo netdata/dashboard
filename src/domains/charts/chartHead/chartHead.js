@@ -21,14 +21,14 @@ export const ChartHead = ({ chart, chartAttributes, menuChartAttributes, ...rest
 
 export const ChartHeadContainer = withChartProps(ChartHead)
 
-export const ChartHeads = forwardRef((props, ref) => (
+export const ChartHeadsWrapper = forwardRef((props, ref) => (
   <Flex justifyContent="center" alignItems="baseline" ref={ref} {...props} />
 ))
 
 export const ChartHeadsContainer = ({ ids, ...rest }) => (
-  <ChartHeads {...rest}>
+  <ChartHeadsWrapper {...rest}>
     {ids.map(id => (
       <ChartHeadContainer key={id} id={id} />
     ))}
-  </ChartHeads>
+  </ChartHeadsWrapper>
 )

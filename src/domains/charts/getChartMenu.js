@@ -39,6 +39,10 @@ export default (
     case "statsd":
       return emit({ menu: part1 })
 
+    case "cpufreq":
+    case "cpuidle":
+      return emit({ menu: "cpu" })
+
     case "smartd":
     case "web":
       return emitMultipartMenu("log")

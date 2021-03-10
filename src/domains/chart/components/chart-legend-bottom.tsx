@@ -1,18 +1,19 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { useDateTime } from "utils/date-time"
+import { useSelector } from "store/redux-separate-context"
+import { selectChartData } from "domains/chart/selectors"
 import { legendPluginModuleString, legendResolutionTooltip } from "domains/chart/utils/legend-utils"
-import { ChartMetadata, DygraphData } from "../chart-types"
+import { ChartMetadata } from "../chart-types"
 
 import * as S from "./chart-legend-bottom.styled"
 
 interface Props {
-  chartData: DygraphData
+  chartUuid: string
   chartMetadata: ChartMetadata
   chartLibrary: string
   colors: {
     [key: string]: string
   }
-  dimensionNames: string[]
   hoveredRow: number
   hoveredX: number | null
   legendFormatValue: (value: number | string | null) => number | string
@@ -52,10 +53,9 @@ export const ChartTimeframe = ({
 }
 
 export const ChartLegendBottom = ({
-  chartData,
+  chartUuid,
   chartMetadata,
   colors,
-  dimensionNames,
   hoveredRow,
   hoveredX,
   legendFormatValue,
@@ -68,6 +68,10 @@ export const ChartLegendBottom = ({
   resizeHandler,
 }: Props) => {
   const showUndefined = hoveredRow === -1 && !showLatestOnBlur
+  const chartData = useSelector(
+    useCallback((state: any) => selectChartData(state, { id: chartUuid }), [chartUuid])
+  )
+  const { dimension_names: dimensionNames, dimension_ids: dimensionIds } = chartData
 
   return (
     <S.LegendContainer>
@@ -83,11 +87,12 @@ export const ChartLegendBottom = ({
       </S.LegendFirstRow>
       <S.LegendSecondRow>
         <S.LegendItems>
-          {dimensionNames.map((dimensionName, i) => {
+          {dimensionIds.map((dimensionId, i) => {
+            const dimensionName = dimensionNames[i]
             const color = colors[dimensionName]
 
-            const isSelected = selectedDimensions.length === 0
-              || selectedDimensions.includes(dimensionName)
+            const isSelected =
+              selectedDimensions.length === 0 || selectedDimensions.includes(dimensionName)
 
             let value
             if (showUndefined) {
@@ -102,13 +107,13 @@ export const ChartLegendBottom = ({
             return (
               <S.DimensionItem
                 color={color}
-                onClick={(event) => {
+                onClick={event => {
                   onDimensionClick(dimensionName, event)
                 }}
                 role="button"
                 tabIndex={0}
                 isDisabled={!isSelected}
-                key={dimensionName}
+                key={dimensionId}
               >
                 <S.DimensionIcon title={dimensionName} color={color} />
                 <S.DimensionLabel>{dimensionName}</S.DimensionLabel>
