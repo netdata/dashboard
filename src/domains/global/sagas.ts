@@ -74,6 +74,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
     },
   })
   const shouldMaskReferrer = !isDemo && !isAllowedReferrer(document.referrer)
+  const MASKED = "masked"
   window.posthog.register(
     // remove properties with unavailable values
     filter((value) => value !== undefined && value !== null,
@@ -83,10 +84,10 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         $pathname: isDemo ? null : "netdata-dashboard",
         $host: isDemo ? null : "dashboard.netdata.io",
 
-        $initial_referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
-        $initial_referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
-        $referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
-        $referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
+        $initial_referring_domain: shouldMaskReferrer ? MASKED : null,
+        $initial_referrer: shouldMaskReferrer ? MASKED : null,
+        $referring_domain: shouldMaskReferrer ? MASKED : null,
+        $referrer: shouldMaskReferrer ? MASKED : null,
 
         event_source: "agent dashboard",
 
