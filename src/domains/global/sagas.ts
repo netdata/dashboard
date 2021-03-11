@@ -140,7 +140,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         system_kernel_name: info.kernel_name,
         system_kernel_version: info.kernel_version,
         system_architecture: info.architecture,
-        system_vitrualization: info.virtualization,
+        system_virtualization: info.virtualization,
         system_virt_detection: info.virt_detection,
         system_container: info.container,
         system_container_detection: info.container_detection,
