@@ -120,6 +120,8 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         $referring_domain: shouldMaskReferrer ? "127.0.0.1" : null,
         $referrer: shouldMaskReferrer ? "http://127.0.0.1" : null,
 
+        event_source: "agent dashboard",
+
         netdata_version: info.version,
         netdata_machine_guid: machineGuid,
         netdata_person_id: personGuid || "Unavailable",
