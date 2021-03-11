@@ -49,44 +49,12 @@ export function* watchWindowFocusChannel() {
   }
 }
 
-const hasPosthogFeatureFlag = !!localStorage.getItem("posthog-dev")
-
-const injectGTM = (machineGuid: string) => {
-  // @ts-ignore
-  if (document.querySelector("script[src^=\"https://www.googletagmanager.com/gtm.js\"]")) {
-    // make sure gtm is loaded only once
-    return
-  }
-  /* eslint-disable */
-  // @ts-ignore
-  ; (function (w, d, s, l, i) {
-    // @ts-ignore
-    w[l] = w[l] || []
-    // @ts-ignore
-    w[l].push({ "gtm.start": new Date().getTime(), event: "gtm.js" })
-    var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s),
-      // @ts-ignore
-      dl = l != "dataLayer" ? "&l=" + l : ""
-    // @ts-ignore
-    j.async = false
-
-    // @ts-ignore
-    j.src = "https://www.googletagmanager.com/gtm.js?id=" + i + dl
-    // @ts-ignore
-    f.parentNode.insertBefore(j, f)
-  })(window, document, "script", "dataLayer", "GTM-N6CBMJD")
-  // @ts-ignore
-  dataLayer.push({ anonymous_statistics: "true", machine_guid: machineGuid })
-  /* eslint-enable */
-}
-
 function* waitForFullInfoPayload() {
   return (yield take(fetchInfoAction.success)).payload.fullInfoPayload
 }
 
 function* injectPosthog(machineGuid: string, personGuid?: string) {
-  if (!(isDemo || hasPosthogFeatureFlag) || window.posthog) {
+  if (window.posthog) {
     return
   }
   const info: InfoPayload = (yield select(selectFullInfoPayload))
@@ -325,10 +293,6 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
 
   const name = isUsingGlobalRegistry ? MASKED_DATA : hostname
   const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
-
-  if (response.data.anonymous_statistics) {
-    injectGTM(response.data.machine_guid)
-  }
 
   // now make access call - max_redirects, callback, etc...
   const accessRegistryResponse: AccessRegistryResponse = yield call(accessRegistry, {
