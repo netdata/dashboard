@@ -1,4 +1,4 @@
-import { uniq, prop, filter } from "ramda"
+import { uniq, filter } from "ramda"
 import {
   spawn, take, put, takeEvery, call, delay, select,
 } from "redux-saga/effects"
@@ -162,8 +162,7 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
           .filter(({ reachable }) => reachable).length,
         mirrored_hosts_unreachable: info.mirrored_hosts_status
           .filter(({ reachable }) => !reachable).length,
-        host_collector_modules: info.collectors.map(prop("module")).join("|"),
-        host_collector_plugins: info.collectors.map(prop("plugin")).join("|"),
+        host_collectors: info.collectors,
         host_is_k8s_node: info.is_k8s_node,
       }),
   )
