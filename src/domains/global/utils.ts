@@ -9,3 +9,4 @@ export const isAllowedReferrer = (referrer: string) => allowedReferrerDomains.in
   || referrer.endsWith(".my-netdata.io/")
   || referrer.startsWith("https://github.com/")
   || referrer.endsWith("netdata.cloud/")
+  || referrer.startsWith("https://app.netdata.cloud/")
