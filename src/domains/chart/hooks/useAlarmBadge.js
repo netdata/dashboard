@@ -18,7 +18,9 @@ export default () => {
       if (!isRendered) {
         toggleIsRendered(true)
       }
+      const { x } = g.getArea()
 
+      ref.current.style.left = `${x}px`
       ref.current.style.right = `calc(100% - ${position}px)`
       ref.current.style.top = "40px"
     }
