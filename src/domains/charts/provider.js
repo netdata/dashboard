@@ -12,8 +12,6 @@ const Provider = ({
   activeSubMenuId,
   chartIds,
   getChart,
-  getChartAttributes,
-  onAttributesChange,
   dashboardAttributes,
   hasKubernetes,
   children,
@@ -27,8 +25,6 @@ const Provider = ({
     <ChartsProvider
       container={container}
       menuChartsAttributeById={menuChartsAttributeById}
-      getChartAttributes={getChartAttributes}
-      onAttributesChange={onAttributesChange}
       getChart={getChart}
       dashboardAttributes={dashboardAttributes}
     >
