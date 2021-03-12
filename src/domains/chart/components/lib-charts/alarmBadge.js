@@ -24,9 +24,11 @@ const Container = styled.div`
   margin-right: 10px;
   overflow: hidden;
   pointer-events: none;
+  direction: rtl;
 `
 
 const Badge = styled.div`
+  display: inline-block;
   border-radius: 36px;
   padding: 2px 12px;
   background: ${({ background }) => background};
@@ -40,7 +42,7 @@ export default forwardRef((
   { alarm: { status, value }},
   ref,
 ) => (
-  <Container ref={ref} >
+  <Container ref={ref}>
     <Badge
       background={getBackgroundColor(status)}
       border={getBorderColor(status)}
