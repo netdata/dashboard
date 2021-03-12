@@ -25,6 +25,7 @@ import {
   selectSmoothPlot,
   selectSyncPanAndZoom,
   selectSpacePanelTransitionEndIsActive,
+  selectAlarm,
 } from "domains/global/selectors"
 import {
   resetGlobalPanAndZoomAction, setCommonMaxAction, setCommonMinAction,
@@ -331,6 +332,8 @@ export const DygraphChart = ({
   viewBefore,
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
+  const selectedAlarm = useSelector(selectAlarm)
+  const alarm = selectedAlarm?.chart === chartData.id ? selectedAlarm : null
 
   const { xAxisDateString, xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
@@ -403,6 +406,7 @@ export const DygraphChart = ({
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
   // for interactionModel callbacks so we need to keep the callback in mutable ref
   const propsRef = useRef({
+    alarm,
     chartData,
     globalChartUnderlay,
     hoveredX,
@@ -420,6 +424,7 @@ export const DygraphChart = ({
   ] = useProceededChart(chartElement, propsRef)
 
   useLayoutEffect(() => {
+    propsRef.current.alarm = alarm
     propsRef.current.chartData = chartData
     propsRef.current.hoveredX = hoveredX
     propsRef.current.immediatelyDispatchPanAndZoom = immediatelyDispatchPanAndZoom
@@ -514,6 +519,19 @@ export const DygraphChart = ({
 
         underlayCallback(canvas: CanvasRenderingContext2D, area: DygraphArea, g: Dygraph) {
           updatePrecededPosition(g)
+
+          if (propsRef.current.alarm) {
+            const { alarm: currentAlarm } = propsRef.current
+
+            const alarmPosition = g.toDomXCoord(currentAlarm.when * 1000)
+            const fillColor = getBorderColor(currentAlarm.status)
+
+            if (fillColor) {
+              const horizontalPadding = 3
+              canvas.fillStyle = fillColor
+              canvas.fillRect(alarmPosition - horizontalPadding, area.y, 2 * horizontalPadding, area.h)
+            }
+          }
 
           // the chart is about to be drawn
           // this function renders global highlighted time-frame

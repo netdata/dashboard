@@ -37,6 +37,7 @@ import { PrintModal } from "domains/dashboard/components/print-modal"
 import { SidebarSocialMedia } from "domains/dashboard/components/sidebar-social-media"
 import { SidebarSocialMediaPortal } from "domains/dashboard/components/sidebar-social-media-portal"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
+import useAlarmFromUrl from "domains/dashboard/hooks/useAlarmFromUrl"
 import { useRegistry } from "hooks/use-registry"
 import { useListenToFocusMessages } from "hooks/use-listen-to-focus-messages"
 import { useAlarms } from "hooks/use-alarms"
@@ -146,6 +147,7 @@ const App: React.FC = () => {
 
   const hasFetchedInfo = useSelector(selectHasFetchedInfo)
   const theme = useSelector(selectTheme)
+  useAlarmFromUrl()
 
   return (
     <ThemeProvider theme={mapTheme(theme)}>
