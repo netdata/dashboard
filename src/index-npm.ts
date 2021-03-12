@@ -48,12 +48,14 @@ export {
   clearHighlightAction,
   setSpacePanelTransitionEndAction,
   setDefaultAfterAction,
+  setAlarmAction,
 } from "domains/global/actions"
 export {
   selectStopUpdatesWhenFocusIsLost,
   selectDestroyOnHide,
   selectDefaultAfter,
   selectGlobalPanAndZoom,
+  selectAlarm,
 } from "domains/global/selectors"
 export { selectChartData } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"

@@ -2,6 +2,7 @@
 
 import { ChartMetadata } from "domains/chart/chart-types"
 
+export type AlarmStatus = "WARNING" | "ERROR" | "REMOVED" | "UNDEFINED" | "UNINITIALIZED" | "CLEAR" | "CRITICAL"
 // it's possible that this interface is too narrow
 export interface AlarmLog {
   hostname: string
@@ -24,8 +25,8 @@ export interface AlarmLog {
   duration: number
   no_clear_notification?: boolean
   non_clear_duration: number
-  status: string
-  old_status: string
+  status: AlarmStatus
+  old_status: AlarmStatus
   delay: number
   delay_up_to_timestamp: number
   updated_by_id: number
@@ -35,11 +36,18 @@ export interface AlarmLog {
   last_repeat: string
   silenced: string
   info: string
-  value: null
-  old_value: null
+  value: number
+  old_value: number
 }
 
 export type AlarmLogs = AlarmLog[]
+
+export type Alarm = {
+  chart?: string
+  value?: string
+  status?: AlarmStatus
+  when: number
+}
 
 interface Alarms {
   [id: string]: {

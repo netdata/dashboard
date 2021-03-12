@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { ActiveAlarms, ChartsMetadata, Snapshot } from "./types"
+import { ActiveAlarms, ChartsMetadata, Snapshot, Alarm } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -148,5 +148,7 @@ export interface SetSpacePanelTransitionEndPayload {
 export const setSpacePanelTransitionEndAction = createAction<SetSpacePanelTransitionEndPayload>(
   `${storeKey}/setSpacePanelStatusAction`,
 )
+
+export const setAlarmAction = createAction<{ alarm: Alarm }>(`${storeKey}/setAlarmAction`)
 
 export const resetRegistry = createAction(`${storeKey}/resetRegistry`)
