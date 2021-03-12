@@ -4,7 +4,7 @@ import { createReducer } from "redux-act"
 import { getInitialAfterFromWindow } from "utils/utils"
 import { isMainJs } from "utils/env"
 import { RegistryMachine } from "domains/global/sagas"
-import { ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
+import { Alarm, ActiveAlarms, Snapshot, ChartsMetadata } from "domains/global/types"
 import { fetchInfoAction } from "domains/chart/actions"
 import { InfoPayload } from "./__mocks__/info-mock"
 import {
@@ -32,6 +32,7 @@ import {
   resetRegistry,
   accessRegistrySuccessAction,
   resetDefaultAfterAction,
+  setAlarmAction,
 } from "./actions"
 import {
   Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
@@ -112,6 +113,7 @@ export type StateT = {
     activeAlarms: null | ActiveAlarms
     hasStartedAlarms: boolean
   }
+  alarm: null | Alarm
 
   snapshot: Snapshot | null
   options: Options
@@ -159,6 +161,7 @@ export const initialState: StateT = {
     activeAlarms: null,
     hasStartedAlarms: false,
   },
+  alarm: null,
 
   chartsMetadata: {
     isFetching: false,
@@ -556,6 +559,10 @@ globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   }
 })
 
+globalReducer.on(setAlarmAction, (state, { alarm }) => ({
+  ...state,
+  alarm,
+}))
 
 globalReducer.on(chartsMetadataRequestSuccess, (state, { data }) => ({
   ...state,
