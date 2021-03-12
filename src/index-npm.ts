@@ -24,6 +24,7 @@ export {
 } from "store/redux-separate-context"
 export { store as dashboardStore } from "store"
 
+export { default as useAlarmFromUrl } from "domains/dashboard/hooks/useAlarmFromUrl"
 export { ChartContainer } from "domains/chart/components/chart-container"
 
 export { NodeView } from "domains/dashboard/components/node-view"
