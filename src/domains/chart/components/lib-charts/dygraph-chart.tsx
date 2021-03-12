@@ -48,7 +48,9 @@ import {
 import "./dygraph-chart.css"
 
 import useProceededChart from "../../hooks/use-proceeded-chart"
+import useAlarmBadge from "../../hooks/useAlarmBadge"
 import ProceededChartDisclaimer from "./proceeded-chart-disclaimer"
+import AlarmBadge, { getBorderColor } from "./alarmBadge"
 
 // This is the threshold above which we assume chart shown duration has changed
 const timeframeThreshold = 5000
@@ -402,6 +404,8 @@ export const DygraphChart = ({
     }
   }, [chartUuid, dispatch, isSyncPanAndZoom])
 
+  const [isAlarmBadge, alarmBadgeRef, updateAlarmBadge] = useAlarmBadge() as any
+
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
   // for interactionModel callbacks so we need to keep the callback in mutable ref
@@ -414,6 +418,7 @@ export const DygraphChart = ({
     // put it to ref to prevent additional updateOptions() after creating dygraph
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
+    updateAlarmBadge,
     updateChartPanOrZoom,
     viewAfter,
     viewBefore,
@@ -431,11 +436,12 @@ export const DygraphChart = ({
     propsRef.current.globalChartUnderlay = globalChartUnderlay
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
+    propsRef.current.updateAlarmBadge = updateAlarmBadge
     propsRef.current.updateChartPanOrZoom = updateChartPanOrZoom
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
-  }, [chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
-    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateChartPanOrZoom, viewAfter, viewBefore])
+  }, [alarm, chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
+    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateAlarmBadge, updateChartPanOrZoom, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -530,6 +536,12 @@ export const DygraphChart = ({
               const horizontalPadding = 3
               canvas.fillStyle = fillColor
               canvas.fillRect(alarmPosition - horizontalPadding, area.y, 2 * horizontalPadding, area.h)
+
+              propsRef.current.updateAlarmBadge(
+                propsRef.current.alarm,
+                g,
+                alarmPosition - horizontalPadding,
+              )
             }
           }
 
@@ -1119,6 +1131,10 @@ export const DygraphChart = ({
       />
       {isProceeded && hasLegend && (
         <ProceededChartDisclaimer ref={precededChartRef as React.Ref<HTMLDivElement>} />
+      )}
+      {alarm && hasLegend && (
+        // @ts-ignore
+        <AlarmBadge ref={alarmBadgeRef} alarm={alarm} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
