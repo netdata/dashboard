@@ -18,11 +18,11 @@ export default () => {
 
       dispatch(setAlarmAction({
         alarm: {
-          chart: alarmChart || "system.load",
+          chart: alarmChart,
           // @ts-ignore
           status: alarmStatus,
-        value: alarmValue,
-        when: alarmTime,
+          value: alarmValue,
+          when: alarmTime,
         },
       }))
       const PADDING = 1000 * 60 * 5
