@@ -6,7 +6,7 @@ import { forEachObjIndexed } from "ramda"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
-import { selectDestroyOnHide, selectIsAsyncOnScroll } from "domains/global/selectors"
+import { selectDestroyOnHide, selectIsAsyncOnScroll, selectAlarm } from "domains/global/selectors"
 import { getPortalNodeStyles } from "domains/chart/utils/get-portal-node-styles"
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { chartLibrariesSettings } from "domains/chart/utils/chartLibrariesSettings"
@@ -65,12 +65,12 @@ export const DisableOutOfView = ({
   /* separate functionality - adding custom styles to portalNode */
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const [hasPortalNodeBeenStyled, setHasPortalNodeBeenStyled] = useState<boolean>(false)
-  // todo omit this for Cloud
+  const shouldAddSpecialHeight = useSelector(selectAlarm)?.chart === attributes.id
   useLayoutEffect(() => {
     if (hasPortalNodeBeenStyled) {
       return
     }
-    const styles = getPortalNodeStyles(attributes, chartSettings)
+    const styles = getPortalNodeStyles(attributes, chartSettings, shouldAddSpecialHeight)
     forEachObjIndexed((value, styleName) => {
       if (value) {
         portalNode.style.setProperty(styleName, value)
@@ -79,7 +79,8 @@ export const DisableOutOfView = ({
     // eslint-disable-next-line no-param-reassign
     portalNode.className = chartSettings.containerClass(attributes)
     setHasPortalNodeBeenStyled(true)
-  }, [attributes, chartSettings, hasPortalNodeBeenStyled, portalNode, setHasPortalNodeBeenStyled])
+  }, [attributes, chartSettings, hasPortalNodeBeenStyled, portalNode, setHasPortalNodeBeenStyled,
+    shouldAddSpecialHeight])
   /* end of "adding custom styles to portalNode" */
 
 

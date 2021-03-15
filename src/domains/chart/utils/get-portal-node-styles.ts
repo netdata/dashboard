@@ -10,6 +10,7 @@ import { ChartLibraryConfig } from "./chartLibrariesSettings"
 type GetPortalNodeStyles = (
   attributes: Attributes,
   chartSettings: ChartLibraryConfig,
+  shouldAddSpecialHeight: boolean,
 ) => {
   height: string | undefined,
   width: string | undefined,
@@ -50,6 +51,7 @@ const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) 
 export const getPortalNodeStyles: GetPortalNodeStyles = (
   attributes,
   chartSettings,
+  shouldAddSpecialHeight,
 ) => {
   let width
   if (typeof attributes.width === "string") {
@@ -78,6 +80,13 @@ export const getPortalNodeStyles: GetPortalNodeStyles = (
     // JSON.stringify when setting localStorage so many users have '"180px"' values set.
     // We can remove .replace() after some time
     height = heightFromLocalStorage.replace(/"/g, "")
+  }
+
+  if (shouldAddSpecialHeight) {
+    const heightOverriden = isLegendOnBottom
+      ? window.innerHeight * 0.5
+      : window.innerHeight * 0.4
+    height = `${heightOverriden}px`
   }
 
   const chartDefaultsMinWidth = window.NETDATA.chartDefaults.min_width
