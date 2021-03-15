@@ -65,11 +65,14 @@ export const DisableOutOfView = ({
   /* separate functionality - adding custom styles to portalNode */
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const [hasPortalNodeBeenStyled, setHasPortalNodeBeenStyled] = useState<boolean>(false)
-  const shouldAddSpecialHeight = useSelector(selectAlarm)?.chart === attributes.id
+  const isShowingAlarmOnChart = useSelector(selectAlarm)?.chart === attributes.id
   useLayoutEffect(() => {
     if (hasPortalNodeBeenStyled) {
       return
     }
+    const shouldAddSpecialHeight = isShowingAlarmOnChart
+      && attributes.chartLibrary === "dygraph"
+      && chartSettings.hasLegend(attributes)
     const styles = getPortalNodeStyles(attributes, chartSettings, shouldAddSpecialHeight)
     forEachObjIndexed((value, styleName) => {
       if (value) {
@@ -79,8 +82,8 @@ export const DisableOutOfView = ({
     // eslint-disable-next-line no-param-reassign
     portalNode.className = chartSettings.containerClass(attributes)
     setHasPortalNodeBeenStyled(true)
-  }, [attributes, chartSettings, hasPortalNodeBeenStyled, portalNode, setHasPortalNodeBeenStyled,
-    shouldAddSpecialHeight])
+  }, [attributes, chartSettings, hasPortalNodeBeenStyled, isShowingAlarmOnChart, portalNode,
+    setHasPortalNodeBeenStyled ])
   /* end of "adding custom styles to portalNode" */
 
 
