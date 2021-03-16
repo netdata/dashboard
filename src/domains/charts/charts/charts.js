@@ -7,12 +7,13 @@ export const ChartMenu = ({ id, menuChartAttributes, chartAttributes, chart }) =
   const ref = useRef()
   const [container, setContainer] = useState()
   const { link } = menuChartAttributes
+  const { legendPosition } = chartAttributes
 
   useLayoutEffect(() => {
     setContainer(ref.current)
   }, [])
 
-  const height = useEstimatedHeight(id)
+  const height = useEstimatedHeight(id, legendPosition)
 
   const attributes = useMemo(
     () => ({

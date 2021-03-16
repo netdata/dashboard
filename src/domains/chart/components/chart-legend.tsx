@@ -4,7 +4,7 @@ import { useSelector } from "store/redux-separate-context"
 import { selectChartData } from "domains/chart/selectors"
 import { getNewSelectedDimensions } from "domains/chart/utils/legend-utils"
 import { Attributes } from "../utils/transformDataAttributes"
-import { ChartMetadata, DygraphData } from "../chart-types"
+import { ChartMetadata } from "../chart-types"
 
 import { ChartLegendRight } from "./chart-legend-right"
 import { ChartLegendBottom } from "./chart-legend-bottom"

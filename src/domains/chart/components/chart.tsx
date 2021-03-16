@@ -30,7 +30,7 @@ import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
 import { chartLibrariesSettings } from "../utils/chartLibrariesSettings"
 import { useFormatters } from "../utils/formatters"
-import { ChartData, ChartMetadata, DygraphData } from "../chart-types"
+import { ChartData, ChartMetadata } from "../chart-types"
 
 import { ChartLegend } from "./chart-legend"
 import { LegendToolbox } from "./legend-toolbox"

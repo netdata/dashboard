@@ -8,7 +8,7 @@ import { useDateTime } from "utils/date-time"
 
 import { legendResolutionTooltip, legendPluginModuleString } from "../utils/legend-utils"
 
-import { ChartMetadata, DygraphData } from "../chart-types"
+import { ChartMetadata } from "../chart-types"
 
 interface Props {
   chartUuid: string

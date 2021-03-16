@@ -1,3 +1,4 @@
+import { mapDefaultAggrMethod } from "utils/fill-missing-data"
 import { generateHeadCharts } from "@/src/domains/dashboard/components/node-view/generate-head-charts"
 import { parseChartString } from "@/src/domains/dashboard/utils/parse-chart-string"
 
@@ -6,16 +7,24 @@ export default (type, chartIds, getChart, attributes) => {
   const ids = []
 
   chartIds.forEach(chartId => {
-    generateHeadCharts(type, getChart(chartId), 0).forEach((head, index) => {
+    const chart = getChart(chartId)
+    generateHeadCharts(type, chart, 0).forEach((head, index) => {
       if (!head) return
 
       const id = `${type}|${chartId}|${index}`
-      const chart = { id, chartId, ...attributes }
+      const headChart = {
+        id,
+        chartId,
+        aggrMethod: mapDefaultAggrMethod(chart.units),
+        ...attributes,
+      }
 
       const parsed = parseChartString(head)
-      Object.keys(parsed).forEach(key => parsed[key] !== undefined && (chart[key] = parsed[key]))
+      Object.keys(parsed).forEach(
+        key => parsed[key] !== undefined && (headChart[key] = parsed[key])
+      )
 
-      charts[id] = chart
+      charts[id] = headChart
       ids.push(id)
     })
   })
