@@ -1,0 +1,5 @@
+<mj-section padding-bottom="50px">
+    <mj-column>
+        <mj-image padding-left="0" width="1000px" align="left" src="https://app.netdata.cloud/static/email/img/header.png" />
+    </mj-column>
+</mj-section>

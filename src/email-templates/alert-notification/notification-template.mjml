@@ -1,0 +1,179 @@
+<mjml>
+
+  <mj-head>
+    <mj-style>
+      .value { background-color: pink; display: inline }
+      .link { color: #00AB44; text-decoration: none;  }
+      .history-wrapper { max-width: 100% !important; }
+    </mj-style>
+
+    <mj-attributes>
+      <mj-text align="center" color="#555" />
+    </mj-attributes>
+    <mj-breakpoint width="200px" />
+
+  </mj-head>
+
+  <mj-body padding="0">
+
+    <mj-include path="./header.mjml" />
+
+    <mj-wrapper	border="1px solid #FF4136">
+      <mj-section padding-bottom="0">
+        <mj-column width="70%">
+          <mj-text align="left" font-size="20px" font-weight="700" padding-top="15px">10min_disk_utilization</mj-text>
+        </mj-column>
+        <mj-column width="30%">
+          <mj-image align="center" width="100px" src="https://app.netdata.cloud/static/email/img/label_critical.png" />
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding="0">
+        <mj-column>
+          <mj-text align="left">on debian-2gb-nbdg1-1</mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section>
+        <mj-column>
+          <mj-text align="left" font-size="26px" font-weight="700" padding-top="15px">
+            <mr-raw>
+              <span style="color: #FF4136; font-size:26px; background: #FFEBEF; 100%; padding:4px 24px; border-radius: 36px">98%
+              </span>
+            </mr-raw>
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding-top="0" padding-bottom="0">
+        <mj-column>
+          <mj-text align="left">
+            Details: the percentage of time the disk was busy, during the last 10 minutes
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section padding-top="0">
+        <mj-column>
+          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%">
+            Go to Chart
+          </mj-button>
+        </mj-column>
+        <mj-column>
+
+        </mj-column>
+      </mj-section>
+
+    </mj-wrapper>
+
+    <mj-spacer height="32px" />
+
+    <mj-section background-color="#FFEBEF">
+      <mj-column>
+        <mj-text align="left" font-size="18px">
+          Chart:
+          <mj-raw style="font-weight:700">disk.util</mj-raw>
+        </mj-text>
+        <mj-text align="left" font-size="18px" padding-top="0">
+          Family:
+          <mj-raw style="font-weight:700">8tb</mj-raw>
+        </mj-text>
+        <mj-text align="left" font-size="14px">Escalated from Warning, raised for 5 minutes</mj-text>
+        <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
+
+        <mj-text align="left" font-size="18px">
+          On
+          <mj-raw style="font-weight:500">Sat Nov 10 2021, 04:28:23 EET</mj-raw>
+        </mj-text>
+        <mj-text align="left" font-size="18px" padding-top="0">
+          By:
+          <mj-raw style="font-weight:500">{host name}</mj-raw>
+        </mj-text>
+        <mj-text align="left" font-size="14px">Global time:
+          <my-raw style="font-weight:500">Sat Nov 10 2021, 16:28:23 UTC</my-raw>
+        </mj-text>
+        <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
+
+        <mj-text align="left" font-size="18px">
+          Classification:
+          <mj-raw style="font-weight:500">OS disk</mj-raw>
+        </mj-text>
+        <mj-text align="left" font-size="18px" padding-top="0">
+          Role:
+          <mj-raw style="font-weight:500">sysadmin</mj-raw>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column width="20%" align="left">
+        <mj-image align="center" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
+      </mj-column>
+      <mj-column align="left" width="60%">
+        <mj-text align="left" font-weight="700" font-size="16px">Want to know more about this alert?</mj-text>
+        <mj-text align="left" font-size="14px" line-height="1.3">Discuss and troubleshoot with others on the Netdata <a href="https://community.netdata.cloud/" class="link">community forums</a></mj-text>
+
+      </mj-column>
+    </mj-section>
+
+
+    <mj-section>
+      <mj-column width="20%" align="left">
+        <mj-image align="left" src="https://app.netdata.cloud/static/email/img/configure_icon.png" widteeh="60px" />
+      </mj-column>
+      <mj-column align="left" width="60%">
+        <mj-text align="left" font-weight="700" font-size="16px">Need to configure this alert?</mj-text>
+        <mj-text align="left" font-size="14px" line-height="1.3"><mj-raw style="color: #00AB44">Edit</mj-raw> this alert's configuration file by logging into {node} and running the following command:</mj-text>
+        <mj-text align="left" font-size="12px" line-height="1.3" padding-top="8px">
+          sudo {/etc/netdata}/edit-config health.d/{disks.conf} <br />
+          The alarm to edit is at line {160}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+
+    <mj-wrapper background-color="#F7F8F8" full-width padding="0" css-class="history-wrapper">
+      <mj-section>
+        <mj-column>
+          <mj-text align="left" font-size="16px">
+            The node has
+            <mj-raw style="font-weight:600">3 warnings</mj-raw>
+            and
+            <mj-raw style="font-weight:600">0 critical</mj-raw>
+            alert(s)
+          </mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8">
+        <mj-column>
+          <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
+          <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text><mj-raw style="background-color:#FFEDB3; border-radius:36px; padding: 2px 12px;">
+            Warning for 10m
+          </mj-raw></mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8">
+        <mj-column>
+          <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
+          <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
+        </mj-column>
+        <mj-column>
+          <mj-text><mj-raw style="background-color:#FFEDB3; border-radius:36px; padding: 2px 12px;">
+            Warning for 10m
+          </mj-raw></mj-text>
+        </mj-column>
+      </mj-section>
+
+    </mj-wrapper>
+
+    <mj-include path="./footer.mjml" />
+
+  </mj-body>
+
+</mjml>
