@@ -10,7 +10,7 @@
     <mj-attributes>
       <mj-text align="center" color="#555" />
     </mj-attributes>
-    <mj-breakpoint width="200px" />
+    <mj-breakpoint width="100px" />
 
   </mj-head>
 
@@ -19,7 +19,7 @@
     <mj-include path="./header.mjml" />
 
     <mj-wrapper	border="1px solid #FF4136">
-      <mj-section padding-bottom="0">
+      <mj-section padding-bottom="0" padding-top="0">
         <mj-column width="70%">
           <mj-text align="left" font-size="20px" font-weight="700" padding-top="15px">10min_disk_utilization</mj-text>
         </mj-column>
@@ -53,15 +53,15 @@
         </mj-column>
       </mj-section>
 
-      <mj-section padding-top="0">
-        <mj-column>
+      <mj-section padding-top="0" padding-bottom="0">
+        <mj-column width="100%">
           <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%">
             Go to Chart
           </mj-button>
         </mj-column>
-        <mj-column>
+        <mj-columne>
 
-        </mj-column>
+        </mj-columne>
       </mj-section>
 
     </mj-wrapper>
@@ -106,11 +106,11 @@
       </mj-column>
     </mj-section>
 
-    <mj-section>
-      <mj-column width="20%" align="left">
-        <mj-image align="center" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
+    <mj-section padding-left="0">
+      <mj-column padding="0" width="100px">
+        <mj-image align="left" width="60px" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
       </mj-column>
-      <mj-column align="left" width="60%">
+      <mj-column align="left" width="80%">
         <mj-text align="left" font-weight="700" font-size="16px">Want to know more about this alert?</mj-text>
         <mj-text align="left" font-size="14px" line-height="1.3">Discuss and troubleshoot with others on the Netdata <a href="https://community.netdata.cloud/" class="link">community forums</a></mj-text>
 
@@ -118,11 +118,11 @@
     </mj-section>
 
 
-    <mj-section>
-      <mj-column width="20%" align="left">
-        <mj-image align="left" src="https://app.netdata.cloud/static/email/img/configure_icon.png" widteeh="60px" />
+    <mj-section padding-left="0">
+      <mj-column padding="0" width="100px">
+        <mj-image align="left" src="https://app.netdata.cloud/static/email/img/configure_icon.png" width="60px" />
       </mj-column>
-      <mj-column align="left" width="60%">
+      <mj-column align="left" width="80%">
         <mj-text align="left" font-weight="700" font-size="16px">Need to configure this alert?</mj-text>
         <mj-text align="left" font-size="14px" line-height="1.3"><mj-raw style="color: #00AB44">Edit</mj-raw> this alert's configuration file by logging into {node} and running the following command:</mj-text>
         <mj-text align="left" font-size="12px" line-height="1.3" padding-top="8px">
@@ -133,7 +133,7 @@
     </mj-section>
 
 
-    <mj-wrapper background-color="#F7F8F8" full-width padding="0" css-class="history-wrapper">
+    <mj-wrapper background-color="#F7F8F8" full-width padding="0" css-class="history-wrapper" padding-bottom="24px">
       <mj-section>
         <mj-column>
           <mj-text align="left" font-size="16px">
@@ -152,7 +152,7 @@
           <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
         <mj-column>
-          <mj-text><mj-raw style="background-color:#FFEDB3; border-radius:36px; padding: 2px 12px;">
+          <mj-text><mj-raw style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px;">
             Warning for 10m
           </mj-raw></mj-text>
         </mj-column>
@@ -164,7 +164,7 @@
           <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
         <mj-column>
-          <mj-text><mj-raw style="background-color:#FFEDB3; border-radius:36px; padding: 2px 12px;">
+          <mj-text><mj-raw style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 4px 12px;">
             Warning for 10m
           </mj-raw></mj-text>
         </mj-column>
