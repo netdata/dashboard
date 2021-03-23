@@ -1134,7 +1134,7 @@ export const DygraphChart = ({
       )}
       {alarm && hasLegend && (
         // @ts-ignore
-        <AlarmBadge ref={alarmBadgeRef} alarm={alarm} />
+        <AlarmBadge ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>

@@ -39,7 +39,7 @@ const Badge = styled.div`
 `
 
 export default forwardRef((
-  { alarm: { status, value }},
+  { status, label },
   ref,
 ) => (
   <Container ref={ref}>
@@ -48,7 +48,7 @@ export default forwardRef((
       border={getBorderColor(status)}
       color={getColor(status)}
     >
-      {value}
+      {label}
     </Badge>
   </Container>
 ))
