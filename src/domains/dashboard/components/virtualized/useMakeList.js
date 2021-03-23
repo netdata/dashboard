@@ -3,6 +3,7 @@ import {
   MenuGroupIdsContext,
   MenuGroupByIdContext,
   SubMenuByIdContext,
+  MenuChartsAttributeById,
   useContainer,
   useDispatchList,
 } from "@/src/domains/charts"
@@ -14,6 +15,7 @@ export default ({ ref, measures, cache }) => {
   const menuGroupIdsRef = useLatestContext(MenuGroupIdsContext)
   const menuGroupByIdRef = useLatestContext(MenuGroupByIdContext)
   const subMenuByIdRef = useLatestContext(SubMenuByIdContext)
+  const menuChartsAttributeByIdRef = useLatestContext(MenuChartsAttributeById)
   const dispatchList = useDispatchList()
 
   const list = useMemo(() => {
@@ -53,6 +55,13 @@ export default ({ ref, measures, cache }) => {
       const subMenu = Object.values(subMenuByIdRef.current).find(r => r.link === link)
       if (subMenu) {
         return list.goToMenuGroup(subMenu.menuGroupId).then(() => list.goToSubMenu(subMenu.id))
+      }
+
+      const menuChart = Object.values(menuChartsAttributeByIdRef.current).find(r => r.link === link)
+      if (menuChart) {
+        return list
+          .goToMenuGroup(menuChart.menuGroupId)
+          .then(() => list.goToChart(menuChart.chartId))
       }
     }
 
