@@ -8,16 +8,12 @@ export default () => {
 
   const updatePosition = (alarm, g, position) => {
     if (!alarm) {
-      if (isRendered) {
-        toggleIsRendered(false)
-      }
+      toggleIsRendered(false)
       return
     }
 
     if (ref.current) {
-      if (!isRendered) {
-        toggleIsRendered(true)
-      }
+      toggleIsRendered(true)
       const { x } = g.getArea()
 
       ref.current.style.left = `${x}px`
