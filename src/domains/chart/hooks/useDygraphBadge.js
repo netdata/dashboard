@@ -1,13 +1,15 @@
 import { useRef } from "react"
 import { useToggle } from "react-use"
 
+const badgeTopMargin = "40px"
+
 export default () => {
   const [isRendered, toggleIsRendered] = useToggle(false)
 
   const ref = useRef(null)
 
-  const updatePosition = (alarm, g, position) => {
-    if (!alarm) {
+  const updatePosition = (isVisible, g, position) => {
+    if (!isVisible) {
       toggleIsRendered(false)
       return
     }
@@ -18,7 +20,7 @@ export default () => {
 
       ref.current.style.left = `${x}px`
       ref.current.style.right = `calc(100% - ${position}px)`
-      ref.current.style.top = "40px"
+      ref.current.style.top = badgeTopMargin
     }
   }
 
