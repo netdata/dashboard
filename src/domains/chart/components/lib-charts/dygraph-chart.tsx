@@ -48,7 +48,7 @@ import {
 import "./dygraph-chart.css"
 
 import useProceededChart from "../../hooks/use-proceeded-chart"
-import useAlarmBadge from "../../hooks/useAlarmBadge"
+import useDygraphBadge from "../../hooks/useDygraphBadge"
 import ProceededChartDisclaimer from "./proceeded-chart-disclaimer"
 import AlarmBadge, { getBorderColor } from "./alarmBadge"
 
@@ -404,7 +404,7 @@ export const DygraphChart = ({
     }
   }, [chartUuid, dispatch, isSyncPanAndZoom])
 
-  const [isAlarmBadge, alarmBadgeRef, updateAlarmBadge] = useAlarmBadge() as any
+  const [isAlarmBadge, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
