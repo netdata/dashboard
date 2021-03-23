@@ -22,8 +22,7 @@ export default () => {
 
       dispatch(setAlarmAction({
         alarm: {
-          chart: alarmChart,
-          // @ts-ignore
+          chartId: alarmChart,
           status: alarmStatus,
           value: alarmValue,
           when: alarmTime,

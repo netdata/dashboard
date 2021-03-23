@@ -43,9 +43,9 @@ export interface AlarmLog {
 export type AlarmLogs = AlarmLog[]
 
 export type Alarm = {
-  chart?: string
-  value?: string
-  status?: AlarmStatus
+  chartId: string
+  value: string
+  status: AlarmStatus
   when: number
 }
 

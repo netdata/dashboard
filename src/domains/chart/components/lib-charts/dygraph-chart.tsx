@@ -335,7 +335,7 @@ export const DygraphChart = ({
 }: Props) => {
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
   const selectedAlarm = useSelector(selectAlarm)
-  const alarm = selectedAlarm?.chart === chartData.id ? selectedAlarm : null
+  const alarm = selectedAlarm?.chartId === chartData.id ? selectedAlarm : null
 
   const { xAxisDateString, xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
@@ -404,7 +404,7 @@ export const DygraphChart = ({
     }
   }, [chartUuid, dispatch, isSyncPanAndZoom])
 
-  const [isAlarmBadge, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
+  const [, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
