@@ -1,23 +1,26 @@
 import React, { forwardRef } from "react"
 import styled from "styled-components"
 
-export const getBackgroundColor = (status) => ({
+const backgroundColorMap = {
   WARNING: "#FFF8E1",
   CRITICAL: "#FFEBEF",
   CLEAR: "#E5F5E8",
-})[status] || null
+}
+export const getBackgroundColor = (status) => backgroundColorMap[status] || null
 
-export const getBorderColor = (status) => ({
+const borderColorMap = {
   WARNING: "#FFC300",
   CRITICAL: "#F59B9B",
   CLEAR: "#68C47D",
-})[status] || null
+}
+export const getBorderColor = (status) => borderColorMap[status] || null
 
-export const getColor = (status) => ({
+const textColorMap = {
   WARNING: "#536775",
   CRITICAL: "#FF4136",
   CLEAR: "#00AB44",
-})[status] || null
+}
+export const getColor = (status) => textColorMap[status] || null
 
 const Container = styled.div`
   position: absolute;
