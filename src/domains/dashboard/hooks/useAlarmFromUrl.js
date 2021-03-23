@@ -3,6 +3,7 @@ import { useMount } from "react-use"
 import { useDispatch } from "store/redux-separate-context"
 import { getHashParams } from "utils/hash-utils"
 import { setAlarmAction, setGlobalPanAndZoomAction } from "domains/global/actions"
+import { alarmStatuses } from "domains/global/constants"
 
 export default () => {
   const dispatch = useDispatch()
@@ -15,6 +16,9 @@ export default () => {
       const alarmStatus = params["alarm_status"]
       const alarmChart = params["alarm_chart"]
       const alarmValue = params["alarm_value"]
+      if (!alarmStatuses.includes(alarmStatus) || !alarmChart || !alarmValue) {
+        return
+      }
 
       dispatch(setAlarmAction({
         alarm: {
