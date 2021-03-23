@@ -65,7 +65,7 @@ export const DisableOutOfView = ({
   /* separate functionality - adding custom styles to portalNode */
   const chartSettings = chartLibrariesSettings[attributes.chartLibrary]
   const [hasPortalNodeBeenStyled, setHasPortalNodeBeenStyled] = useState<boolean>(false)
-  const isShowingAlarmOnChart = useSelector(selectAlarm)?.chart === attributes.id
+  const isShowingAlarmOnChart = useSelector(selectAlarm)?.chartId === attributes.id
   useLayoutEffect(() => {
     if (hasPortalNodeBeenStyled) {
       return
