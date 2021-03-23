@@ -129,10 +129,6 @@ window.urlOptions = {
     chart: null,
     family: null,
     alarm: null,
-    alarm_unique_id: 0,
-    alarm_id: 0,
-    alarm_event_id: 0,
-    alarm_when: 0,
 
     hasProperty: function (property) {
         // console.log('checking property ' + property + ' of type ' + typeof(this[property]));
@@ -199,7 +195,7 @@ window.urlOptions = {
             }
         }
 
-        var numeric = ['after', 'before', 'highlight_after', 'highlight_before', 'alarm_when'];
+        var numeric = ['after', 'before', 'highlight_after', 'highlight_before'];
         len = numeric.length;
         while (len--) {
             if (typeof urlOptions[numeric[len]] === 'string') {
@@ -211,22 +207,6 @@ window.urlOptions = {
                     urlOptions[numeric[len]] = 0;
                 }
             }
-        }
-
-        if (urlOptions.alarm_when) {
-            // if alarm_when exists, create after/before params
-            // -/+ 2 minutes from the alarm, and reload the page
-            const alarmTime = new Date(urlOptions.alarm_when * 1000).valueOf();
-            const timeMarginMs = 120000; // 2 mins
-
-            const after = alarmTime - timeMarginMs;
-            const before = alarmTime + timeMarginMs;
-            const newHash = document.location.hash.replace(
-              /;alarm_when=[0-9]*/i,
-              ";after=" + after + ";before=" + before,
-            );
-            history.replaceState(null, '', newHash);
-            location.reload();
         }
 
         if (urlOptions.server !== null && urlOptions.server !== '') {
