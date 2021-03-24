@@ -16,7 +16,7 @@ export const StyledSidebar = (styled(PortalSidebar) as any).attrs(() => ({
   width: ${getSizeBy(83)};
   height: ${getSizeBy(51)};
   overflow: visible;
-  top: ${getSizeBy(14)};
+  top: ${getSizeBy(7)};
   ${portalSidebarZIndex}
 `
 export const PickerBox = styled.div`
@@ -104,11 +104,9 @@ export const AccessorBox = styled.div`
   align-items: center;
   height: 40px;
   padding: 0 10px;
-  border: 1px solid #aeb3b7;
   box-sizing: border-box;
   white-space: nowrap;
   font-size: 12px;
-  border-radius: 4px;
   cursor: pointer;
 `
 
@@ -183,14 +181,4 @@ export const CustomInput = styled.input`
   &:focus {
     border: 1px solid ${getColor("primary")};
   }
-`
-
-export const StartEndContainer = styled.div`
-  margin-left: 4px;
-`
-
-export const ArrowsIcon = styled(Icon)`
-  height: 8px;
-  margin-left: auto;
-  fill: ${getColor("text")};
 `
