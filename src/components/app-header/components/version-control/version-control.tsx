@@ -2,23 +2,20 @@ import React from "react"
 import { Button } from "@netdata/netdata-ui"
 
 import { useHttp } from "hooks/use-http"
-import { IconContainer } from "../../styled"
-import {
-  Container,
-  NewVersionIndicator,
-} from "./styled"
 
 const NETDATA_LATEST_VERSION_URL = "https://api.github.com/repos/netdata/netdata/releases/latest"
-const NETDATA_LATEST_GCS_VERSION_URL = "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
+const NETDATA_LATEST_GCS_VERSION_URL =
+  "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
 
 const transformGcsVersionResponse = (data: string) => data.replace(/(\r\n|\n|\r| |\t)/gm, "")
 
 // eslint-disable-next-line camelcase
-interface GithubResponse { tag_name: string }
-const transformGithubResponse = (data: (null | GithubResponse)) => (
+interface GithubResponse {
+  tag_name: string
+}
+const transformGithubResponse = (data: null | GithubResponse) =>
   // eslint-disable-next-line camelcase
   data?.tag_name.replace(/(\r\n|\n|\r| |\t)/gm, "")
-)
 
 // original function from main.js
 const versionsMatch = (v1: string, v2: string) => {
@@ -48,77 +45,55 @@ const versionsMatch = (v1: string, v2: string) => {
   if (n1 < n2) return false
   if (n1 > n2) return true
 
-  n1 = (s1.length > 1) ? parseInt(s1[1], 10) : 0
-  n2 = (s2.length > 1) ? parseInt(s2[1], 10) : 0
+  n1 = s1.length > 1 ? parseInt(s1[1], 10) : 0
+  n2 = s2.length > 1 ? parseInt(s2[1], 10) : 0
   if (n1 < n2) return false
   return true
 }
-
 
 interface Props {
   currentVersion: string
   releaseChannel: string
 }
-export const VersionControl = ({
-  currentVersion,
-  releaseChannel,
-}: Props) => {
+export const VersionControl = ({ currentVersion, releaseChannel }: Props) => {
   const isStableReleaseChannel = releaseChannel === "stable"
   const [githubVersion] = useHttp<GithubResponse>(
     NETDATA_LATEST_VERSION_URL,
     isStableReleaseChannel,
-    true,
+    true
   )
 
   const [gcsVersionResponse] = useHttp<{ mediaLink: string }>(
     NETDATA_LATEST_GCS_VERSION_URL,
-    !isStableReleaseChannel,
+    !isStableReleaseChannel
   )
   const [mediaLinkResponse] = useHttp<string>(
-    gcsVersionResponse?.mediaLink, Boolean(gcsVersionResponse),
+    gcsVersionResponse?.mediaLink,
+    Boolean(gcsVersionResponse)
   )
 
   // eslint-disable-next-line no-nested-ternary
   const latestVersion = isStableReleaseChannel
     ? transformGithubResponse(githubVersion)
     : mediaLinkResponse
-      ? transformGcsVersionResponse(mediaLinkResponse)
-      : null
+    ? transformGcsVersionResponse(mediaLinkResponse)
+    : null
 
   if (!latestVersion) {
     return null
   }
   const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
+
   return (
-    <Container>
-      {isNewVersionAvailable && (
-        <NewVersionIndicator>
-          <Button
-            flavour="borderless"
-            themeType="dark"
-            className="btn"
-            data-toggle="modal"
-            data-target="#updateModal"
-            icon="update_pending"
-            title="Need help?"
-            label="Update Now"
-          />
-        </NewVersionIndicator>
-      )}
-      {!isNewVersionAvailable && (
-        <IconContainer>
-          <Button
-            flavour="borderless"
-            themeType="dark"
-            neutral
-            className="btn"
-            data-toggle="modal"
-            data-target="#updateModal"
-            icon="update"
-            title="Check Version"
-          />
-        </IconContainer>
-      )}
-    </Container>
+    <Button
+      neutral
+      flavour="borderless"
+      small
+      name={isNewVersionAvailable ? "update_pending" : "update"}
+      title={isNewVersionAvailable ? "Need help?" : "Check Version"}
+      icon={isNewVersionAvailable ? "update_pending" : "update"}
+      data-toggle="modal"
+      data-target="#updateModal"
+    />
   )
 }
