@@ -144,7 +144,7 @@ body.modal-open {
 }
 
 .sidebar-body {
-    margin-top: 70px;
+    margin-top: 0;
 }
 
 .dashboard-sidebar {
