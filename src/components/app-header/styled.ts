@@ -1,7 +1,5 @@
 import styled from "styled-components"
-import {
-  getColor, getSizeBy, breakpoints,
-} from "@netdata/netdata-ui"
+import { getColor, getSizeBy, breakpoints } from "@netdata/netdata-ui"
 
 import { appHeaderZIndex } from "styles/z-index"
 
@@ -17,15 +15,12 @@ export const StyledHeader = styled.header`
   background: ${getColor(["gray", "limedSpruce"])};
   display: flex;
   flex-flow: row nowrap;
-
   @media ${breakpoints.laptop} {
     padding-right: ${getSizeBy()};
   }
-
   @media ${breakpoints.laptopLarge} {
     padding-right: ${getSizeBy(3)};
   }
-
   @media print {
     display: none;
   }
@@ -61,7 +56,6 @@ export const UtilitySection = styled.section`
   flex-flow: row nowrap;
   align-items: center;
   justify-content: flex-end;
-
   @media ${breakpoints.laptop} {
     padding-left: ${getSizeBy()};
   }
@@ -87,8 +81,8 @@ export const SignInButton = styled.a<{ isDisabled: boolean }>`
   cursor: pointer;
   background-color: ${({ isDisabled }) => (isDisabled ? "rgba(0, 171, 68, 0.4);" : "#00AB44")};
   pointer-events: ${({ isDisabled }) => (isDisabled ? "none" : "auto")};
-  border-color: #00AB44;
-  border-style:solid;
+  border-color: #00ab44;
+  border-style: solid;
   border-radius: 3px;
   border-width: 0;
   width: 100%;
@@ -101,7 +95,8 @@ export const SignInButton = styled.a<{ isDisabled: boolean }>`
   display: flex;
   text-transform: uppercase;
   justify-content: center;
-  &, &:hover {
+  &,
+  &:hover {
     color: ${getColor("bright")};
     text-decoration: none;
   }
