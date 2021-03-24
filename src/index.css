@@ -4,7 +4,7 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  padding-left: 56px;
+  padding-left: 74px;
   transition: padding-left 0.2s ease-out;
 }
 
@@ -14,6 +14,6 @@ code {
 
 @media (min-width: 1200px) {
   .with-panel {
-    padding-left: 280px;
+    padding-left: 372px;
   }
 }
