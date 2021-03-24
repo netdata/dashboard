@@ -38,7 +38,6 @@ const Iframe = ({ signedIn, setOffline }) => {
   const onLoad = useCallback(() => {
     setRendered(true)
     setTimeout(() => {
-      console.log("called")
       if (signInRef.current === undefined) setOffline(true)
     }, 500)
   }, [setOffline])
