@@ -164,7 +164,7 @@
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
-            <span style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px; margin-top: 20px">
+            <span style="background-color:#FFF8E1; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px; margin-top: 20px">
               Warning for 10mm
             </span>
           </mj-text>
@@ -178,8 +178,8 @@
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
-            <span style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 4px 12px;">
-              Warning for 10m
+            <span style="background-color:#FFEBEF; border: 1px solid #FF4136; border-radius:36px; padding: 2px 12px;">
+              Critical for 10m
             </span>
           </mj-text>
         </mj-column>
