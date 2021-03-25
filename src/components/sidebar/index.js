@@ -30,6 +30,7 @@ const Sidebar = () => {
   const toggle = useCallback(() => {
     dispatch(setSpacePanelStatusAction({ isActive: !isOpen }))
     setLsValue(!isOpen)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   useEffect(() => {
@@ -39,11 +40,7 @@ const Sidebar = () => {
 
   return (
     <Wrapper>
-      <Spaces
-        isOpen={isOpen}
-        toggle={toggle}
-        isSignedIn={signedIn}
-      />
+      <Spaces isOpen={isOpen} toggle={toggle} isSignedIn={signedIn} />
       <Space
         isOpen={isOpen}
         toggle={toggle}
