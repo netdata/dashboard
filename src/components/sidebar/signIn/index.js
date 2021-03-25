@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import styled from "styled-components"
-import { Flex, Button } from "@netdata/netdata-ui"
+import { Button } from "@netdata/netdata-ui"
 import { showSignInModalAction } from "domains/dashboard/actions"
 import { selectSignInUrl, selectRegistry } from "domains/global/selectors"
 import { NETDATA_REGISTRY_SERVER } from "utils/utils"
@@ -25,6 +24,7 @@ const SignIn = ({ offline }) => {
           signInLinkHref: link,
         })
       ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [link]
   )
 

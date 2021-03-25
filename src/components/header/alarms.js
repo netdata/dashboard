@@ -1,5 +1,4 @@
 import React, { useMemo } from "react"
-import { Button } from "@netdata/netdata-ui"
 import { useSelector } from "store/redux-separate-context"
 import { selectActiveAlarms } from "domains/global/selectors"
 import Item from "./item"
