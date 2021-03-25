@@ -6,11 +6,11 @@
     />
     <mj-style>
       .value { background-color: pink; display: inline }
-      .link { color: #00AB44; text-decoration: none;  }
       .history-wrapper { max-width: 100% !important; }
     </mj-style>
     <mj-style inline="inline">
       .set-font { font-family: "IBM Plex Sans", sans-serif }
+      .link { color: #00AB44; text-decoration: none;  }
     </mj-style>
 
     <mj-attributes>
@@ -36,24 +36,22 @@
 
       <mj-section padding="0" css-class="set-font">
         <mj-column>
-          <mj-text align="left" font-family="IBM Plex Sans, sans-serif">on debian-2gb-nbdg1-1</mj-text>
+          <mj-text padding-top="0" align="left" font-family="IBM Plex Sans, sans-serif">on debian-2gb-nbdg1-1</mj-text>
         </mj-column>
       </mj-section>
 
       <mj-section css-class="set-font">
         <mj-column>
-          <mj-text align="left" font-size="26px" font-weight="700" padding-top="15px">
-            <mj-raw>
-              <span style="color: #FF4136; font-size:26px; background: #FFEBEF; padding:4px 24px; border-radius: 36px">98%
-              </span>
-            </mj-raw>
+          <mj-text align="left" font-size="26px" font-weight="700" padding-top="0">
+            <span style="color: #FF4136; font-size:26px; background: #FFEBEF; padding:4px 24px; border-radius: 36px">98%
+            </span>
           </mj-text>
         </mj-column>
       </mj-section>
 
       <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
         <mj-column>
-          <mj-text align="left">
+          <mj-text align="left" padding-top="0" font-size="16px" line-height="21px">
             Details: the percentage of time the disk was busy, during the last 10 minutes
           </mj-text>
         </mj-column>
@@ -61,12 +59,12 @@
 
       <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
         <mj-column width="50%">
-          <mj-button align="left" background-color="#FFFFFF" border="1px solid #FF4136" color="#FF4136" height="44px" width="100%">
+          <mj-button align="left" background-color="#FFFFFF" border="1px solid #FF4136" color="#FF4136" height="44px" width="100%" font-weight="600">
             RUN CORRELATIONS
           </mj-button>
         </mj-column>
         <mj-column width="50%">
-          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%">
+          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%" font-weight="600">
             GO TO CHART
           </mj-button>
         </mj-column>
@@ -74,7 +72,7 @@
 
       <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
         <mj-column width="100%">
-          <mj-button align="center" background-color="#FF4136" color="#ffffff" height="44px" width="100%" href="https://app.netdata.cloud">
+          <mj-button align="center" background-color="#FF4136" color="#ffffff" height="44px" width="100%" href="https://app.netdata.cloud" font-weight="600">
             GO TO CHART
           </mj-button>
         </mj-column>
@@ -86,37 +84,37 @@
 
     <mj-section background-color="#FFEBEF" css-class="set-font">
       <mj-column>
-        <mj-text align="left" font-size="18px">
+        <mj-text align="left" font-size="18px" padding-bottom="6px">
           Chart:
-          <mj-raw style="font-weight:700">disk.util</mj-raw>
+          <span style="font-weight:700">disk.util</span>
         </mj-text>
         <mj-text align="left" font-size="18px" padding-top="0">
           Family:
-          <mj-raw style="font-weight:700">8tb</mj-raw>
+          <span style="font-weight:700">8tb</span>
         </mj-text>
-        <mj-text align="left" font-size="14px">Escalated from Warning, raised for 5 minutes</mj-text>
+        <mj-text align="left" font-size="14px" padding-top="4px">Escalated from Warning, raised for 5 minutes</mj-text>
         <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
-        <mj-text align="left" font-size="18px">
+        <mj-text align="left" font-size="16px" padding-bottom="6px">
           On
-          <mj-raw style="font-weight:500">Sat Nov 10 2021, 04:28:23 EET</mj-raw>
+          <span style="font-weight:500">Sat Nov 10 2021, 04:28:23 EET</span>
         </mj-text>
-        <mj-text align="left" font-size="18px" padding-top="0">
+        <mj-text align="left" font-size="16px" padding-top="0">
           By:
-          <mj-raw style="font-weight:500">{host name}</mj-raw>
+          <span style="font-weight:500">{host name}</span>
         </mj-text>
-        <mj-text align="left" font-size="14px">Global time:
-          <my-raw style="font-weight:500">Sat Nov 10 2021, 16:28:23 UTC</my-raw>
+        <mj-text align="left" font-size="14px" padding-top="4px">Global time:
+          <span style="font-weight:500">Sat Nov 10 2021, 16:28:23 UTC</span>
         </mj-text>
         <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
-        <mj-text align="left" font-size="18px">
+        <mj-text align="left" font-size="16px" padding-bottom="6px">
           Classification:
-          <mj-raw style="font-weight:500">OS disk</mj-raw>
+          <span style="font-weight:500">OS disk</span>
         </mj-text>
-        <mj-text align="left" font-size="18px" padding-top="0">
+        <mj-text align="left" font-size="16px" padding-top="0">
           Role:
-          <mj-raw style="font-weight:500">sysadmin</mj-raw>
+          <span style="font-weight:500">sysadmin</span>
         </mj-text>
 
       </mj-column>
@@ -140,7 +138,7 @@
       </mj-column>
       <mj-column align="left" width="80%">
         <mj-text align="left" font-weight="700" font-size="16px">Need to configure this alert?</mj-text>
-        <mj-text align="left" font-size="14px" line-height="1.3"><mj-raw style="color: #00AB44">Edit</mj-raw> this alert's configuration file by logging into {node} and running the following command:</mj-text>
+        <mj-text align="left" font-size="14px" line-height="1.3"><span style="color: #00AB44">Edit</span> this alert's configuration file by logging into {node} and running the following command:</mj-text>
         <mj-text align="left" font-size="12px" line-height="1.3" padding-top="8px">
           sudo {/etc/netdata}/edit-config health.d/{disks.conf} <br />
           The alarm to edit is at line {160}
@@ -154,9 +152,9 @@
         <mj-column>
           <mj-text align="left" font-size="16px">
             The node has
-            <mj-raw style="font-weight:600">3 warnings</mj-raw>
+            <span style="font-weight:600">3 warnings</span>
             and
-            <mj-raw style="font-weight:600">0 critical</mj-raw>
+            <span style="font-weight:600">0 critical</span>
             alert(s)
           </mj-text>
         </mj-column>
@@ -165,7 +163,7 @@
       <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8" css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
-          <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
+          <mj-text align="left" font-size="12px" padding-top="2px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
@@ -179,7 +177,7 @@
       <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8" css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
-          <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
+          <mj-text align="left" font-size="12px" padding-top="2px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
