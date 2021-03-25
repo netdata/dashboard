@@ -4,11 +4,8 @@
     <mj-font name="IBM Plex Sans"
              href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
     />
-    <mj-style>
-      .value { background-color: pink; display: inline }
-      .history-wrapper { max-width: 100% !important; }
-    </mj-style>
     <mj-style inline="inline">
+      .history-wrapper { max-width: 100% !important; }
       .set-font { font-family: "IBM Plex Sans", sans-serif }
       .link { color: #00AB44; text-decoration: none;  }
     </mj-style>
