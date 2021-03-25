@@ -1,10 +1,16 @@
 <mjml>
 
   <mj-head>
+    <mj-font name="IBM Plex Sans"
+             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+    />
     <mj-style>
       .value { background-color: pink; display: inline }
       .link { color: #00AB44; text-decoration: none;  }
       .history-wrapper { max-width: 100% !important; }
+    </mj-style>
+    <mj-style inline="inline">
+      .set-font { font-family: "IBM Plex Sans", sans-serif }
     </mj-style>
 
     <mj-attributes>
@@ -19,7 +25,7 @@
     <mj-include path="./header.mjml" />
 
     <mj-wrapper	border="1px solid #FF4136">
-      <mj-section padding-bottom="0" padding-top="0">
+      <mj-section padding-bottom="0" padding-top="0" css-class="set-font">
         <mj-column width="70%">
           <mj-text align="left" font-size="20px" font-weight="700" padding-top="15px">10min_disk_utilization</mj-text>
         </mj-column>
@@ -28,24 +34,24 @@
         </mj-column>
       </mj-section>
 
-      <mj-section padding="0">
+      <mj-section padding="0" css-class="set-font">
         <mj-column>
-          <mj-text align="left">on debian-2gb-nbdg1-1</mj-text>
+          <mj-text align="left" font-family="IBM Plex Sans, sans-serif">on debian-2gb-nbdg1-1</mj-text>
         </mj-column>
       </mj-section>
 
-      <mj-section>
+      <mj-section css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="26px" font-weight="700" padding-top="15px">
-            <mr-raw>
-              <span style="color: #FF4136; font-size:26px; background: #FFEBEF; 100%; padding:4px 24px; border-radius: 36px">98%
+            <mj-raw>
+              <span style="color: #FF4136; font-size:26px; background: #FFEBEF; padding:4px 24px; border-radius: 36px">98%
               </span>
-            </mr-raw>
+            </mj-raw>
           </mj-text>
         </mj-column>
       </mj-section>
 
-      <mj-section padding-top="0" padding-bottom="0">
+      <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
         <mj-column>
           <mj-text align="left">
             Details: the percentage of time the disk was busy, during the last 10 minutes
@@ -53,22 +59,32 @@
         </mj-column>
       </mj-section>
 
-      <mj-section padding-top="0" padding-bottom="0">
-        <mj-column width="100%">
-          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%">
-            Go to Chart
+      <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
+        <mj-column width="50%">
+          <mj-button align="left" background-color="#FFFFFF" border="1px solid #FF4136" color="#FF4136" height="44px" width="100%">
+            RUN CORRELATIONS
           </mj-button>
         </mj-column>
-        <mj-columne>
+        <mj-column width="50%">
+          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%">
+            GO TO CHART
+          </mj-button>
+        </mj-column>
+      </mj-section>
 
-        </mj-columne>
+      <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
+        <mj-column width="100%">
+          <mj-button align="center" background-color="#FF4136" color="#ffffff" height="44px" width="100%" href="https://app.netdata.cloud">
+            GO TO CHART
+          </mj-button>
+        </mj-column>
       </mj-section>
 
     </mj-wrapper>
 
     <mj-spacer height="32px" />
 
-    <mj-section background-color="#FFEBEF">
+    <mj-section background-color="#FFEBEF" css-class="set-font">
       <mj-column>
         <mj-text align="left" font-size="18px">
           Chart:
@@ -106,7 +122,7 @@
       </mj-column>
     </mj-section>
 
-    <mj-section padding-left="0">
+    <mj-section padding-left="0" css-class="set-font">
       <mj-column padding="0" width="100px">
         <mj-image align="left" width="60px" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
       </mj-column>
@@ -118,7 +134,7 @@
     </mj-section>
 
 
-    <mj-section padding-left="0">
+    <mj-section padding-left="0" css-class="set-font">
       <mj-column padding="0" width="100px">
         <mj-image align="left" src="https://app.netdata.cloud/static/email/img/configure_icon.png" width="60px" />
       </mj-column>
@@ -134,7 +150,7 @@
 
 
     <mj-wrapper background-color="#F7F8F8" full-width padding="0" css-class="history-wrapper" padding-bottom="24px">
-      <mj-section>
+      <mj-section css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="16px">
             The node has
@@ -146,27 +162,31 @@
         </mj-column>
       </mj-section>
 
-      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8">
+      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8" css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
           <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
-        <mj-column>
-          <mj-text><mj-raw style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px;">
-            Warning for 10m
-          </mj-raw></mj-text>
+        <mj-column padding-top="13px">
+          <mj-text align="right">
+            <span style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px; margin-top: 20px">
+              Warning for 10mm
+            </span>
+          </mj-text>
         </mj-column>
       </mj-section>
 
-      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8">
+      <mj-section background-color="#FFFFFF" border-top="8px solid #F7F8F8" css-class="set-font">
         <mj-column>
           <mj-text align="left" font-size="14px" font-weight="600">10_m_response_time</mj-text>
           <mj-text align="left" font-size="12px">Sat Nov 10 2021, 16:04:08 UTC</mj-text>
         </mj-column>
-        <mj-column>
-          <mj-text><mj-raw style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 4px 12px;">
-            Warning for 10m
-          </mj-raw></mj-text>
+        <mj-column padding-top="13px">
+          <mj-text align="right">
+            <span style="background-color:#FFEDB3; border: 1px solid #FFC300; border-radius:36px; padding: 4px 12px;">
+              Warning for 10m
+            </span>
+          </mj-text>
         </mj-column>
       </mj-section>
 
