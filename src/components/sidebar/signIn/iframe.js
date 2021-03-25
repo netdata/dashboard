@@ -40,6 +40,7 @@ const Iframe = ({ signedIn, setOffline }) => {
     setTimeout(() => {
       if (signInRef.current === undefined) setOffline(true)
     }, 500)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setOffline])
 
   const handler = useCallback(
@@ -47,12 +48,13 @@ const Iframe = ({ signedIn, setOffline }) => {
       if (!e?.target) return
       if (e.target.src === signInIframeUrl && !rendered) onLoad()
     },
-    [signInIframeUrl, rendered]
+    [signInIframeUrl, rendered, onLoad]
   )
 
   useEffect(() => {
     window.addEventListener("DOMFrameContentLoaded", handler)
     return () => window.removeEventListener("DOMFrameContentLoaded", handler)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -69,6 +71,7 @@ const Iframe = ({ signedIn, setOffline }) => {
         payload: registryMachinesArray,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signedIn, registry, lsValue])
 
   return <IframeContainer as="iframe" src={signInIframeUrl} onLoad={onLoad} />
