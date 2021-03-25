@@ -28,6 +28,7 @@ const Sidebar = () => {
   const toggle = useCallback(() => {
     dispatch(setSpacePanelStatusAction({ isActive: !isOpen }))
     setLsValue(!isOpen)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   useEffect(() => {
