@@ -18,9 +18,9 @@ const useCheckSignInStatus = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const [signedIn] = useListenToPostMessage("is-signed-in", onMessage);
+  const [signedIn] = useListenToPostMessage("is-signed-in", onMessage)
 
-  return [signedIn, hasSignedInBefore];
-};
+  return [signedIn, hasSignedInBefore]
+}
 
 export default useCheckSignInStatus

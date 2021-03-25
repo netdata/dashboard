@@ -66,6 +66,7 @@ const Iframe = ({ signedIn }) => {
         payload: registryMachinesArray,
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signedIn, registry, lsValue])
 
   return <IframeContainer as="iframe" src={signInIframeUrl} onLoad={onLoad} />
