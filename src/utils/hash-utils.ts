@@ -27,7 +27,9 @@ export const makeHashFromObject = (params: { [paramKey: string]: string }) => {
   if (entries.length === 0) {
     return ""
   }
-  return entries.map((entry) => entry.join("=")).join(fragmentParamsSeparator)
+  return entries.map(
+    ([key, value]) => `${key}=${encodeURIComponent(value)}`
+  ).join(fragmentParamsSeparator)
 }
 
 export const getFilteredHash = (
