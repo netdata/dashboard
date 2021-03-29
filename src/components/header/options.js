@@ -19,6 +19,10 @@ const Container = styled(Flex).attrs({
   list-style-type: none;
 `
 
+const Option = styled(Text)`
+  cursor: pointer;
+`
+
 const Options = () => {
   return (
     <Menu
@@ -26,11 +30,11 @@ const Options = () => {
       items={[]}
       renderDropdown={() => (
         <Container>
-          <Flex as={Text} padding={[0, 4]} data-toggle="modal" data-target="#loadSnapshotModal">
-            Import
+          <Flex as={Option} padding={[0, 4]} data-toggle="modal" data-target="#loadSnapshotModal">
+            Import from a shapshot
           </Flex>
-          <Flex as={Text} padding={[0, 4]} data-toggle="modal" data-target="#saveSnapshotModal">
-            Export
+          <Flex as={Option} padding={[0, 4]} data-toggle="modal" data-target="#saveSnapshotModal">
+            Export to a snapshot
           </Flex>
           <Flex
             as={Text}
