@@ -35,6 +35,7 @@ export * from "domains/dashboard/components/node-view/use-update-theme"
 export * from "domains/dashboard/components/head-main"
 export { default as HeadMainContainer } from "domains/dashboard/components/headMainContainer"
 export * from "domains/dashboard/components/virtualized"
+export * from "utils/hash-utils"
 
 export * from "domains/charts"
 
