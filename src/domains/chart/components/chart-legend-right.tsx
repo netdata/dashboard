@@ -9,6 +9,7 @@ import { useDateTime } from "utils/date-time"
 import { legendResolutionTooltip, legendPluginModuleString } from "../utils/legend-utils"
 
 import { ChartMetadata } from "../chart-types"
+import LegendText from "./legendText"
 
 interface Props {
   chartUuid: string
@@ -163,7 +164,7 @@ export const ChartLegendRight = ({
                     </tbody>
                   </table>
                   {" "}
-                  {dimensionName}
+                  <LegendText id={chartUuid} index={i} />
                 </span>
                 {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                 <span

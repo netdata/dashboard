@@ -88,6 +88,12 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
 // currently BE always transforms data as if `flip` was there
 const IS_FLIP_RESPECTED_IN_COMPOSITE_CHARTS = false
 
+const getGroupByValues = (groupBy) => {
+  if (groupBy === "instance") return "node"
+  if (groupBy === "node" || groupBy === "dimension") return groupBy
+  return  `label=${groupBy}`
+}
+
 const [fetchMetrics$] = getFetchStream(
   isPrintMode ? CONCURRENT_CALLS_LIMIT_PRINT : CONCURRENT_CALLS_LIMIT_METRICS,
 )
@@ -136,7 +142,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
     ? agentOptionsOriginal.concat("flip") : agentOptionsOriginal
 
   const groupValues = [
-    groupBy === "node" || groupBy === "dimension" ? groupBy : `label=${groupBy}`,
+    getGroupByValues(groupBy),
     postGroupBy && `label=${postGroupBy}`,
   ].filter(Boolean)
 
@@ -160,7 +166,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
         method: dimensionsAggrMethod || "sum",
         groupBy: ["chart", ...groupValues],
       },
-      {
+      groupBy !== "instance" && {
         method: aggrMethod,
         groupBy: groupValues,
         ...(aggrGroups.length && { labels: aggrGroups }),
