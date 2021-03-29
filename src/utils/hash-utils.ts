@@ -3,7 +3,7 @@
 import { omit, pipe, mergeDeepLeft } from "ramda"
 
 type HashParams = { [param: string]: string }
-const fragmentParamsSeparatorRegEx = /[\s&;]/
+const fragmentParamsSeparatorRegEx = /[&;]/
 const fragmentParamsSeparator = ";"
 
 export const getHashParams = (
