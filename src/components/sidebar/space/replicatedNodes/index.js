@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from "react"
 import styled from "styled-components"
 import { Flex, Text, Icon, TextInput } from "@netdata/netdata-ui"
 import { MenuList } from "components/menus"
+import Anchor from "./anchor"
 import Node from "./node"
 
 const Search = styled(TextInput)`
@@ -10,7 +11,7 @@ const Search = styled(TextInput)`
   }
 `
 
-export const StyledIcon = styled(Icon)`
+const StyledIcon = styled(Icon)`
   transform: ${({ right }) => (right ? "rotate(270deg)" : "none")};
 `
 
@@ -42,10 +43,10 @@ const ReplicatedNodes = ({ parentNode, replicatedNodes }) => {
       }
     >
       <Flex column gap={4} padding={[4, 0, 0]}>
-        <Flex gap={2} as="a" href={parentNode.url}>
+        <Anchor as="a" href={parentNode.url} justifyContent="start">
           <Icon name="nodes" size="small" color="bright" />
           <Text color="bright">{parentNode.hostname}</Text>
-        </Flex>
+        </Anchor>
         {nodes.length >= 5 && (
           <Flex padding={[0, 0, 0, 2]}>
             <Search
