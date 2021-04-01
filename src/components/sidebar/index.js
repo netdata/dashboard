@@ -3,7 +3,7 @@ import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocalStorage } from "react-use"
-import { selectSpacePanelIsActive } from "@/src/domains/global/selectors"
+import { selectSpacePanelIsActive, selectIsCloudEnabled } from "@/src/domains/global/selectors"
 import { setSpacePanelStatusAction } from "@/src/domains/global/actions"
 import Spaces from "./spaces"
 import Space from "./space"
@@ -25,6 +25,7 @@ const Sidebar = () => {
   const [lsValue, setLsValue] = useLocalStorage("space-panel-state")
   const [signedIn, hasSignedInBefore] = useCheckSignInStatus()
   const isOpen = useSelector(selectSpacePanelIsActive)
+  const cloudEnabled = useSelector(selectIsCloudEnabled)
   const dispatch = useDispatch()
 
   const toggle = useCallback(() => {
@@ -49,7 +50,7 @@ const Sidebar = () => {
         isSignedIn={signedIn}
       />
       <SignInIframe signedIn={signedIn} setOffline={setOffline} />
-      {!isOpen && !signedIn && (
+      {!isOpen && !signedIn && cloudEnabled && (
         <SignInWrapper>
           <SignIn offline={offline} />
         </SignInWrapper>
