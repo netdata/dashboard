@@ -44,16 +44,18 @@ const Badge = styled.div`
 `
 
 export default forwardRef((
-  { status, label },
+  { isVisible, status, label },
   ref,
 ) => (
   <Container ref={ref}>
-    <Badge
-      background={getBackgroundColor(status)}
-      border={getBorderColor(status)}
-      color={getColor(status)}
-    >
-      {label}
-    </Badge>
+    {isVisible && (
+      <Badge
+        background={getBackgroundColor(status)}
+        border={getBorderColor(status)}
+        color={getColor(status)}
+      >
+        {label}
+      </Badge>
+    )}
   </Container>
 ))
