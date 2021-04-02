@@ -25,10 +25,10 @@ export const ChartHeadsWrapper = forwardRef((props, ref) => (
   <Flex justifyContent="center" alignItems="baseline" ref={ref} {...props} />
 ))
 
-export const ChartHeadsContainer = ({ ids, ...rest }) => (
+export const ChartHeadsContainer = ({ ids, uuid, ...rest }) => (
   <ChartHeadsWrapper {...rest}>
     {ids.map(id => (
-      <ChartHeadContainer key={id} id={id} />
+      <ChartHeadContainer key={id} id={id} uuid={uuid} />
     ))}
   </ChartHeadsWrapper>
 )

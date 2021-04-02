@@ -11,6 +11,7 @@ interface Props {
   host: string
   nodeIDs: string[]
   commonAttributesOverrides?: Partial<Attributes>
+  uuid?: string
 }
 export const HeadMain = ({
   getChart,
@@ -18,6 +19,7 @@ export const HeadMain = ({
   host,
   nodeIDs,
   commonAttributesOverrides,
+  uuid,
 }: Props) => {
   const commonAttributes = {
     host,
@@ -49,6 +51,7 @@ export const HeadMain = ({
           }}
           style={{ marginRight: 10 }}
           chartMetadata={getChart("system.swap")}
+          uuid={uuid}
         />
       )}
 
@@ -67,6 +70,7 @@ export const HeadMain = ({
             }}
             style={{ marginRight: 10 }}
             chartMetadata={getChart("system.io")}
+            uuid={uuid}
           />
           <ChartWrapper
             attributes={{
@@ -81,6 +85,7 @@ export const HeadMain = ({
             }}
             style={{ marginRight: 10 }}
             chartMetadata={getChart("system.io")}
+            uuid={uuid}
           />
         </>
       ) : (
@@ -99,6 +104,7 @@ export const HeadMain = ({
               }}
               style={{ marginRight: 10 }}
               chartMetadata={getChart("system.pgpgio")}
+              uuid={uuid}
             />
             <ChartWrapper
               attributes={{
@@ -113,6 +119,7 @@ export const HeadMain = ({
               }}
               style={{ marginRight: 10 }}
               chartMetadata={getChart("system.pgpgio")}
+              uuid={uuid}
             />
           </>
         )
@@ -134,6 +141,7 @@ export const HeadMain = ({
           }}
           style={{ marginRight: 10 }}
           chartMetadata={getChart("system.cpu")}
+          uuid={uuid}
         />
       )}
 
@@ -155,6 +163,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.net")}
+                uuid={uuid}
               />
               <ChartWrapper
                 attributes={{
@@ -169,6 +178,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.net")}
+                uuid={uuid}
               />
             </>
           ),
@@ -190,6 +200,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ip")}
+                uuid={uuid}
               />
               <ChartWrapper
                 attributes={{
@@ -204,6 +215,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ip")}
+                uuid={uuid}
               />
             </>
           ),
@@ -225,6 +237,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ipv4")}
+                uuid={uuid}
               />
               <ChartWrapper
                 attributes={{
@@ -239,6 +252,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ipv4")}
+                uuid={uuid}
               />
             </>
           ),
@@ -260,6 +274,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ipv6")}
+                uuid={uuid}
               />
               <ChartWrapper
                 attributes={{
@@ -274,6 +289,7 @@ export const HeadMain = ({
                 }}
                 style={{ marginRight: 10 }}
                 chartMetadata={getChart("system.ipv6")}
+                uuid={uuid}
               />
             </>
           ),
@@ -297,6 +313,7 @@ export const HeadMain = ({
           }}
           style={{ marginRight: 10 }}
           chartMetadata={getChart("system.ram")}
+          uuid={uuid}
         />
       )}
     </>
