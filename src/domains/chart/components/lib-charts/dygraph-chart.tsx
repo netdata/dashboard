@@ -404,7 +404,7 @@ export const DygraphChart = ({
     }
   }, [chartUuid, dispatch, isSyncPanAndZoom])
 
-  const [, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
+  const [isBadgeVisible, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
@@ -1135,7 +1135,7 @@ export const DygraphChart = ({
       )}
       {alarm && hasLegend && (
         // @ts-ignore
-        <AlarmBadge ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
+        <AlarmBadge isVisible={isBadgeVisible} ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
