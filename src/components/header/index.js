@@ -6,6 +6,7 @@ import Options from "./options"
 import Version from "./version"
 import DateTimePicker from "./dateTimePicker"
 import Alarms from "./alarms"
+import AgentNews from "./news"
 
 const Wrapper = styled(Flex).attrs({
   as: "header",
@@ -27,6 +28,7 @@ const Header = () => (
       <Version />
     </Flex>
     <Flex justifyContent="end" alignItems="center" gap={3}>
+      <AgentNews />
       <DateTimePicker />
       <Alarms />
     </Flex>
