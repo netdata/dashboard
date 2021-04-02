@@ -28,6 +28,7 @@ const Container = styled.div`
   overflow: hidden;
   pointer-events: none;
   direction: rtl;
+  z-index: 10; // higher than chart
 `
 
 const Badge = styled.div`

@@ -531,10 +531,13 @@ export const DygraphChart = ({
 
             const alarmPosition = g.toDomXCoord(currentAlarm.when * 1000)
             const fillColor = getBorderColor(currentAlarm.status)
-
             const horizontalPadding = 3
-            canvas.fillStyle = fillColor
-            canvas.fillRect(alarmPosition - horizontalPadding, area.y, 2 * horizontalPadding, area.h)
+            // use RAF, because dygraph doesn't provide any callback called after drawing the chart
+            requestAnimationFrame(() => {
+              canvas.fillStyle = fillColor
+              canvas.globalAlpha = 0.7
+              canvas.fillRect(alarmPosition - horizontalPadding, area.y, 2 * horizontalPadding, area.h)
+            })
 
             propsRef.current.updateAlarmBadge(
               propsRef.current.alarm,
