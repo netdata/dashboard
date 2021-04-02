@@ -39,6 +39,7 @@ const Badge = styled.div`
   color: ${({ color }) => color};
   font-size: 12px;
   font-weight: 700;
+  direction: ltr;
 `
 
 export default forwardRef((
