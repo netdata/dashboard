@@ -1,7 +1,5 @@
-import React, {
-  useState, useLayoutEffect, useMemo, useRef,
-} from "react"
-import uuid from "uuid"
+import React, { useState, useLayoutEffect, useMemo, useRef } from "react"
+import getUuid from "uuid"
 
 import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartContainer } from "domains/chart/components/chart-container"
@@ -15,6 +13,7 @@ interface Props {
   attributes: Attributes
   height?: number
   id?: string
+  uuid?: string
   style?: React.CSSProperties
   chartMetadata: ChartMetadata
   dropdownMenu?: DropdownMenu
@@ -25,6 +24,7 @@ interface Props {
 export const ChartWrapper = ({
   attributes,
   dropdownMenu,
+  uuid,
   id,
   style: styleOverride,
   chartMetadata,
@@ -43,7 +43,7 @@ export const ChartWrapper = ({
   //   ? { width: "100%", height: `${height}px` }
   //   : { width: "100%" }
 
-  const chartUuid = useMemo(() => uuid.v4(), [])
+  const chartUuid = useMemo(() => getUuid.v4(), [])
 
   return (
     <div
@@ -57,7 +57,7 @@ export const ChartWrapper = ({
         <ChartContainer
           attributes={attributes}
           chartMetadata={chartMetadata}
-          chartUuid={chartUuid}
+          chartUuid={`${id}-${uuid}-${chartUuid}`}
           dropdownMenu={dropdownMenu}
           portalNode={chartContainerElement}
           renderCustomElementForDygraph={renderCustomElementForDygraph}

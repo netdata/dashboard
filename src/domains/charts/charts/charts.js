@@ -3,7 +3,7 @@ import { ChartContainer } from "domains/chart/components/chart-container/chart-c
 import { withChartProps } from "./context"
 import useEstimatedHeight from "./useEstimatedHeight"
 
-export const ChartMenu = ({ id, menuChartAttributes, chartAttributes, chart }) => {
+export const ChartMenu = ({ id, uuid, menuChartAttributes, chartAttributes, chart }) => {
   const ref = useRef()
   const [container, setContainer] = useState()
   const { link } = menuChartAttributes
@@ -36,7 +36,7 @@ export const ChartMenu = ({ id, menuChartAttributes, chartAttributes, chart }) =
         <ChartContainer
           attributes={attributes}
           chartMetadata={chart}
-          chartUuid={id}
+          chartUuid={`${id}-${uuid}`}
           dropdownMenu={null}
           portalNode={container}
           renderCustomElementForDygraph={null}

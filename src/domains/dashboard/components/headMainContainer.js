@@ -3,7 +3,7 @@ import { useContainer, useGetChart, useDashboardAttributes } from "domains/chart
 import { ChartHeadsWrapper, useChartHeadDuration } from "domains/charts/chartHead"
 import { HeadMain } from "./head-main"
 
-const HeadMainContainer = props => {
+const HeadMainContainer = ({ uuid, ...rest }) => {
   const container = useContainer()
   const getChart = useGetChart()
   const { width } = container.getBoundingClientRect()
@@ -11,13 +11,14 @@ const HeadMainContainer = props => {
   const { host, nodeIDs, ...restAttributes } = useDashboardAttributes()
 
   return (
-    <ChartHeadsWrapper {...props}>
+    <ChartHeadsWrapper {...rest}>
       <HeadMain
         getChart={getChart}
         duration={duration}
         host={host}
         nodeIDs={nodeIDs}
         commonAttributesOverrides={restAttributes}
+        uuid={uuid}
       />
     </ChartHeadsWrapper>
   )
