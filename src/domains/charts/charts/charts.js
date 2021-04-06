@@ -36,7 +36,8 @@ export const ChartMenu = ({ id, uuid, menuChartAttributes, chartAttributes, char
         <ChartContainer
           attributes={attributes}
           chartMetadata={chart}
-          chartUuid={`${id}-${uuid}`}
+          chartUuid={id}
+          uuid={uuid}
           dropdownMenu={null}
           portalNode={container}
           renderCustomElementForDygraph={null}

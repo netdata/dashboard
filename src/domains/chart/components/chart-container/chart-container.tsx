@@ -11,6 +11,7 @@ export type Props = {
   // warning! this is not the same as chartId in old dashboard
   // here, the chartID must be unique across all agents
   chartUuid: string
+  uuid?: string
   portalNode: HTMLElement
   chartMetadata?: ChartMetadata | undefined
   dropdownMenu?: DropdownMenu
@@ -26,12 +27,9 @@ export const ChartContainer = ({
   portalNode,
   renderCustomElementForDygraph,
   onAttributesChange,
+  uuid,
 }: Props) => (
-  <DisableOutOfView
-    attributes={attributes}
-    portalNode={portalNode}
-    chartUuid={chartUuid}
-  >
+  <DisableOutOfView attributes={attributes} portalNode={portalNode} chartUuid={chartUuid}>
     <ChartWithLoader
       attributes={attributes}
       chartUuid={chartUuid}
@@ -40,6 +38,7 @@ export const ChartContainer = ({
       dropdownMenu={dropdownMenu}
       externalChartMetadata={chartMetadata}
       portalNode={portalNode}
+      uuid={uuid}
     />
   </DisableOutOfView>
 )

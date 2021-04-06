@@ -1,11 +1,7 @@
 import { cond, always, T } from "ramda"
 import axios from "axios"
-import React, {
-  useEffect, useState, useMemo, useLayoutEffect,
-} from "react"
-import {
-  useThrottle, useUpdateEffect, useUnmount, useDebounce,
-} from "react-use"
+import React, { useEffect, useState, useMemo, useLayoutEffect } from "react"
+import { useThrottle, useUpdateEffect, useUnmount, useDebounce } from "react-use"
 
 import { AppStateT } from "store/app-state"
 import { useSelector, useDispatch } from "store/redux-separate-context"
@@ -72,6 +68,7 @@ const emptyArray = [] as any
 export type Props = {
   attributes: Attributes
   chartUuid: string
+  uuid?: string
   dropdownMenu?: DropdownMenu
   externalChartMetadata?: ChartMetadata
   portalNode: HTMLElement
@@ -82,6 +79,7 @@ export type Props = {
 export const ChartWithLoader = ({
   attributes,
   chartUuid,
+  uuid,
   dropdownMenu,
   externalChartMetadata,
   portalNode,
@@ -94,9 +92,9 @@ export const ChartWithLoader = ({
   const { host = serverDefault, id, nodeIDs } = attributes
   const dispatch = useDispatch()
   const selectChartMetadataRequest = useMemo(makeSelectChartMetadataRequest, [])
-  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) => (
+  const { chartMetadata, isFetchingDetails } = useSelector((state: AppStateT) =>
     selectChartMetadataRequest(state, { chartId: id, id: chartUuid })
-  ))
+  )
   const actualChartMetadata = externalChartMetadata || chartMetadata
   useEffect(() => {
     if (!chartMetadata && !isFetchingDetails && !externalChartMetadata) {
@@ -106,7 +104,7 @@ export const ChartWithLoader = ({
           id: chartUuid,
           host,
           nodeIDs,
-        }),
+        })
       )
     }
   }, [
@@ -118,37 +116,34 @@ export const ChartWithLoader = ({
     chartMetadata,
     externalChartMetadata,
     nodeIDs,
+    uuid,
   ])
 
   // todo local state option
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
-  const chartPanAndZoom = useSelector((state: AppStateT) => (
+  const chartPanAndZoom = useSelector((state: AppStateT) =>
     selectChartPanAndZoom(state, { id: chartUuid })
-  ))
+  )
   const panAndZoom = chartPanAndZoom || globalPanAndZoom
 
-  const isPanAndZoomMaster = (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid)
-    || Boolean(chartPanAndZoom)
+  const isPanAndZoomMaster =
+    (!!globalPanAndZoom && globalPanAndZoom.masterID === chartUuid) || Boolean(chartPanAndZoom)
   const shouldForceTimeRange = panAndZoom?.shouldForceTimeRange || false
 
   // (isRemotelyControlled === false) only during globalPanAndZoom, when chart is panAndZoomMaster
   // and when no toolbox is used at that time
-  const isRemotelyControlled = !panAndZoom
-    || !isPanAndZoomMaster
-    || shouldForceTimeRange // used when zooming/shifting in toolbox
+  const isRemotelyControlled = !panAndZoom || !isPanAndZoomMaster || shouldForceTimeRange // used when zooming/shifting in toolbox
 
-
-  const fetchDataParams = useSelector((state: AppStateT) => selectChartFetchDataParams(
-    state, { id: chartUuid },
-  ))
-  const viewRange = useSelector((state: AppStateT) => selectChartViewRange(
-    state, { id: chartUuid },
-  ))
+  const fetchDataParams = useSelector((state: AppStateT) =>
+    selectChartFetchDataParams(state, { id: chartUuid })
+  )
+  const viewRange = useSelector((state: AppStateT) =>
+    selectChartViewRange(state, { id: chartUuid })
+  )
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id: chartUuid }))
-  const isFetchingData = useSelector((state: AppStateT) => selectChartIsFetchingData(
-    state,
-    { id: chartUuid },
-  ))
+  const isFetchingData = useSelector((state: AppStateT) =>
+    selectChartIsFetchingData(state, { id: chartUuid })
+  )
 
   const hoveredX = useSelector(selectGlobalSelection)
 
@@ -187,9 +182,7 @@ export const ChartWithLoader = ({
     attributes.groupBy,
   ])
 
-  const {
-    before: initialBefore = window.NETDATA.chartDefaults.before,
-  } = attributes
+  const { before: initialBefore = window.NETDATA.chartDefaults.before } = attributes
 
   // attributes.after should be now used only for old custom dashboard
   // and in the future for setting timeframe per-chart
@@ -206,8 +199,8 @@ export const ChartWithLoader = ({
   const chartHeight = boundingClientRect.height
 
   const isShowingSnapshot = Boolean(useSelector(selectSnapshot))
-  const shouldEliminateZeroDimensions = useSelector(selectShouldEliminateZeroDimensions)
-    || isShowingSnapshot
+  const shouldEliminateZeroDimensions =
+    useSelector(selectShouldEliminateZeroDimensions) || isShowingSnapshot
   const shouldUsePanAndZoomPadding = useSelector(selectPanAndZoomDataPadding)
 
   const { CancelToken } = axios
@@ -231,7 +224,7 @@ export const ChartWithLoader = ({
       }
     },
     2000,
-    [isFetchingData],
+    [isFetchingData]
   )
   useEffect(() => {
     if (!isFetchingData && shouldShowSpinnerDebounced) {
@@ -277,19 +270,25 @@ export const ChartWithLoader = ({
         pointsMultiplier = 1
       }
 
-      newViewRange = (newViewRange || [after, before]).map((x) => x * 1000) as [number, number]
+      newViewRange = (newViewRange || [after, before]).map(x => x * 1000) as [number, number]
 
-      const dataPoints = attributes.points
-        || Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
+      const dataPoints =
+        attributes.points ||
+        Math.round(chartWidth / getChartPixelsPerPoint({ attributes, chartSettings }))
       const points = forceDataPoints || dataPoints * pointsMultiplier
 
       const shouldForceTimeWindow = attributes.forceTimeWindow || Boolean(defaultAfter)
       // if we want to add fake points, we need first need to request less
       // to have the desired frequency
       // this will be removed when Agents will support forcing time-window between points
-      const correctedPoints = shouldForceTimeWindow ? getCorrectedPoints({
-        after, before, firstEntry: actualChartMetadata.first_entry, points,
-      }) : null
+      const correctedPoints = shouldForceTimeWindow
+        ? getCorrectedPoints({
+            after,
+            before,
+            firstEntry: actualChartMetadata.first_entry,
+            points,
+          })
+        : null
 
       const group = attributes.method || window.NETDATA.chartDefaults.method
       setShouldFetch(false)
@@ -313,8 +312,9 @@ export const ChartWithLoader = ({
           aggrMethod: attributes.aggrMethod,
           aggrGroups: attributes.aggrGroups,
           // @ts-ignore
-          dimensionsAggrMethod: dimensionsAggrMethodMap[attributes.dimensionsAggrMethod]
-            || attributes.dimensionsAggrMethod,
+          dimensionsAggrMethod:
+            dimensionsAggrMethodMap[attributes.dimensionsAggrMethod] ||
+            attributes.dimensionsAggrMethod,
           nodeIDs,
           httpMethod: attributes.httpMethod,
           groupBy: attributes.groupBy,
@@ -323,13 +323,13 @@ export const ChartWithLoader = ({
           fetchDataParams: {
             // we store it here so it is only available when data is fetched
             // those params should be synced with data
-            fillMissingPoints: correctedPoints ? (points - correctedPoints) : undefined,
+            fillMissingPoints: correctedPoints ? points - correctedPoints : undefined,
             isRemotelyControlled,
             viewRange: newViewRange,
           },
           id: chartUuid,
           cancelTokenSource,
-        }),
+        })
       )
     }
   }, [
@@ -355,13 +355,15 @@ export const ChartWithLoader = ({
     shouldFetch,
     cancelTokenSource,
     nodeIDs,
+    uuid,
   ])
 
   useSelector(selectSpacePanelTransitionEndIsActive)
 
   const externalSelectedDimensions = attributes?.selectedDimensions
-  const [selectedDimensions, setSelectedDimensions] = useState<string[]>(externalSelectedDimensions
-    || emptyArray)
+  const [selectedDimensions, setSelectedDimensions] = useState<string[]>(
+    externalSelectedDimensions || emptyArray
+  )
 
   useLayoutEffect(() => {
     if (externalSelectedDimensions) {
@@ -371,17 +373,19 @@ export const ChartWithLoader = ({
 
   useLayoutEffect(() => {
     setSelectedDimensions(externalSelectedDimensions || emptyArray)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attributes?.groupBy])
 
   const customElementForDygraph = useMemo(
-    () => renderCustomElementForDygraph && renderCustomElementForDygraph({
-      onAttributesChange,
-      attributes,
-      chartMetadata: actualChartMetadata as ChartMetadata,
-      chartData,
-      chartID: id,
-    }),
+    () =>
+      renderCustomElementForDygraph &&
+      renderCustomElementForDygraph({
+        onAttributesChange,
+        attributes,
+        chartMetadata: actualChartMetadata as ChartMetadata,
+        chartData,
+        chartID: id,
+      }),
     [
       onAttributesChange,
       renderCustomElementForDygraph,
@@ -389,26 +393,25 @@ export const ChartWithLoader = ({
       id,
       actualChartMetadata,
       chartData,
-    ],
+    ]
   )
 
   // eslint-disable-next-line max-len
-  const hasEmptyData = (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0
-    || (chartData as EasyPieChartData | null)?.result?.length === 0
+  const hasEmptyData =
+    (chartData as DygraphData | D3pieChartData | null)?.result?.data?.length === 0 ||
+    (chartData as EasyPieChartData | null)?.result?.length === 0
 
   if (!chartData || !actualChartMetadata) {
     return (
       <>
         <Loader
-        // Loader should remount when that flag is changed, because inside
-        // there's an oldschool bootstrap icon which doesn't handle updates well
+          // Loader should remount when that flag is changed, because inside
+          // there's an oldschool bootstrap icon which doesn't handle updates well
           key={`${hasEmptyData}`}
           hasEmptyData={hasEmptyData}
           containerNode={portalNode}
         />
-        {(shouldShowSpinner) && (
-          <ChartSpinner chartLibrary={attributes.chartLibrary} />
-        )}
+        {shouldShowSpinner && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
       </>
     )
   }
@@ -438,10 +441,8 @@ export const ChartWithLoader = ({
         setSelectedDimensions={setSelectedDimensions}
         showLatestOnBlur={!panAndZoom}
       />
-      {(shouldShowSpinner) && (
-        <ChartSpinner chartLibrary={attributes.chartLibrary} />
-      )}
-      {dropdownMenu && (dropdownMenu.length > 0) && (
+      {shouldShowSpinner && <ChartSpinner chartLibrary={attributes.chartLibrary} />}
+      {dropdownMenu && dropdownMenu.length > 0 && (
         <S.ChartDropdownContainer>
           <ChartDropdown
             dropdownMenu={dropdownMenu}
