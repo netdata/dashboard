@@ -91,7 +91,7 @@ const IS_FLIP_RESPECTED_IN_COMPOSITE_CHARTS = false
 const getGroupByValues = (groupBy) => {
   if (groupBy === "chart") return "node"
   if (groupBy === "node" || groupBy === "dimension") return groupBy
-  return  `label=${groupBy}`
+  return `label=${groupBy}`
 }
 
 const [fetchMetrics$] = getFetchStream(
