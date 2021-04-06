@@ -41,6 +41,7 @@ const Badge = styled.div`
   font-size: 12px;
   font-weight: 700;
   direction: ltr;
+  white-space: nowrap;
 `
 
 export default forwardRef((
