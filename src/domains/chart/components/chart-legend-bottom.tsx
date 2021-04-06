@@ -4,9 +4,8 @@ import { useSelector } from "store/redux-separate-context"
 import { selectChartData } from "domains/chart/selectors"
 import { legendPluginModuleString, legendResolutionTooltip } from "domains/chart/utils/legend-utils"
 import { ChartMetadata } from "../chart-types"
-
+import LegendText from "./legendText"
 import * as S from "./chart-legend-bottom.styled"
-
 interface Props {
   chartUuid: string
   chartMetadata: ChartMetadata
@@ -116,7 +115,7 @@ export const ChartLegendBottom = ({
                 key={dimensionId}
               >
                 <S.DimensionIcon title={dimensionName} color={color} />
-                <S.DimensionLabel>{dimensionName}</S.DimensionLabel>
+                <LegendText id={chartUuid} index={i} />
                 <S.DimensionValue>{isSelected && legendFormatValue(value)}</S.DimensionValue>
               </S.DimensionItem>
             )
