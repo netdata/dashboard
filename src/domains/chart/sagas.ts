@@ -89,7 +89,7 @@ const constructCompatibleKey = (dimensions: undefined | string, options: string)
 const IS_FLIP_RESPECTED_IN_COMPOSITE_CHARTS = false
 
 const getGroupByValues = (groupBy) => {
-  if (groupBy === "instance") return "node"
+  if (groupBy === "chart") return "node"
   if (groupBy === "node" || groupBy === "dimension") return groupBy
   return  `label=${groupBy}`
 }
@@ -166,7 +166,7 @@ function* fetchDataSaga({ payload }: Action<FetchDataPayload>) {
         method: dimensionsAggrMethod || "sum",
         groupBy: ["chart", ...groupValues],
       },
-      groupBy !== "instance" && {
+      groupBy !== "chart" && {
         method: aggrMethod,
         groupBy: groupValues,
         ...(aggrGroups.length && { labels: aggrGroups }),
