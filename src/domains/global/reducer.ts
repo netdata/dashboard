@@ -366,10 +366,11 @@ globalReducer.on(centerAroundHighlightAction, (state) => {
   }
 })
 
-globalReducer.on(clearHighlightAction, (state) => ({
+
+globalReducer.on(clearHighlightAction, (state, { resetPanAndZoom = true }:{ resetPanAndZoom?: boolean } = {}) => ({
   ...state,
   globalChartUnderlay: initialState.globalChartUnderlay,
-  globalPanAndZoom: initialState.globalPanAndZoom,
+  ...(resetPanAndZoom ? {globalPanAndZoom: initialState.globalPanAndZoom}: {}),
 }))
 
 globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
