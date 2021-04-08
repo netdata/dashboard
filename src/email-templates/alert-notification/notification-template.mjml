@@ -1,39 +1,46 @@
 <mjml>
 
   <mj-head>
-    <mj-font name="IBM Plex Sans"
-             href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap"
+    <mj-font name="Open Sans"
+             href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap"
     />
     <mj-style inline="inline">
       .history-wrapper { max-width: 100% !important; }
-      .set-font { font-family: "IBM Plex Sans", sans-serif }
+      .set-font { font-family: "IBM Plex Sans", sans-serif; }
       .link { color: #00AB44; text-decoration: none;  }
+      .svgbg {
+      background-image: url("https://app.netdata.cloud/static/img/mail/isotype.png");
+      background-repeat: no-repeat;
+      background-position: 0 -40px;
+      background-size: 334px 265px;
+      }
+      .no-collapse { border-collapse: initial; }
+
     </mj-style>
 
     <mj-attributes>
-      <mj-text align="center" color="#555" />
+      <mj-text align="left" color="#35414A" font-family="Open Sans, sans-serif"; />
     </mj-attributes>
     <mj-breakpoint width="100px" />
-
   </mj-head>
 
-  <mj-body padding="0">
+  <mj-body padding="0" css-class="svgbg" style="color: #35414A;">
 
     <mj-include path="./header.mjml" />
 
-    <mj-wrapper	border="1px solid #FF4136">
+    <mj-wrapper	border="1px solid #FF4136" border-radius="4px" css-class="no-collapse">
       <mj-section padding-bottom="0" padding-top="0" css-class="set-font">
         <mj-column width="70%">
           <mj-text align="left" font-size="20px" font-weight="700" padding-top="15px">10min_disk_utilization</mj-text>
         </mj-column>
         <mj-column width="30%">
-          <mj-image align="center" width="100px" src="https://app.netdata.cloud/static/email/img/label_critical.png" />
+          <mj-image align="right" padding-right="25px" width="100px" src="https://app.netdata.cloud/static/email/img/label_critical.png" />
         </mj-column>
       </mj-section>
 
       <mj-section padding="0" css-class="set-font">
         <mj-column>
-          <mj-text padding-top="0" align="left" font-family="IBM Plex Sans, sans-serif">on debian-2gb-nbdg1-1</mj-text>
+          <mj-text font-size="16px" padding-top="0" align="left" font-family="IBM Plex Sans, sans-serif">on debian-2gb-nbdg1-1</mj-text>
         </mj-column>
       </mj-section>
 
@@ -56,20 +63,12 @@
 
       <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
         <mj-column width="50%">
-          <mj-button align="left" background-color="#FFFFFF" border="1px solid #FF4136" color="#FF4136" height="44px" width="100%" font-weight="600">
+          <mj-button align="left" padding-right="8px" background-color="#FFFFFF" border="1px solid #FF4136" color="#FF4136" height="44px" width="100%" font-weight="600">
             RUN CORRELATIONS
           </mj-button>
         </mj-column>
         <mj-column width="50%">
-          <mj-button align="left" background-color="#FF4136" color="#ffffff" height="44px" width="100%" font-weight="600">
-            GO TO CHART
-          </mj-button>
-        </mj-column>
-      </mj-section>
-
-      <mj-section padding-top="0" padding-bottom="0" css-class="set-font">
-        <mj-column width="100%">
-          <mj-button align="center" background-color="#FF4136" color="#ffffff" height="44px" width="100%" href="https://app.netdata.cloud" font-weight="600">
+          <mj-button align="left" padding-left="8px" background-color="#FF4136" color="#ffffff" height="44px" width="100%" font-weight="600">
             GO TO CHART
           </mj-button>
         </mj-column>
@@ -79,64 +78,64 @@
 
     <mj-spacer height="32px" />
 
-    <mj-section background-color="#FFEBEF" css-class="set-font">
+    <mj-section background-color="#FFEBEF" border-radius="4px" css-class="set-font">
       <mj-column>
         <mj-text align="left" font-size="18px" padding-bottom="6px">
           Chart:
-          <span style="font-weight:700">disk.util</span>
+          <span style="font-weight:700; font-size:20px">disk.util</span>
         </mj-text>
         <mj-text align="left" font-size="18px" padding-top="0">
           Family:
-          <span style="font-weight:700">8tb</span>
+          <span style="font-weight:700; font-size:20px">8tb</span>
         </mj-text>
         <mj-text align="left" font-size="14px" padding-top="4px">Escalated from Warning, raised for 5 minutes</mj-text>
         <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
         <mj-text align="left" font-size="16px" padding-bottom="6px">
           On
-          <span style="font-weight:500">Sat Nov 10 2021, 04:28:23 EET</span>
+          <span style="font-weight:600">Sat Nov 10 2021, 04:28:23 EET</span>
         </mj-text>
         <mj-text align="left" font-size="16px" padding-top="0">
           By:
-          <span style="font-weight:500">{host name}</span>
+          <span style="font-weight:600">{host name}</span>
         </mj-text>
         <mj-text align="left" font-size="14px" padding-top="4px">Global time:
-          <span style="font-weight:500">Sat Nov 10 2021, 16:28:23 UTC</span>
+          <span style="font-weight:600">Sat Nov 10 2021, 16:28:23 UTC</span>
         </mj-text>
         <mj-divider border-width="1px" border-style="solid" border-color="lightgrey" />
 
         <mj-text align="left" font-size="16px" padding-bottom="6px">
           Classification:
-          <span style="font-weight:500">OS disk</span>
+          <span style="font-weight:600">OS disk</span>
         </mj-text>
         <mj-text align="left" font-size="16px" padding-top="0">
           Role:
-          <span style="font-weight:500">sysadmin</span>
+          <span style="font-weight:600">sysadmin</span>
         </mj-text>
 
       </mj-column>
     </mj-section>
 
-    <mj-section padding-left="0" css-class="set-font">
-      <mj-column padding="0" width="100px">
-        <mj-image align="left" width="60px" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
+    <mj-section padding-left="25px" css-class="set-font" text-align="left">
+      <mj-column padding="0" width="66px">
+        <mj-image align="left" padding-left="0" padding-right="0" width="48px" src="https://app.netdata.cloud/static/email/img/community_icon.png" />
       </mj-column>
-      <mj-column align="left" width="80%">
-        <mj-text align="left" font-weight="700" font-size="16px">Want to know more about this alert?</mj-text>
-        <mj-text align="left" font-size="14px" line-height="1.3">Discuss and troubleshoot with others on the Netdata <a href="https://community.netdata.cloud/" class="link">community forums</a></mj-text>
+      <mj-column align="left" width="400px" padding-left="0">
+        <mj-text align="left" font-weight="700" font-size="16px" padding-left="0">Want to know more about this alert?</mj-text>
+        <mj-text align="left" font-size="14px" line-height="1.3" padding-left="0">Discuss and troubleshoot with others on the Netdata <a href="https://community.netdata.cloud/" class="link">community forums</a></mj-text>
 
       </mj-column>
     </mj-section>
 
 
-    <mj-section padding-left="0" css-class="set-font">
-      <mj-column padding="0" width="100px">
-        <mj-image align="left" src="https://app.netdata.cloud/static/email/img/configure_icon.png" width="60px" />
+    <mj-section padding-left="25px" css-class="set-font" text-align="left">
+      <mj-column padding="0" width="66px">
+        <mj-image align="left" padding-left="0" padding-right="0" src="https://app.netdata.cloud/static/email/img/configure_icon.png" width="48px" />
       </mj-column>
-      <mj-column align="left" width="80%">
-        <mj-text align="left" font-weight="700" font-size="16px">Need to configure this alert?</mj-text>
-        <mj-text align="left" font-size="14px" line-height="1.3"><span style="color: #00AB44">Edit</span> this alert's configuration file by logging into {node} and running the following command:</mj-text>
-        <mj-text align="left" font-size="12px" line-height="1.3" padding-top="8px">
+      <mj-column align="left" width="400px" padding-left="0">
+        <mj-text align="left" font-weight="700" font-size="16px" padding-left="0">Need to configure this alert?</mj-text>
+        <mj-text align="left" font-size="14px" line-height="1.3" padding-left="0"><span style="color: #00AB44">Edit</span> this alert's configuration file by logging into {node} and running the following command:</mj-text>
+        <mj-text align="left" font-size="12px" line-height="1.3" padding-left="0" padding-top="8px">
           sudo {/etc/netdata}/edit-config health.d/{disks.conf} <br />
           The alarm to edit is at line {160}
         </mj-text>
@@ -145,7 +144,7 @@
 
 
     <mj-wrapper background-color="#F7F8F8" full-width padding="0" css-class="history-wrapper" padding-bottom="24px">
-      <mj-section css-class="set-font">
+      <mj-section css-class="set-font" padding-bottom="12px">
         <mj-column>
           <mj-text align="left" font-size="16px">
             The node has
@@ -164,7 +163,7 @@
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
-            <span style="background-color:#FFF8E1; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px; margin-top: 20px">
+            <span style="background-color:#FFF8E1; border: 1px solid #FFC300; border-radius:36px; padding: 2px 12px; margin-top: 20px; white-space: nowrap">
               Warning for 10mm
             </span>
           </mj-text>
@@ -178,7 +177,7 @@
         </mj-column>
         <mj-column padding-top="13px">
           <mj-text align="right">
-            <span style="background-color:#FFEBEF; border: 1px solid #FF4136; border-radius:36px; padding: 2px 12px;">
+            <span style="background-color:#FFEBEF; border: 1px solid #FF4136; border-radius:36px; padding: 2px 12px; white-space: nowrap">
               Critical for 10m
             </span>
           </mj-text>
