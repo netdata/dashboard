@@ -9,13 +9,11 @@
       .set-font { font-family: "IBM Plex Sans", sans-serif; }
       .link { color: #00AB44; text-decoration: none;  }
       .svgbg {
-      background-image: url("https://app.netdata.cloud/static/img/mail/isotype.png");
+      background-image: url('https://staging.netdata.cloud/static/email/img/isotype_600.png');
       background-repeat: no-repeat;
-      background-position: 0 -40px;
-      background-size: 334px 265px;
+      background-position: top center;
+      background-size: 600px 192px;
       }
-      .no-collapse { border-collapse: initial; }
-
     </mj-style>
 
     <mj-attributes>
@@ -28,7 +26,7 @@
 
     <mj-include path="./header.mjml" />
 
-    <mj-wrapper	border="1px solid #FF4136" border-radius="4px" css-class="no-collapse">
+    <mj-wrapper	border="1px solid #FF4136" border-radius="4px">
       <mj-section padding-bottom="0" padding-top="0" css-class="set-font">
         <mj-column width="70%">
           <mj-text align="left" font-size="20px" font-weight="700" padding-top="15px">10min_disk_utilization</mj-text>
