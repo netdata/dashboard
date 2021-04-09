@@ -535,8 +535,10 @@ export const DygraphChart = ({
             // use RAF, because dygraph doesn't provide any callback called after drawing the chart
             requestAnimationFrame(() => {
               canvas.fillStyle = fillColor
+              const globalAlphaCache = canvas.globalAlpha
               canvas.globalAlpha = 0.7
               canvas.fillRect(alarmPosition - horizontalPadding, area.y, 2 * horizontalPadding, area.h)
+              canvas.globalAlpha = globalAlphaCache
             })
 
             propsRef.current.updateAlarmBadge(
@@ -881,13 +883,13 @@ export const DygraphChart = ({
   }, [attributes, unitsCurrent])
 
 
-  // immediately update when changing global chart underlay
+  // immediately update when changing global chart underlay or currently showed alarm
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
       dygraphInstance.current.updateOptions({})
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalChartUnderlay])
+  }, [alarm, globalChartUnderlay])
 
   const spacePanelTransitionEndIsActive = useSelector(selectSpacePanelTransitionEndIsActive)
   useUpdateEffect(() => {
