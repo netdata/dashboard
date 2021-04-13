@@ -63,6 +63,9 @@ var urlOptions = {
     alarm_id: 0,
     alarm_event_id: 0,
     alarm_when: 0,
+    alarm_status: null,
+    alarm_chart: null,
+    alarm_value: null,
     hasProperty: function(property) {
         return typeof this[property] !== 'undefined';
     }
@@ -96,6 +99,9 @@ function netdataURL(url) {
         + ';alarm_id=' + urlOptions.alarm_id.toString()
         + ';alarm_event_id=' + urlOptions.alarm_event_id.toString()
         + ';alarm_when=' + urlOptions.alarm_when.toString()
+        + ';alarm_status=' + urlOptions.alarm_status
+        + ';alarm_value=' + encodeURIComponent(urlOptions.alarm_value)
+        + ';alarm_chart=' + urlOptions.alarm_chart
         ;
 }
 
