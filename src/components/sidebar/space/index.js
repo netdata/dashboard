@@ -1,13 +1,13 @@
 import React, { useCallback } from "react"
 import { useSelector } from "react-redux"
 import { createSelector } from "reselect"
-import { Flex, Text, TextSmall, Collapsible, Button, TextNano } from "@netdata/netdata-ui"
-import { selectIsUsingGlobalRegistry } from "domains/global/selectors"
-import SignIn from "components/sidebar/signIn"
+import { Flex, Text, TextSmall, Collapsible, Button } from "@netdata/netdata-ui"
+import { selectIsUsingGlobalRegistry, selectIsCloudEnabled } from "domains/global/selectors"
 import getNodes from "./nodes"
 import ReplicatedNodes from "./replicatedNodes"
-import NoNetwork from "./noNetwork"
 import SpacePanelIframe from "./spacePanelIframe"
+import SignInPrompt from "./prompts/signIn"
+import OfflinePrompt from "./prompts/offline"
 
 const replicatedNodesSelector = createSelector(
   state => state.global.chartsMetadata.data || {},
@@ -20,10 +20,17 @@ const visitedNodesSelector = createSelector(
   registry => registry.registryMachinesArray || []
 )
 
-const Space = ({ isOpen, toggle, offline, hasSignedInBefore, isSignedIn }) => {
+const isSignedInSelector = createSelector(
+  ({ dashboard }) => dashboard,
+  ({ isSignedIn, offline }) => ({ isSignedIn, offline })
+)
+
+const Space = ({ isOpen, toggle }) => {
   const { parentNode = {}, replicatedNodes = [] } = useSelector(replicatedNodesSelector)
   const visitedNodes = useSelector(visitedNodesSelector)
   const globalRegistry = useSelector(selectIsUsingGlobalRegistry)
+  const { isSignedIn, offline } = useSelector(isSignedInSelector)
+  const cloudEnabled = useSelector(selectIsCloudEnabled)
 
   const switchIdentity = useCallback(() => window.switchRegistryModalHandler(), [])
 
@@ -31,7 +38,6 @@ const Space = ({ isOpen, toggle, offline, hasSignedInBefore, isSignedIn }) => {
     <Collapsible width={74} background="panel" open={isOpen} direction="horizontal" persist>
       <Flex
         flex
-        width={74}
         column
         overflow={{ vertical: "hidden" }}
         margin={[3, 0, 0]}
@@ -70,41 +76,8 @@ const Space = ({ isOpen, toggle, offline, hasSignedInBefore, isSignedIn }) => {
             <TextSmall onClick={switchIdentity}>Switch Identity</TextSmall>
           </Flex>
         )}
-        {!offline && !hasSignedInBefore && (
-          <Flex
-            alignItems="center"
-            background={["white", "pure"]}
-            column
-            gap={2}
-            padding={[10]}
-            border={{ side: "right", color: "panel" }}
-          >
-            <TextSmall color={["black", "pure"]} strong textAlign="center">
-              Discover your monitoring superpowers
-            </TextSmall>
-            <TextNano color="black" textAlign="center">
-              Do you know that you can manage a lot of nodes with Netdata Cloud?
-            </TextNano>
-            <SignIn />
-          </Flex>
-        )}
-        {offline && hasSignedInBefore && (
-          <Flex
-            alignItems="center"
-            background="sectionHeaderBackground"
-            column
-            gap={1}
-            padding={[10]}
-          >
-            <TextSmall color={["black", "pure"]} strong textAlign="center">
-              Can't connect to Netdata Cloud
-            </TextSmall>
-            <NoNetwork />
-            <TextNano color="black" textAlign="center" margin={[2, 0, 0]}>
-              Maybe you are behind a firewall or you don’t have connection to the internet
-            </TextNano>
-          </Flex>
-        )}
+        {!isSignedIn && <SignInPrompt />}
+        {offline && cloudEnabled && <OfflinePrompt />}
       </Flex>
     </Collapsible>
   )
