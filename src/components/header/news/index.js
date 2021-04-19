@@ -1,8 +1,7 @@
 import React, { useCallback, useMemo, useEffect, useState } from "react"
 import { useLocalStorage } from "react-use"
+import { Button } from "@netdata/netdata-ui"
 import News from "components/news"
-import Item from "components/header/item"
-import Pill from "components/header/pill"
 import { fetchNews } from "./dataSource"
 
 const AgentNews = () => {
@@ -30,15 +29,19 @@ const AgentNews = () => {
   }, [setValue])
 
   return (
-    <Item hasBorder>
-      <News items={news} onCloseClick={onClose}>
-        {toggle => (
-          <Pill color="bright" background={upToDate ? "border" : "success"} onClick={toggle}>
-            NEWS
-          </Pill>
-        )}
-      </News>
-    </Item>
+    <News items={news} onCloseClick={onClose}>
+      {toggle => (
+        <Button
+          name="news"
+          title="News & Features"
+          icon="insights"
+          flavour="borderless"
+          neutral={upToDate}
+          warning={!upToDate}
+          onClick={toggle}
+        />
+      )}
+    </News>
   )
 }
 export default AgentNews
