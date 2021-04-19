@@ -12,8 +12,8 @@ const Node = ({ hostname, url, status }) => {
           {hostname}
         </Text>
       </Flex>
-      <Pill background={status ? "success" : "border"} color="bright">
-        {status ? "LIVE" : "OFF"}
+      <Pill background={status ? "success" : "border"} color="bright" round={10}>
+        {status ? "Live" : "Off"}
       </Pill>
     </Anchor>
   )
