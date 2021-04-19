@@ -1,23 +1,27 @@
 import React, { useCallback, useEffect, useState, useRef } from "react"
 import styled from "styled-components"
-import { useSelector } from "store/redux-separate-context"
+import { useSelector, useDispatch } from "store/redux-separate-context"
 import { useLocalStorage } from "react-use"
 import { Flex } from "@netdata/netdata-ui"
 import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
 import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils/utils"
 import { selectRegistry, selectCloudBaseUrl } from "domains/global/selectors"
 import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
+import { setOfflineAction } from "@/src/domains/dashboard/actions"
 
 const IframeContainer = styled(Flex).attrs({ position: "absolute" })`
   display: none;
 `
-const Iframe = ({ signedIn, setOffline }) => {
-  const [lsValue, , removeLsValue] = useLocalStorage(LOCAL_STORAGE_NEEDS_SYNC)
+const Iframe = ({ signedIn }) => {
   const [rendered, setRendered] = useState(false)
+  const signInMsg = useRef()
   const ref = useRef()
 
+  const [lsValue, , removeLsValue] = useLocalStorage(LOCAL_STORAGE_NEEDS_SYNC)
   const cloudBaseURL = useSelector(selectCloudBaseUrl)
   const registry = useSelector(selectRegistry)
+
+  const dispatch = useDispatch()
 
   const { origin, pathname } = window.location
   const nameParam = encodeURIComponent(registry.hostname)
@@ -28,20 +32,15 @@ const Iframe = ({ signedIn, setOffline }) => {
     `sign-in?id=${registry.machineGuid}&name=${nameParam}&origin=${originParam}`
   )
 
-  const [helloFromSignIn] = useListenToPostMessage("hello-from-sign-in")
-  const signInRef = useRef(helloFromSignIn)
-
-  useEffect(() => {
-    signInRef.current = helloFromSignIn
-  }, [helloFromSignIn])
+  useListenToPostMessage("hello-from-sign-in", msg => {
+    signInMsg.current = msg
+  })
 
   const onLoad = useCallback(() => {
     setRendered(true)
-    setTimeout(() => {
-      if (signInRef.current === undefined) setOffline(true)
-    }, 500)
+    setTimeout(() => dispatch(setOfflineAction({ offline: signInMsg.current === undefined })), 500)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [setOffline])
+  }, [])
 
   useEffect(() => {
     const handler = e => {
