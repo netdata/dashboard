@@ -59,7 +59,7 @@ export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
 export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
 
-export const selectSignInUrl = createSelector(
+export const selectSignInUrl = (hasSignedInBefore) => createSelector(
   selectRegistry,
   selectCloudBaseUrl,
   (registry, cloudBaseURL) => {
@@ -69,7 +69,7 @@ export const selectSignInUrl = createSelector(
     )
     // not adding redirect_url - it needs to always be based on newest href
     // eslint-disable-next-line max-len
-    return `${cloudBaseURL}/sign-in?id=${registry.machineGuid}&name=${name}&origin=${origin}${utmUrlSuffix}`
+    return `${cloudBaseURL}/${hasSignedInBefore ? 'sign-in' : 'sign-up'}?id=${registry.machineGuid}&name=${name}&origin=${origin}${utmUrlSuffix}`
   },
 )
 
