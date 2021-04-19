@@ -2,10 +2,10 @@ import React, { forwardRef } from "react"
 import styled from "styled-components"
 import { Flex, TextMicro } from "@netdata/netdata-ui"
 
-const StyledPill = styled(Flex).attrs({
-  padding: [0.5, 1],
-  round: 1,
-})`
+const StyledPill = styled(Flex).attrs(({ round = 999 }) => ({
+  padding: [0.5, 2],
+  round,
+}))`
   cursor: pointer;
 `
 

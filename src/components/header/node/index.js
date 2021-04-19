@@ -15,8 +15,10 @@ const Node = () => {
   const hostname = useSelector(hostNameSelector)
 
   return (
-    <Item icon="node_hollow" hasBorder>
-      <Text strong truncate>{hostname}</Text>
+    <Item icon="node_hollow">
+      <Text color="bright" strong truncate>
+        {hostname}
+      </Text>
     </Item>
   )
 }

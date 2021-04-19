@@ -1,35 +1,37 @@
 import React from "react"
-import { Flex, Menu, Icon } from "@netdata/netdata-ui"
-import Container from "./container"
-import Option from "./option"
+import { Flex, Button } from "@netdata/netdata-ui"
 
 const Options = () => {
   return (
-    <Menu
-      icon={<Icon name="node_import_export" color="text" />}
-      items={[]}
-      renderDropdown={() => (
-        <Container>
-          <Flex as={Option} padding={[0, 4]} data-toggle="modal" data-target="#loadSnapshotModal">
-            Import a shapshot
-          </Flex>
-          <Flex as={Option} padding={[0, 4]} data-toggle="modal" data-target="#saveSnapshotModal">
-            Export a snapshot
-          </Flex>
-          <Flex
-            as={Option}
-            padding={[2, 4, 0, 4]}
-            border={{ side: "top", color: "disabled" }}
-            data-toggle="modal"
-            data-target="#printPreflightModal"
-          >
-            Print
-          </Flex>
-        </Container>
-      )}
-      caret={false}
-      padding={[0]}
-    />
+    <Flex gap={2}>
+      <Button
+        flavour="borderless"
+        neutral
+        themeType="dark"
+        data-toggle="modal"
+        data-target="#loadSnapshotModal"
+        icon="download"
+        title="Import a snapshot"
+      />
+      <Button
+        flavour="borderless"
+        neutral
+        themeType="dark"
+        data-toggle="modal"
+        data-target="#saveSnapshotModal"
+        icon="upload"
+        title="Export a snapshot"
+      />
+      <Button
+        flavour="borderless"
+        neutral
+        themeType="dark"
+        data-toggle="modal"
+        data-target="#printPreflightModal"
+        icon="print"
+        title="Print dashboard"
+      />
+    </Flex>
   )
 }
 

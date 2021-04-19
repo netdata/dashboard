@@ -88,6 +88,7 @@ export const VersionControl = ({ currentVersion, releaseChannel }: Props) => {
     <Button
       neutral
       flavour="borderless"
+      themeType="dark"
       small
       name={isNewVersionAvailable ? "update_pending" : "update"}
       title={isNewVersionAvailable ? "Need help?" : "Check Version"}

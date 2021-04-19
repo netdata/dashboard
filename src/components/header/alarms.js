@@ -4,6 +4,11 @@ import { selectActiveAlarms } from "domains/global/selectors"
 import Item from "./item"
 import Pill from "./pill"
 
+const pillProps = {
+  "data-toggle": "modal",
+  "data-target": "#alarmsModal",
+}
+
 const Alarms = () => {
   const activeAlarms = useSelector(selectActiveAlarms)
 
@@ -26,10 +31,10 @@ const Alarms = () => {
 
   return (
     <Item icon="alarm">
-      <Pill background="error" color="bright" data-toggle="modal" data-target="#alarmsModal">
+      <Pill background="error" color="bright" {...pillProps}>
         {critical}
       </Pill>
-      <Pill background="warning" color="tooltip" data-toggle="modal" data-target="#alarmsModal">
+      <Pill background="warning" color="tooltip" {...pillProps}>
         {warning}
       </Pill>
     </Item>
