@@ -1,31 +1,28 @@
-import React, { useCallback, useState, useEffect } from "react"
+import React, { useCallback, useEffect } from "react"
 import styled from "styled-components"
+import { createSelector } from "reselect"
 import { Flex } from "@netdata/netdata-ui"
 import { useDispatch, useSelector } from "react-redux"
 import { useLocalStorage } from "react-use"
-import { selectSpacePanelIsActive, selectIsCloudEnabled } from "@/src/domains/global/selectors"
+import { selectSpacePanelIsActive } from "@/src/domains/global/selectors"
 import { setSpacePanelStatusAction } from "@/src/domains/global/actions"
 import Spaces from "./spaces"
 import Space from "./space"
-import SignInIframe from "./signIn/iframe"
-import SignIn from "./signIn"
-import useCheckSignInStatus from "./useCheckSignInStatus"
 
 const Wrapper = styled(Flex).attrs({ height: "100vh", zIndex: 10 })`
   pointer-events: all;
 `
 
-const SignInWrapper = styled(Flex).attrs({ position: "absolute" })`
-  bottom: 16px;
-  left: 80px;
-`
+const isSignedInSelector = createSelector(
+  ({ dashboard }) => dashboard,
+  ({ isSignedIn }) => isSignedIn
+)
 
 const Sidebar = () => {
-  const [offline, setOffline] = useState(false)
   const [lsValue, setLsValue] = useLocalStorage("space-panel-state")
-  const [signedIn, hasSignedInBefore] = useCheckSignInStatus()
   const isOpen = useSelector(selectSpacePanelIsActive)
-  const cloudEnabled = useSelector(selectIsCloudEnabled)
+  const signedIn = useSelector(isSignedInSelector)
+
   const dispatch = useDispatch()
 
   const toggle = useCallback(() => {
@@ -42,21 +39,9 @@ const Sidebar = () => {
   return (
     <Wrapper>
       <Spaces isOpen={isOpen} toggle={toggle} isSignedIn={signedIn} />
-      <Space
-        isOpen={isOpen}
-        toggle={toggle}
-        offline={offline}
-        hasSignedInBefore={hasSignedInBefore}
-        isSignedIn={signedIn}
-      />
-      <SignInIframe signedIn={signedIn} setOffline={setOffline} />
-      {!isOpen && !signedIn && cloudEnabled && (
-        <SignInWrapper>
-          <SignIn offline={offline} />
-        </SignInWrapper>
-      )}
+      <Space isOpen={isOpen} toggle={toggle} offline={true} />
     </Wrapper>
   )
 }
 
-export default Sidebar
+export default React.memo(Sidebar)
