@@ -1,31 +1,83 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { ThemeProvider } from "styled-components"
-import { Flex, Menu, Icon, DarkTheme } from "@netdata/netdata-ui"
-import { getIframeSrc } from "@/src/utils"
+import { createSelector } from "reselect"
+import { useToggle } from "react-use"
+import { Flex, Button, DarkTheme, Text, Layer } from "@netdata/netdata-ui"
+import { useSelector } from "store/redux-separate-context"
+import { MenuItem } from "components/menus"
+import SignOut from "components/auth/signOut"
+import SignIn from "components/auth/signIn"
 
-const menuItems = [{ children: "Sign Out" }]
+const SignInItem = () => {
+  return (
+    <SignIn>
+      {({ isRegistry, link, hasSignedInBefore, onSignIn }) => (
+        <Text {...(isRegistry ? { href: link } : { onClick: onSignIn })}>
+          {hasSignedInBefore ? "Sign in" : "Sign up"}
+        </Text>
+      )}
+    </SignIn>
+  )
+}
+
+const isSignedInSelector = createSelector(
+  ({ dashboard }) => dashboard,
+  ({ isSignedIn }) => isSignedIn
+)
 
 const UserSettings = () => {
+  const [isOpen, toggle] = useToggle()
+  const signedIn = useSelector(isSignedInSelector)
+
+  const menuItems = useMemo(
+    () => [
+      {
+        children: "Operational Status",
+        onClick: () => window.open("https://status.netdata.cloud", "_blank", "noopener,noreferrer"),
+      },
+      { separator: true },
+      ...(signedIn
+        ? [{ children: <SignOut flavour="borderless" height={{ max: "18px" }} /> }]
+        : [{ children: <SignInItem /> }]),
+    ],
+    [signedIn]
+  )
+
   return (
     <ThemeProvider theme={DarkTheme}>
-      <Menu
-        icon={<Icon name="user" size="small" color="text" />}
-        caret={false}
-        items={menuItems}
-        padding={[2]}
-        renderDropdown={() => (
-          <Flex margin={[5, 18]} column width={52} background="mainBackground" padding={[3]} round>
-            <Flex
-              alignItems="center"
-              as="iframe"
-              src={getIframeSrc("https://staging.netdata.cloud", "sign-out")}
-              border={{ side: "all", size: "0px" }}
-              height="24px"
-            />
-          </Flex>
-        )}
-        dropProps={{ align: { top: "top", right: "right" } }}
+      <Button
+        flavour="borderless"
+        neutral
+        icon="user"
+        title="User settings"
+        name="userSettings"
+        onClick={toggle}
       />
+      {isOpen && (
+        <Layer
+          position="bottom-left"
+          onClickOutside={toggle}
+          onEsc={toggle}
+          backdrop={false}
+          margin={[5, 18]}
+        >
+          <Flex column width={52} background="mainBackground" padding={[3]} round>
+            {menuItems.map((item, i) => {
+              if (item.separator) return <Flex height="1px" background="disabled" key={i} />
+              return (
+                <MenuItem
+                  key={i}
+                  padding={[2, 4]}
+                  round={1}
+                  {...(item.onClick && { onClick: item.onClick })}
+                >
+                  {item.children}
+                </MenuItem>
+              )
+            })}
+          </Flex>
+        </Layer>
+      )}
     </ThemeProvider>
   )
 }

@@ -1,5 +1,5 @@
 import React from "react"
-import { Flex, Button, Documentation, Icon } from "@netdata/netdata-ui"
+import { Flex, Button, Documentation } from "@netdata/netdata-ui"
 import ExpandButton from "./expandButton"
 import UserSettings from "./userSettings"
 import SpacesSkeleton from "./spacesSkeleton"
@@ -57,8 +57,7 @@ const Spaces = ({ isOpen, toggle, isSignedIn }) => {
           icon="gear"
           title="Settings"
         />
-        {isSignedIn && <UserSettings />}
-        {!isSignedIn && <Icon name="user" size="small" color="bright" />}
+        <UserSettings />
       </Flex>
     </Flex>
   )
