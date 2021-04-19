@@ -19,3 +19,9 @@ export const showSignInModalAction = createAction<ShowSignInModalAction>(
 )
 
 export const explicitlySignInAction = createAction(`${storeKey}/explicitlySignIn`)
+
+export interface IsSignedInAction { isSignedIn: boolean }
+export const isSignedInAction = createAction<IsSignedInAction>(`${storeKey}/isSignedInAction`)
+
+export interface SetOfflineAction { offline: boolean }
+export const setOfflineAction = createAction<SetOfflineAction>(`${storeKey}/setOfflineAction`)
