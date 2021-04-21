@@ -9,10 +9,14 @@ import SignOut from "components/auth/signOut"
 import SignIn from "components/auth/signIn"
 
 const SignInItem = () => {
+  const onClick = (e, link) => {
+    e.stopPropagation()
+    window.open(link, "_blank", "noopener,noreferrer")
+  }
   return (
     <SignIn>
       {({ isRegistry, link, hasSignedInBefore, onSignIn }) => (
-        <Text {...(isRegistry ? { href: link } : { onClick: onSignIn })}>
+        <Text onClick={isRegistry ? e => onClick(e, link) : onSignIn}>
           {hasSignedInBefore ? "Sign in" : "Sign up"}
         </Text>
       )}
@@ -31,13 +35,22 @@ const UserSettings = () => {
 
   const menuItems = useMemo(
     () => [
-      {
-        children: "Operational Status",
-        onClick: () => window.open("https://status.netdata.cloud", "_blank", "noopener,noreferrer"),
-      },
-      { separator: true },
       ...(signedIn
-        ? [{ children: <SignOut flavour="borderless" height={{ max: "18px" }} /> }]
+        ? [
+            {
+              children: "Operational Status",
+              onClick: () =>
+                window.open("https://status.netdata.cloud", "_blank", "noopener,noreferrer"),
+            },
+          ]
+        : []),
+      ...(signedIn ? [{ separator: true }] : []),
+      ...(signedIn
+        ? [
+            {
+              children: <SignOut flavour="borderless" height={{ max: "18px" }} />,
+            },
+          ]
         : [{ children: <SignInItem /> }]),
     ],
     [signedIn]
