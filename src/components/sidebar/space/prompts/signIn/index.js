@@ -10,18 +10,18 @@ const SignInPrompt = () => {
         const { title, content } = promptContent[hasSignedInBefore ? "signIn" : "signUp"]
         return (
           <Flex
-            alignItems="center"
-            background={["white", "pure"]}
+            background="key"
             column
-            gap={8}
+            gap={4}
             padding={[10]}
             border={{ side: "right", color: "panel" }}
           >
-            <Text color={["black", "pure"]} strong textAlign="center">
+            <Text color="bright" strong>
               {title}
             </Text>
             {content.map(el => el)}
             <Button
+              width="100%"
               label={hasSignedInBefore ? "SIGN IN TO CLOUD" : "SIGN UP TO CLOUD"}
               disabled={offline}
               {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
