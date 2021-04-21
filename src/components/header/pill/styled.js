@@ -11,7 +11,7 @@ const StyledPill = styled(Flex).attrs(({ round = 999, hollow, background }) => (
   round,
   border: hollow ? { side: "all", color: background, size: "1px" } : false,
 }))`
-  background: ${({ background, hollow }) => (hollow ? hollowColors[background] : background)}
+  background: ${({ background, hollow }) => (hollow ? hollowColors[background] : background)};
   cursor: pointer;
 `
 
