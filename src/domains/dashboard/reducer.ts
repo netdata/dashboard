@@ -16,7 +16,7 @@ export const initialState: StateT = {
   isSnapshotMode: false,
   snapshotCharts: null,
   snapshotDataPoints: null,
-  isSignedIn: true,
+  isSignedIn: false,
   offline: false
 }
 
