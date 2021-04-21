@@ -31,10 +31,10 @@ const Alarms = () => {
 
   return (
     <Item icon="alarm">
-      <Pill background="error" color="bright" {...pillProps}>
+      <Pill background="error" hollow {...pillProps}>
         {critical}
       </Pill>
-      <Pill background="warning" color="tooltip" {...pillProps}>
+      <Pill background="warning" hollow {...pillProps}>
         {warning}
       </Pill>
     </Item>
