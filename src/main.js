@@ -1714,7 +1714,7 @@ function alarmsUpdateModal() {
               + '<div class="action-button ripple" title="click to copy to the clipboard the URL of this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopy(\'' + badge_url + '\'); return false;"><i class="far fa-copy"></i></div>'
               + '<div class="action-button ripple" title="click to copy to the clipboard an auto-refreshing <code>embed</code> html element for this badge" data-toggle="tooltip" data-placement="bottom" onClick="clipboardCopyBadgeEmbed(\'' + badge_url + '\'); return false;"><i class="fas fa-copy"></i></div>';
 
-            var html = '<tr><td class="text-center" style="vertical-align:middle" width="40%"><b>' + alarm.chart + '</b><br/>&nbsp;<br/><embed src="' + badge_url + '" type="image/svg+xml" height="20"/><br/>&nbsp;<br/><span style="font-size: 18px">' + alarm.info + '</span>' + action_buttons + '</td>'
+            var html = '<tr><td class="text-center" style="vertical-align: middle; word-break: break-word;" width="40%"><b>' + alarm.chart + '</b><br/>&nbsp;<br/><embed src="' + badge_url + '" type="image/svg+xml" height="20"/><br/>&nbsp;<br/><span style="font-size: 18px;">' + alarm.info + '</span>' + action_buttons + '</td>'
               + '<td><table class="table">'
               + ((typeof alarm.warn !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">warning&nbsp;when</td><td><span style="font-family: monospace; color:#fe7d37; font-weight: bold;">' + alarm.warn + '</span></td></tr>') : '')
               + ((typeof alarm.crit !== 'undefined') ? ('<tr><td width="10%" style="text-align:right">critical&nbsp;when</td><td><span style="font-family: monospace; color: #e05d44; font-weight: bold;">' + alarm.crit + '</span></td></tr>') : '');
@@ -1776,7 +1776,7 @@ function alarmsUpdateModal() {
                   negative_suffix: ''
               }) + '</td></tr>'
               + ((has_alarm === true) ? ('<tr><td width="10%" style="text-align:right">execute</td><td><span style="font-family: monospace;">' + alarm.exec + '</span>' + delay + '</td></tr>') : '')
-              + '<tr><td width="10%" style="text-align:right">source</td><td><span style="font-family: monospace;">' + alarm.source + '</span></td></tr>'
+              + '<tr><td width="10%" style="text-align:right">source</td><td><span style="font-family: monospace; word-break: break-word;">' + alarm.source + '</span></td></tr>'
               + '</table></td></tr>';
 
             return html;
