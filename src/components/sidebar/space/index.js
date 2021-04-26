@@ -76,7 +76,7 @@ const Space = ({ isOpen, toggle }) => {
             <TextSmall onClick={switchIdentity}>Switch Identity</TextSmall>
           </Flex>
         )}
-        {!isSignedIn && <SignInPrompt />}
+        {!isSignedIn && cloudEnabled && <SignInPrompt />}
         {offline && cloudEnabled && <OfflinePrompt />}
       </Flex>
     </Collapsible>
