@@ -7,8 +7,6 @@ import * as S from "./styled"
 
 export const DatePickerContainer = () => (
   <DatePickerPortal>
-    <S.DatePickerContainer>
-      <ReduxWrappedPicker />
-    </S.DatePickerContainer>
+    <ReduxWrappedPicker />
   </DatePickerPortal>
 )

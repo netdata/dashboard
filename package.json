@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "2.16.1",
+  "version": "2.17.0",
   "homepage": ".",
   "main": "./lib/src/index-npm.js",
   "files": [
@@ -17,7 +17,8 @@
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
     "@material/menu-surface": "^1.0.0",
-    "@netdata/netdata-ui": "^1.3.10",
+    "@netdata/netdata-ui": "^1.4.7",
+    "@prismicio/client": "^4.0.0",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
