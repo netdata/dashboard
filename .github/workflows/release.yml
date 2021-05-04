@@ -38,4 +38,4 @@ jobs:
           repo: netdata/netdata
           workflow: Dashboard Version PR
           ref: refs/heads/master
-          inputs: {"dashboard_version": "${{ github.event.release.tag_name }}"}
+          inputs: '{"dashboard_version": "${{ github.event.release.tag_name }}"}'
