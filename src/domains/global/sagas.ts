@@ -94,6 +94,8 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         netdata_version: info.version,
         netdata_machine_guid: machineGuid,
         netdata_person_id: personGuid || "Unavailable",
+        netdata_buildinfo: info["buildinfo"]
+        netdata_release_channel: info["release-channel"]
         mirrored_host_count: info.mirrored_hosts?.length,
         alarms_normal: info.alarms?.normal,
         alarms_warning: info.alarms?.warning,
@@ -125,6 +127,23 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         host_cloud_available: info["cloud-available"],
         host_agent_claimed: info["agent-claimed"],
         host_aclk_available: info["aclk-available"],
+        host_aclk_implementation: info["aclk-implementation"],
+        host_allmetrics_json_used: info["allmetrics-json-used"],
+        host_allmetrics_prometheus_used: info["allmetrics-prometheus-used"],
+        host_allmetrics_shell_used: info["allmetrics-shell-used"],
+        host_charts_count: info["charts-count"],
+        host_dashboard_used: info["dashboard-used"],
+        host_metrics_count: info["metrics-count"],
+        host_notification_methods: info["notification-methods"],
+        config_memory_mode: info["memory-mode"],
+        config_exporting_enabled: info["exporting-enabled"],
+        config_exporting_connectors: info["exporting-connectors"],
+        config_hosts_available: info["hosts-available"],
+        config_https_enabled: info["https-enabled"],
+        config_multidb_disk_quota: info["multidb-disk-quota"],
+        config_page_cache_size: info["page-cache-size"],
+        config_stream_enabled: info["stream-enabled"],
+        config_web_enabled: info["web-enabled"],
         // eslint-disable-next-line camelcase
         host_is_parent: info.host_labels?._is_parent,
         mirrored_hosts_reachable: info.mirrored_hosts_status
