@@ -94,8 +94,8 @@ function* injectPosthog(machineGuid: string, personGuid?: string) {
         netdata_version: info.version,
         netdata_machine_guid: machineGuid,
         netdata_person_id: personGuid || "Unavailable",
-        netdata_buildinfo: info["buildinfo"]
-        netdata_release_channel: info["release-channel"]
+        netdata_buildinfo: info["buildinfo"],
+        netdata_release_channel: info["release-channel"],
         mirrored_host_count: info.mirrored_hosts?.length,
         alarms_normal: info.alarms?.normal,
         alarms_warning: info.alarms?.warning,
