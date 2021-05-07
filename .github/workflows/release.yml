@@ -30,3 +30,12 @@ jobs:
           asset_name: dashboard.tar.gz
           asset_content_type: application/gzip
           upload_url: ${{ github.event.release.upload_url }}
+      - name: 'Trigger agent code update'
+        if: github.event.release.prerelease == false
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.NETDATABOT_GITHUB_TOKEN }}
+          repo: netdata/netdata
+          workflow: Dashboard Version PR
+          ref: refs/heads/master
+          inputs: '{"dashboard_version": "${{ github.event.release.tag_name }}"}'
