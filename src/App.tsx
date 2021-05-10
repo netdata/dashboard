@@ -120,9 +120,9 @@ const App: React.FC = () => {
         // styling will have smaller priority than bootstrap css
         <NotificationsContainer />
       )}
-      {chartsMetadata && cloudBaseURL && hasFetchedInfo && (
+      {chartsMetadata && cloudBaseURL && hasFetchedInfo && haveDOMReadyForParsing && (
         <Layout printMode={isPrintMode}>
-          {hasFetchDependencies && haveDOMReadyForParsing && (
+          {hasFetchDependencies && (
             <>
               <Portals key={refreshHelper} />
               <SidebarSocialMediaPortal>
