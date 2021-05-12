@@ -49,6 +49,7 @@ export const selectDefaultAfter = createSelector(selectGlobal, prop("defaultAfte
 export const selectGlobalChartUnderlay = createSelector(selectGlobal, prop("globalChartUnderlay"))
 
 export const selectHasWindowFocus = createSelector(selectGlobal, prop("hasWindowFocus"))
+export const selectGlobalPause = createSelector(selectGlobal, prop("globalPause"))
 
 export const selectSnapshot = createSelector(
   selectGlobal,
