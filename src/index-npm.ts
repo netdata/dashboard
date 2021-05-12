@@ -51,15 +51,20 @@ export {
   setSpacePanelTransitionEndAction,
   setDefaultAfterAction,
   setAlarmAction,
+  resetGlobalPauseAction,
+  setGlobalPauseAction,
 } from "domains/global/actions"
 export {
   selectStopUpdatesWhenFocusIsLost,
   selectDestroyOnHide,
   selectDefaultAfter,
   selectGlobalPanAndZoom,
+  selectGlobalPause,
   selectAlarm,
+  selectHasWindowFocus,
+  selectGlobalSelection,
 } from "domains/global/selectors"
-export { selectChartData } from "domains/chart/selectors"
+export { selectChartData, selectChartsAreFetching } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
 
 export { VersionControl } from "components/app-header/components/version-control"
