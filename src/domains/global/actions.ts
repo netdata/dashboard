@@ -13,13 +13,21 @@ interface RequestCommonColors {
   dimensionNames: string[]
 }
 export const requestCommonColorsAction = createAction<RequestCommonColors>(
-  `${storeKey}/globalRequestCommonColors`,
+  `${storeKey}/globalRequestCommonColors`
 )
 
-interface SetCommonMinAction { chartUuid: string, commonMinKey: string, value: number }
+interface SetCommonMinAction {
+  chartUuid: string
+  commonMinKey: string
+  value: number
+}
 export const setCommonMinAction = createAction<SetCommonMinAction>(`${storeKey}/setCommonMin`)
 
-interface SetCommonMaxAction { chartUuid: string, commonMaxKey: string, value: number }
+interface SetCommonMaxAction {
+  chartUuid: string
+  commonMaxKey: string
+  value: number
+}
 export const setCommonMaxAction = createAction<SetCommonMaxAction>(`${storeKey}/setCommonMax`)
 
 interface SetGlobalSelectionAction {
@@ -27,7 +35,7 @@ interface SetGlobalSelectionAction {
   hoveredX: number
 }
 export const setGlobalSelectionAction = createAction<SetGlobalSelectionAction>(
-  `${storeKey}/setGlobalSelection`,
+  `${storeKey}/setGlobalSelection`
 )
 
 export interface SetGlobalPanAndZoomAction {
@@ -37,7 +45,7 @@ export interface SetGlobalPanAndZoomAction {
   shouldForceTimeRange?: boolean
 }
 export const setGlobalPanAndZoomAction = createAction<SetGlobalPanAndZoomAction>(
-  `${storeKey}/setGlobalPanAndZoom`,
+  `${storeKey}/setGlobalPanAndZoom`
 )
 
 export const resetGlobalPanAndZoomAction = createAction(`${storeKey}/resetGlobalPanAndZoomAction`)
@@ -46,7 +54,7 @@ export interface SetDefaultAfterAction {
   after: number
 }
 export const setDefaultAfterAction = createAction<SetDefaultAfterAction>(
-  `${storeKey}/setDefaultAfterAction`,
+  `${storeKey}/setDefaultAfterAction`
 )
 
 export const resetDefaultAfterAction = createAction(`${storeKey}/resetDefaultAfterAction`)
@@ -57,7 +65,7 @@ export interface SetGlobalChartUnderlayAction {
   masterID: string
 }
 export const setGlobalChartUnderlayAction = createAction<SetGlobalChartUnderlayAction>(
-  `${storeKey}/setGlobalChartUnderlay`,
+  `${storeKey}/setGlobalChartUnderlay`
 )
 
 export const centerAroundHighlightAction = createAction(`${storeKey}/centerAroundHighlightAction`)
@@ -67,7 +75,7 @@ interface WindowFocusChangeAction {
   hasWindowFocus: boolean
 }
 export const windowFocusChangeAction = createAction<WindowFocusChangeAction>(
-  `${storeKey}/windowFocusChangeAction`,
+  `${storeKey}/windowFocusChangeAction`
 )
 
 export interface FetchHelloPayload {
@@ -87,9 +95,8 @@ export interface HelloResponse {
 
 export const fetchHelloAction = createRequestAction<
   FetchHelloPayload,
-  { cloudBaseURL: string, hostname: string, isCloudEnabled: boolean, machineGuid: string }
-  >(`${storeKey}/fetchHelloAction`)
-
+  { cloudBaseURL: string; hostname: string; isCloudEnabled: boolean; machineGuid: string }
+>(`${storeKey}/fetchHelloAction`)
 
 interface UpdatePersonUrlsAction {
   personGuid: string
@@ -97,14 +104,14 @@ interface UpdatePersonUrlsAction {
   registryMachinesArray: RegistryMachine[]
 }
 export const updatePersonUrlsAction = createAction<UpdatePersonUrlsAction>(
-  `${storeKey}/updatePersonUrlsAction`,
+  `${storeKey}/updatePersonUrlsAction`
 )
 
 export interface AccessRegistrySuccessAction {
   registryServer: string
 }
 export const accessRegistrySuccessAction = createAction<AccessRegistrySuccessAction>(
-  `${storeKey}/accessRegistrySuccessAction`,
+  `${storeKey}/accessRegistrySuccessAction`
 )
 
 export interface StartAlarmsPayload {
@@ -114,9 +121,11 @@ export const startAlarmsAction = createAction<StartAlarmsPayload>(`${storeKey}/s
 
 export const fetchAllAlarmsAction = createRequestAction(`${storeKey}/fetchAllAlarmsAction`)
 
-export interface UpdateActiveAlarmAction { activeAlarms: ActiveAlarms }
+export interface UpdateActiveAlarmAction {
+  activeAlarms: ActiveAlarms
+}
 export const updateActiveAlarmsAction = createAction<UpdateActiveAlarmAction>(
-  `${storeKey}/updateActiveAlarmsAction`,
+  `${storeKey}/updateActiveAlarmsAction`
 )
 
 export interface SetOptionAction {
@@ -128,27 +137,30 @@ export const setOptionAction = createAction<SetOptionAction>(`${storeKey}/setOpt
 export const resetOptionsAction = createAction(`${storeKey}/resetOptions`)
 
 export const loadSnapshotAction = createAction<{ snapshot: Snapshot }>(
-  `${storeKey}/loadSnapshotAction`,
+  `${storeKey}/loadSnapshotAction`
 )
 
 export const chartsMetadataRequestSuccess = createAction<{ data: ChartsMetadata }>(
-  `${storeKey}/chartsMetadataRequestSuccess`,
+  `${storeKey}/chartsMetadataRequestSuccess`
 )
 
 export interface SetSpacePanelStatusActionPayload {
   isActive: boolean
 }
 export const setSpacePanelStatusAction = createAction<SetSpacePanelStatusActionPayload>(
-  `${storeKey}/setSpacePanelStatusAction`,
+  `${storeKey}/setSpacePanelStatusAction`
 )
 
 export interface SetSpacePanelTransitionEndPayload {
   isActive: boolean
 }
 export const setSpacePanelTransitionEndAction = createAction<SetSpacePanelTransitionEndPayload>(
-  `${storeKey}/setSpacePanelStatusAction`,
+  `${storeKey}/setSpacePanelStatusAction`
 )
 
 export const setAlarmAction = createAction<{ alarm: Alarm }>(`${storeKey}/setAlarmAction`)
 
 export const resetRegistry = createAction(`${storeKey}/resetRegistry`)
+
+export const setGlobalPauseAction = createAction(`${storeKey}/setGlobalPauseAction`)
+export const resetGlobalPauseAction = createAction<{ forcePlay?: boolean}>(`${storeKey}/resetGlobalPauseAction`)
