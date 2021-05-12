@@ -13,8 +13,9 @@ import { PickedValues } from "./types"
 
 interface Props {
   tagging?: string
+  isPlaying?: boolean
 }
-export const ReduxWrappedPicker = ({ tagging }: Props) => {
+export const ReduxWrappedPicker = ({ tagging, isPlaying }: Props) => {
   const dispatch = useDispatch()
 
   const [isOpen, setOpenState] = useState<boolean>(false)
@@ -71,6 +72,7 @@ export const ReduxWrappedPicker = ({ tagging }: Props) => {
       handleOpenState={controlOpenState}
       setRangeValues={handlePickedValuesChange}
       tagging={tagging}
+      isPlaying={isPlaying}
     />
   )
 }

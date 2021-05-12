@@ -7,11 +7,9 @@ import { Button } from "@netdata/netdata-ui"
 
 import { useCloseOnOutsideClick } from "hooks/use-click-outside"
 
-import {
-  PickerActionArea, PickerBox, PickerBtnArea, HeaderSvg, StyledSidebar,
-} from "./styled"
+import { PickerActionArea, PickerBox, PickerBtnArea, HeaderSvg, StyledSidebar } from "./styled"
 import { ShortPickArea } from "./short-pick"
-import { PickerAccessorElement } from "./accessor-element"
+import PickerAccessorElement from "./accessorElement"
 import { CustomShortPicker } from "./custom-short-pick"
 import { PickedValues } from "./types"
 // @ts-ignore
@@ -44,6 +42,7 @@ type PickerPropsT = {
   handleOpenState: (state: boolean) => void
   setRangeValues: (params: PickedValues) => void
   tagging?: string
+  isPlaying?: boolean
 }
 
 type HandleRangeChangeT = {
@@ -53,7 +52,7 @@ type HandleRangeChangeT = {
 
 function handleChangeDateByManualInput(
   dateToBeSet: Moment | number,
-  setterFn: (date: number) => void,
+  setterFn: (date: number) => void
 ): void {
   if (typeof dateToBeSet === "number") {
     setterFn(dateToBeSet)
@@ -80,9 +79,8 @@ const focusTaggingMap: { [key: string]: string } = {
 }
 
 export const Picker = (props: PickerPropsT) => {
-  const {
-    isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "",
-  } = props
+  const { isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "", isPlaying } = props
+  // debugger;
 
   const [startDateState, setStartDate] = useState<number>(pickedValues.start)
   const [endDateState, setEndDate] = useState<number>(pickedValues.end)
@@ -101,10 +99,7 @@ export const Picker = (props: PickerPropsT) => {
   const [focusedInput, setFocusedInput] = useState<any>("startDate")
 
   function handleDatesChange({ startDate, endDate }: HandleRangeChangeT) {
-    if (startDate === null || endDate === null) {
-      // nulls can happen when date is not properly entered in input field
-      return
-    }
+    if (!startDate && !endDate) return
     handleChangeDateByManualInput(endDate, setEndDate)
     handleChangeDateByManualInput(startDate, setStartDate)
   }
@@ -133,7 +128,6 @@ export const Picker = (props: PickerPropsT) => {
     })
     close()
   }
-
 
   const focusTagging = focusTaggingMap[focusedInput]
 
@@ -192,7 +186,12 @@ export const Picker = (props: PickerPropsT) => {
   return (
     <>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <PickerAccessorElement onClick={() => handleOpenState(true)} {...pickedValues} />
+      <PickerAccessorElement
+        onClick={() => handleOpenState(true)}
+        isPlaying={isPlaying}
+        setRangeValues={setRangeValues}
+        {...pickedValues}
+      />
       {isOpen && pickerModal}
     </>
   )

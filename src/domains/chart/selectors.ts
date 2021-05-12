@@ -64,6 +64,10 @@ export const selectChartPanAndZoom = createSelector(selectSingleChartState, prop
 const hasCompletedFetching = (chartState: ChartState) => chartState.isFetchDataFailure
   || Boolean(chartState.chartData) || chartState.isFetchDetailsFailure
 
+export const selectChartsAreFetching = createSelector(selectChartsState, chartsState =>
+  Object.values(chartsState).some(({ isFetchingData }) => isFetchingData)
+)
+
 export const selectAmountOfFetchedCharts = createSelector(
   selectChartsState,
   (chartsState) => Object.values(chartsState)
