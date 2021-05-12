@@ -2,10 +2,13 @@ import { useEffect, useState } from "react"
 import { useInterval } from "react-use"
 
 import { useSelector } from "store/redux-separate-context"
-import { selectHasWindowFocus, selectStopUpdatesWhenFocusIsLost } from "domains/global/selectors"
+import {
+  selectHasWindowFocus,
+  selectStopUpdatesWhenFocusIsLost,
+  selectGlobalPause,
+} from "domains/global/selectors"
 import { BIGGEST_INTERVAL_NUMBER } from "utils/biggest-interval-number"
 import { isPrintMode } from "domains/dashboard/utils/parse-url"
-
 
 type UseFetchNewDataClock = (arg: {
   areCriteriaMet: boolean
@@ -17,7 +20,9 @@ export const useFetchNewDataClock: UseFetchNewDataClock = ({
 }) => {
   const hasWindowFocus = useSelector(selectHasWindowFocus)
   const stopUpdatesWhenFocusIsLost = useSelector(selectStopUpdatesWhenFocusIsLost)
-  const shouldBeUpdating = !(!hasWindowFocus && stopUpdatesWhenFocusIsLost)
+  const globalPause = useSelector(selectGlobalPause)
+
+  const shouldBeUpdating = !(!hasWindowFocus && stopUpdatesWhenFocusIsLost) && !globalPause
 
   const [shouldFetch, setShouldFetch] = useState<boolean>(true)
   const [shouldFetchImmediatelyAfterFocus, setShouldFetchImmediatelyAfterFocus] = useState(false)
@@ -30,9 +35,10 @@ export const useFetchNewDataClock: UseFetchNewDataClock = ({
   }, [shouldFetchImmediatelyAfterFocus, setShouldFetchImmediatelyAfterFocus, shouldBeUpdating])
 
   // don't use setInterval when we loose focus
-  const intervalTime = ((shouldBeUpdating || !shouldFetchImmediatelyAfterFocus) && !isPrintMode)
-    ? preferedIntervalTime
-    : BIGGEST_INTERVAL_NUMBER
+  const intervalTime =
+    (shouldBeUpdating || !shouldFetchImmediatelyAfterFocus) && !isPrintMode
+      ? preferedIntervalTime
+      : BIGGEST_INTERVAL_NUMBER
   useInterval(() => {
     if (areCriteriaMet) {
       if (!shouldBeUpdating) {
