@@ -5,7 +5,7 @@ import Item from "./item"
 import Node from "./node"
 import Options from "./options"
 import Version from "./version"
-import DateTimePicker from "./dateTimePicker"
+import GlobalControls from "./globalControls"
 import Alarms from "./alarms"
 import AgentNews from "./news"
 import SignIn from "./signIn"
@@ -33,7 +33,9 @@ const Header = () => (
         <AgentNews />
         <Options />
       </Item>
-      <DateTimePicker />
+      <Item hasBorder>
+        <GlobalControls />
+      </Item>
       <Alarms />
       <SignIn />
     </Flex>
