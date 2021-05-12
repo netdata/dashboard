@@ -44,6 +44,7 @@ type PickerPropsT = {
   handleOpenState: (state: boolean) => void
   setRangeValues: (params: PickedValues) => void
   tagging?: string
+  isPlaying?: boolean
 }
 
 type HandleRangeChangeT = {
@@ -81,7 +82,7 @@ const focusTaggingMap: { [key: string]: string } = {
 
 export const Picker = (props: PickerPropsT) => {
   const {
-    isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "",
+    isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "", isPlaying
   } = props
 
   const [startDateState, setStartDate] = useState<number>(pickedValues.start)
@@ -192,7 +193,7 @@ export const Picker = (props: PickerPropsT) => {
   return (
     <>
       {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-      <PickerAccessorElement onClick={() => handleOpenState(true)} {...pickedValues} />
+      <PickerAccessorElement onClick={() => handleOpenState(true)} isPlaying={isPlaying} {...pickedValues} />
       {isOpen && pickerModal}
     </>
   )
