@@ -343,7 +343,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
 }
 
 const constructOptionStorageKey = (key: string) => `options.${key}`
-function setOptonSaga({ payload }: Action<SetOptionAction>) {
+function setOptionSaga({ payload }: Action<SetOptionAction>) {
   const { key, value } = payload
   if (key === "stop_updates_when_focus_is_lost") {
     // old dashboard was saving that property to localStorage, but was always ommiting it when
@@ -368,6 +368,6 @@ export function* globalSagas() {
   yield spawn(watchWindowFocusChannel)
   yield takeEvery(fetchHelloAction.request, fetchHelloSaga)
   yield spawn(alarmsSagas)
-  yield takeEvery(setOptionAction, setOptonSaga)
+  yield takeEvery(setOptionAction, setOptionSaga)
   yield takeEvery(setSpacePanelStatusAction, spacePanelSaga)
 }
