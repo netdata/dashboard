@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from "react"
 import { ThemeProvider } from "styled-components"
-import { DefaultTheme, DarkTheme, BlueTheme } from "@netdata/netdata-ui"
+import { DefaultTheme, DarkTheme } from "@netdata/netdata-ui"
 
 import "./types/global"
 
@@ -10,25 +10,23 @@ const dashboardThemes: { [k: string]: "white" | "slate" } = {
   unspecified: "slate",
   light: "white",
   dark: "slate",
-  blue: "slate",
 }
 
 const uiKitThemes: { [k: string]: any } = {
   unspecified: DarkTheme,
   light: DefaultTheme,
   dark: DarkTheme,
-  blue: BlueTheme,
 }
 
 export const DashboardThemeProvider = ({
   theme = "unspecified",
   children,
 }: PropsWithChildren<{ theme: string }>) => {
-  window.netdataTheme = dashboardThemes[theme]
+  window.netdataTheme = dashboardThemes[theme] || dashboardThemes.unspecified
   window.NETDATA.updateTheme()
 
   return (
-    <ThemeProvider theme={uiKitThemes[theme]}>
+    <ThemeProvider theme={uiKitThemes[theme] || uiKitThemes.unspecified}>
       <GlobalColors />
       {children}
     </ThemeProvider>

@@ -35,12 +35,12 @@ const Section = ({ title, onExpand, children, noBorder }) => (
   <Flex
     gap={3}
     padding={[0, 0, 3]}
-    border={!noBorder && { side: "bottom", color: ["gray", "shuttleGray"] }}
+    border={!noBorder && { side: "bottom", color: "separator" }}
     column
     data-testid="k8sPopoverSection"
   >
     <Flex justifyContent="between" data-testid="k8sPopoverSection-header">
-      <H6 color={["gray", "aluminium"]} wordBreak="break-all">
+      <H6 color="border" wordBreak="break-all">
         {title}
       </H6>
       {onExpand && <ExpandButton onClick={onExpand} />}

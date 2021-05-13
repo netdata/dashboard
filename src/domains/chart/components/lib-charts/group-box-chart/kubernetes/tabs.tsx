@@ -19,10 +19,8 @@ export const TabButton = styled(Button).attrs(({ active }) => ({
     height: initial;
     width: initial;
     padding: 2px 20px;
-    ${({ active, theme }) =>
-      active && `border-bottom: 3px solid ${getColor(["white", "almost"])({ theme })};`}
-    color: ${({ active, theme }) =>
-      getColor(active ? ["white", "almost"] : ["gray", "nepal"])({ theme })}
+    ${({ active, theme }) => active && `border-bottom: 3px solid ${getColor("bright")({ theme })};`}
+    color: ${({ active, theme }) => getColor(active ? "bright" : "separator")({ theme })}
   }
 `
 

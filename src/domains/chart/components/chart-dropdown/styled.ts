@@ -1,18 +1,14 @@
 import styled from "styled-components"
-import {
-  getColor, Icon,
-} from "@netdata/netdata-ui"
-
-import { grayLimedSpruce, graySilverSand } from "styles/layout-constants"
+import { getColor, Icon } from "@netdata/netdata-ui"
 
 export const DropdownItem = styled.div`
   display: flex;
   flex-direction: start;
   align-items: center;
-  color: ${getColor(grayLimedSpruce)};
+  color: ${getColor(["neutral", "limedSpruce"])};
   white-space: nowrap;
   & > svg use {
-      fill: ${getColor(grayLimedSpruce)};
+    fill: ${getColor(["neutral", "limedSpruce"])};
   }
 `
 
@@ -25,9 +21,9 @@ export const DotsBtn = styled(Icon)`
   height: 10px;
   cursor: pointer;
   & use {
-    fill: ${getColor(grayLimedSpruce)};
+    fill: ${getColor(["neutral", "limedSpruce"])};
     & :hover {
-      fill: ${getColor(graySilverSand)};
+      fill: ${getColor(["neutral", "regentgrey"])};
     }
   }
 `

@@ -19,7 +19,7 @@ const Title = styled(Text)`
   overflow-x: hidden;
 `
 
-const getUnitSign = (unit) => {
+const getUnitSign = unit => {
   return unit === "percentage" ? "%" : ` ${unit.replace(/milliseconds/, "ms")}`
 }
 
@@ -29,7 +29,7 @@ const aggrMethods = {
   min: "Min",
   max: "Max",
 }
-const getAggregation = (value) => `${aggrMethods[value]}` || ""
+const getAggregation = value => `${aggrMethods[value]}` || ""
 
 const ChartValueContainer = memo(({ id, units, aggrMethod, displayedIndex }) => {
   const chartData = useSelector((state: AppStateT) => selectChartData(state, { id }))
@@ -53,16 +53,12 @@ const ChartValueContainer = memo(({ id, units, aggrMethod, displayedIndex }) => 
   return (
     <Text
       wordBreak="keep-all"
-      color={["white", "pure"]}
+      color="bright"
       margin={[0, 0, 0, "auto"]}
       data-testid="k8sPopoverChart-chartValue"
     >
       {aggregation && (
-        <Text
-          margin={[0, 1, 0, 0]}
-          color={["gray", "nepal"]}
-          data-testid="k8sPopoverChart-chartValue-aggr"
-        >
+        <Text margin={[0, 1, 0, 0]} color="separator" data-testid="k8sPopoverChart-chartValue-aggr">
           {aggregation}
         </Text>
       )}
@@ -86,8 +82,8 @@ const ChartOverview = ({ id, chartMetadata, aggrMethod, displayedIndex }) => {
 
   return (
     <Flex gap={2} data-testid="k8sPopoverChart-overview">
-      <Text color={["white", "pure"]} dangerouslySetInnerHTML={{ __html: icon }} />
-      <Title color={["white", "pure"]} data-testid="k8sPopoverChart-title">
+      <Text color="bright" dangerouslySetInnerHTML={{ __html: icon }} />
+      <Title color="bright" data-testid="k8sPopoverChart-title">
         {title}
       </Title>
       <ChartValue id={id} units={units} aggrMethod={aggrMethod} displayedIndex={displayedIndex} />
