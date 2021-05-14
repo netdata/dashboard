@@ -10,7 +10,7 @@ const SignInPrompt = () => {
         const { title, content } = promptContent[hasSignedInBefore ? "signIn" : "signUp"]
         return (
           <Flex
-            background={['gray', 'trout']}
+            background={["neutral", "regentgrey"]}
             column
             gap={4}
             padding={[10]}
