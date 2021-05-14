@@ -24,7 +24,7 @@ export const NotificationsContainer = styled(WrappedToastContainer)<ToastContain
     min-width: 400px;
     max-width: 500px;
     ${notificationsZIndex};
-    color: ${getColor("text")};
+    color: ${getColor(["neutral", "limedSpruce"])};
   }
   .Toastify__toast {
     padding: 0;
