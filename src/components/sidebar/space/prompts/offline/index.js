@@ -3,7 +3,7 @@ import { Flex, TextNano, TextSmall } from "@netdata/netdata-ui"
 import NoNetwork from "./noNetwork"
 
 const OfflinePrompt = () => (
-  <Flex alignItems="center" background={["gray", "trout"]} column gap={1} padding={[10]}>
+  <Flex alignItems="center" background={["neutral", "regentgrey"]} column gap={1} padding={[10]}>
     <TextSmall color="bright" strong textAlign="center">
       Can't connect to Netdata Cloud
     </TextSmall>

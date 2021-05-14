@@ -7,7 +7,7 @@ import { Text, Flex, Icon } from "@netdata/netdata-ui"
 
 const ExternalButton = styled(Icon).attrs({
   margin: [0, 0, 0, "auto"],
-  color: ["white", "pure"],
+  color: "bright",
   width: "10px",
   height: "10px",
   alignSelf: "center",
@@ -22,15 +22,9 @@ const ExternalButton = styled(Icon).attrs({
 const Item = ({ icon, title, secondary, onClick }) => (
   <Flex gap={1} alignItems="start" data-testid="k8sPopoverItem">
     <Flex width="22px" height="22px" data-testid="k8sPopoverItem-icon">
-      <Icon
-        name={icon}
-        color={["white", "pure"]}
-        margin={[0, 1, 0, 0]}
-        width="22px"
-        height="22px"
-      />
+      <Icon name={icon} color="bright" margin={[0, 1, 0, 0]} width="22px" height="22px" />
     </Flex>
-    <Text color={["white", "pure"]} data-testid="k8sPopoverItem-title">
+    <Text color="bright" data-testid="k8sPopoverItem-title">
       {title}
     </Text>
     {secondary && (

@@ -31,13 +31,13 @@ export const NotificationsContainer = styled(WrappedToastContainer)<ToastContain
     padding-top: 5px;
   }
   .Toastify__toast--error {
-    background: ${getColor(["red", "roseWhite"])};
+    background: ${getColor(["red", "lavender"])};
     border: 1px solid ${getColor("error")};
   }
   .Toastify__toast--warning {
   }
   .Toastify__toast--success {
-    background: ${getColor(["green", "clearDay"])};
+    background: ${getColor(["green", "frostee"])};
     border: 1px solid ${getColor("success")};
   }
   .Toastify__toast-body {

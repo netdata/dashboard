@@ -17,7 +17,6 @@ export const themeOptions: { [index in DashboardTheme]: ThemeOptions } = {
     onSecondary: DefaultTheme.colors.bright,
     onSurface: DefaultTheme.colors.text,
     onError: DefaultTheme.colors.bright,
-    dupaDupa: "#ff00ff",
     textPrimaryOnBackground: DefaultTheme.colors.text,
     textSecondaryOnBackground: DefaultTheme.colors.textFocus,
     textHintOnBackground: DefaultTheme.colors.text,

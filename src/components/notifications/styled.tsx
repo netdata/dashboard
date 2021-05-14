@@ -9,12 +9,13 @@ export const NodeIconContainer = styled.div`
   justify-content: center;
   align-items: center;
   & > svg use {
-    fill: ${getColor(["gray", "limedSpruce"])};
+    fill: ${getColor(["neutral", "limedSpruce"])};
   }
 `
 
 export const NotificationLink = styled.a`
-  &, &:hover {
+  &,
+  &:hover {
     text-decoration: underline;
     color: inherit;
   }

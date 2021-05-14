@@ -8,7 +8,7 @@ export const ButtonGroup = styled.div`
   align-items: center;
   justify-content: flex-end;
   height: 100%;
-  color: ${getColor(["gray", "aluminium"])};
+  color: ${getColor(["neutral", "regentgrey"])};
 `
 
 export const TimeButton = styled.button<{ isSelected: boolean }>`

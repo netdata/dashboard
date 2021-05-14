@@ -12,7 +12,7 @@ export const StyledHeader = styled.header`
   position: fixed;
   height: ${HEADER_SIZE}px;
   width: 100%;
-  background: ${getColor(["gray", "limedSpruce"])};
+  background: ${getColor(["neutral", "limedSpruce"])};
   display: flex;
   flex-flow: row nowrap;
   @media ${breakpoints.laptop} {
