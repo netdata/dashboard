@@ -29,7 +29,9 @@ import {
 } from "domains/global/selectors"
 import {
   resetGlobalPanAndZoomAction, setCommonMaxAction, setCommonMinAction,
+  setGlobalPauseAction, resetGlobalPauseAction
 } from "domains/global/actions"
+
 import { resetChartPanAndZoomAction } from "domains/chart/actions"
 
 import { Attributes } from "../../utils/transformDataAttributes"
@@ -586,6 +588,8 @@ export const DygraphChart = ({
             // eslint-disable-next-line no-param-reassign
             context.tarp.tarps = hackDygraphIFrameTarps(context.tarp.tarps)
 
+            dispatch(setGlobalPauseAction())
+
             if (event.button && event.button === 1) {
               // middle mouse button
 
@@ -671,11 +675,13 @@ export const DygraphChart = ({
               // eslint-disable-next-line no-underscore-dangle
               dygraph.drawGraph_(false)
             } else if (context.isPanning) {
+
               latestIsUserAction.current = true
               // @ts-ignore
               Dygraph.endPan(event, dygraph, context)
               propsRef.current.immediatelyDispatchPanAndZoom()
             } else if (context.isZooming) {
+
               latestIsUserAction.current = true
               // @ts-ignore
               Dygraph.endZoom(event, dygraph, context)
@@ -786,6 +792,7 @@ export const DygraphChart = ({
           },
 
           dblclick() {
+            dispatch(resetGlobalPauseAction({ forcePlay: false }))
             propsRef.current.resetGlobalPanAndZoom()
           },
 
@@ -870,7 +877,7 @@ export const DygraphChart = ({
   }, [attributes, chartData, chartMetadata, chartSettings, chartUuid, dimensionsVisibility,
     hasEmptyData, hiddenLabelsElementId, isFakeStacked,
     orderedColors, setHoveredX, setMinMax, shouldSmoothPlot, unitsCurrent,
-    xAxisDateString, xAxisTimeString, updatePrecededPosition])
+    xAxisDateString, xAxisTimeString, updatePrecededPosition, dispatch])
 
   useUpdateEffect(() => {
     if (dygraphInstance.current) {
