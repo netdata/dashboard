@@ -52,8 +52,8 @@ export const PickerAccessorElement = ({ onClick, start = 15 * MINUTE, end, isPla
 
   const endAlias = useMemo(() => getEndAlias(startDate, endDate), [startDate, endDate])
   const duration = useMemo(
-    () => startAlias.from(endDate, isPlaying),
-    [startAlias, endDate, isPlaying]
+    () => startDate.from(endDate, !isPlaying),
+    [startDate, endDate, isPlaying]
   )
 
   return (
