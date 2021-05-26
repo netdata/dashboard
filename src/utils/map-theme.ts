@@ -1,6 +1,6 @@
 import { DefaultTheme, DarkTheme } from "@netdata/netdata-ui"
 
-export type DashboardTheme = "white" | "slate"
+export type DashboardTheme = any
 
 export const mapTheme = (theme: DashboardTheme): any =>
   ({
