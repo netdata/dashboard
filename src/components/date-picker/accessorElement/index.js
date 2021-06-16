@@ -11,6 +11,7 @@ import {
 } from "./utils"
 import Container from "./container"
 import DateBox from "./dateBox"
+import DurationBox from "./durationBox"
 import PickerTooltip from "./pickerTooltip"
 import { selectChartsAreFetching } from "@/src/domains/chart/selectors"
 
@@ -66,9 +67,7 @@ const PickerAccessorElement = ({
           startDate={startDate}
           isSameDate={isSameDate}
         />
-        <TextSmall color="text" whiteSpace="nowrap">
-          {`${isPlaying ? "last " : ""}${duration}`}
-        </TextSmall>
+        <DurationBox isPlaying={isPlaying} duration={duration} />
       </Container>
     </Tooltip>
   )
