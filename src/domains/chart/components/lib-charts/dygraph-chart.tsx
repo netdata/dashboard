@@ -16,6 +16,7 @@ import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
 import { debounce } from "utils/debounce"
+import { hasHashParam } from "utils/hash-utils"
 
 import {
   selectCommonMin,
@@ -53,6 +54,7 @@ import useProceededChart from "../../hooks/use-proceeded-chart"
 import useDygraphBadge from "../../hooks/useDygraphBadge"
 import ProceededChartDisclaimer from "./proceeded-chart-disclaimer"
 import AlarmBadge, { getBorderColor } from "./alarmBadge"
+import NeutralPill from "./neutralPill"
 
 // This is the threshold above which we assume chart shown duration has changed
 const timeframeThreshold = 5000
@@ -406,7 +408,8 @@ export const DygraphChart = ({
     }
   }, [chartUuid, dispatch, isSyncPanAndZoom])
 
-  const [isBadgeVisible, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
+  const [isAlarmBadgeVisible, alarmBadgeRef, updateAlarmBadge] = useDygraphBadge() as any
+  const [isHighlightBadgeVisible, highlightBadgeRef, updateHighlightBadge] = useDygraphBadge() as any
 
   // setGlobalChartUnderlay is using state from closure (chartData.after), so we need to have always
   // the newest callback. Unfortunately we cannot use Dygraph.updateOptions() (library restriction)
@@ -421,6 +424,7 @@ export const DygraphChart = ({
     resetGlobalPanAndZoom,
     setGlobalChartUnderlay,
     updateAlarmBadge,
+    updateHighlightBadge,
     updateChartPanOrZoom,
     viewAfter,
     viewBefore,
@@ -439,11 +443,12 @@ export const DygraphChart = ({
     propsRef.current.resetGlobalPanAndZoom = resetGlobalPanAndZoom
     propsRef.current.setGlobalChartUnderlay = setGlobalChartUnderlay
     propsRef.current.updateAlarmBadge = updateAlarmBadge
+    propsRef.current.updateHighlightBadge = updateHighlightBadge
     propsRef.current.updateChartPanOrZoom = updateChartPanOrZoom
     propsRef.current.viewAfter = viewAfter
     propsRef.current.viewBefore = viewBefore
   }, [alarm, chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
-    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateAlarmBadge, updateChartPanOrZoom, viewAfter, viewBefore])
+    resetGlobalPanAndZoom, setGlobalChartUnderlay, updateAlarmBadge, updateHighlightBadge, updateChartPanOrZoom, viewAfter, viewBefore])
 
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
@@ -548,6 +553,29 @@ export const DygraphChart = ({
               g,
               alarmPosition - horizontalPadding,
             )
+          }
+
+          const onMetricsCorralation = hasHashParam("metrics_correlation")
+          if (onMetricsCorralation && propsRef.current.globalChartUnderlay) {
+            const { before, masterID } = propsRef.current.globalChartUnderlay
+
+            if (masterID && masterID !== propsRef.current.chartData.id) {
+              propsRef.current.updateHighlightBadge(false)
+            } else {
+              const horizontalPadding = 3
+
+              propsRef.current.updateHighlightBadge(
+                true,
+                g,
+                g.toDomXCoord(before),
+                (pillRef, pillX, pillPosition, topMargin) => {
+                  pillRef.current.style.left = `${pillPosition + horizontalPadding}px`
+                  pillRef.current.style.top = topMargin
+                }
+              )
+            }
+          } else {
+            propsRef.current.updateHighlightBadge(false)
           }
 
           // the chart is about to be drawn
@@ -659,7 +687,7 @@ export const DygraphChart = ({
               propsRef.current.setGlobalChartUnderlay({
                 after: sortedRange[0],
                 before: sortedRange[1],
-                masterID: chartUuid,
+                masterID: chartData.id,
               })
               dygraphHighlightAfter.current = null
               // eslint-disable-next-line no-param-reassign
@@ -1144,7 +1172,11 @@ export const DygraphChart = ({
       )}
       {alarm && hasLegend && (
         // @ts-ignore
-        <AlarmBadge isVisible={isBadgeVisible} ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
+        <AlarmBadge isVisible={isAlarmBadgeVisible} ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
+      )}
+      {hasLegend && (
+        // @ts-ignore
+        <NeutralPill isVisible={isHighlightBadgeVisible} ref={highlightBadgeRef} {...globalChartUnderlay} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
