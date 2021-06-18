@@ -5,7 +5,7 @@ const badgeTopMargin = "40px"
 
 const defaultPositionTo = (ref, x, position, topMargin) => {
   ref.current.style.left = `${x}px`
-  ref.current.style.right = `calc(100% + ${position}px)`
+  ref.current.style.right = `calc(100% - ${position}px)`
   ref.current.style.top = topMargin
 }
 
