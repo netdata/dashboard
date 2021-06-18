@@ -24,15 +24,25 @@ const Badge = styled.div`
   white-space: nowrap;
 `
 
+const minTimeframe = 15
+const maxTimeframe = 180
+
+const getMissingTime = total => {
+  if (total < minTimeframe) return " (Select at least 15 sec)"
+  if (total > maxTimeframe) return " (Select up to 180 sec)"
+  return ""
+}
+
 const NeutralPill = forwardRef((
   { isVisible, before, after },
   ref,
 ) => {
+  const total = (before - after) / 1000
   return (
     <Container ref={ref}>
       {isVisible && (
         <Badge>
-          {Math.round((before - after) / 1000)} sec.
+          {Math.round(total)} sec.{getMissingTime(total)}
         </Badge>
       )}
     </Container>
