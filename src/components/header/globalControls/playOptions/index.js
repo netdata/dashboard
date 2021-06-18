@@ -4,10 +4,7 @@ import { useToggle } from "react-use"
 import { Flex, Icon, Tooltip, Drop } from "@netdata/netdata-ui"
 import { MenuItem } from "@/src/components/menus"
 import { useDispatch } from "store/redux-separate-context"
-import {
-  resetGlobalPauseAction,
-  setGlobalPauseAction,
-} from "domains/global/actions"
+import { resetGlobalPauseAction, setGlobalPauseAction } from "domains/global/actions"
 import PlayOptionsTooltip from "./playOptionsTooltip"
 
 const MenuButton = styled(Flex).attrs({ padding: [1], role: "button" })`
@@ -33,7 +30,7 @@ const PlayOptions = ({ target }) => {
   const close = () => toggle(false)
 
   const onPlay = () => {
-    dispatch(resetGlobalPauseAction())
+    dispatch(resetGlobalPauseAction({ forcePlay: false }))
     close()
   }
 
