@@ -1,6 +1,6 @@
 import { sortBy, reverse } from "ramda"
 import React, {
-  useLayoutEffect, useRef, useCallback,
+  useLayoutEffect, useRef, useCallback, useState,
 } from "react"
 import classNames from "classnames"
 import { useUpdateEffect, useUnmount, useMount } from "react-use"
@@ -450,6 +450,8 @@ export const DygraphChart = ({
   }, [alarm, chartData, globalChartUnderlay, hoveredX, immediatelyDispatchPanAndZoom,
     resetGlobalPanAndZoom, setGlobalChartUnderlay, updateAlarmBadge, updateHighlightBadge, updateChartPanOrZoom, viewAfter, viewBefore])
 
+  const [localHighlight, setLocalHighlight] = useState<{before?: number, after?: number} | null>(null)
+
   const shouldSmoothPlot = useSelector(selectSmoothPlot)
   useLayoutEffect(() => {
     if (chartElement && chartElement.current && !dygraphInstance.current && !hasEmptyData) {
@@ -663,6 +665,28 @@ export const DygraphChart = ({
               latestIsUserAction.current = true
               // @ts-ignore
               Dygraph.moveZoom(event, dygraph, context)
+
+              const onMetricsCorralation = hasHashParam("metrics_correlation")
+              if (onMetricsCorralation) {
+                const before = dygraph.toDataXCoord(event.offsetX)
+                const after = dygraphHighlightAfter.current
+                if (before - after > 1000) { // more than a sec
+                  setLocalHighlight({
+                    after,
+                    before,
+                  })
+                  propsRef.current.updateHighlightBadge(
+                    true,
+                    dygraph,
+                    dygraph.toDomXCoord(before),
+                    (pillRef, pillX, pillPosition, topMargin) => {
+                      pillRef.current.style.left = `${pillPosition}px`
+                      pillRef.current.style.top = topMargin
+                    }
+                  )
+                }
+              }
+
               event.preventDefault()
             } else if (context.isPanning) {
               latestIsUserAction.current = true
@@ -690,6 +714,7 @@ export const DygraphChart = ({
                 masterID: chartData.id,
               })
               dygraphHighlightAfter.current = null
+              setLocalHighlight(null)
               // eslint-disable-next-line no-param-reassign
               context.isZooming = false
 
@@ -1176,7 +1201,7 @@ export const DygraphChart = ({
       )}
       {hasLegend && (
         // @ts-ignore
-        <NeutralPill isVisible={isHighlightBadgeVisible} ref={highlightBadgeRef} {...globalChartUnderlay} />
+        <NeutralPill isVisible={isHighlightBadgeVisible} ref={highlightBadgeRef} {...globalChartUnderlay} {...localHighlight} />
       )}
       <div className="dygraph-chart__labels-hidden" id={hiddenLabelsElementId} />
     </>
