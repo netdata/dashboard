@@ -18,7 +18,7 @@ const getIcon = (isPlaying, isForcePlaying) => {
 const PlayPausePill = ({ isPlaying, isForcePlaying }) => {
   const dispatch = useDispatch()
 
-  const onPlay = () => dispatch(resetGlobalPauseAction())
+  const onPlay = () => dispatch(resetGlobalPauseAction({ forcePlay: false }))
   const onPause = () => dispatch(setGlobalPauseAction())
   const icon = useMemo(() => getIcon(isPlaying, isForcePlaying), [isPlaying, isForcePlaying])
 
