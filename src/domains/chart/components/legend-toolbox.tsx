@@ -5,14 +5,12 @@ import { ToolboxButton } from "./toolbox-button"
 type ClickCallback = (event: React.MouseEvent) => void
 interface Props {
   onToolboxLeftClick: ClickCallback
-  onToolboxResetClick: ClickCallback
   onToolboxRightClick: ClickCallback
   onToolboxZoomInClick: ClickCallback
   onToolboxZoomOutClick: ClickCallback
 }
 export const LegendToolbox = ({
   onToolboxLeftClick,
-  onToolboxResetClick,
   onToolboxRightClick,
   onToolboxZoomInClick,
   onToolboxZoomOutClick,
@@ -25,15 +23,6 @@ export const LegendToolbox = ({
       popoverTitle="Pan Left"
       popoverContent="Pan the chart to the left. You can also <b>drag it</b> with your mouse or your
        finger (on touch devices).<br/><small>Help can be disabled from the settings.</small>"
-    />
-    <ToolboxButton
-      className="netdata-legend-toolbox-button"
-      onClick={onToolboxResetClick}
-      iconType="reset"
-      popoverTitle="Chart Reset"
-      popoverContent="Reset all the charts to their default auto-refreshing state. You can also
-       <b>double click</b> the chart contents with your mouse or your finger (on touch devices).
-       <br/><small>Help can be disabled from the settings.</small>"
     />
     <ToolboxButton
       className="netdata-legend-toolbox-button"

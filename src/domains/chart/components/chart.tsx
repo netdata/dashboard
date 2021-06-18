@@ -5,9 +5,7 @@ import { useDebouncedCallback } from "use-debounce"
 
 import {
   requestCommonColorsAction,
-  resetGlobalPanAndZoomAction,
   setDefaultAfterAction,
-  resetDefaultAfterAction,
   setGlobalPanAndZoomAction,
   setGlobalSelectionAction,
 } from "domains/global/actions"
@@ -22,7 +20,7 @@ import { useDispatch, useSelector } from "store/redux-separate-context"
 import { TimeRange } from "types/common"
 import { MS_IN_SECOND, isTimestamp } from "utils/utils"
 
-import { resetChartPanAndZoomAction, setChartPanAndZoomAction } from "domains/chart/actions"
+import { setChartPanAndZoomAction } from "domains/chart/actions"
 
 import { getPanAndZoomStep } from "../utils/get-pan-and-zoom-step"
 import { Attributes } from "../utils/transformDataAttributes"
@@ -410,18 +408,6 @@ export const Chart = memo(
       [defaultAfter, dispatch, globalPanAndZoom, handleToolBoxPanAndZoom, viewAfter, viewBefore]
     )
 
-    const handleToolboxResetClick = useCallback(() => {
-      if (isSyncPanAndZoom) {
-        if (globalPanAndZoom) {
-          dispatch(resetGlobalPanAndZoomAction())
-        } else {
-          dispatch(resetDefaultAfterAction())
-        }
-      } else {
-        dispatch(resetChartPanAndZoomAction({ id: chartUuid }))
-      }
-    }, [chartUuid, dispatch, globalPanAndZoom, isSyncPanAndZoom])
-
     /**
      * assign colors
      */
@@ -456,7 +442,6 @@ export const Chart = memo(
     const legendToolbox = (
       <LegendToolbox
         onToolboxLeftClick={handleToolboxLeftClick}
-        onToolboxResetClick={handleToolboxResetClick}
         onToolboxRightClick={handleToolboxRightClick}
         onToolboxZoomInClick={handleToolboxZoomInClick}
         onToolboxZoomOutClick={handleToolboxZoomOutClick}
