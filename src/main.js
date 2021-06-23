@@ -3440,7 +3440,6 @@ function dashboardSettingsSetup() {
         sync_option('parallel_refresher');
         sync_option('concurrent_refreshes');
         sync_option('sync_selection');
-        sync_option('sync_pan_and_zoom');
 
         sync_option('legend_right');
         theme_sync_option('netdata_theme_control');
@@ -3481,9 +3480,6 @@ function dashboardSettingsSetup() {
     $('#sync_selection').change(function () {
         setOption('sync_selection', $(this).prop('checked'));
         netdataReload();
-    });
-    $('#sync_pan_and_zoom').change(function () {
-        setOption('sync_pan_and_zoom', $(this).prop('checked'));
     });
     $('#stop_updates_when_focus_is_lost').change(function () {
         urlOptions.update_always = !$(this).prop('checked');
