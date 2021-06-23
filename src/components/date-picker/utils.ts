@@ -28,11 +28,3 @@ export const guessResolutionAndValue: GuessResolutionAndValue = (after: number) 
     value,
   }
 }
-
-export const getShortHandTimeAlias = (after: number) => {
-  const { value, resolution } = guessResolutionAndValue(after)
-  if (value > 1) {
-    return `Last ${value} ${resolution}s`
-  }
-  return `Last ${resolution}`
-}

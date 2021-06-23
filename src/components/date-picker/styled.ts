@@ -31,15 +31,9 @@ export const PickerBox = styled.div`
   z-index: ${dialogsZIndex};
 `
 export const HeaderSvg = styled.svg`
-  fill: ${getColor("text")};
+  fill: ${getColor(["gray", "arsenic"])};
   height: 14px;
   width: 14px;
-`
-export const IconSpacer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-right: ${getSizeBy()};
 `
 
 export const PickerActionArea = styled.div`
@@ -100,7 +94,7 @@ export const AccessorBox = styled.div`
   width: 100%;
   display: flex;
   justify-content: start;
-  color: ${getColor("text")};
+  color: ${getColor(["gray", "arsenic"])};
   align-items: center;
   height: 40px;
   padding: 0 10px;

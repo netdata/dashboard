@@ -33,9 +33,14 @@ import {
   accessRegistrySuccessAction,
   resetDefaultAfterAction,
   setAlarmAction,
+  setGlobalPauseAction,
+  resetGlobalPauseAction,
 } from "./actions"
 import {
-  Options, optionsMergedWithLocalStorage, getOptionsMergedWithLocalStorage, clearLocalStorage,
+  Options,
+  optionsMergedWithLocalStorage,
+  getOptionsMergedWithLocalStorage,
+  clearLocalStorage,
 } from "./options"
 import { CLOUD_BASE_URL_DISABLED } from "./constants"
 
@@ -79,6 +84,7 @@ export type StateT = {
   }
   hoveredX: number | null
   hasWindowFocus: boolean
+  globalPause: boolean
 
   spacePanelIsActive: boolean
   spacePanelTransitionEndIsActive: boolean
@@ -100,7 +106,7 @@ export type StateT = {
     personGuid: string | null
     registryMachines: { [key: string]: RegistryMachine } | null
     registryMachinesArray: RegistryMachine[] | null
-    registryServer: string | null,
+    registryServer: string | null
   }
 
   chartsMetadata: {
@@ -132,6 +138,7 @@ export const initialState: StateT = {
   globalChartUnderlay: null,
   hoveredX: null,
   hasWindowFocus: document.hasFocus(),
+  globalPause: false,
   spacePanelIsActive: false, // set to true only for testing layout
   // the same as property above, just updated after transition ends
   spacePanelTransitionEndIsActive: false,
@@ -198,12 +205,12 @@ const hasLastOnly = (array: string[]) => last(array) === "ONLY"
 const removeLastOnly = (array: string[]) => (hasLastOnly(array) ? init(array) : array)
 const createCommonColorsKeysSubstate = (
   colorsAttribute: string | undefined,
-  hasCustomColors: boolean,
+  hasCustomColors: boolean
 ) => {
   const custom = hasCustomColors ? removeLastOnly((colorsAttribute as string).split(" ")) : []
   const shouldCopyTheme = hasCustomColors
-    // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
-    ? !hasLastOnly((colorsAttribute as string).split(" "))
+    ? // disable copyTheme when there's "ONLY" keyword in "data-colors" attribute
+      !hasLastOnly((colorsAttribute as string).split(" "))
     : true
   const available = [
     ...custom,
@@ -219,9 +226,7 @@ const createCommonColorsKeysSubstate = (
 globalReducer.on(
   requestCommonColorsAction,
   //@ts-ignore
-  (state, {
-    chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames,
-  }) => {
+  (state, { chartContext, chartUuid, colorsAttribute, commonColorsAttribute, dimensionNames }) => {
     const keyName = getKeyForCommonColorsState({
       colorsAttribute,
       commonColorsAttribute,
@@ -230,18 +235,19 @@ globalReducer.on(
     })
 
     const hasCustomColors = typeof colorsAttribute === "string" && colorsAttribute.length > 0
-    const subState = state.commonColorsKeys[keyName]
-      || createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
+    const subState =
+      state.commonColorsKeys[keyName] ||
+      createCommonColorsKeysSubstate(colorsAttribute, hasCustomColors)
 
     const currentlyAssignedNr = Object.keys(subState.assigned).length
     const requestedDimensionsAssigned = mergeAll(
       dimensionNames
         // dont assign already assigned dimensions
-        .filter((dimensionName) => !subState.assigned[dimensionName])
+        .filter(dimensionName => !subState.assigned[dimensionName])
         .map((dimensionName, i) => ({
           [dimensionName]:
             subState.available[(i + currentlyAssignedNr) % subState.available.length],
-        })),
+        }))
     )
     const assigned = {
       ...subState.assigned,
@@ -258,9 +264,8 @@ globalReducer.on(
         },
       },
     }
-  },
+  }
 )
-
 
 globalReducer.on(setCommonMinAction, (state, { chartUuid, commonMinKey, value }) => {
   const charts = {
@@ -316,15 +321,12 @@ globalReducer.on(setGlobalSelectionAction, (state, { chartUuid, hoveredX }) => (
   currentSelectionMasterId: chartUuid,
 }))
 
-globalReducer.on(
-  setGlobalPanAndZoomAction,
-  (state, payload) => ({
-    ...state,
-    globalPanAndZoom: payload,
-  }),
-)
+globalReducer.on(setGlobalPanAndZoomAction, (state, payload) => ({
+  ...state,
+  globalPanAndZoom: payload,
+}))
 
-globalReducer.on(resetGlobalPanAndZoomAction, (state) => ({
+globalReducer.on(resetGlobalPanAndZoomAction, state => ({
   ...state,
   globalPanAndZoom: initialState.globalPanAndZoom,
   hoveredX: initialState.hoveredX, // need to reset this also on mobile
@@ -335,7 +337,7 @@ globalReducer.on(setDefaultAfterAction, (state, { after }) => ({
   defaultAfter: after,
 }))
 
-globalReducer.on(resetDefaultAfterAction, (state) => ({
+globalReducer.on(resetDefaultAfterAction, state => ({
   ...state,
   defaultAfter: initialState.defaultAfter,
 }))
@@ -349,7 +351,7 @@ globalReducer.on(setGlobalChartUnderlayAction, (state, { after, before, masterID
   },
 }))
 
-globalReducer.on(centerAroundHighlightAction, (state) => {
+globalReducer.on(centerAroundHighlightAction, state => {
   if (!state.globalChartUnderlay) {
     // eslint-disable-next-line no-console
     console.warn("Cannot center around empty selection")
@@ -366,12 +368,14 @@ globalReducer.on(centerAroundHighlightAction, (state) => {
   }
 })
 
-
-globalReducer.on(clearHighlightAction, (state, { resetPanAndZoom = true }:{ resetPanAndZoom?: boolean } = {}) => ({
-  ...state,
-  globalChartUnderlay: initialState.globalChartUnderlay,
-  ...(resetPanAndZoom ? {globalPanAndZoom: initialState.globalPanAndZoom}: {}),
-}))
+globalReducer.on(
+  clearHighlightAction,
+  (state, { resetPanAndZoom = true }: { resetPanAndZoom?: boolean } = {}) => ({
+    ...state,
+    globalChartUnderlay: initialState.globalChartUnderlay,
+    ...(resetPanAndZoom ? { globalPanAndZoom: initialState.globalPanAndZoom } : {}),
+  })
+)
 
 globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
   // make additional check, because it's possible to get hasWindowFocus === false
@@ -383,7 +387,16 @@ globalReducer.on(windowFocusChangeAction, (state, { hasWindowFocus }) => {
   }
 })
 
-globalReducer.on(fetchHelloAction.request, (state) => ({
+globalReducer.on(setGlobalPauseAction, state => ({ ...state, globalPause: true }))
+globalReducer.on(resetGlobalPauseAction, (state, { forcePlay }) => ({
+  ...state,
+  globalPause: initialState.globalPause,
+  globalPanAndZoom: initialState.globalPanAndZoom,
+  hoveredX: initialState.hoveredX,
+  options: { ...state.options, stop_updates_when_focus_is_lost: !forcePlay },
+}))
+
+globalReducer.on(fetchHelloAction.request, state => ({
   ...state,
   registry: {
     ...state.registry,
@@ -391,9 +404,7 @@ globalReducer.on(fetchHelloAction.request, (state) => ({
   },
 }))
 
-globalReducer.on(fetchHelloAction.success, (state, {
-  cloudBaseURL, hostname, machineGuid,
-}) => ({
+globalReducer.on(fetchHelloAction.success, (state, { cloudBaseURL, hostname, machineGuid }) => ({
   ...state,
   registry: {
     ...state.registry,
@@ -404,7 +415,7 @@ globalReducer.on(fetchHelloAction.success, (state, {
     machineGuid,
   },
 }))
-globalReducer.on(fetchHelloAction.failure, (state) => ({
+globalReducer.on(fetchHelloAction.failure, state => ({
   ...state,
   registry: {
     ...state.registry,
@@ -421,7 +432,7 @@ globalReducer.on(accessRegistrySuccessAction, (state, { registryServer }) => ({
   },
 }))
 
-globalReducer.on(resetRegistry, (state) => ({
+globalReducer.on(resetRegistry, state => ({
   ...state,
   registry: {
     ...state.registry,
@@ -429,29 +440,33 @@ globalReducer.on(resetRegistry, (state) => ({
   },
 }))
 
-globalReducer.on(fetchInfoAction, (state) => ({
+globalReducer.on(fetchInfoAction, state => ({
   ...state,
   registry: {
     ...state.registry,
     hasStartedInfo: true,
   },
 }))
-globalReducer.on(fetchInfoAction.success, (state, {
-  isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable, fullInfoPayload,
-}) => ({
-  ...state,
-  registry: {
-    ...state.registry,
-    hasFetchedInfo: true,
-    isCloudAvailable,
-    isCloudEnabled,
-    isAgentClaimed,
-    isACLKAvailable,
-    fullInfoPayload,
-  },
-}))
+globalReducer.on(
+  fetchInfoAction.success,
+  (
+    state,
+    { isCloudAvailable, isCloudEnabled, isAgentClaimed, isACLKAvailable, fullInfoPayload }
+  ) => ({
+    ...state,
+    registry: {
+      ...state.registry,
+      hasFetchedInfo: true,
+      isCloudAvailable,
+      isCloudEnabled,
+      isAgentClaimed,
+      isACLKAvailable,
+      fullInfoPayload,
+    },
+  })
+)
 
-globalReducer.on(fetchInfoAction.failure, (state) => ({
+globalReducer.on(fetchInfoAction.failure, state => ({
   ...state,
   registry: {
     ...state.registry,
@@ -462,19 +477,20 @@ globalReducer.on(fetchInfoAction.failure, (state) => ({
   },
 }))
 
-globalReducer.on(updatePersonUrlsAction, (state, {
-  personGuid, registryMachines, registryMachinesArray,
-}) => ({
-  ...state,
-  registry: {
-    ...state.registry,
-    personGuid,
-    registryMachines,
-    registryMachinesArray,
-  },
-}))
+globalReducer.on(
+  updatePersonUrlsAction,
+  (state, { personGuid, registryMachines, registryMachinesArray }) => ({
+    ...state,
+    registry: {
+      ...state.registry,
+      personGuid,
+      registryMachines,
+      registryMachinesArray,
+    },
+  })
+)
 
-globalReducer.on(startAlarmsAction, (state) => ({
+globalReducer.on(startAlarmsAction, state => ({
   ...state,
   alarms: {
     ...state.alarms,
@@ -498,7 +514,7 @@ globalReducer.on(setOptionAction, (state, { key, value }) => ({
   },
 }))
 
-globalReducer.on(resetOptionsAction, (state) => {
+globalReducer.on(resetOptionsAction, state => {
   clearLocalStorage()
   return {
     ...state,
@@ -508,7 +524,7 @@ globalReducer.on(resetOptionsAction, (state) => {
 
 globalReducer.on(loadSnapshotAction, (state, { snapshot }) => {
   const parsedData = Object.keys(snapshot.data)
-    .map((dataKey) => {
+    .map(dataKey => {
       let uncompressed
       try {
         // @ts-ignore
