@@ -7,7 +7,7 @@ import Options from "./options"
 import Version from "./version"
 import GlobalControls from "./globalControls"
 import Alarms from "./alarms"
-import AgentNews from "./news"
+import News from "./news"
 import SignIn from "./signIn"
 
 const Wrapper = styled(Flex).attrs({
@@ -30,7 +30,7 @@ const Header = () => (
     <Flex justifyContent="end" alignItems="center" gap={3}>
       <Item hasBorder>
         <Version />
-        <AgentNews />
+        <News />
         <Options />
       </Item>
       <GlobalControls />
