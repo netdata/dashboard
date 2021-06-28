@@ -121,7 +121,11 @@ export const EasyPieChart = ({
     sortBy(identity),
     ([_min, _max]: number[]) => [Math.min(_min, value || 0), Math.max(_max, value || 0)],
   )([min, max])
-  setMinMax(safeMinMax as [number, number])
+
+  useEffect(() => {
+    setMinMax(safeMinMax as [number, number])
+  }, [safeMinMax])
+
   const pcent = getPercentFromValueMinMax({
     value: showUndefined ? 0 : (value as number),
     min: safeMinMax[0],
