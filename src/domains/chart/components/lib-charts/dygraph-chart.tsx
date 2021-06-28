@@ -1195,7 +1195,7 @@ export const DygraphChart = ({
       {isProceeded && hasLegend && (
         <ProceededChartDisclaimer ref={precededChartRef as React.Ref<HTMLDivElement>} />
       )}
-      {alarm && hasLegend && (
+      {alarm?.value && hasLegend && (
         // @ts-ignore
         <AlarmBadge isVisible={isAlarmBadgeVisible} ref={alarmBadgeRef} status={alarm.status} label={alarm.value} />
       )}
