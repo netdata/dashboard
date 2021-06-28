@@ -27,8 +27,6 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
 
   const setActiveMenuGroupId = useCallback(
     id => {
-      if (initialScrollRef.current) return
-
       setMenuGroupId(id)
       scrollIntoView(container, `[data-sidebar-menugroupid="${id}"]`)
 
@@ -39,7 +37,6 @@ export default ({ onMenuGroupClick, onSubMenuClick, onChartNameChange, initialCh
 
   const setActiveSubMenuId = useCallback(
     id => {
-      if (initialScrollRef.current) return
       setSubMenuId(id)
 
       if (!(id in subMenus)) return

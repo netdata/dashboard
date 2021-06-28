@@ -101,7 +101,9 @@ export const GaugeChart = ({
   )([min, max])
   // calling outside "useEffect" intentionally,
   // because it should update the values first, and only then render the chart in useEffect()
-  setMinMax([safeMin, safeMax])
+  useEffect(() => {
+    setMinMax([safeMin, safeMax])
+  }, [safeMin, safeMax])
 
   const pcent = pipe(
     always(((value - safeMin) * 100) / (safeMax - safeMin)),
