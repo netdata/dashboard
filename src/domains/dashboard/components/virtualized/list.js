@@ -14,7 +14,7 @@ const makeThrottleScroll = () =>
     const { top: containerTop } = container.getBoundingClientRect()
 
     const firstVisibleElement = Array.from(
-      document.querySelectorAll("[data-submenuid],[data-menuid]")
+      container.querySelectorAll("[data-submenuid], [data-menuid]")
     ).find(el => el.getBoundingClientRect().top - containerTop > 0)
 
     if (!firstVisibleElement) return
@@ -23,6 +23,15 @@ const makeThrottleScroll = () =>
     if (menuGroupId) {
       onActiveSubMenuId("")
       onActiveMenuGroupId(menuGroupId)
+      return
+    }
+
+    const chartElement = Array.from(container.querySelectorAll("[data-chartid]")).find(
+      el => el.getBoundingClientRect().top - containerTop > 0
+    )
+    if (chartElement) {
+      const subMenuId = chartElement.closest("[data-submenuid]").getAttribute("data-submenuid")
+      onActiveSubMenuId(subMenuId)
       return
     }
 
@@ -99,6 +108,7 @@ const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
             width={width}
             onScroll={onScroll}
             tabIndex={null}
+            scrollToAlignment="start"
           />
         )
       }}
