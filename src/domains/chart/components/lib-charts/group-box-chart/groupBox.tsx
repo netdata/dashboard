@@ -23,7 +23,7 @@ const aligns = {
   bottom: { top: "bottom" },
 }
 
-const GroupBox = ({ data, renderTooltip, aspectRatio }: GroupBoxProps) => {
+const GroupBox = ({ data, renderTooltip, ...options }: GroupBoxProps) => {
   const dataRef = useRef()
   const canvasRef = useRef()
   const boxesRef = useRef()
@@ -54,25 +54,28 @@ const GroupBox = ({ data, renderTooltip, aspectRatio }: GroupBoxProps) => {
     })
 
   useLayoutEffect(() => {
-    boxesRef.current = drawBoxes(canvasRef.current, {
-      onMouseenter: ({ index, ...rect }) => {
-        boxHoverRef.current = index
-        boxesRef.current.activateBox(index)
-        timeoutId.current = setTimeout(() => {
-          setHover({
-            target: { getBoundingClientRect: () => rect },
-            index,
-            rect,
-          })
-        }, 600)
+    boxesRef.current = drawBoxes(
+      canvasRef.current,
+      {
+        onMouseenter: ({ index, ...rect }) => {
+          boxHoverRef.current = index
+          boxesRef.current.activateBox(index)
+          timeoutId.current = setTimeout(() => {
+            setHover({
+              target: { getBoundingClientRect: () => rect },
+              index,
+              rect,
+            })
+          }, 600)
+        },
+        onMouseout: () => {
+          boxHoverRef.current = -1
+          clearTimeout(timeoutId.current)
+          closeDrop()
+        },
       },
-      onMouseout: () => {
-        boxHoverRef.current = -1
-        clearTimeout(timeoutId.current)
-        closeDrop()
-      },
-      aspectRatio,
-    })
+      options
+    )
     return () => boxesRef.current.clear()
   }, [])
 

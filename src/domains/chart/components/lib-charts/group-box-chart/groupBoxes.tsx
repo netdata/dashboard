@@ -57,7 +57,7 @@ const GroupBoxWrapper = ({
         {({ isOpen, ref: popoverRef, ...rest }) => (
           <Label
             data-testid="groupBoxWrapper-title"
-            ref={(el) => {
+            ref={el => {
               ref.current = el
               popoverRef(el)
             }}

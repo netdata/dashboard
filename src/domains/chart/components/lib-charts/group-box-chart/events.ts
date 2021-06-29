@@ -1,17 +1,24 @@
 /* eslint-disable object-curly-newline */
 /* eslint-disable no-param-reassign */
 // @ts-nocheck
-import { cellSize, cellBoxSize, getXPosition, getYPosition } from "./utilities"
+import { getCellBoxSize, getXPosition, getYPosition, getOffsetPosition } from "./utilities"
 
-export default (el, columns, total, { onMouseenter, onMouseout }) => {
+export default (
+  el,
+  columns,
+  total,
+  { onMouseenter, onMouseout },
+  { cellSize, cellPadding } = {}
+) => {
   let hoveredIndex = -1
 
-  const getEvent = (index) => {
+  const getEvent = index => {
     const rect = el.getBoundingClientRect()
-    const offsetX = getXPosition(columns, index)
-    const offsetY = getYPosition(columns, index)
+    const offsetX = getXPosition(columns, index, cellSize)
+    const offsetY = getYPosition(columns, index, cellSize)
     const left = rect.left + offsetX
     const top = rect.top + offsetY
+    const cellBoxSize = getCellBoxSize(cellSize, cellPadding)
 
     return {
       index,
@@ -31,10 +38,10 @@ export default (el, columns, total, { onMouseenter, onMouseout }) => {
     hoveredIndex = -1
   }
 
-  const mousemove = (e) => {
+  const mousemove = e => {
     const { offsetX, offsetY } = e
-    const x = Math.floor(offsetX / cellSize)
-    const y = Math.floor(offsetY / cellSize)
+    const x = getOffsetPosition(offsetX, cellSize)
+    const y = getOffsetPosition(offsetY, cellSize)
     const nextHoveredIndex = y * columns + x
 
     if (nextHoveredIndex === hoveredIndex) return

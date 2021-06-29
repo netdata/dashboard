@@ -4,29 +4,41 @@
 /* eslint-disable no-param-reassign */
 // @ts-nocheck
 import { scaleLinear, extent } from "d3"
-import { cellSize, cellBoxSize, getRows, getColumns, getXPosition, getYPosition } from "./utilities"
+import {
+  getCellBoxSize,
+  getRows,
+  getColumns,
+  getXPosition,
+  getYPosition,
+  getFullWidth,
+  getFullHeight,
+} from "./utilities"
 import registerEvents from "./events"
 
-export const getWidth = (data, aspectRatio) => {
+export const getWidth = (data, { aspectRatio, cellSize } = {}) => {
   const rows = getRows(data, aspectRatio)
   const columns = getColumns(rows, aspectRatio)
-  return Math.ceil(columns) * cellSize
+  return getFullWidth(columns, cellSize)
 }
 
-const getCanvasAttributes = (data, aspectRatio) => {
+const getCanvasAttributes = (data, { aspectRatio, cellSize, padding } = {}) => {
   const rows = getRows(data, aspectRatio)
   const columns = getColumns(rows, aspectRatio)
-  const width = Math.ceil(columns) * cellSize
-  const height = Math.ceil(rows) * cellSize + cellSize
+  const width = getFullWidth(columns, cellSize)
+  const height = getFullHeight(rows, cellSize, padding)
+
   return { width, height, columns: Math.ceil(columns) }
 }
 
-const makeGetColor = values =>
+const defaultColorRange = ["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"]
+
+const makeGetColor = (values, colorRange = defaultColorRange) =>
   scaleLinear()
     .domain(extent(values, value => value))
-    .range(["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"])
+    .range(colorRange)
 
-export default (el, { onMouseenter, onMouseout, aspectRatio }) => {
+export default (el, { onMouseenter, onMouseout }, options = {}) => {
+  const { cellSize, cellPadding, cellStroke = 2, lineWidth = 1, colorRange } = options
   const canvas = el.getContext("2d")
 
   let activeBox = -1
@@ -42,26 +54,35 @@ export default (el, { onMouseenter, onMouseout, aspectRatio }) => {
   }
 
   const update = ({ data }) => {
-    const { width, height, columns } = getCanvasAttributes(data, aspectRatio)
-    el.width = width
-    el.height = height
+    const { width, height, columns } = getCanvasAttributes(data, options)
+    el.width = parseInt(width)
+    el.height = parseInt(height)
     clear()
     clearEvents()
-    const getColor = makeGetColor(data)
+    const getColor = makeGetColor(data, colorRange)
 
     const drawBox = (value, index) => {
       canvas.fillStyle = getColor(value)
       canvas.fillRect(
-        getXPosition(columns, index),
-        getYPosition(columns, index),
-        cellBoxSize,
-        cellBoxSize
+        getXPosition(columns, index, cellSize),
+        getYPosition(columns, index, cellSize),
+        getCellBoxSize(cellSize, cellPadding),
+        getCellBoxSize(cellSize, cellPadding)
       )
     }
 
     data.forEach(drawBox)
 
-    clearEvents = registerEvents(el, columns, data.length, { onMouseenter, onMouseout })
+    clearEvents = registerEvents(
+      el,
+      columns,
+      data.length,
+      {
+        onMouseenter,
+        onMouseout,
+      },
+      options
+    )
 
     deactivateBox = () => {
       if (activeBox !== -1) drawBox(data[activeBox], activeBox)
@@ -71,12 +92,17 @@ export default (el, { onMouseenter, onMouseout, aspectRatio }) => {
       deactivateBox()
       activeBox = index
 
-      const offsetX = getXPosition(columns, index)
-      const offsetY = getYPosition(columns, index)
+      const offsetX = getXPosition(columns, index, cellSize)
+      const offsetY = getYPosition(columns, index, cellSize)
 
-      canvas.lineWidth = 1
+      canvas.lineWidth = lineWidth
       canvas.strokeStyle = "#fff"
-      canvas.strokeRect(offsetX + 1, offsetY + 1, cellBoxSize - 2, cellBoxSize - 2)
+      canvas.strokeRect(
+        offsetX + lineWidth,
+        offsetY + lineWidth,
+        getCellBoxSize(cellSize, cellPadding) - cellStroke,
+        getCellBoxSize(cellSize, cellPadding) - cellStroke
+      )
     }
   }
 
