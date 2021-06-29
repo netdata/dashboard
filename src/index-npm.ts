@@ -99,3 +99,5 @@ export type DashboardStateT = AppStateT_
 
 export { DashboardThemeProvider } from "./theme-provider"
 export { mapDefaultAggrMethod } from "utils/fill-missing-data"
+
+export * from 'domains/chart/components/lib-charts/group-box-chart'
