@@ -7,26 +7,26 @@ import { scaleLinear, extent } from "d3"
 import { cellSize, cellBoxSize, getRows, getColumns, getXPosition, getYPosition } from "./utilities"
 import registerEvents from "./events"
 
-export const getWidth = (data) => {
-  const rows = getRows(data)
-  const columns = getColumns(rows)
+export const getWidth = (data, aspectRatio) => {
+  const rows = getRows(data, aspectRatio)
+  const columns = getColumns(rows, aspectRatio)
   return Math.ceil(columns) * cellSize
 }
 
-const getCanvasAttributes = (data) => {
-  const rows = getRows(data)
-  const columns = getColumns(rows)
+const getCanvasAttributes = (data, aspectRatio) => {
+  const rows = getRows(data, aspectRatio)
+  const columns = getColumns(rows, aspectRatio)
   const width = Math.ceil(columns) * cellSize
   const height = Math.ceil(rows) * cellSize + cellSize
   return { width, height, columns: Math.ceil(columns) }
 }
 
-const makeGetColor = (values) =>
+const makeGetColor = values =>
   scaleLinear()
-    .domain(extent(values, (value) => value))
+    .domain(extent(values, value => value))
     .range(["rgba(198, 227, 246, 0.9)", "rgba(14, 154, 255, 0.9)"])
 
-export default (el, { onMouseenter, onMouseout }) => {
+export default (el, { onMouseenter, onMouseout, aspectRatio }) => {
   const canvas = el.getContext("2d")
 
   let activeBox = -1
@@ -42,7 +42,7 @@ export default (el, { onMouseenter, onMouseout }) => {
   }
 
   const update = ({ data }) => {
-    const { width, height, columns } = getCanvasAttributes(data)
+    const { width, height, columns } = getCanvasAttributes(data, aspectRatio)
     el.width = width
     el.height = height
     clear()
@@ -67,7 +67,7 @@ export default (el, { onMouseenter, onMouseout }) => {
       if (activeBox !== -1) drawBox(data[activeBox], activeBox)
     }
 
-    activateBox = (index) => {
+    activateBox = index => {
       deactivateBox()
       activeBox = index
 
@@ -83,7 +83,7 @@ export default (el, { onMouseenter, onMouseout }) => {
   return {
     clear,
     update,
-    activateBox: (index) => activateBox(index),
+    activateBox: index => activateBox(index),
     deactivateBox: () => deactivateBox(),
   }
 }

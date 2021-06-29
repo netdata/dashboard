@@ -23,7 +23,7 @@ const aligns = {
   bottom: { top: "bottom" },
 }
 
-const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
+const GroupBox = ({ data, renderTooltip, aspectRatio }: GroupBoxProps) => {
   const dataRef = useRef()
   const canvasRef = useRef()
   const boxesRef = useRef()
@@ -42,7 +42,7 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
 
   const closeDrop = () =>
     requestAnimationFrame(() => {
-      setHover((currentHover) => {
+      setHover(currentHover => {
         if (
           !dropHoverRef.current &&
           (boxHoverRef.current === -1 || boxHoverRef.current !== currentHover?.index)
@@ -71,6 +71,7 @@ const GroupBox = ({ data, renderTooltip }: GroupBoxProps) => {
         clearTimeout(timeoutId.current)
         closeDrop()
       },
+      aspectRatio,
     })
     return () => boxesRef.current.clear()
   }, [])
