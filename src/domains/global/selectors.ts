@@ -135,6 +135,7 @@ export const selectUnitsScalingMethod = createSelectOption("units")
 export const selectTemperatureSetting = createSelectOption("temperature")
 export const selectSecondsAsTimeSetting = createSelectOption("seconds_as_time")
 export const selectTimezoneSetting = createSelectOption("timezone")
+export const selectUTCOffsetSetting = createSelectOption("utcOffset")
 export const selectUserSetServerTimezone = createSelectOption("user_set_server_timezone")
 
 export const selectChartsMetadata = createSelector(

@@ -35,6 +35,7 @@ import {
   setAlarmAction,
   setGlobalPauseAction,
   resetGlobalPauseAction,
+  setUTCOffset,
 } from "./actions"
 import {
   Options,
@@ -394,6 +395,11 @@ globalReducer.on(resetGlobalPauseAction, (state, { forcePlay }) => ({
   globalPanAndZoom: initialState.globalPanAndZoom,
   hoveredX: initialState.hoveredX,
   options: { ...state.options, stop_updates_when_focus_is_lost: !forcePlay },
+}))
+
+globalReducer.on(setUTCOffset, (state, { utcOffset }) => ({
+  ...state,
+  options: { ...state.options, utcOffset },
 }))
 
 globalReducer.on(fetchHelloAction.request, state => ({

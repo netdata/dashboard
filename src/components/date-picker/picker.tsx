@@ -43,6 +43,7 @@ type PickerPropsT = {
   setRangeValues: (params: PickedValues) => void
   tagging?: string
   isPlaying?: boolean
+  utcOffset?: number | string
 }
 
 type HandleRangeChangeT = {
@@ -66,11 +67,11 @@ function handleChangeDateByManualInput(
   }
 }
 
-const convertToMoment = (time: number) => {
+const convertToMoment = (time: number, utcOffset: number | string) => {
   if (time > 0) {
-    return moment(time)
+    return moment(time).utcOffset(utcOffset)
   }
-  return moment(new Date().valueOf() + time * 1000)
+  return moment(new Date().valueOf() + time * 1000).utcOffset(utcOffset)
 }
 
 const focusTaggingMap: { [key: string]: string } = {
@@ -79,14 +80,27 @@ const focusTaggingMap: { [key: string]: string } = {
 }
 
 export const Picker = (props: PickerPropsT) => {
-  const { isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "", isPlaying } = props
-  // debugger;
+  const {
+    isOpen,
+    handleOpenState,
+    setRangeValues,
+    pickedValues,
+    tagging = "",
+    isPlaying,
+    utcOffset,
+  } = props
 
   const [startDateState, setStartDate] = useState<number>(pickedValues.start)
   const [endDateState, setEndDate] = useState<number>(pickedValues.end)
 
-  const startDateMoment = useMemo(() => convertToMoment(startDateState), [startDateState])
-  const endDateMoment = useMemo(() => convertToMoment(endDateState), [endDateState])
+  const startDateMoment = useMemo(
+    () => convertToMoment(startDateState, utcOffset),
+    [startDateState, utcOffset]
+  )
+  const endDateMoment = useMemo(
+    () => convertToMoment(endDateState, utcOffset),
+    [endDateState, utcOffset]
+  )
 
   useEffect(() => {
     setStartDate(pickedValues.start)

@@ -38,11 +38,18 @@ export interface Options {
   seconds_as_time: boolean
   timezone: string
   user_set_server_timezone: string
+  utcOffset: number | string
 }
 export type OptionsKey = keyof Options
 
 // those options have been created around 2015/2016 and some of them are not needed anymore
 // so we need to revisit them, test their impact, etc.
+
+const getUTCOffset = () => {
+  const now = new Date()
+  const offset = now.getTimezoneOffset() / 60
+  return -offset
+}
 
 export const INITIAL_OPTIONS: Options = {
   // performance options
@@ -82,10 +89,11 @@ export const INITIAL_OPTIONS: Options = {
   seconds_as_time: true, // show seconds as DDd:HH:MM:SS ?
   timezone: "default", // the timezone to use, or 'default'
   user_set_server_timezone: "default", // as set by the user on the dashboard
+  utcOffset: getUTCOffset(),
 }
 
-const localStorageKeyToOption = <T extends string>(key: T) => key.replace(/^options\./, "")
-  .replace(themeLocalStorageKey, THEME)
+const localStorageKeyToOption = <T extends string>(key: T) =>
+  key.replace(/^options\./, "").replace(themeLocalStorageKey, THEME)
 
 const getItemFromLocalStorage = <T extends string>(key: T) => {
   const value = localStorage.getItem(key)
@@ -115,11 +123,11 @@ const getItemFromLocalStorage = <T extends string>(key: T) => {
 
 export const getOptionsMergedWithLocalStorage = (): Options => {
   const optionsFromLocalStorage = Object.keys(localStorage)
-    .filter((key) => key.startsWith("options.") || key === themeLocalStorageKey)
-    .map((key) => ({
+    .filter(key => key.startsWith("options.") || key === themeLocalStorageKey)
+    .map(key => ({
       [localStorageKeyToOption(key)]: getItemFromLocalStorage(key),
     }))
-    .filter((o) => Object.values(o)[0] !== null)
+    .filter(o => Object.values(o)[0] !== null)
 
   const overridenOptions = mergeAll(optionsFromLocalStorage) as unknown as Options
   return mergeRight(INITIAL_OPTIONS, overridenOptions)
@@ -130,7 +138,7 @@ export const initialLegendRight = optionsMergedWithLocalStorage[LEGEND_RIGHT]
 
 export const clearLocalStorage = () => {
   const localStorageKeys = Object.keys(localStorage)
-  localStorageKeys.forEach((key) => {
+  localStorageKeys.forEach(key => {
     if (key.startsWith(LOCALSTORAGE_HEIGHT_KEY_PREFIX) || key.startsWith("options.")) {
       localStorage.removeItem(key)
     }

@@ -8,6 +8,7 @@ import Version from "./version"
 import GlobalControls from "./globalControls"
 import Alarms from "./alarms"
 import News from "./news"
+import Timezone from "./timezone"
 import SignIn from "./signIn"
 
 const Wrapper = styled(Flex).attrs({
@@ -32,6 +33,7 @@ const Header = () => (
         <Version />
         <News />
         <Options />
+        <Timezone />
       </Item>
       <GlobalControls />
       <Alarms />
