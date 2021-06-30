@@ -4,6 +4,7 @@ import "./custom-picker-styles.scss"
 import { DateRangePicker } from "react-dates"
 import moment, { Moment } from "moment"
 import { Button } from "@netdata/netdata-ui"
+import { getDateWithOffset } from "utils/date-time"
 
 import { useCloseOnOutsideClick } from "hooks/use-click-outside"
 
@@ -43,6 +44,7 @@ type PickerPropsT = {
   setRangeValues: (params: PickedValues) => void
   tagging?: string
   isPlaying?: boolean
+  utcOffset?: number | string
 }
 
 type HandleRangeChangeT = {
@@ -66,11 +68,9 @@ function handleChangeDateByManualInput(
   }
 }
 
-const convertToMoment = (time: number) => {
-  if (time > 0) {
-    return moment(time)
-  }
-  return moment(new Date().valueOf() + time * 1000)
+const convertToMoment = (time: number, utcOffset: number | string) => {
+  const date = time > 0 ? time : new Date().valueOf() + time * 1000
+  return getDateWithOffset(date, utcOffset)
 }
 
 const focusTaggingMap: { [key: string]: string } = {
@@ -79,14 +79,27 @@ const focusTaggingMap: { [key: string]: string } = {
 }
 
 export const Picker = (props: PickerPropsT) => {
-  const { isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "", isPlaying } = props
-  // debugger;
+  const {
+    isOpen,
+    handleOpenState,
+    setRangeValues,
+    pickedValues,
+    tagging = "",
+    isPlaying,
+    utcOffset,
+  } = props
 
   const [startDateState, setStartDate] = useState<number>(pickedValues.start)
   const [endDateState, setEndDate] = useState<number>(pickedValues.end)
 
-  const startDateMoment = useMemo(() => convertToMoment(startDateState), [startDateState])
-  const endDateMoment = useMemo(() => convertToMoment(endDateState), [endDateState])
+  const startDateMoment = useMemo(
+    () => convertToMoment(startDateState, utcOffset),
+    [startDateState, utcOffset]
+  )
+  const endDateMoment = useMemo(
+    () => convertToMoment(endDateState, utcOffset),
+    [endDateState, utcOffset]
+  )
 
   useEffect(() => {
     setStartDate(pickedValues.start)

@@ -1,7 +1,7 @@
+import moment from "moment"
 import { useMemo } from "react"
-
 import { useSelector } from "store/redux-separate-context"
-import { selectTimezoneSetting } from "domains/global/selectors"
+import { selectUTCOffsetSetting } from "domains/global/selectors"
 
 const zeropad = (x: number) => {
   if (x > -10 && x < 10) {
@@ -12,21 +12,18 @@ const zeropad = (x: number) => {
 
 export const isSupportingDateTimeFormat = !!(Intl && Intl.DateTimeFormat && navigator.language)
 
-const narrowToDate = (d: Date | number) => (typeof d === "number"
-  ? new Date(d)
-  : d
-)
+const locale = navigator.language || "en"
+moment.locale(locale)
+
+const narrowToDate = (d: Date | number) => (typeof d === "number" ? new Date(d) : d)
 // these are the old netdata functions
 // we fallback to these, if the new ones fail
 export const localeDateStringNative = (d: Date | number) => narrowToDate(d).toLocaleDateString()
 export const localeTimeStringNative = (d: Date | number) => narrowToDate(d).toLocaleTimeString()
 export const xAxisTimeStringNative = (d: Date | number) => {
   const date = narrowToDate(d)
-  return `${zeropad(date.getHours())}:${
-    zeropad(date.getMinutes())}:${
-    zeropad(date.getSeconds())}`
+  return `${zeropad(date.getHours())}:${zeropad(date.getMinutes())}:${zeropad(date.getSeconds())}`
 }
-
 
 export const isProperTimezone = (timeZone: string): boolean => {
   try {
@@ -45,76 +42,44 @@ export const isProperTimezone = (timeZone: string): boolean => {
   return true
 }
 
+export const getDateWithOffset = (date, offset) => moment(date).utcOffset(offset)
+
 export const useDateTime = () => {
-  const timezone = useSelector(selectTimezoneSetting)
-  const isUsingTimezone = timezone !== "" && timezone !== "default"
+  const utcOffset = useSelector(selectUTCOffsetSetting)
 
-  const localeDateString = useMemo(() => {
-    const dateOptions = {
-      localeMatcher: "best fit",
-      formatMatcher: "best fit",
-      weekday: "short",
-      year: "numeric",
-      month: "short",
-      day: "2-digit",
-      timeZone: isUsingTimezone ? timezone : undefined,
-    }
-    const dateFormat = () => new Intl.DateTimeFormat(navigator.language, dateOptions)
-    return isSupportingDateTimeFormat
-      ? (d: Date | number) => dateFormat().format(d)
-      : localeDateStringNative
-  }, [timezone, isUsingTimezone])
+  const localeDateString = useMemo(
+    () =>
+      isSupportingDateTimeFormat
+        ? (date, long = true) =>
+            getDateWithOffset(date, utcOffset).format(long ? "ddd, MMM DD, YYYY" : "L")
+        : localeDateStringNative,
+    [utcOffset]
+  )
 
+  const localeTimeString = useMemo(
+    () =>
+      isSupportingDateTimeFormat
+        ? (date, showSecs = true) =>
+            getDateWithOffset(date, utcOffset).format(showSecs ? "HH:mm:ss" : "HH:mm")
+        : localeTimeStringNative,
+    [utcOffset]
+  )
 
-  const localeTimeString = useMemo(() => {
-    const timeOptions = {
-      localeMatcher: "best fit",
-      hour12: false,
-      formatMatcher: "best fit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: isUsingTimezone ? timezone : undefined,
-      timeZoneName: isUsingTimezone ? "short" : undefined,
-    }
-    const timeFormat = () => new Intl.DateTimeFormat(navigator.language, timeOptions)
-    return isSupportingDateTimeFormat
-      ? (d: Date | number) => timeFormat().format(d)
-      : localeTimeStringNative
-  }, [timezone, isUsingTimezone])
+  const xAxisDateString = useMemo(
+    () =>
+      isSupportingDateTimeFormat
+        ? date => getDateWithOffset(date, utcOffset).format()
+        : xAxisTimeStringNative,
+    [utcOffset]
+  )
 
-
-  const xAxisTimeString = useMemo(() => {
-    const xAxisOptions = {
-      localeMatcher: "best fit",
-      hour12: false,
-      formatMatcher: "best fit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      timeZone: isUsingTimezone ? timezone : undefined,
-    }
-    const xAxisFormat = () => new Intl.DateTimeFormat(navigator.language, xAxisOptions)
-    return isSupportingDateTimeFormat
-      ? (d: Date | number) => xAxisFormat().format(d)
-      : xAxisTimeStringNative
-  }, [timezone, isUsingTimezone])
-
-
-  const xAxisDateString = useMemo(() => {
-    const xAxisOptions = {
-      localeMatcher: "best fit",
-      hour12: false,
-      formatMatcher: "best fit",
-      day: "2-digit",
-      month: "2-digit",
-      timeZone: isUsingTimezone ? timezone : undefined,
-    }
-    const xAxisFormat = () => new Intl.DateTimeFormat(navigator.language, xAxisOptions)
-    return isSupportingDateTimeFormat
-      ? (d: Date | number) => xAxisFormat().format(d)
-      : xAxisTimeStringNative
-  }, [timezone, isUsingTimezone])
+  const xAxisTimeString = useMemo(
+    () =>
+      isSupportingDateTimeFormat
+        ? date => getDateWithOffset(date, utcOffset).format("HH:mm:ss")
+        : xAxisTimeStringNative,
+    [utcOffset]
+  )
 
   return {
     localeDateString,

@@ -163,4 +163,7 @@ export const setAlarmAction = createAction<{ alarm: Alarm }>(`${storeKey}/setAla
 export const resetRegistry = createAction(`${storeKey}/resetRegistry`)
 
 export const setGlobalPauseAction = createAction(`${storeKey}/setGlobalPauseAction`)
-export const resetGlobalPauseAction = createAction<{ forcePlay?: boolean}>(`${storeKey}/resetGlobalPauseAction`)
+export const resetGlobalPauseAction = createAction<{ forcePlay?: boolean }>(
+  `${storeKey}/resetGlobalPauseAction`
+)
+export const setUTCOffset = createAction<{ utcOffset?: number | string }>(`${storeKey}/setUTCOffset`)
