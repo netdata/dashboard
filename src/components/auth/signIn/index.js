@@ -16,9 +16,9 @@ const offlineSelector = createSelector(
   ({ offline }) => offline
 )
 
-const SignIn = ({ children }) => {
+const SignIn = ({ children, utmParameters }) => {
   const [hasSignedInBefore] = useLocalStorage("has-sign-in-history")
-  const signInUrl = useSelector(state => selectSignInUrl(hasSignedInBefore)(state))
+  const signInUrl = useSelector(state => selectSignInUrl(utmParameters)(state))
   const isRegistry = useSelector(isRegistrySelector)
   const offline = useSelector(offlineSelector)
 

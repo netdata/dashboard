@@ -60,19 +60,21 @@ export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
 export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
 
-export const selectSignInUrl = (hasSignedInBefore) => createSelector(
-  selectRegistry,
-  selectCloudBaseUrl,
-  (registry, cloudBaseURL) => {
+const utmParametersToString = (utmParameters = {}) =>
+  Object.keys(utmParameters).reduce((acc, key) => (acc += `&utm_${key}=${utmParameters[key]}`), "")
+
+export const selectSignInUrl = utmParameters =>
+  createSelector(selectRegistry, selectCloudBaseUrl, (registry, cloudBaseURL) => {
     const name = encodeURIComponent(registry.hostname)
     const origin = encodeURIComponent(
-      alwaysEndWithSlash(window.location.origin + window.location.pathname),
+      alwaysEndWithSlash(window.location.origin + window.location.pathname)
     )
     // not adding redirect_url - it needs to always be based on newest href
     // eslint-disable-next-line max-len
-    return `${cloudBaseURL}/${hasSignedInBefore ? 'sign-in' : 'sign-up'}?id=${registry.machineGuid}&name=${name}&origin=${origin}${utmUrlSuffix}`
-  },
-)
+    return `${cloudBaseURL}/sign-in?id=${
+      registry.machineGuid
+    }&name=${name}&origin=${origin}${utmUrlSuffix}${utmParametersToString(utmParameters)}`
+  })
 
 export const selectIsFetchingHello = createSelector(selectRegistry, prop("isFetchingHello"))
 export const selectIsUsingGlobalRegistry = createSelector(

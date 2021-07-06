@@ -103,6 +103,7 @@ export const GaugeChart = ({
   // because it should update the values first, and only then render the chart in useEffect()
   useEffect(() => {
     setMinMax([safeMin, safeMax])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeMin, safeMax])
 
   const pcent = pipe(

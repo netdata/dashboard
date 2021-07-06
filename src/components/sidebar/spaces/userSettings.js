@@ -14,10 +14,10 @@ const SignInItem = () => {
     window.open(link, "_blank", "noopener,noreferrer")
   }
   return (
-    <SignIn>
-      {({ isRegistry, link, hasSignedInBefore, onSignIn }) => (
+    <SignIn utmParameters={{ content: "userSettings"}}>
+      {({ isRegistry, link, onSignIn }) => (
         <Text onClick={isRegistry ? e => onClick(e, link) : onSignIn}>
-          {hasSignedInBefore ? "Sign in" : "Sign up"}
+          Sign in
         </Text>
       )}
     </SignIn>

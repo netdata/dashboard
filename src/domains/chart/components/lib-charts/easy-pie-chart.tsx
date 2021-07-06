@@ -124,6 +124,7 @@ export const EasyPieChart = ({
 
   useEffect(() => {
     setMinMax(safeMinMax as [number, number])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [safeMinMax])
 
   const pcent = getPercentFromValueMinMax({
