@@ -5,9 +5,9 @@ import promptContent from "./promptContent"
 
 const SignInPrompt = () => {
   return (
-    <SignIn>
-      {({ isRegistry, link, hasSignedInBefore, onSignIn, offline }) => {
-        const { title, content } = promptContent[hasSignedInBefore ? "signIn" : "signUp"]
+    <SignIn utmParameters={{ content: "sidebar" }}>
+      {({ isRegistry, link, onSignIn, offline }) => {
+        const { title, content } = promptContent["signIn"]
         return (
           <Flex
             background={["neutral", "regentgrey"]}
@@ -22,7 +22,7 @@ const SignInPrompt = () => {
             {content.map(el => el)}
             <Button
               width="100%"
-              label={hasSignedInBefore ? "SIGN IN TO CLOUD" : "SIGN UP TO CLOUD"}
+              label="SIGN IN TO CLOUD"
               disabled={offline}
               {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
             />

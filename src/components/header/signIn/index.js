@@ -16,9 +16,9 @@ const SignIn = () => {
         <SignInIframe signedIn={signedIn} />
         {!signedIn && (
           <SignInButton>
-            {({ isRegistry, link, hasSignedInBefore, offline, onSignIn }) => (
+            {({ isRegistry, link, offline, onSignIn }) => (
               <Button
-                label={hasSignedInBefore ? "SIGN IN TO CLOUD" : "SIGN UP TO CLOUD"}
+                label="SIGN IN TO CLOUD"
                 disabled={offline}
                 {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
               />
