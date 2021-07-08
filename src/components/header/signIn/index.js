@@ -18,7 +18,7 @@ const SignIn = () => {
           <SignInButton utmParameters={{ content: "topbar" }}>
             {({ isRegistry, link, offline, onSignIn }) => (
               <Button
-                label="SIGN IN TO CLOUD"
+                label="Sign in"
                 disabled={offline}
                 {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
               />

@@ -22,7 +22,7 @@ const SignInPrompt = () => {
             {content.map(el => el)}
             <Button
               width="100%"
-              label="SIGN IN TO CLOUD"
+              label="Sign in"
               disabled={offline}
               {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
             />
