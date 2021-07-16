@@ -53,7 +53,7 @@ export default (el, { onMouseenter, onMouseout }, options = {}) => {
     canvas.beginPath()
   }
 
-  const update = ({ data }) => {
+  const update = data => {
     const { width, height, columns } = getCanvasAttributes(data, options)
     el.width = parseInt(width)
     el.height = parseInt(height)
