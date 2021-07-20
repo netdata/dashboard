@@ -36,7 +36,7 @@ export const getPathFromScriptSource = (source: string) => {
 
 const getDefaultServer = () => {
   if (isDevelopmentEnv) {
-    return "http://localhost:19999"
+    return "http://n1.katsuna.com:19999/"
   }
 
   // Agent Dashboard does not need sophisticated server-detection, which is causing problems

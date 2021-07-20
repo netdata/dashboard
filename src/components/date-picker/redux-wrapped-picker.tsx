@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react"
 
 import { useDispatch, useSelector } from "store/redux-separate-context"
-import { selectGlobalPanAndZoom, selectDefaultAfter } from "domains/global/selectors"
+import { selectGlobalPanAndZoom, selectDefaultAfter, selectUTCOffsetSetting } from "domains/global/selectors"
 import {
   resetGlobalPanAndZoomAction,
   setDefaultAfterAction,
   setGlobalPanAndZoomAction,
 } from "domains/global/actions"
-
 import { Picker } from "./picker"
 import { PickedValues } from "./types"
 
@@ -21,6 +20,7 @@ export const ReduxWrappedPicker = ({ tagging, isPlaying }: Props) => {
   const [isOpen, setOpenState] = useState<boolean>(false)
 
   const globalPanAndZoom = useSelector(selectGlobalPanAndZoom)
+  const utcOffset = useSelector(selectUTCOffsetSetting)
   const isGlobalPanAndZoom = Boolean(globalPanAndZoom)
 
   const defaultAfter = useSelector(selectDefaultAfter)
@@ -73,6 +73,8 @@ export const ReduxWrappedPicker = ({ tagging, isPlaying }: Props) => {
       setRangeValues={handlePickedValuesChange}
       tagging={tagging}
       isPlaying={isPlaying}
+      //@ts-ignore
+      utcOffset={utcOffset}
     />
   )
 }
