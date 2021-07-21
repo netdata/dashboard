@@ -63,9 +63,22 @@ export default (el, { onMouseenter, onMouseout }, options = {}) => {
 
     const drawBox = (value, index) => {
       canvas.fillStyle = getColor(value)
+
+      const offsetX = getXPosition(columns, index, cellSize)
+      const offsetY = getYPosition(columns, index, cellSize)
+
+      if (lineWidth && cellStroke) {
+        canvas.clearRect(
+          offsetX - lineWidth,
+          offsetY - lineWidth,
+          getCellBoxSize(cellSize, cellPadding) + cellStroke,
+          getCellBoxSize(cellSize, cellPadding) + cellStroke
+        )
+      }
+
       canvas.fillRect(
-        getXPosition(columns, index, cellSize),
-        getYPosition(columns, index, cellSize),
+        offsetX,
+        offsetY,
         getCellBoxSize(cellSize, cellPadding),
         getCellBoxSize(cellSize, cellPadding)
       )
@@ -95,14 +108,16 @@ export default (el, { onMouseenter, onMouseout }, options = {}) => {
       const offsetX = getXPosition(columns, index, cellSize)
       const offsetY = getYPosition(columns, index, cellSize)
 
-      canvas.lineWidth = lineWidth
-      canvas.strokeStyle = "#fff"
-      canvas.strokeRect(
-        offsetX + lineWidth,
-        offsetY + lineWidth,
-        getCellBoxSize(cellSize, cellPadding) - cellStroke,
-        getCellBoxSize(cellSize, cellPadding) - cellStroke
-      )
+      if (lineWidth && cellStroke) {
+        canvas.lineWidth = lineWidth
+        canvas.strokeStyle = "#fff"
+        canvas.strokeRect(
+          offsetX + lineWidth,
+          offsetY + lineWidth,
+          getCellBoxSize(cellSize, cellPadding) - cellStroke,
+          getCellBoxSize(cellSize, cellPadding) - cellStroke
+        )
+      }
     }
   }
 
