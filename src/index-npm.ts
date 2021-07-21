@@ -66,6 +66,7 @@ export {
   selectHasWindowFocus,
   selectGlobalSelection,
   selectUTCOffsetSetting,
+  selectTimezoneSetting,
 } from "domains/global/selectors"
 export { selectChartData, selectChartsAreFetching } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
