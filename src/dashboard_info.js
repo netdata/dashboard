@@ -1529,6 +1529,23 @@ netdataDashboard.context = {
     },
 
     'disk.space': {
+        'heads': [
+          function (os, id) {
+              return '<div data-netdata="' + id + '"'
+                + ' data-dimensions="used"'
+                + ' data-append-options="percentage"'
+                + ' data-gauge-max-value="100"'
+                + ' data-chart-library="gauge"'
+                + ' data-title="Disk space used"'
+                + ' data-units="percentage %"'
+                + ' data-gauge-adjust="width"'
+                + ' data-width="12%"'
+                + ' data-before="0"'
+                + ' data-after="-CHART_DURATION"'
+                + ' data-points="CHART_DURATION"'
+                + ' role="application"></div>';
+          }
+        ],
         info: 'Disk space utilization. reserved for root is automatically reserved by the system to prevent the root user from getting out of space.'
     },
     'disk.inodes': {
