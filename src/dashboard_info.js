@@ -128,10 +128,9 @@ netdataDashboard.menu = {
         info: 'Charts with performance information for all the system disks. Special care has been given to present disk performance metrics in a way compatible with <code>iostat -x</code>. netdata by default prevents rendering performance charts for individual partitions and unmounted virtual disks. Disabled charts can still be enabled by configuring the relative settings in the netdata configuration file.'
     },
 
-    'mount_points': {
-        title: 'Mount Points',
-        icon: '<i class="fas fa-hdd"></i>',
-        info: ''
+    'mdstat': {
+        title: 'MD arrays',
+        icon: '<i class="fas fa-hdd"></i>'
     },
 
     'sensors': {
@@ -1509,6 +1508,10 @@ netdataDashboard.context = {
         height: 0.5,
         info: 'The average service time for completed I/O operations. This metric is calculated using the total busy time of the disk and the number of completed operations. If the disk is able to execute multiple parallel operations the reporting average service time will be misleading.'
     },
+    'disk.latency_io': {
+        height: 0.5,
+        info: 'Disk I/O latency is the time it takes for an I/O request to be completed. Latency is the single most important metric to focus on when it comes to storage performance, under most circumstances. For hard drives, an average latency somewhere between 10 to 20 ms can be considered acceptable. For SSD (Solid State Drives), depending on the workload it should never reach higher than 1-3 ms. In most cases, workloads will experience less than 1ms latency numbers. The dimensions refer to time intervals. This chart is based on the <a href="https://github.com/cloudflare/ebpf_exporter/blob/master/examples/bio-tracepoints.yaml" target="_blank">bio_tracepoints</a> tool of the ebpf_exporter.'
+    },
     'disk.avgsz': {
         height: 0.5,
         info: 'The average I/O operation size.'
@@ -1685,6 +1688,25 @@ netdataDashboard.context = {
             '</ul>' +
             'Assuming non-superuser accounts are being used to connect to Postgres (so <i>superuser_reserved_connections</i> are subtracted from <i>max_connections</i>).<br/>' +
             'For more information see <a href="https://www.postgresql.org/docs/current/runtime-config-connection.html" target="_blank">Connections and Authentication</a>.'
+    },
+    'postgres.forced_autovacuum': {
+        info: 'Percent towards forced autovacuum for one or more tables.<ul>' +
+            '<li><strong>percent_towards_forced_autovacuum:</strong> a forced autovacuum will run once this value reaches 100.</li>' +
+            '</ul>' +
+            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    'postgres.tx_wraparound_oldest_current_xid': {
+        info: 'The oldest current transaction id (xid).<ul>' +
+            '<li><strong>oldest_current_xid:</strong> oldest current transaction id.</li>' +
+            '</ul>' +
+            'If for some reason autovacuum fails to clear old XIDs from a table, the system will begin to emit warning messages when the database\'s oldest XIDs reach eleven million transactions from the wraparound point.<br/>' +
+            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    'postgres.percent_towards_wraparound': {
+        info: 'Percent towards transaction wraparound.<ul>' +
+            '<li><strong>percent_towards_wraparound:</strong> transaction wraparound may occur when this value reaches 100.</li>' +
+            '</ul>' +
+            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
     },
 
 
@@ -3416,6 +3438,133 @@ netdataDashboard.context = {
     },
 
     // ------------------------------------------------------------------------
+    // Filesystem
+
+    'filesystem.vfs_deleted_objects': {
+        title : 'VFS remove',
+        info: 'This chart does not show all events that remove files from the file system, because file systems can create their own functions to remove files, it shows calls for the function <code>vfs_unlink</code>. '
+    },
+
+    'filesystem.vfs_io': {
+        title : 'VFS IO',
+        info: 'Successful or failed calls to functions <code>vfs_read</code> and <code>vfs_write</code>. This chart may not show all file system events if it uses other functions to store data on disk.'
+    },
+
+    'filesystem.vfs_io_bytes': {
+        title : 'VFS bytes written',
+        info: 'Total of bytes read or written with success using the functions <code>vfs_read</code> and <code>vfs_write</code>.'
+    },
+
+    'filesystem.vfs_io_error': {
+        title : 'VFS IO error',
+        info: 'Failed calls to functions <code>vfs_read</code> and <code>vfs_write</code>.'
+    },
+
+    'filesystem.vfs_fsync': {
+        info: 'Successful or failed calls to functions <code>vfs_fsync</code>.'
+    },
+
+    'filesystem.vfs_fsync_error': {
+        info: 'Failed calls to functions <code>vfs_fsync</code>.'
+    },
+
+    'filesystem.vfs_open': {
+        info: 'Successful or failed calls to functions <code>vfs_open</code>.'
+    },
+
+    'filesystem.vfs_open_error': {
+        info: 'Failed calls to functions <code>vfs_open</code>.'
+    },
+
+    'filesystem.vfs_create': {
+        info: 'Successful or failed calls to functions <code>vfs_create</code>.'
+    },
+
+    'filesystem.vfs_create_error': {
+        info: 'Failed calls to functions <code>vfs_create</code>.'
+    },
+
+    'filesystem.ext4_read_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_read_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+    },
+
+    'filesystem.ext4_write_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+    },
+
+    'filesystem.ext4_open_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+    },
+
+    'filesystem.ext4_sync_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_sync_file</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+    },
+
+    'filesystem.xfs_read_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_read_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.xfs_write_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.xfs_open_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.xfs_sync_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_sync</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.nfs_read_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_file_read</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.nfs_write_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_file_write</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.nfs_open_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when functions <code>nfs_file_open</code> and <code>nfs4_file_open</code> are called and another for when they finish the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.nfs_attribute_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_getattr</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.zfs_read_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_iter_read</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.zfs_write_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_iter_write</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.zfs_open_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.zfs_sync_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_fsync</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.btrfs_read_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_read_iter</code> (kernel newer than 5.9.16) or the function <code>generic_file_read_iter</code> (old kernels) is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.btrfs_write_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.btrfs_open_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.btrfs_sync_latency': {
+        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_sync_file</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+    },
+
+    // ------------------------------------------------------------------------
     // eBPF
 
     'ebpf.tcp_functions': {
@@ -3466,26 +3615,6 @@ netdataDashboard.context = {
             ' <a href="https://www.man7.org/linux/man-pages/man2/close.2.html" target="_blank">close(2)</a>. '
     },
 
-    'ebpf.deleted_objects': {
-        title : 'VFS remove',
-        info: 'This chart does not show all events that remove files from the file system, because file systems can create their own functions to remove files, it shows calls for the function <a href="https://www.kernel.org/doc/htmldocs/filesystems/API-vfs-unlink.html" target="_blank">vfs_unlink</a>. '
-    },
-
-    'ebpf.io': {
-        title : 'VFS IO',
-        info: 'Successful or failed calls to functions <a  href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_read</a> and <a href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_write</a>. This chart may not show all file system events if it uses other functions to store data on disk.'
-    },
-
-    'ebpf.io_bytes': {
-        title : 'VFS bytes written',
-        info: 'Total of bytes read or written with success using the functions <a  href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_read</a> and <a href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_write</a>.'
-    },
-
-    'ebpf.io_error': {
-        title : 'VFS IO error',
-        info: 'Failed calls to functions <a  href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_read</a> and <a href="https://topic.alibabacloud.com/a/kernel-state-file-operation-__-work-information-kernel_8_8_20287135.html" target="_blank">vfs_write</a>.'
-    },
-
     'ebpf.process_thread': {
         title : 'Task creation',
         info: 'Number of times that either <a href="https://www.ece.uic.edu/~yshi1/linux/lkse/node4.html#SECTION00421000000000000000" target="_blank">do_fork</a>, or <code>kernel_clone</code> if you are running kernel newer than 5.9.16, is called to create a new task, which is the common name used to define process and tasks inside the kernel. Netdata identifies the threads by counting the number of calls for <a href="https://linux.die.net/man/2/clone" target="_blank">sys_clone</a> that has the flag <code>CLONE_THREAD</code> set.'
@@ -3504,6 +3633,14 @@ netdataDashboard.context = {
     'ebpf.process_status': {
         title : 'Task status',
         info: 'Difference between the number of process created and the number of threads created per period(<code>process</code> dimension), it also shows the number of possible zombie process running on system.'
+    },
+
+    'apps.swap_read_call': {
+        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory.'
+    },
+
+    'apps.swap_write_call': {
+        info: 'The function <code>swap_writepage</code> is called when the kernel writes a page to swap memory.'
     },
 
     // ------------------------------------------------------------------------
