@@ -27,9 +27,9 @@ export const makeHashFromObject = (params: { [paramKey: string]: string }) => {
   if (entries.length === 0) {
     return ""
   }
-  return entries.map(
-    ([key, value]) => `${key}=${encodeURIComponent(value)}`
-  ).join(fragmentParamsSeparator)
+  return entries
+    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .join(fragmentParamsSeparator)
 }
 
 export const getFilteredHash = (
@@ -45,8 +45,7 @@ export const getUniqueParamsHash = pipe(getHashParams, makeHashFromObject)
 export const setHashParams = (params: { [paramKey: string]: string }) => {
   const allParams = getHashParams()
   const allParamsResult = mergeDeepLeft(params, allParams)
-  // window.history.replaceState(null, "", `#${makeHashFromObject(allParams)}`)
-  window.location.hash = `${makeHashFromObject(allParamsResult)}`
+  history.pushState(history.state, "", `#${makeHashFromObject(allParamsResult)}`)
 }
 
 export const getHashParam = (
@@ -60,5 +59,5 @@ export const hasHashParam = (
 ): boolean => getHashParams(hash)[param] !== undefined
 
 export const removeHashParams = (params: string[]) => {
-  window.location.hash = `${getFilteredHash(params)}`
+  history.pushState(history.state, "", `#${getFilteredHash(params)}`)
 }
