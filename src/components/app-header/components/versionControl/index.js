@@ -1,5 +1,6 @@
 import React from "react"
 import { Button } from "@netdata/netdata-ui"
+import Tooltip from "@/src/components/tooltips"
 
 import { useHttp } from "hooks/use-http"
 
@@ -7,18 +8,11 @@ const NETDATA_LATEST_VERSION_URL = "https://api.github.com/repos/netdata/netdata
 const NETDATA_LATEST_GCS_VERSION_URL =
   "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt"
 
-const transformGcsVersionResponse = (data: string) => data.replace(/(\r\n|\n|\r| |\t)/gm, "")
+const transformGcsVersionResponse = data => data.replace(/(\r\n|\n|\r| |\t)/gm, "")
 
-// eslint-disable-next-line camelcase
-interface GithubResponse {
-  tag_name: string
-}
-const transformGithubResponse = (data: null | GithubResponse) =>
-  // eslint-disable-next-line camelcase
-  data?.tag_name.replace(/(\r\n|\n|\r| |\t)/gm, "")
+const transformGithubResponse = data => data?.tag_name.replace(/(\r\n|\n|\r| |\t)/gm, "")
 
-// original function from main.js
-const versionsMatch = (v1: string, v2: string) => {
+const versionsMatch = (v1, v2) => {
   if (v1 === v2) {
     return true
   }
@@ -51,28 +45,13 @@ const versionsMatch = (v1: string, v2: string) => {
   return true
 }
 
-interface Props {
-  currentVersion: string
-  releaseChannel: string
-}
-export const VersionControl = ({ currentVersion, releaseChannel }: Props) => {
+const VersionControl = ({ currentVersion, releaseChannel }) => {
   const isStableReleaseChannel = releaseChannel === "stable"
-  const [githubVersion] = useHttp<GithubResponse>(
-    NETDATA_LATEST_VERSION_URL,
-    isStableReleaseChannel,
-    true
-  )
+  const [githubVersion] = useHttp(NETDATA_LATEST_VERSION_URL, isStableReleaseChannel, true)
 
-  const [gcsVersionResponse] = useHttp<{ mediaLink: string }>(
-    NETDATA_LATEST_GCS_VERSION_URL,
-    !isStableReleaseChannel
-  )
-  const [mediaLinkResponse] = useHttp<string>(
-    gcsVersionResponse?.mediaLink,
-    Boolean(gcsVersionResponse)
-  )
+  const [gcsVersionResponse] = useHttp(NETDATA_LATEST_GCS_VERSION_URL, !isStableReleaseChannel)
+  const [mediaLinkResponse] = useHttp(gcsVersionResponse?.mediaLink, Boolean(gcsVersionResponse))
 
-  // eslint-disable-next-line no-nested-ternary
   const latestVersion = isStableReleaseChannel
     ? transformGithubResponse(githubVersion)
     : mediaLinkResponse
@@ -85,17 +64,20 @@ export const VersionControl = ({ currentVersion, releaseChannel }: Props) => {
   const isNewVersionAvailable = !versionsMatch(currentVersion, latestVersion)
 
   return (
-    <Button
-      flavour="borderless"
-      themeType="dark"
-      small
-      neutral={!isNewVersionAvailable}
-      warning={isNewVersionAvailable}
-      name={isNewVersionAvailable ? "update_pending" : "update"}
-      title={isNewVersionAvailable ? "Need help?" : "Check Version"}
-      icon={isNewVersionAvailable ? "update_pending" : "update"}
-      data-toggle="modal"
-      data-target="#updateModal"
-    />
+    <Tooltip content={isNewVersionAvailable ? "Need help?" : "Check Version"} align="bottom" plain>
+      <Button
+        flavour="borderless"
+        themeType="dark"
+        small
+        neutral={!isNewVersionAvailable}
+        warning={isNewVersionAvailable}
+        name={isNewVersionAvailable ? "update_pending" : "update"}
+        icon={isNewVersionAvailable ? "update_pending" : "update"}
+        data-toggle="modal"
+        data-target="#updateModal"
+      />
+    </Tooltip>
   )
 }
+
+export default VersionControl

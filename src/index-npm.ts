@@ -67,7 +67,7 @@ export {
 export { selectChartData, selectChartsAreFetching } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
 
-export { VersionControl } from "components/app-header/components/version-control"
+export { default as VersionControl } from "components/app-header/components/versionControl"
 
 /**
  * types
@@ -100,4 +100,4 @@ export type DashboardStateT = AppStateT_
 export { DashboardThemeProvider } from "./theme-provider"
 export { mapDefaultAggrMethod } from "utils/fill-missing-data"
 
-export * from 'domains/chart/components/lib-charts/group-box-chart'
+export * from "domains/chart/components/lib-charts/group-box-chart"

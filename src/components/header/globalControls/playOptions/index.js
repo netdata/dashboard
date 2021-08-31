@@ -1,10 +1,11 @@
 import React, { memo, Fragment } from "react"
 import styled from "styled-components"
 import { useToggle } from "react-use"
-import { Flex, Icon, Tooltip, Drop } from "@netdata/netdata-ui"
+import { Flex, Icon, Drop } from "@netdata/netdata-ui"
 import { MenuItem } from "@/src/components/menus"
 import { useDispatch } from "store/redux-separate-context"
 import { resetGlobalPauseAction, setGlobalPauseAction } from "domains/global/actions"
+import Tooltip from "@/src/components/tooltips"
 import PlayOptionsTooltip from "./playOptionsTooltip"
 
 const MenuButton = styled(Flex).attrs({ padding: [1], role: "button" })`
@@ -47,11 +48,7 @@ const PlayOptions = ({ target }) => {
   return (
     <Fragment>
       {!isOpen ? (
-        <Tooltip
-          content={<PlayOptionsTooltip />}
-          align={{ bottom: "bottom", right: "right" }}
-          plain
-        >
+        <Tooltip content={<PlayOptionsTooltip />} align="bottom" plain>
           <MenuButton onClick={toggle} width="auto">
             <Icon name="chevron_down" color="text" width="12px" height="12px" />
           </MenuButton>
