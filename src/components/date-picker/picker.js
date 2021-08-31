@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react"
 import "react-dates/initialize"
 import "./custom-picker-styles.scss"
 import { DateRangePicker } from "react-dates"
-import moment, { Moment } from "moment"
+import moment from "moment"
 import { Button } from "@netdata/netdata-ui"
 
 import { useCloseOnOutsideClick } from "hooks/use-click-outside"
@@ -11,17 +11,18 @@ import { PickerActionArea, PickerBox, PickerBtnArea, HeaderSvg, StyledSidebar } 
 import { ShortPickArea } from "./short-pick"
 import PickerAccessorElement from "./accessorElement"
 import { CustomShortPicker } from "./custom-short-pick"
-import { PickedValues } from "./types"
 // @ts-ignore
 import MonthLeftSvg from "./assets/month_arrow_l.svg"
 // @ts-ignore
 import MonthRightSvg from "./assets/month_arrow_r.svg"
 
+import { useDateTime, getDateWithOffset } from "utils/date-time"
+
 function pickerFormat() {
   return "DD/MM/YYYY HH:mm"
 }
 
-function disabledDates(day: Moment): boolean {
+function disabledDates(day) {
   return day.diff(moment(), "seconds") > 0
 }
 
@@ -36,24 +37,7 @@ const MonthRight = () => (
   </HeaderSvg>
 )
 
-type PickerPropsT = {
-  isOpen: boolean
-  pickedValues: PickedValues
-  handleOpenState: (state: boolean) => void
-  setRangeValues: (params: PickedValues) => void
-  tagging?: string
-  isPlaying?: boolean
-}
-
-type HandleRangeChangeT = {
-  startDate: number | Moment | null
-  endDate: number | Moment | null
-}
-
-function handleChangeDateByManualInput(
-  dateToBeSet: Moment | number,
-  setterFn: (date: number) => void
-): void {
+function handleChangeDateByManualInput(dateToBeSet, setterFn) {
   if (typeof dateToBeSet === "number") {
     setterFn(dateToBeSet)
   } else if (dateToBeSet) {
@@ -66,27 +50,33 @@ function handleChangeDateByManualInput(
   }
 }
 
-const convertToMoment = (time: number) => {
-  if (time > 0) {
-    return moment(time)
-  }
-  return moment(new Date().valueOf() + time * 1000)
+const convertToMoment = (time, utcOffset) => {
+  return time > 0
+    ? getDateWithOffset(time, utcOffset)
+    : getDateWithOffset(new Date().valueOf() + time * 1000, utcOffset)
 }
 
-const focusTaggingMap: { [key: string]: string } = {
+const focusTaggingMap = {
   startDate: "start",
   endDate: "finish",
 }
 
-export const Picker = (props: PickerPropsT) => {
+export const Picker = props => {
   const { isOpen, handleOpenState, setRangeValues, pickedValues, tagging = "", isPlaying } = props
-  // debugger;
 
-  const [startDateState, setStartDate] = useState<number>(pickedValues.start)
-  const [endDateState, setEndDate] = useState<number>(pickedValues.end)
+  const [startDateState, setStartDate] = useState(pickedValues.start)
+  const [endDateState, setEndDate] = useState(pickedValues.end)
 
-  const startDateMoment = useMemo(() => convertToMoment(startDateState), [startDateState])
-  const endDateMoment = useMemo(() => convertToMoment(endDateState), [endDateState])
+  const { utcOffset } = useDateTime()
+
+  const startDateMoment = useMemo(
+    () => convertToMoment(startDateState, utcOffset),
+    [startDateState, utcOffset]
+  )
+  const endDateMoment = useMemo(
+    () => convertToMoment(endDateState, utcOffset),
+    [endDateState, utcOffset]
+  )
 
   useEffect(() => {
     setStartDate(pickedValues.start)
@@ -96,9 +86,9 @@ export const Picker = (props: PickerPropsT) => {
     setEndDate(pickedValues.end)
   }, [pickedValues.end])
 
-  const [focusedInput, setFocusedInput] = useState<any>("startDate")
+  const [focusedInput, setFocusedInput] = useState("startDate")
 
-  function handleDatesChange({ startDate, endDate }: HandleRangeChangeT) {
+  function handleDatesChange({ startDate, endDate }) {
     if (!startDate && !endDate) return
     handleChangeDateByManualInput(endDate, setEndDate)
     handleChangeDateByManualInput(startDate, setStartDate)
@@ -117,7 +107,7 @@ export const Picker = (props: PickerPropsT) => {
   }
   const ref = useCloseOnOutsideClick(close)
 
-  function keepFocus(fi: any) {
+  function keepFocus(fi) {
     if (!fi) return
     setFocusedInput(fi)
   }
