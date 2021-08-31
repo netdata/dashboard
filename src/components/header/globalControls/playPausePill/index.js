@@ -1,7 +1,6 @@
 import React, { useMemo } from "react"
 import { useDispatch } from "store/redux-separate-context"
 import { resetGlobalPauseAction, setGlobalPauseAction } from "domains/global/actions"
-import { TextSmall } from "@netdata/netdata-ui"
 import Tooltip from "@/src/components/tooltips"
 import StyledPill from "./styledPill"
 
