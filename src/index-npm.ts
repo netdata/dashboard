@@ -36,6 +36,7 @@ export * from "domains/dashboard/components/head-main"
 export { default as HeadMainContainer } from "domains/dashboard/components/headMainContainer"
 export * from "domains/dashboard/components/virtualized"
 export * from "utils/hash-utils"
+export * from "utils/date-time"
 
 export * from "domains/charts"
 
@@ -53,6 +54,7 @@ export {
   setAlarmAction,
   resetGlobalPauseAction,
   setGlobalPauseAction,
+  setUTCOffset,
 } from "domains/global/actions"
 export {
   selectStopUpdatesWhenFocusIsLost,
@@ -63,6 +65,8 @@ export {
   selectAlarm,
   selectHasWindowFocus,
   selectGlobalSelection,
+  selectUTCOffsetSetting,
+  selectTimezoneSetting,
 } from "domains/global/selectors"
 export { selectChartData, selectChartsAreFetching } from "domains/chart/selectors"
 export { STOP_UPDATES_WHEN_FOCUS_IS_LOST, DESTROY_ON_HIDE } from "domains/global/options"
