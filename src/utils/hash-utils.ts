@@ -45,7 +45,7 @@ export const getUniqueParamsHash = pipe(getHashParams, makeHashFromObject)
 export const setHashParams = (params: { [paramKey: string]: string }) => {
   const allParams = getHashParams()
   const allParamsResult = mergeDeepLeft(params, allParams)
-  history.replaceState(history.state, "", `#${makeHashFromObject(allParamsResult)}`)
+  window.history.replaceState(window.history.state, "", `#${makeHashFromObject(allParamsResult)}`)
 }
 
 export const getHashParam = (
@@ -59,5 +59,5 @@ export const hasHashParam = (
 ): boolean => getHashParams(hash)[param] !== undefined
 
 export const removeHashParams = (params: string[]) => {
-  history.replaceState(history.state, "", `#${getFilteredHash(params)}`)
+  window.history.replaceState(window.history.state, "", `#${getFilteredHash(params)}`)
 }
