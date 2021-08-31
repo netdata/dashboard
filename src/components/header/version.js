@@ -1,5 +1,5 @@
 import React from "react"
-import { VersionControl } from "components/app-header/components/version-control"
+import VersionControl from "components/app-header/components/versionControl"
 import { useSelector } from "@/src/store/redux-separate-context"
 
 const versionSelector = state => {
