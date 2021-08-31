@@ -5,6 +5,7 @@ import SignInButton from "components/auth/signIn"
 import SignInIframe from "components/auth/signIn/iframe"
 import useCheckSignInStatus from "components/auth/signIn/useCheckSignInStatus"
 import { selectIsCloudEnabled } from "domains/global/selectors"
+import Tooltip from "@/src/components/tooltips"
 
 const SignIn = () => {
   const [signedIn] = useCheckSignInStatus()
@@ -12,20 +13,26 @@ const SignIn = () => {
 
   return (
     cloudEnabled && (
-      <React.Fragment>
-        <SignInIframe signedIn={signedIn} />
-        {!signedIn && (
-          <SignInButton utmParameters={{ content: "topbar" }}>
-            {({ isRegistry, link, offline, onSignIn }) => (
-              <Button
-                label="Sign in"
-                disabled={offline}
-                {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
-              />
-            )}
-          </SignInButton>
-        )}
-      </React.Fragment>
+      <Tooltip
+        content="Sign in to Netdata to monitor all your nodes at once, have composite charts, custom dashboards, use intelligent features and more"
+        align="bottom"
+        plain
+      >
+        <div>
+          <SignInIframe signedIn={signedIn} />
+          {!signedIn && (
+            <SignInButton utmParameters={{ content: "topbar" }}>
+              {({ isRegistry, link, offline, onSignIn }) => (
+                <Button
+                  label="Sign in"
+                  disabled={offline}
+                  {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
+                />
+              )}
+            </SignInButton>
+          )}
+        </div>
+      </Tooltip>
     )
   )
 }

@@ -3,6 +3,7 @@ import { useSelector } from "store/redux-separate-context"
 import { selectActiveAlarms } from "domains/global/selectors"
 import Item from "./item"
 import Pill from "./pill"
+import Tooltip from "@/src/components/tooltips"
 
 const pillProps = {
   "data-toggle": "modal",
@@ -31,12 +32,30 @@ const Alarms = () => {
 
   return (
     <Item icon="alarm">
-      <Pill background="error" hollow {...pillProps}>
-        {critical}
-      </Pill>
-      <Pill background="warning" hollow {...pillProps}>
-        {warning}
-      </Pill>
+      <Tooltip
+        content={
+          critical
+            ? `${critical} critical alert${critical.length > 1 ? "s" : ""}`
+            : "No critical alerts"
+        }
+        align="bottom"
+        plain
+      >
+        <Pill background="error" hollow {...pillProps}>
+          {critical}
+        </Pill>
+      </Tooltip>
+      <Tooltip
+        content={
+          warning ? `${warning} warning alert${warning.length > 1 ? "s" : ""}` : "No warning alerts"
+        }
+        align="bottom"
+        plain
+      >
+        <Pill background="warning" hollow {...pillProps}>
+          {warning}
+        </Pill>
+      </Tooltip>
     </Item>
   )
 }
