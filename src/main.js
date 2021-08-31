@@ -129,6 +129,7 @@ window.urlOptions = {
     chart: null,
     family: null,
     alarm: null,
+    utc: null,
 
     hasProperty: function (property) {
         // console.log('checking property ' + property + ' of type ' + typeof(this[property]));
@@ -164,6 +165,10 @@ window.urlOptions = {
 
         if (urlOptions.mode !== 'live') {
             hash += ';mode=' + urlOptions.mode;
+        }
+
+        if (urlOptions.utc !== null) {
+            hash += ';utc=' + urlOptions.utc;
         }
 
         return hash;
@@ -270,6 +275,12 @@ window.urlOptions = {
             urlOptions.before = before;
             urlOptions.hashUpdate();
         }
+    },
+
+    updateUtcParam: function (utc) {
+        if (!utc) return
+        urlOptions.utc = utc
+        urlOptions.hashUpdate();
     },
 
     netdataHighlightCallback: function (status, after, before) {
