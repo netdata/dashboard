@@ -6,7 +6,7 @@ import { Dropdown } from "@/src/components/mdx-components/dropdown"
 export const PickerBox = styled.div`
   display: flex;
   position: relative;
-  min-width: ${getSizeBy(83)};
+  min-width: ${getSizeBy(102)};
   min-height: ${getSizeBy(43)};
   flex-direction: column;
   align-items: flex-end;

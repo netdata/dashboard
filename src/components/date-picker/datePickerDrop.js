@@ -110,6 +110,7 @@ const DatePickerDrop = ({
           justifyContent={isValidTimePeriod ? "between" : "end"}
           width="100%"
           padding={[5, 6]}
+          gap={2}
         >
           {isValidTimePeriod && <PeriodIndication startDate={startDate} endDate={endDate} />}
           <Flex alignItems="center" justifyContent="center" gap={4}>

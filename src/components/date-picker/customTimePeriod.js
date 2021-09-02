@@ -53,7 +53,6 @@ const CustomTimePeriod = ({ handleDatesChange, selectedStart, tagging }) => {
       <DropdownIcon name="triangle_down" />
     </Flex>
   )
-  console.log("isDropdownOpen", isDropdownOpen)
   return (
     <Flex
       justifyContent="start"
