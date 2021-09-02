@@ -7,7 +7,7 @@ import {
   selectGlobalPause,
   selectGlobalSelection,
 } from "domains/global/selectors"
-import { ReduxWrappedPicker } from "components/date-picker"
+import { ReduxDatePickerContainer } from "components/date-picker"
 import Item from "../item"
 import Container from "./container"
 import PlayPausePill from "./playPausePill"
@@ -47,7 +47,7 @@ const GlobalControls = () => {
       >
         <PlayPausePill isPlaying={isPlaying} isForcePlaying={!stopUpdatesWhenFocusIsLost} />
         <PlayOptions target={ref} />
-        <ReduxWrappedPicker isPlaying={isPlaying} tagging={tagging} />
+        <ReduxDatePickerContainer isPlaying={isPlaying} tagging={tagging} />
       </Container>
     </Item>
   )
