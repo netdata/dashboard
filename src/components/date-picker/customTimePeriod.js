@@ -3,44 +3,43 @@ import { Flex, Text } from "@netdata/netdata-ui"
 import { getCustomTimePeriod, parseInputPeriod, dateResolutions } from "./utils"
 import { StyledDropdown, DropdownIcon, CustomInput, StyledCustomTimePeriod } from "./styled"
 
-const CustomTimePeriod = ({ handleDatesChange, selectedStart, tagging }) => {
-  const [{ resolution, value }, setCustomTimePeriod] = useState({ resolution: "minutes", value: 0 })
+const CustomTimePeriod = ({
+  handleTimePeriodChange,
+  selectedStart,
+  selectedResolution,
+  tagging,
+}) => {
+  const [value, setValue] = useState(0)
   const [isDropdownOpen, toggleDropdown] = useState(false)
 
   useEffect(
     () =>
       selectedStart <= 0
-        ? setCustomTimePeriod(getCustomTimePeriod(-selectedStart, resolution))
-        : setCustomTimePeriod({ resolution, value: 0 }),
+        ? setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
+        : setValue(0),
     [selectedStart]
   )
 
-  const handleTimePeriodChange = useCallback(value => {
-    handleDatesChange({
-      startDate: value,
-      endDate: 0,
-    })
-  }, [])
-
-  const onChange = useCallback(
-    e => setCustomTimePeriod({ resolution, value: e.target.value }),
-    [resolution]
-  )
+  const onChange = useCallback(e => setValue(e.target.value), [])
 
   const onBlur = useCallback(
     e => {
       const value = Number(e.currentTarget.value)
       const isValidInput = !Number.isNaN(value) && Number.isInteger(value) && value > 0
-      if (isValidInput) return handleTimePeriodChange(parseInputPeriod(value, resolution))
-      setCustomTimePeriod(getCustomTimePeriod(-selectedStart, resolution))
+      if (isValidInput)
+        return handleTimePeriodChange(
+          parseInputPeriod(value, selectedResolution),
+          selectedResolution
+        )
+      setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
     },
-    [resolution, value]
+    [selectedResolution, value]
   )
 
   const onChangeResolution = useCallback(
     newResolution => {
       return () => {
-        handleTimePeriodChange(parseInputPeriod(value, newResolution))
+        handleTimePeriodChange(parseInputPeriod(value, newResolution), newResolution)
         toggleDropdown(false)
       }
     },
@@ -49,7 +48,7 @@ const CustomTimePeriod = ({ handleDatesChange, selectedStart, tagging }) => {
 
   const renderTitle = () => (
     <Flex alignItems="center" flexWrap={false} width="100%">
-      <Text padding={[0, 4, 0, 0]}>{resolution}</Text>
+      <Text padding={[0, 4, 0, 0]}>{selectedResolution}</Text>
       <DropdownIcon name="triangle_down" />
     </Flex>
   )
