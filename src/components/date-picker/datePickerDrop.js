@@ -30,6 +30,7 @@ const DatePickerDrop = ({
 }) => {
   const [startDate, setStartDate] = useState(initialStartDate)
   const [endDate, setEndDate] = useState(initialStartDate)
+  const [resolution, setResolution] = useState("minutes")
   const [focusedInput, setFocusedInput] = useState("startDate")
   const [isOpen, toggle, , close] = useToggle()
   const ref = useRef()
@@ -54,10 +55,6 @@ const DatePickerDrop = ({
   }, [])
 
   const applyChanges = () => {
-    console.log({
-      start: startDate,
-      end: endDate,
-    })
     setRangeValues({
       start: startDate,
       end: endDate,
@@ -71,6 +68,13 @@ const DatePickerDrop = ({
     [startDate, endDate]
   )
 
+  const handleTimePeriodChange = useCallback((time, resolution) => {
+    setResolution(resolution)
+    setDates({
+      startDate: time,
+      endDate: 0,
+    })
+  }, [])
   const onDatepickerChange = (startDate, endDate) => {
     setDates({ startDate, endDate })
     const date = focusTagging === "finish" ? endDate || startDate : startDate || endDate
@@ -88,9 +92,14 @@ const DatePickerDrop = ({
       <PickerBox data-testid="datePicker">
         <Flex justifyContent="between" alignItems="center" width="100%" padding={[6, 6, 0, 6]}>
           <Flex column gap={3} margin={[0, 7, 0, 0]}>
-            <TimePeriods handleDatesChange={setDates} selectedDate={startDate} tagging={tagging} />
+            <TimePeriods
+              handleTimePeriodChange={handleTimePeriodChange}
+              selectedDate={startDate}
+              tagging={tagging}
+            />
             <CustomTimePeriod
-              handleDatesChange={setDates}
+              handleTimePeriodChange={handleTimePeriodChange}
+              selectedResolution={resolution}
               selectedStart={startDate}
               tagging={tagging}
             />

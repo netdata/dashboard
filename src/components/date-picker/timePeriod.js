@@ -2,8 +2,8 @@ import React, { memo, useCallback } from "react"
 import { Text } from "@netdata/netdata-ui"
 import { StyledTimePeriod } from "./styled"
 
-const TimePeriod = ({ value, period, isSelected, setTimeRange, tagging }) => {
-  const onClick = useCallback(() => setTimeRange(value), [value])
+const TimePeriod = ({ value, period, resolution, isSelected, setTimeRange, tagging }) => {
+  const onClick = useCallback(() => setTimeRange(value, resolution), [value, resolution])
   return (
     <StyledTimePeriod
       key={value}

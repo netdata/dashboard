@@ -2,6 +2,7 @@ import { getColor, getRgbColor } from "@netdata/netdata-ui"
 import styled from "styled-components"
 
 export const StyledDateInput = styled.input`
+  width: 100%;
   text-align: center;
   border: 1px solid ${getColor("border")};
   color: inherit;
@@ -10,8 +11,8 @@ export const StyledDateInput = styled.input`
   border-radius: 4px;
   padding: 4px;
   height: 32px;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
   outline: none;
   &:focus {
     border: 1px solid ${getColor("primary")};
