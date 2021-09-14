@@ -2,6 +2,10 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 
+import '@formatjs/intl-datetimeformat/polyfill'
+import '@formatjs/intl-datetimeformat/locale-data/en'
+import '@formatjs/intl-datetimeformat/add-all-tz'
+
 import "@material/menu-surface/dist/mdc.menu-surface.css"
 
 // intentionally loading before bootstrap styles
