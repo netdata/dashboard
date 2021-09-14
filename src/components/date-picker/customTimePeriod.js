@@ -1,7 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react"
 import { Flex, Text } from "@netdata/netdata-ui"
-import { getCustomTimePeriod, parseInputPeriod, dateResolutions } from "./utils"
+import {
+  getCustomTimePeriod,
+  parseInputPeriod,
+  dateResolutions,
+  maxTimePeriodInUnix,
+} from "./utils"
 import { StyledDropdown, DropdownIcon, CustomInput, StyledCustomTimePeriod } from "./styled"
+import { isValid, add, getUnixTime } from "date-fns"
 
 const CustomTimePeriod = ({
   handleTimePeriodChange,
@@ -26,7 +32,12 @@ const CustomTimePeriod = ({
     e => {
       const value = Number(e.currentTarget.value)
       const isValidInput = !Number.isNaN(value) && Number.isInteger(value) && value > 0
-      if (isValidInput)
+      const timePeriod = add(new Date(0), {
+        [selectedResolution]: value,
+      })
+      const isValidTimePeriod =
+        isValidInput && isValid(timePeriod) && getUnixTime(timePeriod) <= maxTimePeriodInUnix
+      if (isValidTimePeriod)
         return handleTimePeriodChange(
           parseInputPeriod(value, selectedResolution),
           selectedResolution
