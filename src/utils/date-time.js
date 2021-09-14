@@ -49,6 +49,7 @@ export const useDateTime = () => {
 
   const localeDateString = useMemo(() => {
     const dateOptions = long => ({
+      hourCycle: 'h23',
       localeMatcher: "best fit",
       formatMatcher: "best fit",
       ...(long
@@ -65,7 +66,7 @@ export const useDateTime = () => {
   const localeTimeString = useMemo(() => {
     const timeOptions = showSecs => ({
       localeMatcher: "best fit",
-      hour12: false,
+      hourCycle: 'h23',
       formatMatcher: "best fit",
       timeStyle: showSecs ? "medium" : "short",
       timeZone: isUsingTimezone ? timezone : undefined,
@@ -80,7 +81,7 @@ export const useDateTime = () => {
   const xAxisTimeString = useMemo(() => {
     const xAxisOptions = {
       localeMatcher: "best fit",
-      hour12: false,
+      hourCycle: 'h23',
       formatMatcher: "best fit",
       hour: "2-digit",
       minute: "2-digit",
@@ -94,7 +95,7 @@ export const useDateTime = () => {
   const xAxisDateString = useMemo(() => {
     const xAxisOptions = {
       localeMatcher: "best fit",
-      hour12: false,
+      hourCycle: 'h23',
       formatMatcher: "best fit",
       day: "2-digit",
       month: "2-digit",
