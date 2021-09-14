@@ -4,7 +4,7 @@ import { toDate, getTime, isBefore } from "date-fns"
 import DatePicker from "../datePicker/datePickerLib"
 import DatePickerInput from "./datePickerInput"
 import { StyledCalendar } from "../datePicker/styled"
-import useConvertedDates from "./useConvertedDate"
+import useConvertedDates, { convertTimestampToDate } from "./useConvertedDate"
 
 const DatePickerWrapper = ({
   startDate,
@@ -17,13 +17,17 @@ const DatePickerWrapper = ({
   const [convertedStartDate, convertedEndDate] = useConvertedDates(startDate, endDate)
   const setValidStartDate = useCallback(
     (startDate, setPreviousValue) =>
-      isBefore(startDate, endDate) ? setStartDate(startDate) : setPreviousValue(),
+      isBefore(convertTimestampToDate(startDate), convertedEndDate)
+        ? setStartDate(startDate)
+        : setPreviousValue(),
     [endDate]
   )
 
   const setValidEndDate = useCallback(
     (endDate, setPreviousValue) =>
-      isBefore(startDate, endDate) ? setEndDate(endDate) : setPreviousValue(),
+      isBefore(convertedStartDate, convertTimestampToDate(endDate))
+        ? setEndDate(endDate)
+        : setPreviousValue(),
     [startDate]
   )
 
