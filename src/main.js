@@ -129,6 +129,7 @@ window.urlOptions = {
     chart: null,
     family: null,
     alarm: null,
+    utc: null,
 
     hasProperty: function (property) {
         // console.log('checking property ' + property + ' of type ' + typeof(this[property]));
@@ -164,6 +165,10 @@ window.urlOptions = {
 
         if (urlOptions.mode !== 'live') {
             hash += ';mode=' + urlOptions.mode;
+        }
+
+        if (urlOptions.utc !== null) {
+            hash += ';utc=' + urlOptions.utc;
         }
 
         return hash;
@@ -270,6 +275,12 @@ window.urlOptions = {
             urlOptions.before = before;
             urlOptions.hashUpdate();
         }
+    },
+
+    updateUtcParam: function (utc) {
+        if (!utc) return
+        urlOptions.utc = utc
+        urlOptions.hashUpdate();
     },
 
     netdataHighlightCallback: function (status, after, before) {
@@ -3416,21 +3427,6 @@ function dashboardSettingsSetup() {
                 self.bootstrapToggle(getOption('temperature') === 'celsius' ? 'on' : 'off');
             }
         };
-        var timezone_sync_option = function (option) {
-            var self = $('#' + option);
-
-            const timezoneOption = getOption("timezone")
-            document.getElementById('browser_timezone').innerText = browser_timezone;
-            document.getElementById('server_timezone').innerText = options.timezone || "unknown";
-            document.getElementById('current_timezone').innerText = timezoneOption === 'default'
-              ? 'unset, using browser default' : timezoneOption;
-
-            const isUsingTimezone = timezoneOption !== "" && timezoneOption !== "default"
-            if (self.prop('checked') === isUsingTimezone) {
-                self.bootstrapToggle(isUsingTimezone ? 'off' : 'on');
-            }
-        };
-
 
         sync_option('stop_updates_when_focus_is_lost');
         sync_option('eliminate_zero_dimensions');
@@ -3450,7 +3446,6 @@ function dashboardSettingsSetup() {
         units_sync_option('units_conversion');
         temp_sync_option('units_temp');
         sync_option('seconds_as_time');
-        timezone_sync_option('local_timezone');
 
         if (getOption('parallel_refresher') === false) {
             $('#concurrent_refreshes_row').hide();
@@ -3495,13 +3490,6 @@ function dashboardSettingsSetup() {
     });
     $('#seconds_as_time').change(function () {
         setOption('seconds_as_time', $(this).prop('checked'));
-    });
-    $('#local_timezone').change(function () {
-        if ($(this).prop('checked')) {
-            selected_server_timezone('default', true);
-        } else {
-            selected_server_timezone('default', false);
-        }
     });
 
     $('#units_conversion').change(function () {

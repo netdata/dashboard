@@ -1,13 +1,13 @@
 import React from "react"
 import styled from "styled-components"
 import { Flex } from "@netdata/netdata-ui"
-import Item from "./item"
 import Node from "./node"
 import Options from "./options"
 import Version from "./version"
 import GlobalControls from "./globalControls"
 import Alarms from "./alarms"
 import News from "./news"
+import Timezone from "./timezone"
 import SignIn from "./signIn"
 
 const Wrapper = styled(Flex).attrs({
@@ -28,11 +28,10 @@ const Header = () => (
       <Node />
     </Flex>
     <Flex justifyContent="end" alignItems="center" gap={3}>
-      <Item hasBorder>
-        <Version />
-        <News />
-        <Options />
-      </Item>
+      <Version />
+      <News />
+      <Options />
+      <Timezone />
       <GlobalControls />
       <Alarms />
       <SignIn />

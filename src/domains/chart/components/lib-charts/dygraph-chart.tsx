@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { sortBy, reverse } from "ramda"
 import React, {
   useLayoutEffect, useRef, useCallback, useState,
@@ -27,6 +28,7 @@ import {
   selectSyncPanAndZoom,
   selectSpacePanelTransitionEndIsActive,
   selectAlarm,
+  selectTimezoneSetting
 } from "domains/global/selectors"
 import {
   resetGlobalPanAndZoomAction, setCommonMaxAction, setCommonMinAction,
@@ -340,6 +342,8 @@ export const DygraphChart = ({
   const globalChartUnderlay = useSelector(selectGlobalChartUnderlay)
   const selectedAlarm = useSelector(selectAlarm)
   const alarm = selectedAlarm?.chartId === chartData.id ? selectedAlarm : null
+
+  const timezone = useSelector(selectTimezoneSetting)
 
   const { xAxisDateString, xAxisTimeString } = useDateTime()
   const chartSettings = chartLibrariesSettings[chartLibrary]
@@ -1035,7 +1039,7 @@ export const DygraphChart = ({
       xAxisTimeString,
     })
     dygraphInstance.current.updateOptions(dygraphOptionsStatic)
-  }, [dygraphChartType])
+  }, [dygraphChartType, timezone])
 
   // set selection
   const currentSelectionMasterId = useSelector(selectGlobalSelectionMaster)
