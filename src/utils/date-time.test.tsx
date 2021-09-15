@@ -19,9 +19,9 @@ describe("isProperTimezone", () => {
 })
 
 let dateTime: {
-  localeDateString: any,
-  localeTimeString: any,
-  xAxisTimeString: any,
+  localeDateString: any
+  localeTimeString: any
+  xAxisTimeString: any
 }
 
 beforeEach(() => {
@@ -32,9 +32,7 @@ beforeEach(() => {
 
 describe("useDateTime", () => {
   it("returns 3 formatters", () => {
-    const {
-      localeDateString, localeTimeString, xAxisTimeString,
-    } = dateTime
+    const { localeDateString, localeTimeString, xAxisTimeString } = dateTime
     expect(typeof localeDateString).toBe("function")
     expect(typeof localeTimeString).toBe("function")
     expect(typeof xAxisTimeString).toBe("function")
@@ -65,9 +63,7 @@ describe("useDateTime", () => {
     testHookNewInstance(() => {
       dateTime = newInstance.useDateTime()
     })
-    const {
-      localeDateString, localeTimeString, xAxisTimeString,
-    } = dateTime
+    const { localeDateString, localeTimeString, xAxisTimeString } = dateTime
     expect(localeDateString).toBe(newInstance.localeDateStringNative)
     expect(localeTimeString).toBe(newInstance.localeTimeStringNative)
     expect(xAxisTimeString).toBe(newInstance.xAxisTimeStringNative)
@@ -77,16 +73,16 @@ describe("useDateTime", () => {
   })
 
   it("formats dates", () => {
-    const {
-      localeDateString, localeTimeString, xAxisTimeString,
-    } = dateTime
+    const { localeDateString, localeTimeString, xAxisTimeString } = dateTime
     expect(typeof localeDateString).toBe("function")
     expect(typeof localeTimeString).toBe("function")
     expect(typeof xAxisTimeString).toBe("function")
 
-    const date = new Date("Aug 13, 2018, 12:34:56")
-    expect(localeDateString(date)).toBe("Mon, Aug 13, 2018")
-    expect(localeTimeString(date)).toBe("12:34:56")
-    expect(xAxisTimeString(date)).toBe("12:34:56")
+    const date = new Date("Sep 15, 2021, 00:30:45")
+    expect(localeDateString(date)).toBe("Wed, Sep 15, 2021")
+    expect(localeDateString(date, { long: false })).toBe("9/15/21")
+    expect(localeTimeString(date)).toBe("00:30:45")
+    expect(localeTimeString(date, { secs: false })).toBe("00:30")
+    expect(xAxisTimeString(date)).toBe("00:30:45")
   })
 })
