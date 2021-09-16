@@ -54,8 +54,8 @@ const getOptions = ({ long, isTime, secs, timezone }) => ({
   timeZone: timezone,
 })
 
-const dateFormat = (date, options) =>
-  new Intl.DateTimeFormat(navigator.language, getOptions(options)).format(date)
+const dateFormat = (date, { locale, ...options }) =>
+  new Intl.DateTimeFormat(locale ?? navigator.language, getOptions(options)).format(date)
 
 const getTimezone = timezone => (timezone !== "" && timezone !== "default" ? timezone : undefined)
 
