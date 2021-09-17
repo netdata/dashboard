@@ -53,6 +53,7 @@ const DatePickerWrapper = ({
         startDate={convertedStartDate}
         endDate={convertedEndDate}
         maxDate={new Date()}
+        minDate={new Date("1/1/2018")}
         inline
         selectsRange
         monthsShown={2}

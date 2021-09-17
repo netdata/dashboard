@@ -5,7 +5,7 @@ const HOUR = MINUTE * 60
 const DAY = HOUR * 24
 const MONTH = 30 * DAY
 
-export const maxTimePeriodInUnix = 315532800
+export const maxTimePeriodInUnix = 94694400
 export const dateResolutions = ["minutes", "hours", "days", "months"]
 
 const resolutionsMapping = {
