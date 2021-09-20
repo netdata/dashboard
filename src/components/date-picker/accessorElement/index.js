@@ -22,7 +22,7 @@ const PickerAccessorElement = forwardRef(
     const globalPanAndZoom = useDashboardSelector(selectGlobalPanAndZoom)
     useEffect(() => {
       const after = getDuration(startDate, endDate).as("seconds")
-      if (!isPlaying && timeframe !== after) setTimeframe(after)
+      if (!isPlaying && timeframe !== after) setTimeframe(Math.round(after))
       if (isPlaying && timeframe && !!globalPanAndZoom) {
         setRangeValues({ start: Math.round(timeframe) })
         setTimeframe(null)

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
 import { Flex, Icon, TextSmall } from "@netdata/netdata-ui"
-import useConvertedDates from "./useConvertedDate"
 import { formatDates, getTimePeriod } from "./utils"
+import useConvertedDates from "./useConvertedDate"
 
 const PeriodIndication = ({ startDate, endDate }) => {
   const [convertedStart, convertedEnd] = useConvertedDates(startDate, endDate)

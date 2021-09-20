@@ -6,8 +6,8 @@ import CustomTimePeriod from "./customTimePeriod"
 import DatePickerWrapper from "./datePickerWrapper"
 import { getFocusTagging } from "./utils"
 import PeriodIndication from "./periodIndication"
-import { PickerBox, StyledDrop, StyledHR } from "./styled"
 import AccessorElement from "./accessorElement"
+import { PickerBox, StyledDrop, StyledHR } from "./styled"
 
 export const reportEvent = (
   eventCategory,

@@ -3,9 +3,9 @@ import React, { useCallback } from "react"
 import { toDate, getTime, isBefore } from "date-fns"
 import DatePicker from "../datePicker/datePickerLib"
 import DatePickerInput from "./datePickerInput"
-import { StyledCalendar } from "../datePicker/styled"
 import useConvertedDates, { convertTimestampToDate } from "./useConvertedDate"
-import { useDateTime } from "@/src/utils/date-time"
+import useLocaleDate from "./useLocaleDate"
+import { StyledCalendar } from "../datePicker/styled"
 
 const DatePickerWrapper = ({
   startDate,
@@ -15,15 +15,7 @@ const DatePickerWrapper = ({
   onDatesChange,
   onInputFocus,
 }) => {
-  const { localeTimeString, localeDateString } = useDateTime()
-  const getLocaleDate = useCallback(
-    date => {
-      return `${localeDateString(date, { locale: "en-us", long: false })} ${localeTimeString(date, {
-        secs: false,
-      })}`
-    },
-    [localeTimeString, localeDateString]
-  )
+  const getLocaleDate = useLocaleDate()
   const [convertedStartDate, convertedEndDate] = useConvertedDates(startDate, endDate)
   const setValidStartDate = useCallback(
     (startDate, setPreviousValue) =>

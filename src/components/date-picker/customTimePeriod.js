@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react"
+import { isValid, add, getUnixTime } from "date-fns"
 import { Flex, Text } from "@netdata/netdata-ui"
 import {
   getCustomTimePeriod,
@@ -7,7 +8,6 @@ import {
   maxTimePeriodInUnix,
 } from "./utils"
 import { StyledDropdown, DropdownIcon, CustomInput, StyledCustomTimePeriod } from "./styled"
-import { isValid, add, getUnixTime } from "date-fns"
 
 const CustomTimePeriod = ({
   handleTimePeriodChange,

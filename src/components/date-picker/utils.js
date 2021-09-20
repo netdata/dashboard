@@ -53,5 +53,16 @@ export const formatDates = (startDate, endDate) => {
   }
 }
 
+export const formatOffset = offset => {
+  if (!offset) return "+00:00"
+  const splitOffset = offset.toString().split(".")
+  const mathSign = splitOffset[0] > 0 ? "+" : "-"
+  const absoluteNumber = Math.abs(splitOffset[0]).toString()
+  const firstPart = `${mathSign}${absoluteNumber.padStart(2, 0)}`
+  return splitOffset.length > 1
+    ? `${firstPart}:${String(splitOffset[1] * 0.6).padEnd(2, 0)}`
+    : `${firstPart}:00`
+}
+
 export const getTimePeriod = (startDate, endDate) =>
   formatDistanceStrict(getTime(startDate), getTime(endDate))

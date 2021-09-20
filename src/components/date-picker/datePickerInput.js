@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { format, isValid, parse, getTime } from "date-fns"
+import { formatOffset } from "./utils"
 import { StyledDateInput } from "../datePicker/styled"
+import { useDateTime } from "@/src/utils/date-time"
 
 const DatePickerInput = ({
   name = "",
@@ -9,6 +11,7 @@ const DatePickerInput = ({
   onFocus,
   placeholderText = "",
 }) => {
+  const { utcOffset } = useDateTime()
   const [inputValue, setInputValue] = useState("")
   const onChange = useCallback(e => {
     const date = e.target.value
@@ -22,14 +25,18 @@ const DatePickerInput = ({
   }, [])
   const onBlur = useCallback(
     e => {
-      const parsedDate = parse(e.target.value, "MMMM d yyyy, H:mm", Date.now())
+      const parsedDate = parse(
+        `${e.target.value} ${formatOffset(utcOffset)}`,
+        "MMMM d yyyy, H:mm xxx",
+        Date.now()
+      )
       const isValidDate = isValid(parsedDate) && getTime(parsedDate) > 0
       if (isValidDate) {
         const timestamp = getTime(parsedDate)
         onDatesChange(timestamp, () => setFormattedValue(value))
       } else setFormattedValue(value)
     },
-    [value]
+    [value, utcOffset]
   )
 
   useEffect(() => setFormattedValue(value), [value])

@@ -1,7 +1,7 @@
 import styled from "styled-components"
-import { dialogsZIndex, customDropdownZIndex } from "@/src/styles/z-index"
 import { getColor, getSizeBy, Icon, Drop } from "@netdata/netdata-ui"
 import { Dropdown } from "@/src/components/mdx-components/dropdown"
+import { dialogsZIndex, customDropdownZIndex } from "@/src/styles/z-index"
 
 export const PickerBox = styled.div`
   display: flex;

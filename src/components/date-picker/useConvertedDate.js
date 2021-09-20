@@ -1,6 +1,6 @@
-import { useCallback, useMemo } from "react"
+import { useMemo } from "react"
 import { toDate } from "date-fns"
-import { useDateTime } from "@/src/utils/date-time"
+import useLocaleDate from "./useLocaleDate"
 
 export const convertTimestampToDate = (timestamp, getLocaleDate) => {
   if (timestamp > 0) {
@@ -11,16 +11,7 @@ export const convertTimestampToDate = (timestamp, getLocaleDate) => {
 }
 
 const useConvertedDates = (startDate, endDate) => {
-  const { localeTimeString, localeDateString } = useDateTime()
-  const getLocaleDate = useCallback(
-    date => {
-      return `${localeDateString(date, { locale: "en-us", long: false })} ${localeTimeString(date, {
-        secs: false,
-      })}`
-    },
-    [localeTimeString, localeDateString]
-  )
-
+  const getLocaleDate = useLocaleDate()
   return useMemo(
     () => [
       convertTimestampToDate(startDate, getLocaleDate),
