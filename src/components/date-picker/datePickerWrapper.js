@@ -5,6 +5,7 @@ import DatePicker from "../datePicker/datePickerLib"
 import DatePickerInput from "./datePickerInput"
 import { StyledCalendar } from "../datePicker/styled"
 import useConvertedDates, { convertTimestampToDate } from "./useConvertedDate"
+import { useDateTime } from "@/src/utils/date-time"
 
 const DatePickerWrapper = ({
   startDate,
@@ -14,21 +15,30 @@ const DatePickerWrapper = ({
   onDatesChange,
   onInputFocus,
 }) => {
+  const { localeTimeString, localeDateString } = useDateTime()
+  const getLocaleDate = useCallback(
+    date => {
+      return `${localeDateString(date, { locale: "en-us", long: false })} ${localeTimeString(date, {
+        secs: false,
+      })}`
+    },
+    [localeTimeString, localeDateString]
+  )
   const [convertedStartDate, convertedEndDate] = useConvertedDates(startDate, endDate)
   const setValidStartDate = useCallback(
     (startDate, setPreviousValue) =>
-      isBefore(convertTimestampToDate(startDate), convertedEndDate)
+      isBefore(convertTimestampToDate(startDate, getLocaleDate), convertedEndDate)
         ? setStartDate(startDate)
         : setPreviousValue(),
-    [endDate]
+    [endDate, getLocaleDate]
   )
 
   const setValidEndDate = useCallback(
     (endDate, setPreviousValue) =>
-      isBefore(convertedStartDate, convertTimestampToDate(endDate))
+      isBefore(convertedStartDate, convertTimestampToDate(endDate, getLocaleDate))
         ? setEndDate(endDate)
         : setPreviousValue(),
-    [startDate]
+    [startDate, getLocaleDate]
   )
 
   const onChange = useCallback(dates => {
