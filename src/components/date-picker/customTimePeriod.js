@@ -30,19 +30,22 @@ const CustomTimePeriod = ({
 
   const onBlur = useCallback(
     e => {
-      const value = Number(e.currentTarget.value)
-      const isValidInput = !Number.isNaN(value) && Number.isInteger(value) && value > 0
+      const inputValue = Number(e.currentTarget.value)
+      const isValidInput =
+        !Number.isNaN(inputValue) && Number.isInteger(inputValue) && inputValue > 0
       const timePeriod = add(new Date(0), {
-        [selectedResolution]: value,
+        [selectedResolution]: inputValue,
       })
       const isValidTimePeriod =
         isValidInput && isValid(timePeriod) && getUnixTime(timePeriod) <= maxTimePeriodInUnix
       if (isValidTimePeriod)
         return handleTimePeriodChange(
-          parseInputPeriod(value, selectedResolution),
+          parseInputPeriod(inputValue, selectedResolution),
           selectedResolution
         )
-      setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
+      return selectedStart <= 0
+        ? setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
+        : setValue(0)
     },
     [selectedResolution, value]
   )
