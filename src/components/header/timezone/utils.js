@@ -17,7 +17,7 @@ export const timezoneList = () => {
     const { utc } = timezone
 
     try {
-      // We use 'fr' locale because it is the only one that returns back the UTC offset (dd/mm/yyyy, UTC-x) 
+      // We use 'fr' locale because it is the only one that returns back the UTC offset (dd/mm/yyyy, UTC-x)
       // so we can parse it later and digitize it.
       const dateString = new Intl.DateTimeFormat("fr", {
         timeZone: utc[0],
@@ -47,7 +47,12 @@ export const timezonesById = timezones =>
   }, {})
 
 export const getDefaultTimezone = () => {
-  const dateFormat = new Intl.DateTimeFormat("default", {})
-  const usedOptions = dateFormat.resolvedOptions()
-  return usedOptions
+  try {
+    const dateFormat = new Intl.DateTimeFormat("default", {})
+    const usedOptions = dateFormat.resolvedOptions()
+    return usedOptions
+  } catch (e) {
+    console.log(e)
+    return {}
+  }
 }
