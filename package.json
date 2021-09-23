@@ -13,7 +13,6 @@
     "styled-components": "^5.0.1"
   },
   "dependencies": {
-    "@formatjs/intl-datetimeformat": "^4.2.3",
     "@fortawesome/fontawesome-free": "^5.15.2",
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
