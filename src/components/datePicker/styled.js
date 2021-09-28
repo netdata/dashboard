@@ -24,12 +24,16 @@ export const StyledCalendar = styled.div`
   .react-datepicker {
     &__navigation {
       top: 8px;
+      &-icon::before {
+        border-color: ${getColor("main")};
+      }
     }
     &__header {
       background: ${getColor("mainBackground")};
       border: 0;
       .react-datepicker__current-month {
         color: ${getColor("main")};
+        font-weight: normal;
       }
       .react-datepicker__day-name {
         color: ${getColor("textLite")};

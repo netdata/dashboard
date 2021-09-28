@@ -27,8 +27,8 @@ export const StyledTimePeriod = styled.span`
   &:last-of-type {
     margin-bottom: ${getSizeBy(1)};
   }
-  &:hover {
-    color: ${getColor("primary")};
+  & > span:hover {
+    color: ${getColor("textLite")};
   }
 `
 export const StyledCustomTimePeriod = styled.span`
@@ -39,7 +39,7 @@ export const StyledCustomTimePeriod = styled.span`
     margin-top: 0;
   }
   &:hover {
-    color: ${getColor("primary")};
+    color: ${getColor("textLite")};
   }
 `
 

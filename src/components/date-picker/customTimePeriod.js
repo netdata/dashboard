@@ -74,7 +74,7 @@ const CustomTimePeriod = ({
       data-ga={`date-picker::click-last-integer::${tagging}`}
       data-testid="customTimePeriod"
     >
-      <Text strong>Last</Text>
+      <Text>Last</Text>
       <CustomInput
         value={value}
         onChange={onChange}
