@@ -1,7 +1,7 @@
 import { Flex } from "@netdata/netdata-ui"
 import React, { useCallback } from "react"
-import { getTime, isBefore } from "date-fns"
-import { useDateTime } from "@netdata/dashboard"
+import { getTime, isBefore, format } from "date-fns"
+import { useDateTime } from "@/src/utils/date-time"
 import DatePicker from "../datePicker/datePickerLib"
 import DatePickerInput from "./datePickerInput"
 import useConvertedDates, { convertTimestampToDate } from "./useConvertedDate"
@@ -40,8 +40,12 @@ const DatePickerWrapper = ({
     dates => {
       const [startDate, endDate] = dates
 
-      const startDateWithOffset = startDate ? getDateWithOffset(startDate, utcOffset) : startDate
-      const endDateWithOffset = endDate ? getDateWithOffset(endDate, utcOffset) : endDate
+      const startDateWithOffset = startDate
+        ? getDateWithOffset(format(startDate, "MMMM d yyyy, H:mm"), utcOffset)
+        : startDate
+      const endDateWithOffset = endDate
+        ? getDateWithOffset(format(endDate, "MMMM d yyyy, H:mm"), utcOffset)
+        : endDate
 
       const startDateTimestamp = getTime(startDateWithOffset) || null
       const endDateTimestamp = getTime(endDateWithOffset) || null

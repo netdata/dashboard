@@ -67,7 +67,7 @@ export const formatOffset = offset => {
 export const getDateWithOffset = (date, utcOffset) => {
   const formattedDate = isMatch(date, "MMMM d yyyy, H:mm")
     ? date
-    : format(date, "MMMM d yyyy, H:mm")
+    : parse(date, "MMMM d yyyy, H:mm", Date.now())
   return parse(`${formattedDate} ${formatOffset(utcOffset)}`, "MMMM d yyyy, H:mm xxx", Date.now())
 }
 
