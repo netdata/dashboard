@@ -22,7 +22,7 @@ const DatePicker = ({
 }) => (
   <DatePickerLib
     selected={selected}
-    onChange={onChange} // takes date as parameter
+    onChange={onChange}
     selectsStart={selectsStart}
     selectsEnd={selectsEnd}
     startDate={startDate}

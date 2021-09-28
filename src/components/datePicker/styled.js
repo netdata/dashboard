@@ -25,7 +25,7 @@ export const StyledCalendar = styled.div`
     &__navigation {
       top: 8px;
       &-icon::before {
-        border-color: ${getColor("main")};
+        border-color: ${getColor("text")};
       }
     }
     &__header {

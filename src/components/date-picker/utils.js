@@ -1,4 +1,4 @@
-import { format, formatDistanceStrict, getTime, getUnixTime, add } from "date-fns"
+import { format, formatDistanceStrict, parse, getTime, getUnixTime, add, isMatch } from "date-fns"
 
 const MINUTE = 60
 const HOUR = MINUTE * 60
@@ -62,6 +62,13 @@ export const formatOffset = offset => {
   return splitOffset.length > 1
     ? `${firstPart}:${String(splitOffset[1] * 0.6).padEnd(2, 0)}`
     : `${firstPart}:00`
+}
+
+export const getDateWithOffset = (date, utcOffset) => {
+  const formattedDate = isMatch(date, "MMMM d yyyy, H:mm")
+    ? date
+    : format(date, "MMMM d yyyy, H:mm")
+  return parse(`${formattedDate} ${formatOffset(utcOffset)}`, "MMMM d yyyy, H:mm xxx", Date.now())
 }
 
 export const getTimePeriod = (startDate, endDate) =>

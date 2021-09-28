@@ -1,10 +1,12 @@
 import { Flex } from "@netdata/netdata-ui"
 import React, { useCallback } from "react"
-import { toDate, getTime, isBefore } from "date-fns"
+import { getTime, isBefore } from "date-fns"
+import { useDateTime } from "@netdata/dashboard"
 import DatePicker from "../datePicker/datePickerLib"
 import DatePickerInput from "./datePickerInput"
 import useConvertedDates, { convertTimestampToDate } from "./useConvertedDate"
 import useLocaleDate from "./useLocaleDate"
+import { getDateWithOffset } from "./utils"
 import { StyledCalendar } from "../datePicker/styled"
 
 const DatePickerWrapper = ({
@@ -17,6 +19,7 @@ const DatePickerWrapper = ({
 }) => {
   const getLocaleDate = useLocaleDate()
   const [convertedStartDate, convertedEndDate] = useConvertedDates(startDate, endDate)
+  const { utcOffset } = useDateTime()
   const setValidStartDate = useCallback(
     (startDate, setPreviousValue) =>
       isBefore(convertTimestampToDate(startDate, getLocaleDate), convertedEndDate)
@@ -33,12 +36,21 @@ const DatePickerWrapper = ({
     [startDate, getLocaleDate]
   )
 
-  const onChange = useCallback(dates => {
-    const [startDate, endDate] = dates
-    const startDateTimestamp = getTime(toDate(startDate)) || null
-    const endDateTimestamp = getTime(toDate(endDate)) || null
-    onDatesChange(startDateTimestamp, endDateTimestamp)
-  }, [])
+  const onChange = useCallback(
+    dates => {
+      const [startDate, endDate] = dates
+
+      const startDateWithOffset = startDate ? getDateWithOffset(startDate, utcOffset) : startDate
+      const endDateWithOffset = endDate ? getDateWithOffset(endDate, utcOffset) : endDate
+
+      const startDateTimestamp = getTime(startDateWithOffset) || null
+      const endDateTimestamp = getTime(endDateWithOffset) || null
+
+      onDatesChange(startDateTimestamp, endDateTimestamp)
+    },
+    [utcOffset]
+  )
+
   return (
     <Flex
       column
