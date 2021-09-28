@@ -9,56 +9,45 @@ import {
 } from "./utils"
 import { StyledDropdown, DropdownIcon, CustomInput, StyledCustomTimePeriod } from "./styled"
 
-const CustomTimePeriod = ({
-  handleTimePeriodChange,
-  selectedStart,
-  selectedResolution,
-  tagging,
-}) => {
-  const getValue = () =>
-    selectedStart <= 0 ? getCustomTimePeriod(-selectedStart, selectedResolution) : 0
-  const [value, setValue] = useState(getValue)
+const CustomTimePeriod = ({ handleTimePeriodChange, value, resolution, tagging }) => {
+  const getInputValue = () => (value <= 0 ? getCustomTimePeriod(-value, resolution) : 0)
+  const [inputValue, setInputValue] = useState(getInputValue)
   const [isDropdownOpen, toggleDropdown] = useState(false)
 
-  useEffect(() => setValue(getValue()), [selectedStart])
+  useEffect(() => setInputValue(getInputValue()), [value])
 
-  const onChange = useCallback(e => setValue(e.target.value), [])
+  const onChange = useCallback(e => setInputValue(e.target.value), [])
 
   const onBlur = useCallback(
     e => {
-      const inputValue = Number(e.currentTarget.value)
+      const currentValue = Number(e.currentTarget.value)
       const isValidInput =
-        !Number.isNaN(inputValue) && Number.isInteger(inputValue) && inputValue > 0
+        !Number.isNaN(currentValue) && Number.isInteger(currentValue) && currentValue > 0
       const timePeriod = add(new Date(0), {
-        [selectedResolution]: inputValue,
+        [resolution]: currentValue,
       })
       const isValidTimePeriod =
         isValidInput && isValid(timePeriod) && getUnixTime(timePeriod) <= maxTimePeriodInUnix
       if (isValidTimePeriod)
-        return handleTimePeriodChange(
-          parseInputPeriod(inputValue, selectedResolution),
-          selectedResolution
-        )
-      return selectedStart <= 0
-        ? setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
-        : setValue(0)
+        return handleTimePeriodChange(parseInputPeriod(currentValue, resolution), resolution)
+      return value <= 0 ? setInputValue(getCustomTimePeriod(-value, resolution)) : setInputValue(0)
     },
-    [selectedResolution, value]
+    [resolution, inputValue]
   )
 
   const onChangeResolution = useCallback(
     newResolution => {
       return () => {
-        handleTimePeriodChange(parseInputPeriod(value, newResolution), newResolution)
+        handleTimePeriodChange(parseInputPeriod(inputValue, newResolution), newResolution)
         toggleDropdown(false)
       }
     },
-    [value]
+    [inputValue]
   )
 
   const renderTitle = () => (
     <Flex alignItems="center" flexWrap={false} width="100%">
-      <Text padding={[0, 4, 0, 0]}>{selectedResolution}</Text>
+      <Text padding={[0, 4, 0, 0]}>{resolution}</Text>
       <DropdownIcon name="triangle_down" />
     </Flex>
   )
@@ -72,10 +61,10 @@ const CustomTimePeriod = ({
     >
       <Text>Last</Text>
       <CustomInput
-        value={value}
+        value={inputValue}
         onChange={onChange}
         onBlur={onBlur}
-        data-ga={`date-picker::click-last-integer::${tagging}::${value}`}
+        data-ga={`date-picker::click-last-integer::${tagging}::${inputValue}`}
         data-testid="timePeriod-timeInput"
       />
       <StyledDropdown

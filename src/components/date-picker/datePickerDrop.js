@@ -24,8 +24,8 @@ export const reportEvent = (
 }
 
 const DatePickerDrop = ({
-  setRangeValues,
-  pickedValues: { start: initialStartDate, end: initialEndDate } = {},
+  onChange,
+  values: { start: initialStartDate, end: initialEndDate } = {},
   tagging = "",
   isPlaying,
 }) => {
@@ -56,7 +56,7 @@ const DatePickerDrop = ({
   }, [])
 
   const applyChanges = () => {
-    setRangeValues({
+    onChange({
       start: startDate,
       end: endDate,
     })
@@ -100,8 +100,8 @@ const DatePickerDrop = ({
               />
               <CustomTimePeriod
                 handleTimePeriodChange={handleTimePeriodChange}
-                selectedResolution={resolution}
-                selectedStart={startDate}
+                value={startDate}
+                resolution={resolution}
                 tagging={tagging}
               />
             </Flex>
@@ -152,7 +152,7 @@ const DatePickerDrop = ({
         tagging={tagging}
         isPickerOpen={isOpen}
         isPlaying={isPlaying}
-        setRangeValues={setRangeValues}
+        setRangeValues={onChange}
         start={initialStartDate}
         end={initialEndDate}
         ref={ref}

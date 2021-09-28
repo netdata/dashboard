@@ -8,7 +8,6 @@ import {
   setGlobalPanAndZoomAction,
   setDefaultAfterAction,
 } from "domains/global/actions"
-import { useDateTime } from "utils/date-time"
 import { selectDefaultAfter, selectGlobalPanAndZoom } from "domains/global/selectors"
 import { setHashParams } from "utils/hash-utils"
 import DatePickerDrop from "./datePickerDrop"
@@ -18,7 +17,6 @@ const ReduxDatePickerContainer = memo(({ tagging, isPlaying }) => {
 
   const globalPanAndZoom = useDashboardSelector(selectGlobalPanAndZoom)
   const isGlobalPanAndZoom = Boolean(globalPanAndZoom)
-  const { utcOffset } = useDateTime()
 
   const defaultAfter = useDashboardSelector(selectDefaultAfter)
   const pickedValues = useMemo(
@@ -61,11 +59,10 @@ const ReduxDatePickerContainer = memo(({ tagging, isPlaying }) => {
   }, [pickedValues])
   return (
     <DatePickerDrop
-      pickedValues={pickedValues}
-      setRangeValues={handlePickedValuesChange}
+      values={pickedValues}
+      onChange={handlePickedValuesChange}
       tagging={tagging}
       isPlaying={isPlaying}
-      utcOffset={utcOffset}
     />
   )
 })
