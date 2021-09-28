@@ -15,7 +15,10 @@ import DateBox from "./dateBox"
 import DurationBox from "./durationBox"
 
 const PickerAccessorElement = forwardRef(
-  ({ onClick, start = 15 * MINUTE, end, isPlaying, setRangeValues, tagging }, ref) => {
+  (
+    { onClick, start = 15 * MINUTE, end, isPlaying, isPickerOpen, setRangeValues, tagging },
+    ref
+  ) => {
     const [timeframe, setTimeframe] = useState()
     const startDate = getStartDate(start)
     const endDate = getEndDate(end)
@@ -36,7 +39,11 @@ const PickerAccessorElement = forwardRef(
     )
 
     return (
-      <Tooltip content="Select a predefined or a custom timeframe" align="bottom" plain>
+      <Tooltip
+        content={isPickerOpen ? () => {} : "Select a predefined or a custom timeframe"}
+        align="bottom"
+        plain
+      >
         <Container
           alignItems="center"
           justifyContent="center"

@@ -63,10 +63,9 @@ const DatePickerDrop = ({
   }
 
   const focusTagging = useMemo(() => getFocusTagging(focusedInput), [focusedInput])
-  const isValidTimePeriod = useMemo(
-    () => startDate !== null && endDate !== null && startDate !== endDate,
-    [startDate, endDate]
-  )
+
+  const isValidTimePeriod = startDate !== null && endDate !== null && startDate !== endDate
+  const isButtonDisabled = startDate === initialStartDate && endDate === initialEndDate
 
   const handleTimePeriodChange = useCallback((time, resolution) => {
     setResolution(resolution)
@@ -127,13 +126,14 @@ const DatePickerDrop = ({
               label="CLEAR"
               flavour="hollow"
               onClick={clearChanges}
+              disabled={isButtonDisabled}
               data-ga={`date-picker::click-clear::${tagging}-${focusTagging}`}
               data-testid="datePicker-clear"
             />
             <Button
               label="APPLY"
               onClick={applyChanges}
-              disabled={!isValidTimePeriod}
+              disabled={!isValidTimePeriod || isButtonDisabled}
               data-ga={`date-picker::click-apply::${tagging}-${focusTagging}`}
               data-testid="datePicker-apply"
             />
@@ -148,7 +148,7 @@ const DatePickerDrop = ({
       <AccessorElement
         onClick={toggle}
         tagging={tagging}
-        open={isOpen}
+        isPickerOpen={isOpen}
         isPlaying={isPlaying}
         setRangeValues={setRangeValues}
         start={initialStartDate}
