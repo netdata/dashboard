@@ -15,16 +15,12 @@ const CustomTimePeriod = ({
   selectedResolution,
   tagging,
 }) => {
-  const [value, setValue] = useState(0)
+  const getValue = () =>
+    selectedStart <= 0 ? getCustomTimePeriod(-selectedStart, selectedResolution) : 0
+  const [value, setValue] = useState(getValue)
   const [isDropdownOpen, toggleDropdown] = useState(false)
 
-  useEffect(
-    () =>
-      selectedStart <= 0
-        ? setValue(getCustomTimePeriod(-selectedStart, selectedResolution))
-        : setValue(0),
-    [selectedStart]
-  )
+  useEffect(() => setValue(getValue()), [selectedStart])
 
   const onChange = useCallback(e => setValue(e.target.value), [])
 

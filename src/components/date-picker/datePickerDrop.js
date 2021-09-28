@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react"
 import { Button, Flex } from "@netdata/netdata-ui"
 import useToggle from "hooks/useToggle"
+import useLocalStorage from "hooks/useLocalStorage"
 import TimePeriods from "./timePeriods"
 import CustomTimePeriod from "./customTimePeriod"
 import DatePickerWrapper from "./datePickerWrapper"
@@ -30,7 +31,7 @@ const DatePickerDrop = ({
 }) => {
   const [startDate, setStartDate] = useState(initialStartDate)
   const [endDate, setEndDate] = useState(initialStartDate)
-  const [resolution, setResolution] = useState("minutes")
+  const [resolution, setResolution] = useLocalStorage("resolution", "minutes")
   const [focusedInput, setFocusedInput] = useState("startDate")
   const [isOpen, toggle, , close] = useToggle()
   const ref = useRef()
@@ -80,68 +81,69 @@ const DatePickerDrop = ({
     reportEvent("date-picker", "click-date-picker", tagging, String(date))
   }
 
-  const pickerDrop = (
-    <StyledDrop
-      target={ref.current}
-      canHideTarget={false}
-      align={{ top: "bottom", left: "left" }}
-      onEsc={close}
-      onClickOutside={close}
-    >
-      <PickerBox data-testid="datePicker">
-        <Flex justifyContent="between" alignItems="center" width="100%" padding={[6, 6, 0, 6]}>
-          <Flex column gap={3} margin={[0, 7, 0, 0]}>
-            <TimePeriods
-              handleTimePeriodChange={handleTimePeriodChange}
-              selectedDate={startDate}
-              tagging={tagging}
-            />
-            <CustomTimePeriod
-              handleTimePeriodChange={handleTimePeriodChange}
-              selectedResolution={resolution}
-              selectedStart={startDate}
-              tagging={tagging}
-            />
-          </Flex>
-          <StyledHR />
-          <DatePickerWrapper
-            startDate={startDate}
-            endDate={endDate}
-            setStartDate={setStartDate}
-            setEndDate={setEndDate}
-            onDatesChange={onDatepickerChange}
-            onInputFocus={onInputFocus}
-          />
-        </Flex>
-        <Flex
-          alignItems="center"
-          justifyContent={isValidTimePeriod ? "between" : "end"}
-          width="100%"
-          padding={[5, 6]}
-          gap={2}
-        >
-          {isValidTimePeriod && <PeriodIndication startDate={startDate} endDate={endDate} />}
-          <Flex alignItems="center" justifyContent="center" gap={4}>
-            <Button
-              label="CLEAR"
-              flavour="hollow"
-              onClick={clearChanges}
-              disabled={isButtonDisabled}
-              data-ga={`date-picker::click-clear::${tagging}-${focusTagging}`}
-              data-testid="datePicker-clear"
-            />
-            <Button
-              label="APPLY"
-              onClick={applyChanges}
-              disabled={!isValidTimePeriod || isButtonDisabled}
-              data-ga={`date-picker::click-apply::${tagging}-${focusTagging}`}
-              data-testid="datePicker-apply"
+  const pickerDrop =
+    ref.current && isOpen ? (
+      <StyledDrop
+        target={ref.current}
+        canHideTarget={false}
+        align={{ top: "bottom", left: "left" }}
+        onEsc={close}
+        onClickOutside={close}
+      >
+        <PickerBox data-testid="datePicker">
+          <Flex justifyContent="between" alignItems="center" width="100%" padding={[6, 6, 0, 6]}>
+            <Flex column gap={3} margin={[0, 7, 0, 0]}>
+              <TimePeriods
+                handleTimePeriodChange={handleTimePeriodChange}
+                selectedDate={startDate}
+                tagging={tagging}
+              />
+              <CustomTimePeriod
+                handleTimePeriodChange={handleTimePeriodChange}
+                selectedResolution={resolution}
+                selectedStart={startDate}
+                tagging={tagging}
+              />
+            </Flex>
+            <StyledHR />
+            <DatePickerWrapper
+              startDate={startDate}
+              endDate={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
+              onDatesChange={onDatepickerChange}
+              onInputFocus={onInputFocus}
             />
           </Flex>
-        </Flex>
-      </PickerBox>
-    </StyledDrop>
-  )
+          <Flex
+            alignItems="center"
+            justifyContent={isValidTimePeriod ? "between" : "end"}
+            width="100%"
+            padding={[5, 6]}
+            gap={2}
+          >
+            {isValidTimePeriod && <PeriodIndication startDate={startDate} endDate={endDate} />}
+            <Flex alignItems="center" justifyContent="center" gap={4}>
+              <Button
+                label="CLEAR"
+                flavour="hollow"
+                onClick={clearChanges}
+                disabled={isButtonDisabled}
+                data-ga={`date-picker::click-clear::${tagging}-${focusTagging}`}
+                data-testid="datePicker-clear"
+              />
+              <Button
+                label="APPLY"
+                onClick={applyChanges}
+                disabled={!isValidTimePeriod || isButtonDisabled}
+                data-ga={`date-picker::click-apply::${tagging}-${focusTagging}`}
+                data-testid="datePicker-apply"
+              />
+            </Flex>
+          </Flex>
+        </PickerBox>
+      </StyledDrop>
+    ) : null
 
   return (
     <>
@@ -155,7 +157,7 @@ const DatePickerDrop = ({
         end={initialEndDate}
         ref={ref}
       />
-      {ref.current && isOpen && pickerDrop}
+      {pickerDrop}
     </>
   )
 }
