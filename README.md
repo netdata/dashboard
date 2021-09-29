@@ -8,6 +8,9 @@ Starts dashboard in the development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 Make sure Netdata is running under [http://localhost:19999](https://localhost:19999).
 
+> If your Netdata is running on a remote host you need to create an SSH tunnel to the host
+> `ssh -L 127.0.0.1:19999:127.0.0.1:19999 NODE`.
+
 
 ### `npm run start:node-view`
 Starts app with only Node-View component running. This is used to develop the component for Cloud purposes.
