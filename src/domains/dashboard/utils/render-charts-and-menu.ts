@@ -120,7 +120,7 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
       break
 
     case "anomaly":
-      if (parts.length > 2 && parts[1].startsWith('detection')) {
+      if (parts.length >= 2 && parts[1].startsWith('detection')) {
         chartEnriched.menu = `${tmp}_detection`
       }
       break
