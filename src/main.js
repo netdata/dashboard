@@ -1087,11 +1087,8 @@ function enrichChartData(chart) {
             break;
 
         case 'anomaly':
-            chart.menu = chart.type;
-            if (parts.length > 2 && parts[1] === 'detection') {
-                chart.menu_pattern = tmp + '_' + parts[1];
-            } else if (parts.length > 1) {
-                chart.menu_pattern = tmp;
+            if (parts.length >= 2 && parts[1].startsWith('detection')) {
+                chart.menu = tmp + '_detection';
             }
             break;
 
