@@ -41,7 +41,7 @@ const DatePickerInput = ({
     <StyledDateInput
       type="text"
       name={name}
-      value={inputValue}
+      value={value ? inputValue : placeholderText}
       onChange={onChange}
       onBlur={onBlur}
       onFocus={onFocus}

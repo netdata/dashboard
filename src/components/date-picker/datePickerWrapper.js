@@ -85,14 +85,14 @@ const DatePickerWrapper = ({
           value={convertedStartDate}
           onDatesChange={setValidStartDate}
           onFocus={onInputFocus}
-          placeholderText="Select from date"
+          placeholderText="Select a start date"
         />
         <DatePickerInput
           name="endDate"
           value={convertedEndDate}
           onDatesChange={setValidEndDate}
           onFocus={onInputFocus}
-          placeholderText="Select to date"
+          placeholderText="Select an end date"
         />
       </Flex>
     </Flex>
