@@ -60,6 +60,7 @@ const ReduxDatePickerContainer = memo(({ tagging, isPlaying }) => {
   return (
     <DatePickerDrop
       values={pickedValues}
+      defaultValue={defaultAfter}
       onChange={handlePickedValuesChange}
       tagging={tagging}
       isPlaying={isPlaying}

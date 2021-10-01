@@ -26,6 +26,7 @@ export const reportEvent = (
 const DatePickerDrop = ({
   onChange,
   values: { start: initialStartDate, end: initialEndDate } = {},
+  defaultValue,
   tagging = "",
   isPlaying,
 }) => {
@@ -48,7 +49,7 @@ const DatePickerDrop = ({
     })
   }, [initialStartDate, initialEndDate])
 
-  const clearChanges = useCallback(() => setDates({ startDate: -60 * 15, endDate: 0 }), [])
+  const clearChanges = useCallback(() => setDates({ startDate: defaultValue, endDate: 0 }), [])
 
   const onInputFocus = useCallback(e => {
     if (!e.target.name) return
@@ -66,7 +67,9 @@ const DatePickerDrop = ({
   const focusTagging = useMemo(() => getFocusTagging(focusedInput), [focusedInput])
 
   const isValidTimePeriod = startDate !== null && endDate !== null && startDate !== endDate
-  const isButtonDisabled = startDate === initialStartDate && endDate === initialEndDate
+  const isApplyDisabled = startDate === initialStartDate && endDate === initialEndDate
+  const consistentDefaultValue = useMemo(() => defaultValue, [])
+  const isClearDisabled = startDate === consistentDefaultValue
 
   const handleTimePeriodChange = useCallback((time, resolution) => {
     setResolution(resolution)
@@ -128,14 +131,14 @@ const DatePickerDrop = ({
                 label="CLEAR"
                 flavour="hollow"
                 onClick={clearChanges}
-                disabled={isButtonDisabled}
+                disabled={isClearDisabled}
                 data-ga={`date-picker::click-clear::${tagging}-${focusTagging}`}
                 data-testid="datePicker-clear"
               />
               <Button
                 label="APPLY"
                 onClick={applyChanges}
-                disabled={!isValidTimePeriod || isButtonDisabled}
+                disabled={!isValidTimePeriod || isApplyDisabled}
                 data-ga={`date-picker::click-apply::${tagging}-${focusTagging}`}
                 data-testid="datePicker-apply"
               />
