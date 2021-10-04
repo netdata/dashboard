@@ -17,7 +17,7 @@ const useConvertedDates = (startDate, endDate) => {
       convertTimestampToDate(startDate, getLocaleDate),
       convertTimestampToDate(endDate, getLocaleDate),
     ],
-    [startDate, endDate]
+    [startDate, endDate, getLocaleDate]
   )
 }
 

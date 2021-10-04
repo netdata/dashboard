@@ -14,6 +14,7 @@ const CustomTimePeriod = ({ handleTimePeriodChange, value, resolution, tagging }
   const [inputValue, setInputValue] = useState(getInputValue)
   const [isDropdownOpen, toggleDropdown] = useState(false)
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => setInputValue(getInputValue()), [value])
 
   const onChange = useCallback(e => setInputValue(e.target.value), [])
@@ -32,7 +33,7 @@ const CustomTimePeriod = ({ handleTimePeriodChange, value, resolution, tagging }
         return handleTimePeriodChange(parseInputPeriod(currentValue, resolution), resolution)
       return value <= 0 ? setInputValue(getCustomTimePeriod(-value, resolution)) : setInputValue(0)
     },
-    [resolution, inputValue]
+    [resolution, value, handleTimePeriodChange]
   )
 
   const onChangeResolution = useCallback(
@@ -42,7 +43,7 @@ const CustomTimePeriod = ({ handleTimePeriodChange, value, resolution, tagging }
         toggleDropdown(false)
       }
     },
-    [inputValue]
+    [inputValue, handleTimePeriodChange]
   )
 
   const renderTitle = () => (

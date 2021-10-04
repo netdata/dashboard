@@ -25,7 +25,7 @@ const DatePickerWrapper = ({
       isBefore(convertTimestampToDate(startDate, getLocaleDate), convertedEndDate)
         ? setStartDate(startDate)
         : setPreviousValue(),
-    [endDate, getLocaleDate]
+    [convertedEndDate, getLocaleDate, setStartDate]
   )
 
   const setValidEndDate = useCallback(
@@ -33,7 +33,7 @@ const DatePickerWrapper = ({
       isBefore(convertedStartDate, convertTimestampToDate(endDate, getLocaleDate))
         ? setEndDate(endDate)
         : setPreviousValue(),
-    [startDate, getLocaleDate]
+    [convertedStartDate, getLocaleDate, setEndDate]
   )
 
   const onChange = useCallback(
@@ -52,7 +52,7 @@ const DatePickerWrapper = ({
 
       onDatesChange(startDateTimestamp, endDateTimestamp)
     },
-    [utcOffset]
+    [utcOffset, onDatesChange]
   )
 
   return (

@@ -30,11 +30,13 @@ const PickerAccessorElement = forwardRef(
         setRangeValues({ start: Math.round(timeframe) })
         setTimeframe(null)
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [startDate, endDate, timeframe, isPlaying])
 
     const isSameDate = useMemo(() => getIsSameDate(startDate, endDate), [startDate, endDate])
     const duration = useMemo(
       () => getGranularDuration(getDuration(startDate, endDate).as("milliseconds")),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       [isPlaying, startDate, endDate]
     )
 

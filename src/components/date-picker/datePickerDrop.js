@@ -47,8 +47,9 @@ const DatePickerDrop = ({
       startDate: initialStartDate,
       endDate: initialEndDate,
     })
-  }, [initialStartDate, initialEndDate])
+  }, [initialStartDate, initialEndDate, setDates])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const clearChanges = useCallback(() => setDates({ startDate: defaultValue, endDate: 0 }), [])
 
   const onInputFocus = useCallback(e => {
@@ -68,16 +69,20 @@ const DatePickerDrop = ({
 
   const isValidTimePeriod = startDate !== null && endDate !== null && startDate !== endDate
   const isApplyDisabled = startDate === initialStartDate && endDate === initialEndDate
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const consistentDefaultValue = useMemo(() => defaultValue, [])
   const isClearDisabled = startDate === consistentDefaultValue
 
-  const handleTimePeriodChange = useCallback((time, resolution) => {
-    setResolution(resolution)
-    setDates({
-      startDate: time,
-      endDate: 0,
-    })
-  }, [])
+  const handleTimePeriodChange = useCallback(
+    (time, resolution) => {
+      setResolution(resolution)
+      setDates({
+        startDate: time,
+        endDate: 0,
+      })
+    },
+    [setDates, setResolution]
+  )
   const onDatepickerChange = (startDate, endDate) => {
     setDates({ startDate, endDate })
     const date = focusTagging === "finish" ? endDate || startDate : startDate || endDate
