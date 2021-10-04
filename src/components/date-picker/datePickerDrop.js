@@ -26,7 +26,7 @@ export const reportEvent = (
 const DatePickerDrop = ({
   onChange,
   values: { start: initialStartDate, end: initialEndDate } = {},
-  defaultValue,
+  defaultValue = -60 * 15,
   tagging = "",
   isPlaying,
 }) => {

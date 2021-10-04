@@ -35,6 +35,7 @@ const ReduxDatePickerContainer = memo(({ tagging, isPlaying }) => {
     if (start < 0) {
       // live mode
       dashboardDispatch(
+        // changes the default value, so it becomes inconsistent
         setDefaultAfterAction({
           after: start,
         })
