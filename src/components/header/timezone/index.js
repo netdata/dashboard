@@ -51,7 +51,7 @@ const Timezone = () => {
     if (timezoneHash !== utc) updateUtcParam(utc)
     if (selectedTimezone !== utc) dispatch(setOptionAction({ key: "timezone", value: utc }))
 
-    dispatch(setOptionAction({ key: "utcOffset", value: parseInt(offset) }))
+    dispatch(setOptionAction({ key: "utcOffset", value: parseFloat(offset) }))
 
     return offset
     // eslint-disable-next-line react-hooks/exhaustive-deps

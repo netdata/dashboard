@@ -1,38 +1,19 @@
-import React, { useState, useMemo, useEffect, forwardRef } from "react"
+import React, { useMemo, forwardRef } from "react"
 import Tooltip from "@/src/components/tooltips"
-import { useSelector as useDashboardSelector } from "store/redux-separate-context"
-import { selectGlobalPanAndZoom } from "domains/global/selectors"
-import {
-  getStartDate,
-  getEndDate,
-  getIsSameDate,
-  getDuration,
-  MINUTE,
-  getGranularDuration,
-} from "./utils"
+import { getStartDate, getEndDate, getIsSameDate, getDuration, getGranularDuration } from "./utils"
 import Container from "./container"
 import DateBox from "./dateBox"
 import DurationBox from "./durationBox"
 
 const PickerAccessorElement = forwardRef(
-  (
-    { onClick, start = 15 * MINUTE, end, isPlaying, isPickerOpen, setRangeValues, tagging },
-    ref
-  ) => {
-    const [timeframe, setTimeframe] = useState()
-    const startDate = getStartDate(start)
-    const endDate = getEndDate(end)
-    const globalPanAndZoom = useDashboardSelector(selectGlobalPanAndZoom)
-    useEffect(() => {
-      const after = getDuration(startDate, endDate).as("seconds")
-      if (!isPlaying && timeframe !== after) setTimeframe(Math.round(after))
-      if (isPlaying && timeframe && !!globalPanAndZoom) {
-        setRangeValues({ start: Math.round(timeframe) })
-        setTimeframe(null)
-      }
-    }, [startDate, endDate, timeframe, isPlaying])
+  ({ onClick, start, end, isPlaying, isPickerOpen, tagging }, ref) => {
+    const [startDate, endDate, isSameDate] = useMemo(() => {
+      const startDate = getStartDate(start)
+      const endDate = getEndDate(end)
+      const isSameDate = getIsSameDate(startDate, endDate)
+      return [startDate, endDate, isSameDate]
+    }, [start, end])
 
-    const isSameDate = useMemo(() => getIsSameDate(startDate, endDate), [startDate, endDate])
     const duration = useMemo(
       () => getGranularDuration(getDuration(startDate, endDate).as("milliseconds")),
       [isPlaying, startDate, endDate]
@@ -44,6 +25,7 @@ const PickerAccessorElement = forwardRef(
         align="bottom"
         plain
       >
+        {" "}
         <Container
           alignItems="center"
           justifyContent="center"

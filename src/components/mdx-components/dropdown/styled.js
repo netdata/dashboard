@@ -32,7 +32,7 @@ export const ListContainer = styled.div`
   padding: ${getSizeBy(3)} 0;
 `
 
-export const OpenerIcon = styled(Icon)<{ noMargin: boolean }>`
+export const OpenerIcon = styled(Icon)`
   flex-shrink: 0;
   flex-grow: 0;
   margin-left: ${({ noMargin }) => (noMargin ? "unset" : "16px")};

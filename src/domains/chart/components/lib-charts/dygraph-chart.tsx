@@ -1038,7 +1038,7 @@ export const DygraphChart = ({
       xAxisDateString,
       xAxisTimeString,
     })
-    dygraphInstance.current.updateOptions(dygraphOptionsStatic)
+    if (!hasEmptyData) dygraphInstance.current.updateOptions(dygraphOptionsStatic)
   }, [dygraphChartType, timezone])
 
   // set selection
