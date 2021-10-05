@@ -3,7 +3,10 @@ import { Text } from "@netdata/netdata-ui"
 import { StyledTimePeriod } from "./styled"
 
 const TimePeriod = ({ value, period, resolution, isSelected, setTimeRange, tagging }) => {
-  const onClick = useCallback(() => setTimeRange(value, resolution), [value, resolution])
+  const onClick = useCallback(
+    () => setTimeRange(value, resolution),
+    [value, resolution, setTimeRange]
+  )
   return (
     <StyledTimePeriod
       key={value}

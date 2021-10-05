@@ -25,7 +25,6 @@ const PickerAccessorElement = forwardRef(
         align="bottom"
         plain
       >
-        {" "}
         <Container
           alignItems="center"
           justifyContent="center"

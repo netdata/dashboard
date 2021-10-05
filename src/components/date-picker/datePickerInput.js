@@ -32,10 +32,10 @@ const DatePickerInput = ({
         onDatesChange(timestamp, () => setFormattedValue(value))
       } else setFormattedValue(value)
     },
-    [value, utcOffset]
+    [value, utcOffset, onDatesChange, setFormattedValue]
   )
 
-  useEffect(() => setFormattedValue(value), [value])
+  useEffect(() => setFormattedValue(value), [value, setFormattedValue])
 
   return (
     <StyledDateInput
