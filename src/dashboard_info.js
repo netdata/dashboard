@@ -48,7 +48,8 @@ netdataDashboard.menu = {
     'net': {
         title: 'Network Interfaces',
         icon: '<i class="fas fa-sitemap"></i>',
-        info: 'Performance metrics for network interfaces.'
+        info: '<p>Performance <a href="https://www.kernel.org/doc/html/latest/networking/statistics.html" target="_blank">metrics for network interfaces</a>.</p>'+
+        '<p>Netdata retrieves this data reading the <code>/proc/net/dev</code> file and <code>/sys/class/net/</code> directory.</p>'
     },
 
     'wireless': {
@@ -62,7 +63,7 @@ netdataDashboard.menu = {
         icon: '<i class="fas fa-cloud"></i>',
         info: function (os) {
             if (os === "linux")
-                return 'Metrics for the networking stack of the system. These metrics are collected from <code>/proc/net/netstat</code>, apply to both IPv4 and IPv6 traffic and are related to operation of the kernel networking stack.';
+                return 'Metrics for the networking stack of the system. These metrics are collected from <code>/proc/net/netstat</code> or attaching <code>kprobes</code> to kernel functions, apply to both IPv4 and IPv6 traffic and are related to operation of the kernel networking stack.';
             else
                 return 'Metrics for the networking stack of the system.';
         }
@@ -89,13 +90,26 @@ netdataDashboard.menu = {
     'sctp': {
         title: 'SCTP Networking',
         icon: '<i class="fas fa-cloud"></i>',
-        info: '<a href="https://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol" target="_blank">Stream Control Transmission Protocol (SCTP)</a> is a computer network protocol which operates at the transport layer and serves a role similar to the popular protocols TCP and UDP. SCTP provides some of the features of both UDP and TCP: it is message-oriented like UDP and ensures reliable, in-sequence transport of messages with congestion control like TCP. It differs from those protocols by providing multi-homing and redundant paths to increase resilience and reliability.'
+        info: '<p><a href="https://en.wikipedia.org/wiki/Stream_Control_Transmission_Protocol" target="_blank">Stream Control Transmission Protocol (SCTP)</a> '+
+        'is a computer network protocol which operates at the transport layer and serves a role similar to the popular '+
+        'protocols TCP and UDP. SCTP provides some of the features of both UDP and TCP: it is message-oriented like UDP '+
+        'and ensures reliable, in-sequence transport of messages with congestion control like TCP. '+
+        'It differs from those protocols by providing multi-homing and redundant paths to increase resilience and reliability.</p>'+
+        '<p>Netdata collects SCTP metrics reading the <code>/proc/net/sctp/snmp</code> file.</p>'
     },
 
     'ipvs': {
         title: 'IP Virtual Server',
         icon: '<i class="fas fa-eye"></i>',
-        info: '<a href="http://www.linuxvirtualserver.org/software/ipvs.html" target="_blank">IPVS (IP Virtual Server)</a> implements transport-layer load balancing inside the Linux kernel, so called Layer-4 switching. IPVS running on a host acts as a load balancer at the front of a cluster of real servers, it can direct requests for TCP/UDP based services to the real servers, and makes services of the real servers to appear as a virtual service on a single IP address.'
+        info: '<p><a href="http://www.linuxvirtualserver.org/software/ipvs.html" target="_blank">IPVS (IP Virtual Server)</a> '+
+        'implements transport-layer load balancing inside the Linux kernel, so called Layer-4 switching. '+
+        'IPVS running on a host acts as a load balancer at the front of a cluster of real servers, '+
+        'it can direct requests for TCP/UDP based services to the real servers, '+
+        'and makes services of the real servers to appear as a virtual service on a single IP address.</p>'+
+        '<p>Netdata collects summary statistics, reading <code>/proc/net/ip_vs_stats</code>. '+
+        'To display the statistics information of services and their servers, run <code>ipvsadm -Ln --stats</code> '+
+        'or <code>ipvsadm -Ln --rate</code> for the rate statistics. '+
+        'For details, see <a href="https://linux.die.net/man/8/ipvsadm" target="_blank">ipvsadm(8)</a>.</p>'
     },
 
     'netfilter': {
@@ -128,9 +142,20 @@ netdataDashboard.menu = {
         info: 'Charts with performance information for all the system disks. Special care has been given to present disk performance metrics in a way compatible with <code>iostat -x</code>. netdata by default prevents rendering performance charts for individual partitions and unmounted virtual disks. Disabled charts can still be enabled by configuring the relative settings in the netdata configuration file.'
     },
 
+    'mount': {
+        title: 'Mount Points',
+        icon: '<i class="fas fa-hdd"></i>',
+        info: ''
+    },
+
     'mdstat': {
         title: 'MD arrays',
-        icon: '<i class="fas fa-hdd"></i>'
+        icon: '<i class="fas fa-hdd"></i>',
+        info: '<p>RAID devices are virtual devices created from two or more real block devices. '+
+        '<a href="https://man7.org/linux/man-pages/man4/md.4.html" target="_blank">Linux Software RAID</a> devices are '+
+        'implemented through the md (Multiple Devices) device driver.</p>'+
+        '<p>Netdata monitors the current status of MD arrays reading <a href="https://raid.wiki.kernel.org/index.php/Mdstat" target="_blank">/proc/mdstat</a> and '+
+        '<code>/sys/block/%s/md/mismatch_cnt</code> files.</p>'
     },
 
     'sensors': {
@@ -637,6 +662,11 @@ netdataDashboard.menu = {
         info: 'Z scores scores relating to key system metrics.'
     },
 
+    'anomaly_detection': {
+        title: 'Anomaly Detection',
+        icon: '<i class="fas fa-brain"></i>',
+        info: 'Charts relating to anomaly detection, increased `anomalous` dimensions or a higher than usual `anomaly_rate` could be signs of some abnormal behaviour. Read our <a href="https://learn.netdata.cloud/guides/monitor/anomaly-detection" target="_blank">anomaly detection guide</a> for more details.'
+    },
 };
 
 
@@ -714,8 +744,39 @@ netdataDashboard.submenu = {
         info: 'Non-Uniform Memory Access (NUMA) is a hierarchical memory design the memory access time is dependent on locality. Under NUMA, a processor can access its own local memory faster than non-local memory (memory local to another processor or memory shared between processors). The individual metrics are described in the <a href="https://www.kernel.org/doc/Documentation/numastat.txt" target="_blank">Linux kernel documentation</a>.'
     },
 
+    'mem.ecc': {
+        info: '<p><a href="https://en.wikipedia.org/wiki/ECC_memory" target="_blank">ECC memory</a> '+
+        'is a type of computer data storage that uses an error correction code (ECC) to detect '+
+        'and correct n-bit data corruption which occurs in memory. '+
+        'Typically, ECC memory maintains a memory system immune to single-bit errors: '+
+        'the data that is read from each word is always the same as the data that had been written to it, '+
+        'even if one of the bits actually stored has been flipped to the wrong state.</p>'+
+        '<p>Memory errors can be classified into two types: '+
+        '<b>Soft errors</b>, which randomly corrupt bits but do not leave physical damage. '+
+        'Soft errors are transient in nature and are not repeatable, can be because of electrical or '+
+        'magnetic interference. '+
+        '<b>Hard errors</b>, which corrupt bits in a repeatable manner because '+
+        'of a physical/hardware defect or an environmental problem.'
+    },
+
     'ip.ecn': {
-        info: '<a href="https://en.wikipedia.org/wiki/Explicit_Congestion_Notification" target="_blank">Explicit Congestion Notification (ECN)</a> is a TCP extension that allows end-to-end notification of network congestion without dropping packets. ECN is an optional feature that may be used between two ECN-enabled endpoints when the underlying network infrastructure also supports it.'
+        info: '<a href="https://en.wikipedia.org/wiki/Explicit_Congestion_Notification" target="_blank">Explicit Congestion Notification (ECN)</a> '+
+        'is an extension to the IP and to the TCP that allows end-to-end notification of network congestion without dropping packets. '+
+        'ECN is an optional feature that may be used between two ECN-enabled endpoints when '+
+        'the underlying network infrastructure also supports it.'
+    },
+
+    'ip.multicast': {
+        info: '<a href="https://en.wikipedia.org/wiki/Multicast" target="_blank">IP multicast</a> is a technique for '+
+        'one-to-many communication over an IP network. '+
+        'Multicast uses network infrastructure efficiently by requiring the source to send a packet only once, '+
+        'even if it needs to be delivered to a large number of receivers. '+
+        'The nodes in the network take care of replicating the packet to reach multiple receivers only when necessary.'
+    },
+    'ip.broadcast': {
+        info: 'In computer networking, '+
+        '<a href="https://en.wikipedia.org/wiki/Broadcasting_(networking)" target="_blank">broadcasting</a> refers to transmitting a packet that will be received by every device on the network. '+
+        'In practice, the scope of the broadcast is limited to a broadcast domain.'
     },
 
     'netfilter.conntrack': {
@@ -730,7 +791,15 @@ netdataDashboard.submenu = {
 
     'netfilter.synproxy': {
         title: 'DDoS protection',
-        info: 'DDoS protection performance metrics. <a href="https://github.com/firehol/firehol/wiki/Working-with-SYNPROXY" target="_blank">SYNPROXY</a> is a TCP SYN packets proxy. It is used to protect any TCP server (like a web server) from SYN floods and similar DDoS attacks. It is a netfilter module, in the Linux kernel (since version 3.12). It is optimized to handle millions of packets per second utilizing all CPUs available without any concurrency locking between the connections. It can be used for any kind of TCP traffic (even encrypted), since it does not interfere with the content itself.'
+        info: 'DDoS protection performance metrics. <a href="https://github.com/firehol/firehol/wiki/Working-with-SYNPROXY" target="_blank">SYNPROXY</a> '+
+        'is a TCP SYN packets proxy. '+
+        'It is used to protect any TCP server (like a web server) from SYN floods and similar DDoS attacks. '+
+        'SYNPROXY intercepts new TCP connections and handles the initial 3-way handshake using syncookies '+
+        'instead of conntrack to establish the connection. '+
+        'It is optimized to handle millions of packets per second utilizing all CPUs available without '+
+        'any concurrency locking between the connections. '+
+        'It can be used for any kind of TCP traffic (even encrypted), '+
+        'since it does not interfere with the content itself.'
     },
 
     'ipfw.dynamic_rules': {
@@ -795,9 +864,132 @@ netdataDashboard.submenu = {
     'ntpd.peers': {
         title: 'peers',
         info: 'Statistics of the peer variables for each peer configured in <code>/etc/ntp.conf</code> as shown by the readvar billboard <code>ntpq -c "rv &lt;association&gt;"</code>, while each peer is assigned a nonzero association ID as shown by <code>ntpq -c "apeers"</code>. The module periodically scans for new/changed peers (default: every 60s). <b>ntpd</b> selects the best possible peer from the available peers to synchronize the clock. A minimum of at least 3 peers is required to properly identify the best possible peer.'
-    }
-};
+    },
 
+    'mem.page_cache': {
+        title: 'page cache (eBPF)',
+        info: 'Monitor calls to functions used to manipulate <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows page cache manipulation per <a href="#menu_apps_submenu_page_cache">application</a>.'
+    },
+
+    'apps.page_cache': {
+        title: 'page cache (eBPF)',
+        info: 'Netdata also gives a summary for these charts in <a href="#menu_mem_submenu_page_cache">Memory submenu</a>.'
+    },
+
+    'filesystem.vfs': {
+        title: 'vfs (eBPF)',
+        info: 'Monitor calls to functions used to manipulate <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#vfs" target="_blank">File Systems</a>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows Virtual File System per <a href="#menu_apps_submenu_vfs">application</a>.'
+    },
+
+    'apps.vfs': {
+        title: 'vfs (eBPF)',
+        info: 'Netdata also gives a summary for these charts in <a href="#menu_filesystem_submenu_vfs">Filesystem submenu</a>.'
+    },
+
+    'filesystem.ext4_latency': {
+        info: 'Latency is the time it takes for an event to be completed. We calculate the difference between the calling and return times, this spans disk I/O, file system operations (lock, I/O), run queue latency and all events related to the monitored action. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+    },
+
+    'filesystem.xfs_latency': {
+        info: 'Latency is the time it takes for an event to be completed. We calculate the difference between the calling and return times, this spans disk I/O, file system operations (lock, I/O), run queue latency and all events related to the monitored action. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.nfs_latency': {
+        info: 'Latency is the time it takes for an event to be completed. We calculate the difference between the calling and return times, this spans disk I/O, file system operations (lock, I/O), run queue latency and all events related to the monitored action. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.zfs_latency': {
+        info: 'Latency is the time it takes for an event to be completed. We calculate the difference between the calling and return times, this spans disk I/O, file system operations (lock, I/O), run queue latency and all events related to the monitored action. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.btrfs_latency': {
+        info: 'Latency is the time it takes for an event to be completed. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+    },
+
+    'filesystem.file_access': {
+        title: 'file access (eBPF)',
+        info: 'When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows file access per <a href="#menu_apps_submenu_file_access">application</a>.'
+    },
+
+    'apps.file_access': {
+        title: 'file access (eBPF)',
+        info: 'Netdata also gives a summary for this chart on <a href="#menu_filesystem_submenu_file_access">Filesystem submenu</a> (more details on <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#file" target="_blank">eBPF plugin file chart section</a>).'
+    },
+
+    'ip.kernel': {
+        title: 'kernel functions',
+        info: 'Next charts are made when <code>ebpf.plugin</code> is running on your host. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows calls for kernel functions per <a href="#menu_apps_submenu_net">application</a>.'
+    },
+
+    'apps.net': {
+        title: 'network',
+        info: 'Netdata also gives a summary for eBPF charts in <a href="#menu_ip_submenu_kernel">Networking Stack submenu</a>.'
+    },
+
+    'system.ipc semaphores': {
+        info: 'System V semaphores is an inter-process communication (IPC) mechanism. '+
+        'It allows processes or threads within a process to synchronize their actions. '+
+        'They are often used to monitor and control the availability of system resources such as shared memory segments. ' +
+        'For details, see <a href="https://man7.org/linux/man-pages/man7/svipc.7.html" target="_blank">svipc(7)</a>. ' +
+        'To see the host IPC semaphore information, run <code>ipcs -us</code>. For limits, run <code>ipcs -ls</code>.'
+    },
+
+    'system.ipc shared memory': {
+        info: 'System V shared memory is an inter-process communication (IPC) mechanism. '+
+        'It allows processes to communicate information by sharing a region of memory. '+
+        'It is the fastest form of inter-process communication available since no kernel involvement occurs when data is passed between the processes (no copying). '+
+        'Typically, processes must synchronize their access to a shared memory object, using, for example, POSIX semaphores. '+
+        'For details, see <a href="https://man7.org/linux/man-pages/man7/svipc.7.html" target="_blank">svipc(7)</a>. '+
+        'To see the host IPC shared memory information, run <code>ipcs -um</code>. For limits, run <code>ipcs -lm</code>.'
+    },
+
+    'system.ipc message queues': {
+        info: 'System V message queues is an inter-process communication (IPC) mechanism. '+
+        'It allow processes to exchange data in the form of messages. '+
+        'For details, see <a href="https://man7.org/linux/man-pages/man7/svipc.7.html" target="_blank">svipc(7)</a>. ' +
+        'To see the host IPC messages information, run <code>ipcs -uq</code>. For limits, run <code>ipcs -lq</code>.'
+    },
+
+    'system.interrupts': {
+        info: '<a href="https://en.wikipedia.org/wiki/Interrupt" target="_blank"><b>Interrupts</b></a> are signals '+
+        'sent to the CPU by external devices (normally I/O devices) or programs (running processes). '+
+        'They tell the CPU to stop its current activities and execute the appropriate part of the operating system. '+
+        'Interrupt types are '+
+        '<b>hardware</b> (generated by hardware devices to signal that they need some attention from the OS), '+
+        '<b>software</b> (generated by programs when they want to request a system call to be performed by the operating system), and '+
+        '<b>traps</b> (generated by the CPU itself to indicate that some error or condition occurred for which assistance from the operating system is needed).'
+    },
+
+    'system.softirqs': {
+        info: 'Software interrupts (or "softirqs") are one of the oldest deferred-execution mechanisms in the kernel. '+
+        'Several tasks among those executed by the kernel are not critical: '+
+        'they can be deferred for a long period of time, if necessary. '+
+        'The deferrable tasks can execute with all interrupts enabled '+
+        '(softirqs are patterned after hardware interrupts). '+
+        'Taking them out of the interrupt handler helps keep kernel response time small.'
+    },
+
+    'cpu.softirqs': {
+        info: 'Total number of software interrupts per CPU. '+
+        'To see the total number for the system check the <a href="#menu_system_submenu_softirqs">softirqs</a> section.'
+    },
+
+    'cpu.interrupts': {
+        info: 'Total number of interrupts per CPU. '+
+        'To see the total number for the system check the <a href="#menu_system_submenu_interrupts">interrupts</a> section. '+
+        'The last column in <code>/proc/interrupts</code> provides an interrupt description or the device name that registered the handler for that interrupt.'
+    },
+
+    'cpu.throttling': {
+        info: ' CPU throttling is commonly used to automatically slow down the computer '+
+        'when possible to use less energy and conserve battery.'
+    },
+
+    'cpu.cpuidle': {
+        info: '<a href="https://en.wikipedia.org/wiki/Advanced_Configuration_and_Power_Interface#Processor_states" target="_blank">Idle States (C-states)</a> '+
+        'are used to save power when the processor is idle.'
+    },
+};
 
 // ----------------------------------------------------------------------------
 // chart
@@ -895,15 +1087,35 @@ netdataDashboard.context = {
 
     'system.intr': {
         colors: '#DD5555',
-        info: 'Total number of CPU interrupts. Check <code>system.interrupts</code> that gives more detail about each interrupt and also the <a href="#menu_cpu">CPUs</a> section where interrupts are analyzed per CPU core.'
+        info: 'Total number of CPU interrupts. Check <code>system.interrupts</code> that gives more detail about each interrupt and also the <a href="#menu_cpu">CPUs</a> section where interrupts are analyzed <a href="#menu_cpu_submenu_interrupts">per CPU core</a>.'
     },
 
     'system.interrupts': {
-        info: 'CPU interrupts in detail. At the <a href="#menu_cpu">CPUs</a> section, interrupts are analyzed per CPU core.'
+        info: 'CPU interrupts in detail. At the <a href="#menu_cpu">CPUs</a> section, interrupts are analyzed <a href="#menu_cpu_submenu_interrupts">per CPU core</a>. '+
+        'The last column in <code>/proc/interrupts</code> provides an interrupt description or the device name that registered the handler for that interrupt.'
+    },
+
+    'system.hardirq_latency': {
+        info: 'Total time spent servicing hardware interrupts. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/hardirqs_example.txt" target="_blank">hardirqs</a> from BCC tools.'
     },
 
     'system.softirqs': {
-        info: 'CPU softirqs in detail. At the <a href="#menu_cpu">CPUs</a> section, softirqs are analyzed per CPU core.'
+        info: '<p>Total number of software interrupts in the system. '+
+        'At the <a href="#menu_cpu">CPUs</a> section, softirqs are analyzed <a href="#menu_cpu_submenu_softirqs">per CPU core</a>.</p>'+
+        '<p><b>HI</b> - high priority tasklets. '+
+        '<b>TIMER</b> - tasklets related to timer interrupts. '+
+        '<b>NET_TX</b>, <b>NET_RX</b> - used for network transmit and receive processing. '+
+        '<b>BLOCK</b> - handles block I/O completion events. '+
+        '<b>IRQ_POLL</b> - used by the IO subsystem to increase performance (a NAPI like approach for block devices). '+
+        '<b>TASKLET</b> - handles regular tasklets. '+
+        '<b>SCHED</b> - used by the scheduler to perform load-balancing and other scheduling tasks. '+
+        '<b>HRTIMER</b> - used for high-resolution timers. '+
+        '<b>RCU</b> - performs read-copy-update (RCU) processing.</p>'
+
+    },
+
+    'system.softirq_latency': {
+        info: 'Total time spent servicing software interrupts. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/softirqs_example.txt" target="_blank">softirqs</a> from BCC tools.'
     },
 
     'system.processes': {
@@ -953,6 +1165,47 @@ netdataDashboard.context = {
         info: 'System swap memory usage. Swap space is used when the amount of physical memory (RAM) is full. When the system needs more memory resources and the RAM is full, inactive pages in memory are moved to the swap space (usually a disk, a disk partition or a file).'
     },
 
+    'system.swapcalls': {
+        info: 'Monitor calls to functions <code>swap_readpage</code> and <code>swap_writepage</code>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows swap access per <a href="#menu_apps_submenu_swap">application</a>.'
+    },
+
+    'system.ipc_semaphores': {
+        info: 'Number of allocated System V IPC semaphores. '+
+        'The system-wide limit on the number of semaphores in all semaphore sets is specified in <code>/proc/sys/kernel/sem</code> file (2nd field).'
+    },
+
+    'system.ipc_semaphore_arrays': {
+        info: 'Number of used System V IPC semaphore arrays (sets). Semaphores support semaphore sets where each one is a counting semaphore. '+
+        'So when an application requests semaphores, the kernel releases them in sets. '+
+        'The system-wide limit on the maximum number of semaphore sets is specified in <code>/proc/sys/kernel/sem</code> file (4th field).'
+    },
+
+    'system.shared_memory_segments': {
+        info: 'Number of allocated System V IPC memory segments. '+
+        'The system-wide maximum number of shared memory segments that can be created is specified in <code>/proc/sys/kernel/shmmni</code> file.'
+    },
+
+    'system.shared_memory_bytes': {
+        info: 'Amount of memory currently used by System V IPC memory segments. '+
+        'The run-time limit on the maximum  shared memory segment size that can be created is specified in <code>/proc/sys/kernel/shmmax</code> file.'
+    },
+
+    'system.shared_memory_calls': {
+        info: 'Monitor calls to functions <code>shmget</code>, <code>shmat</code>, <code>shmdt</code>, and <code>shmctl</code>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows shared memory system call usage <a href="#menu_apps_submenu_ipc_shared_memory">per application</a>.'
+    },
+
+    'system.message_queue_messages': {
+        info: 'Number of messages that are currently present in System V IPC message queues.'
+    },
+
+    'system.message_queue_bytes': {
+        info: 'Amount of memory currently used by messages in System V IPC message queues.'
+    },
+
+    'system.uptime': {
+        info: 'The amount of time the system has been running, including time spent in suspend.'
+    },
+
     // ------------------------------------------------------------------------
     // CPU charts
 
@@ -975,6 +1228,22 @@ netdataDashboard.context = {
     'cpu.softnet_stat': {
         commonMin: true,
         commonMax: true
+    },
+
+    'cpu.core_throttling': {
+        info: 'The number of adjustments made to the clock speed of the CPU based on it\'s core temperature.'
+    },
+
+    'cpu.package_throttling': {
+        info: 'The number of adjustments made to the clock speed of the CPU based on it\'s package (chip) temperature.'
+    },
+
+    'cpufreq.cpufreq': {
+        info: 'The frequency measures the number of cycles your CPU executes per second.'
+    },
+
+    'cpuidle.cpuidle': {
+        info: 'The percentage of time spent in C-states.'
     },
 
     // ------------------------------------------------------------------------
@@ -1049,7 +1318,13 @@ netdataDashboard.context = {
     },
 
     'mem.kernel': {
-        info: 'The total amount of memory being used by the kernel. <b>Slab</b> is the amount of memory used by the kernel to cache data structures for its own use. <b>KernelStack</b> is the amount of memory allocated for each task done by the kernel. <b>PageTables</b> is the amount of memory dedicated to the lowest level of page tables (A page table is used to turn a virtual address into a physical memory address). <b>VmallocUsed</b> is the amount of memory being used as virtual address space.'
+        info: 'The total amount of memory being used by the kernel. '+
+        '<b>Slab</b> is the memory used by the kernel to cache data structures for its own use. '+
+        '<b>KernelStack</b> is the memory allocated for each task done by the kernel. '+
+        '<b>PageTables</b> is the memory dedicated to the lowest level of page tables (A page table is used to turn a virtual address into a physical memory address). '+
+        '<b>VmallocUsed</b> is the memory being used as virtual address space. '+
+        '<b>Percpu</b> is the memory allocated to the per-CPU allocator used to back per-CPU allocations (excludes the cost of metadata). '+
+        'When you create a per-CPU variable, each processor on the system gets its own copy of that variable.'
     },
 
     'mem.slab': {
@@ -1062,6 +1337,22 @@ netdataDashboard.context = {
 
     'mem.transparent_hugepages': {
         info: 'Transparent HugePages (THP) is backing virtual memory with huge pages, supporting automatic promotion and demotion of page sizes. It works for all applications for anonymous memory mappings and tmpfs/shmem.'
+    },
+
+    'mem.hwcorrupt': {
+        info: 'The amount of memory with physical corruption problems, identified by <a href="https://en.wikipedia.org/wiki/ECC_memory" target="_blank">ECC</a> and set aside by the kernel so it does not get used.'
+    },
+
+    'mem.ecc_ce': {
+        info: 'The number of correctable (single-bit) ECC errors. '+
+        'These errors do not affect the normal operation of the system '+
+        'because they are still being corrected. '+
+        'Periodic correctable errors may indicate that one of the memory modules is slowly failing.'
+    },
+
+    'mem.ecc_ue': {
+        info: 'The number of uncorrectable (multi-bit) ECC errors. '+
+        'An uncorrectable error is a fatal issue that will typically lead to an OS crash.'
     },
 
     'mem.cachestat_ratio': {
@@ -1097,30 +1388,46 @@ netdataDashboard.context = {
     },
 
     'filesystem.dc_hit_ratio': {
-        info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
+        info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows directory cache per <a href="#menu_apps_submenu_directory_cache__eBPF_">application</a>.'
     },
 
     'filesystem.dc_reference': {
         info: 'Counters of file accesses. <code>Reference</code> is when there is a file access and the file is not present in the directory cache. <code>Miss</code> is when there is file access and the file is not found in the filesystem. <code>Slow</code> is when there is a file access and the file is present in the filesystem but not in the directory cache. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
     },
 
-    // ------------------------------------------------------------------------
-    // network interfaces
-
-    'net.drops': {
-        info: 'Packets that have been dropped at the network interface level. These are the same counters reported by <code>ifconfig</code> as <code>RX dropped</code> (inbound) and <code>TX dropped</code> (outbound). <b>inbound</b> packets can be dropped at the network interface level due to <a href="#menu_system_submenu_softnet_stat">softnet backlog</a> overflow, bad / unintended VLAN tags, unknown or unregistered protocols, IPv6 frames when the server is not configured for IPv6. Check <a href="https://www.novell.com/support/kb/doc.php?id=7007165" target="_blank">this document</a> for more information.'
+    'md.health': {
+        info: 'Number of failed devices per MD array. '+
+        'Netdata retrieves this data from the <b>[n/m]</b> field of the md status line. '+
+        'It means that ideally the array would have <b>n</b> devices however, currently, <b>m</b> devices are in use. '+
+        '<code>failed disks</code> is <b>n-m</b>.'
     },
-
-    'net.duplex': {
-        info: 'State map: 0 - unknown, 1 - half duplex, 2 - full duplex'
+    'md.disks': {
+        info: 'Number of devices in use and in the down state. '+
+        'Netdata retrieves this data from the <b>[n/m]</b> field of the md status line. '+
+        'It means that ideally the array would have <b>n</b> devices however, currently, <b>m</b> devices are in use. '+
+        '<code>inuse</code> is <b>m</b>, <code>down</code> is <b>n-m</b>.'
     },
-
-    'net.operstate': {
-        info: 'State map: 0 - unknown, 1 - notpresent, 2 - down, 3 - lowerlayerdown, 4 - testing, 5 - dormant, 6 - up'
+    'md.status': {
+        info: 'Completion progress of the ongoing operation.'
     },
-
-    'net.carrier': {
-        info: 'State map: 0 - down, 1 - up'
+    'md.expected_time_until_operation_finish': {
+        info: 'Estimated time to complete the ongoing operation. '+
+        'The time is only an approximation since the operation speed will vary according to other I/O demands.'
+    },
+    'md.operation_speed': {
+        info: 'Speed of the ongoing operation. '+
+        'The system-wide rebuild speed limits are specified in <code>/proc/sys/dev/raid/{speed_limit_min,speed_limit_max}</code> files. '+
+        'These options are good for tweaking rebuilt process and may increase overall system load, cpu and memory usage.'
+    },
+    'md.mismatch_cnt': {
+        info: 'When performing <b>check</b> and <b>repair</b>, and possibly when performing <b>resync</b>, md will count the number of errors that are found. '+
+        'A count of mismatches is recorded in the <code>sysfs</code> file <code>md/mismatch_cnt</code>. '+
+        'This value is the number of sectors that were re-written, or (for <b>check</b>) would have been re-written. '+
+        'It may be larger than the number of actual errors by a factor of the number of sectors in a page. '+
+        'Mismatches can not be interpreted very reliably on RAID1 or RAID10, especially when the device is used for swap. '+
+        'On a truly clean RAID5 or RAID6 array, any mismatches should indicate a hardware problem at some level - '+
+        'software issues should never cause such a mismatch. '+
+        'For details, see <a href="https://man7.org/linux/man-pages/man4/md.4.html" target="_blank">md(4)</a>.'
     },
 
     // ------------------------------------------------------------------------
@@ -1128,9 +1435,58 @@ netdataDashboard.context = {
 
     'ip.inerrors': {
         info: 'Errors encountered during the reception of IP packets. ' +
-            '<code>noroutes</code> (<code>InNoRoutes</code>) counts packets that were dropped because there was no route to send them. ' +
-            '<code>truncated</code> (<code>InTruncatedPkts</code>) counts packets which is being discarded because the datagram frame didn\'t carry enough data. ' +
-            '<code>checksum</code> (<code>InCsumErrors</code>) counts packets that were dropped because they had wrong checksum. '
+            '<b>noroutes</b> (<code>InNoRoutes</code>) counts packets that were dropped because there was no route to send them. ' +
+            '<b>truncated</b> (<code>InTruncatedPkts</code>) counts packets which is being discarded because the datagram frame didn\'t carry enough data. ' +
+            '<b>checksum</b> (<code>InCsumErrors</code>) counts packets that were dropped because they had wrong checksum. '
+    },
+
+    'ip.mcast': {
+        info: 'Total multicast traffic in the system.'
+    },
+
+    'ip.mcastpkts': {
+        info: 'Total transferred multicast packets in the system.'
+    },
+
+    'ip.bcast': {
+        info: 'Total broadcast traffic in the system.'
+    },
+
+    'ip.bcastpkts': {
+        info: 'Total transferred broadcast packets in the system.'
+    },
+
+    'ip.ecnpkts': {
+        info: 'Total number of received IP packets with ECN bits set in the system. '+
+        '<b>CEP</b> - congestion encountered. '+
+        '<b>NoECTP</b> - non ECN-capable transport. '+
+        '<b>ECTP0</b> and <b>ECTP1</b> - ECN capable transport.'
+    },
+
+    'ip.tcpreorders': {
+        info: 'TCP prevents out-of-order packets by either sequencing them in the correct order or by requesting the retransmission of out-of-order packets. '+
+        '<b>Timestamp</b> - detected re-ordering using the timestamp option. '+
+        '<b>SACK</b> - detected re-ordering using Selective Acknowledgment algorithm. '+
+        '<b>FACK</b> - detected re-ordering using Forward Acknowledgment algorithm. '+
+        '<b>Reno</b> - detected re-ordering using Fast Retransmit algorithm.'
+    },
+
+    'ip.tcpofo': {
+        info: 'TCP maintains an out-of-order (OOO) queue to keep the OOO packets in the TCP communication. '+
+        '<b>InQueue</b> - the TCP layer receives an OOO packet and has enough memory to queue it. '+
+        '<b>Dropped</b> - the TCP layer receives an OOO packet but does not have enough memory, so drops it. '+
+        '<b>Merged</b> - the received OOO packet has an overlay with the previous packet. '+
+        'The overlay part will be dropped. All these packets will also be counted into <b>InQueue</b>. '+
+        '<b>Pruned</b> - packets dropped from out-of-order queue because of socket buffer overrun.'
+    },
+
+    'ip.tcpsyncookies': {
+        info: '<a href="https://en.wikipedia.org/wiki/SYN_cookies" target="_blank">SYN cookies</a> are used to mitigate SYN flood. '+
+        '<b>Received</b> - after sending a SYN cookie, it came back to us and passed the check. '+
+        '<b>Sent</b> - an application was not able to accept a connection fast enough, so the kernel could not store '+
+        'an entry in the queue for this connection. Instead of dropping it, it sent a SYN cookie to the client. '+
+        '<b>Failed</b> - the MSS decoded from the SYN cookie is invalid. When this counter is incremented, '+
+        'the received packet won’t be treated as a SYN cookie.'
     },
 
     'ip.tcpmemorypressures': {
@@ -1140,6 +1496,42 @@ netdataDashboard.context = {
     'ip.tcpconnaborts': {
         info: 'TCP connection aborts. <b>baddata</b> (<code>TCPAbortOnData</code>) happens while the connection is on <code>FIN_WAIT1</code> and the kernel receives a packet with a sequence number beyond the last one for this connection - the kernel responds with <code>RST</code> (closes the connection). <b>userclosed</b> (<code>TCPAbortOnClose</code>) happens when the kernel receives data on an already closed connection and responds with <code>RST</code>. <b>nomemory</b> (<code>TCPAbortOnMemory</code> happens when there are too many orphaned sockets (not attached to an fd) and the kernel has to drop a connection - sometimes it will send an <code>RST</code>, sometimes it won\'t. <b>timeout</b> (<code>TCPAbortOnTimeout</code>) happens when a connection times out. <b>linger</b> (<code>TCPAbortOnLinger</code>) happens when the kernel killed a socket that was already closed by the application and lingered around for long enough. <b>failed</b> (<code>TCPAbortFailed</code>) happens when the kernel attempted to send an <code>RST</code> but failed because there was no memory available.'
     },
+
+    'ip.tcp_functions': {
+        title : 'TCP calls',
+        info: 'Successful or failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code>, and <code>tcp_close</code>.'
+    },
+
+    'ip.total_tcp_bandwidth': {
+        title : 'TCP bandwidth',
+        info: 'Bytes sent and received by functions <code>tcp_sendmsg</code> and <code>tcp_cleanup_rbuf</code>. We use <code>tcp_cleanup_rbuf</code> instead of <code>tcp_recvmsg</code>, because the last one misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+    },
+
+    'ip.tcp_error': {
+        title : 'TCP errors',
+        info: 'Failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code>, and <code>tcp_close</code>.'
+    },
+
+    'ip.tcp_retransmit': {
+        title : 'TCP retransmit',
+        info: 'Number of packets retransmitted by function <code>tcp_retransmit_skb</code>.'
+    },
+
+    'ip.udp_functions': {
+        title : 'UDP calls',
+        info: 'Successful or failed calls to functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
+    },
+
+    'ip.total_udp_bandwidth': {
+        title : 'UDP bandwidth',
+        info: 'Bytes sent and received by functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
+    },
+
+    'ip.udp_error': {
+        title : 'UDP errors',
+        info: 'Failed calls to functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
+    },
+
 
     'ip.tcp_syn_queue': {
         info: 'The <b>SYN queue</b> of the kernel tracks TCP handshakes until connections get fully established. ' +
@@ -1165,8 +1557,119 @@ netdataDashboard.context = {
     // ------------------------------------------------------------------------
     // IPv4
 
+    'ipv4.packets': {
+        info: '<p>IPv4 packets statistics for this host.</p>'+
+        '<p><b>Received</b> - packets received by the IP layer. '+
+        'This counter will be increased even if the packet is dropped later. '+
+        '<b>Sent</b> - packets sent via IP layer, for both single cast and multicast packets. '+
+        'This counter does not include any packets counted in <b>Forwarded</b>. '+
+        '<b>Forwarded</b> - input packets for which this host was not their final IP destination, '+
+        'as a result of which an attempt was made to find a route to forward them to that final destination. '+
+        'In hosts which do not act as IP Gateways, this counter will include only those packets which were '+
+        '<a href="https://en.wikipedia.org/wiki/Source_routing" target="_blank">Source-Routed</a> '+
+        'and the Source-Route option processing was successful. '+
+        '<b>Delivered</b> - packets delivered to the upper layer protocols, e.g. TCP, UDP, ICMP, and so on.</p>'
+    },
+
+    'ipv4.fragsout': {
+        info: '<p><a href="https://en.wikipedia.org/wiki/IPv4#Fragmentation" target="_blank">IPv4 fragmentation</a> '+
+        'statistics for this system.</p>'+
+        '<p><b>OK</b> - packets that have been successfully fragmented. '+
+        '<b>Failed</b> - packets that have been discarded because they needed to be fragmented '+
+        'but could not be, e.g. due to <i>Don\'t Fragment</i> (DF) flag was set. '+
+        '<b>Created</b> - fragments that have been generated as a result of fragmentation.</p>'
+    },
+
+    'ipv4.fragsin': {
+        info: '<p><a href="https://en.wikipedia.org/wiki/IPv4#Reassembly" target="_blank">IPv4 reassembly</a> '+
+        'statistics for this system.</p>'+
+        '<p><b>OK</b> - packets that have been successfully reassembled. '+
+        '<b>Failed</b> - failures detected by the IP reassembly algorithm. '+
+        'This is not necessarily a count of discarded IP fragments since some algorithms '+
+        'can lose track of the number of fragments by combining them as they are received. '+
+        '<b>All</b> - received IP fragments which needed to be reassembled.</p>'
+    },
+
+    'ipv4.errors': {
+        info: '<p>The number of discarded IPv4 packets.</p>'+
+        '<p><b>InDiscards</b>, <b>OutDiscards</b> - inbound and outbound packets which were chosen '+
+        'to be discarded even though no errors had been '+
+        'detected to prevent their being deliverable to a higher-layer protocol. '+
+        '<b>InHdrErrors</b> - input packets that have been discarded due to errors in their IP headers, including '+
+        'bad checksums, version number mismatch, other format errors, time-to-live exceeded, '+
+        'errors discovered in processing their IP options, etc. '+
+        '<b>OutNoRoutes</b> - packets that have been discarded because no route could be found '+
+        'to transmit them to their destination. This includes any packets which a host cannot route '+
+        'because all of its default gateways are down. '+
+        '<b>InAddrErrors</b> - input packets that have been discarded due to invalid IP address or '+
+        'the destination IP address is not a local address and IP forwarding is not enabled. '+
+        '<b>InUnknownProtos</b> - input packets which were discarded because of an unknown or unsupported protocol.</p>'
+    },
+
+    'ipv4.icmp': {
+        info: '<p>The number of transferred IPv4 ICMP messages.</p>'+
+        '<p><b>Received</b>, <b>Sent</b> - ICMP messages which the host received and attempted to send. '+
+        'Both these counters include errors.</p>'
+    },
+
+    'ipv4.icmp_errors': {
+        info: '<p>The number of IPv4 ICMP errors.</p>'+
+        '<p><b>InErrors</b> - received ICMP messages but determined as having ICMP-specific errors, '+
+        'e.g. bad ICMP checksums, bad length, etc. '+
+        '<b>OutErrors</b> - ICMP messages which this host did not send due to '+
+        'problems discovered within ICMP such as a lack of buffers. '+
+        'This counter does not include errors discovered outside the ICMP layer '+
+        'such as the inability of IP to route the resultant datagram. '+
+        '<b>InCsumErrors</b> - received ICMP messages with bad checksum.</p>'
+    },
+
+    'ipv4.icmpmsg': {
+        info: 'The number of transferred '+
+        '<a href="https://www.iana.org/assignments/icmp-parameters/icmp-parameters.xhtml" target="_blank">IPv4 ICMP control messages</a>.'
+    },
+
+    'ipv4.udppackets': {
+        info: 'The number of transferred UDP packets.'
+    },
+
+    'ipv4.udperrors': {
+        info: '<p>The number of errors encountered during transferring UDP packets.</p>'+
+        '<b>RcvbufErrors</b> - receive buffer is full. '+
+        '<b>SndbufErrors</b> - send buffer is full, no kernel memory available, or '+
+        'the IP layer reported an error when trying to send the packet and no error queue has been setup. '+
+        '<b>InErrors</b> - that is an aggregated counter for all errors, excluding <b>NoPorts</b>. '+
+        '<b>NoPorts</b> - no application is listening at the destination port. '+
+        '<b>InCsumErrors</b> - a UDP checksum failure is detected. '+
+        '<b>IgnoredMulti</b> - ignored multicast packets.'
+    },
+
+    'ipv4.udplite': {
+        info: 'The number of transferred UDP-Lite packets.'
+    },
+
+    'ipv4.udplite_errors': {
+        info: '<p>The number of errors encountered during transferring UDP-Lite packets.</p>'+
+        '<b>RcvbufErrors</b> - receive buffer is full. '+
+        '<b>SndbufErrors</b> - send buffer is full, no kernel memory available, or '+
+        'the IP layer reported an error when trying to send the packet and no error queue has been setup. '+
+        '<b>InErrors</b> - that is an aggregated counter for all errors, excluding <b>NoPorts</b>. '+
+        '<b>NoPorts</b> - no application is listening at the destination port. '+
+        '<b>InCsumErrors</b> - a UDP checksum failure is detected. '+
+        '<b>IgnoredMulti</b> - ignored multicast packets.'
+    },
+
+    'ipv4.tcppackets': {
+        info: '<p>The number of packets transferred by the TCP layer.</p>'+
+        '</p><b>Received</b> - received packets, including those received in error, '+
+        'such as checksum error, invalid TCP header, and so on. '+
+        '<b>Sent</b> - sent packets, excluding the retransmitted packets. '+
+        'But it includes the SYN, ACK, and RST packets.</p>'
+    },
+
     'ipv4.tcpsock': {
-        info: 'The number of established TCP connections (known as <code>CurrEstab</code>). This is a snapshot of the established connections at the time of measurement (i.e. a connection established and a connection disconnected within the same iteration will not affect this metric).'
+        info: 'The number of TCP connections for which the current state is either ESTABLISHED or CLOSE-WAIT. '+
+        'This is a snapshot of the established connections at the time of measurement '+
+        '(i.e. a connection established and a connection disconnected within the same iteration will not affect this metric).'
     },
 
     'ipv4.tcpopens': {
@@ -1185,6 +1688,330 @@ netdataDashboard.context = {
             + ' <code>OutRsts</code> is the number of TCP segments sent, with the <code>RST</code> flag set (for both IPv4 and IPv6).'
             + ' <code>AttemptFails</code> is the number of times TCP connections made a direct transition from either <code>SYN_SENT</code> or <code>SYN_RECV</code> to <code>CLOSED</code>, plus the number of times TCP connections made a direct transition from the <code>SYN_RECV</code> to <code>LISTEN</code>.'
             + ' <code>TCPSynRetrans</code> shows retries for new outbound TCP connections, which can indicate general connectivity issues or backlog on the remote host.'
+    },
+
+    'ipv4.sockstat_sockets': {
+        info: 'The total number of used sockets for all '+
+        '<a href="https://man7.org/linux/man-pages/man7/address_families.7.html" target="_blank">address families</a> '+
+        'in this system.'
+    },
+
+    'ipv4.sockstat_tcp_sockets': {
+        info: '<p>The number of TCP sockets in the system in certain '+
+        '<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Protocol_operation" target="_blank">states</a>.</p>'+
+        '<p><b>Alloc</b> - in any TCP state. '+
+        '<b>Orphan</b> - no longer attached to a socket descriptor in any user processes, '+
+        'but for which the kernel is still required to maintain state in order to complete the transport protocol. '+
+        '<b>InUse</b> - in any TCP state, excluding TIME-WAIT and CLOSED. '+
+        '<b>TimeWait</b> - in the TIME-WAIT state.</p>'
+    },
+
+    'ipv4.sockstat_tcp_mem': {
+        info: 'The amount of memory used by allocated TCP sockets.'
+    },
+
+    'ipv4.sockstat_udp_sockets': {
+        info: 'The number of used UDP sockets.'
+    },
+
+    'ipv4.sockstat_udp_mem': {
+        info: 'The amount of memory used by allocated UDP sockets.'
+    },
+
+    'ipv4.sockstat_udplite_sockets': {
+        info: 'The number of used UDP-Lite sockets.'
+    },
+
+    'ipv4.sockstat_raw_sockets': {
+        info: 'The number of used <a href="https://en.wikipedia.org/wiki/Network_socket#Types" target="_blank"> raw sockets</a>.'
+    },
+
+    'ipv4.sockstat_frag_sockets': {
+        info: 'The number of entries in hash tables that are used for packet reassembly.'
+    },
+
+    'ipv4.sockstat_frag_mem': {
+        info: 'The amount of memory used for packet reassembly.'
+    },
+
+    // ------------------------------------------------------------------------
+    // IPv6
+
+    'ipv6.packets': {
+        info: '<p>IPv6 packet statistics for this host.</p>'+
+        '<p><b>Received</b> - packets received by the IP layer. '+
+        'This counter will be increased even if the packet is dropped later. '+
+        '<b>Sent</b> - packets sent via IP layer, for both single cast and multicast packets. '+
+        'This counter does not include any packets counted in <b>Forwarded</b>. '+
+        '<b>Forwarded</b> - input packets for which this host was not their final IP destination, '+
+        'as a result of which an attempt was made to find a route to forward them to that final destination. '+
+        'In hosts which do not act as IP Gateways, this counter will include only those packets which were '+
+        '<a href="https://en.wikipedia.org/wiki/Source_routing" target="_blank">Source-Routed</a> '+
+        'and the Source-Route option processing was successful. '+
+        '<b>Delivers</b> - packets delivered to the upper layer protocols, e.g. TCP, UDP, ICMP, and so on.</p>'
+    },
+
+    'ipv6.fragsout': {
+        info: '<p><a href="https://en.wikipedia.org/wiki/IP_fragmentation" target="_blank">IPv6 fragmentation</a> '+
+        'statistics for this system.</p>'+
+        '<p><b>OK</b> - packets that have been successfully fragmented. '+
+        '<b>Failed</b> - packets that have been discarded because they needed to be fragmented '+
+        'but could not be, e.g. due to <i>Don\'t Fragment</i> (DF) flag was set. '+
+        '<b>All</b> - fragments that have been generated as a result of fragmentation.</p>'
+    },
+
+    'ipv6.fragsin': {
+        info: '<p><a href="https://en.wikipedia.org/wiki/IP_fragmentation" target="_blank">IPv6 reassembly</a> '+
+        'statistics for this system.</p>'+
+        '<p><b>OK</b> - packets that have been successfully reassembled. '+
+        '<b>Failed</b> - failures detected by the IP reassembly algorithm. '+
+        'This is not necessarily a count of discarded IP fragments since some algorithms '+
+        'can lose track of the number of fragments by combining them as they are received. '+
+        '<b>Timeout</b> - reassembly timeouts detected. '+
+        '<b>All</b> - received IP fragments which needed to be reassembled.</p>'
+    },
+
+    'ipv6.errors': {
+        info: '<p>The number of discarded IPv6 packets.</p>'+
+        '<p><b>InDiscards</b>, <b>OutDiscards</b> - packets which were chosen to be discarded even though '+
+        'no errors had been detected to prevent their being deliverable to a higher-layer protocol. '+
+        '<b>InHdrErrors</b> - errors in IP headers, including bad checksums, version number mismatch, '+
+        'other format errors, time-to-live exceeded, etc. '+
+        '<b>InAddrErrors</b> - invalid IP address or the destination IP address is not a local address and '+
+        'IP forwarding is not enabled. '+
+        '<b>InUnknownProtos</b> - unknown or unsupported protocol. '+
+        '<b>InTooBigErrors</b> - the size exceeded the link MTU. '+
+        '<b>InTruncatedPkts</b> - packet frame did not carry enough data. '+
+        '<b>InNoRoutes</b> - no route could be found while forwarding. '+
+        '<b>OutNoRoutes</b> - no route could be found for packets generated by this host.</p>'
+    },
+
+    'ipv6.udppackets': {
+        info: 'The number of transferred UDP packets.'
+    },
+
+    'ipv6.udperrors': {
+        info: '<p>The number of errors encountered during transferring UDP packets.</p>'+
+        '<b>RcvbufErrors</b> - receive buffer is full. '+
+        '<b>SndbufErrors</b> - send buffer is full, no kernel memory available, or '+
+        'the IP layer reported an error when trying to send the packet and no error queue has been setup. '+
+        '<b>InErrors</b> - that is an aggregated counter for all errors, excluding <b>NoPorts</b>. '+
+        '<b>NoPorts</b> - no application is listening at the destination port. '+
+        '<b>InCsumErrors</b> - a UDP checksum failure is detected. '+
+        '<b>IgnoredMulti</b> - ignored multicast packets.'
+    },
+
+    'ipv6.udplitepackets': {
+        info: 'The number of transferred UDP-Lite packets.'
+    },
+
+    'ipv6.udpliteerrors': {
+        info: '<p>The number of errors encountered during transferring UDP-Lite packets.</p>'+
+        '<p><b>RcvbufErrors</b> - receive buffer is full. '+
+        '<b>SndbufErrors</b> - send buffer is full, no kernel memory available, or '+
+        'the IP layer reported an error when trying to send the packet and no error queue has been setup. '+
+        '<b>InErrors</b> - that is an aggregated counter for all errors, excluding <b>NoPorts</b>. '+
+        '<b>NoPorts</b> - no application is listening at the destination port. '+
+        '<b>InCsumErrors</b> - a UDP checksum failure is detected.</p>'
+    },
+
+    'ipv6.mcast': {
+        info: 'Total IPv6 multicast traffic.'
+    },
+
+    'ipv6.bcast': {
+        info: 'Total IPv6 broadcast traffic.'
+    },
+
+    'ipv6.mcastpkts': {
+        info: 'Total transferred IPv6 multicast packets.'
+    },
+
+    'ipv6.icmp': {
+        info: '<p>The number of transferred ICMPv6 messages.</p>'+
+        '<p><b>Received</b>, <b>Sent</b> - ICMP messages which the host received and attempted to send. '+
+        'Both these counters include errors.</p>'
+    },
+
+    'ipv6.icmpredir': {
+        info: 'The number of transferred ICMPv6 Redirect messages. '+
+        'These messages inform a host to update its routing information (to send packets on an alternative route).'
+    },
+
+    'ipv6.icmpechos': {
+        info: 'The number of ICMPv6 Echo messages.'
+    },
+
+    'ipv6.icmperrors': {
+        info: '<p>The number of ICMPv6 errors and '+
+        '<a href="https://www.rfc-editor.org/rfc/rfc4443.html#section-3" target="_blank">error messages</a>.</p>'+
+        '<p><b>InErrors</b>, <b>OutErrors</b> - bad ICMP messages (bad ICMP checksums, bad length, etc.). '+
+        '<b>InCsumErrors</b> - wrong checksum.</p>'
+    },
+
+    'ipv6.groupmemb': {
+        info: '<p>The number of transferred ICMPv6 Group Membership messages.</p>'+
+        '<p> Multicast routers send Group Membership Query messages to learn which groups have members on each of their '+
+        'attached physical networks. Host computers respond by sending a Group Membership Report for each '+
+        'multicast group joined by the host. A host computer can also send a Group Membership Report when '+
+        'it joins a new multicast group. '+
+        'Group Membership Reduction messages are sent when a host computer leaves a multicast group.</p>'
+    },
+
+    'ipv6.icmprouter': {
+        info: '<p>The number of transferred ICMPv6 '+
+        '<a href="https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol" target="_blank">Router Discovery</a> messages.</p>'+
+        '<p>Router <b>Solicitations</b> message is sent from a computer host to any routers on the local area network '+
+        'to request that they advertise their presence on the network. '+
+        'Router <b>Advertisement</b> message is sent by a router on the local area network to announce its IP address '+
+        'as available for routing.</p>'
+    },
+
+    'ipv6.icmpneighbor': {
+        info: '<p>The number of transferred ICMPv6 '+
+        '<a href="https://en.wikipedia.org/wiki/Neighbor_Discovery_Protocol" target="_blank">Neighbour Discovery</a> messages.</p>'+
+        '<p>Neighbor <b>Solicitations</b> are used by nodes to determine the link layer address '+
+        'of a neighbor, or to verify that a neighbor is still reachable via a cached link layer address. '+
+        'Neighbor <b>Advertisements</b> are used by nodes to respond to a Neighbor Solicitation message.</p>'
+    },
+
+    'ipv6.icmpmldv2': {
+        info: 'The number of transferred ICMPv6 '+
+        '<a href="https://en.wikipedia.org/wiki/Multicast_Listener_Discovery" target="_blank">Multicast Listener Discovery</a> (MLD) messages.'
+    },
+
+    'ipv6.icmptypes': {
+        info: 'The number of transferred ICMPv6 messages of '+
+        '<a href="https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol_for_IPv6#Types" target="_blank">certain types</a>.'
+    },
+
+    'ipv6.ect': {
+        info: '<p>Total number of received IPv6 packets with ECN bits set in the system.</p>'+
+        '<p><b>CEP</b> - congestion encountered. '+
+        '<b>NoECTP</b> - non ECN-capable transport. '+
+        '<b>ECTP0</b> and <b>ECTP1</b> - ECN capable transport.</p>'
+    },
+
+    'ipv6.sockstat6_tcp_sockets': {
+        info: 'The number of TCP sockets in any '+
+        '<a href="https://en.wikipedia.org/wiki/Transmission_Control_Protocol#Protocol_operation" target="">state</a>, '+
+        'excluding TIME-WAIT and CLOSED.'
+    },
+
+    'ipv6.sockstat6_udp_sockets': {
+        info: 'The number of used UDP sockets.'
+    },
+
+    'ipv6.sockstat6_udplite_sockets': {
+        info: 'The number of used UDP-Lite sockets.'
+    },
+
+    'ipv6.sockstat6_raw_sockets': {
+        info: 'The number of used <a href="https://en.wikipedia.org/wiki/Network_socket#Types" target="_blank"> raw sockets</a>.'
+    },
+
+    'ipv6.sockstat6_frag_sockets': {
+        info: 'The number of entries in hash tables that are used for packet reassembly.'
+    },
+
+
+    // ------------------------------------------------------------------------
+    // SCTP
+
+    'sctp.established': {
+        info: 'The number of associations for which the current state is either '+
+        'ESTABLISHED, SHUTDOWN-RECEIVED or SHUTDOWN-PENDING.'
+    },
+
+    'sctp.transitions': {
+        info: '<p>The number of times that associations have made a direct transition between states.</p>'+
+        '<p><b>Active</b> - from COOKIE-ECHOED to ESTABLISHED. The upper layer initiated the association attempt. '+
+        '<b>Passive</b> - from CLOSED to ESTABLISHED. The remote endpoint initiated the association attempt. '+
+        '<b>Aborted</b> - from any state to CLOSED using the primitive ABORT. Ungraceful termination of the association. '+
+        '<b>Shutdown</b> - from SHUTDOWN-SENT or SHUTDOWN-ACK-SENT to CLOSED. Graceful termination of the association.</p>'
+    },
+
+    'sctp.packets': {
+        info: '<p>The number of transferred SCTP packets.</p>'+
+        '<p><b>Received</b> - includes duplicate packets. '+
+        '<b>Sent</b> - includes retransmitted DATA chunks.</p>'
+    },
+
+    'sctp.packet_errors': {
+        info: '<p>The number of errors encountered during receiving SCTP packets.</p>'+
+        '<p><b>Invalid</b> - packets for which the receiver was unable to identify an appropriate association. '+
+        '<b>Checksum</b> - packets with an invalid checksum.</p>'
+    },
+
+    'sctp.fragmentation': {
+        info: '<p>The number of fragmented and reassembled SCTP messages.</p>'+
+        '<p><b>Reassembled</b> - reassembled user messages, after conversion into DATA chunks. '+
+        '<b>Fragmented</b> - user messages that have to be fragmented because of the MTU.</p>'
+    },
+
+    'sctp.chunks': {
+        info: 'The number of transferred control, ordered, and unordered DATA chunks. '+
+        'Retransmissions and duplicates are not included.'
+    },
+
+    // ------------------------------------------------------------------------
+    // Netfilter Connection Tracker
+
+    'netfilter.conntrack_sockets': {
+        info: 'The number of entries in the conntrack table.'
+    },
+
+    'netfilter.conntrack_new': {
+        info: '<p>Packet tracking statistics.</p>'+
+        '<p><b>New</b> - conntrack entries added which were not expected before. '+
+        '<b>Ignore</b> - packets seen which are already connected to a conntrack entry. '+
+        '<b>Invalid</b> - packets seen which can not be tracked.</p>'
+    },
+
+    'netfilter.conntrack_changes': {
+        info: '<p>The number of changes in conntrack tables.</p>'+
+        '<p><b>Inserted</b>, <b>Deleted</b> - conntrack entries which were inserted or removed. '+
+        '<b>Delete-list</b> - conntrack entries which were put to dying list.</p>'
+    },
+
+    'netfilter.conntrack_expect': {
+        info: '<p>The number of events in the "expect" table. '+
+        'Connection tracking expectations are the mechanism used to "expect" RELATED connections to existing ones. '+
+        'An expectation is a connection that is expected to happen in a period of time.</p>'+
+        '<p><b>Created</b>, <b>Deleted</b> - conntrack entries which were inserted or removed. '+
+        '<b>New</b> - conntrack entries added after an expectation for them was already present.</p>'
+    },
+
+    'netfilter.conntrack_search': {
+        info: '<p>Conntrack table lookup statistics.</p>'+
+        '<p><b>Searched</b> - conntrack table lookups performed. '+
+        '<b>Restarted</b> - conntrack table lookups which had to be restarted due to hashtable resizes. '+
+        '<b>Found</b> - conntrack table lookups which were successful.</p>'
+    },
+
+    'netfilter.conntrack_errors': {
+        info: '<p>Conntrack errors.</p>'+
+        '<p><b>IcmpError</b> - packets which could not be tracked due to error situation. '+
+        '<b>InsertFailed</b> - entries for which list insertion was attempted but failed '+
+        '(happens if the same entry is already present). '+
+        '<b>Drop</b> - packets dropped due to conntrack failure. '+
+        'Either new conntrack entry allocation failed, or protocol helper dropped the packet. '+
+        '<b>EarlyDrop</b> - dropped conntrack entries to make room for new ones, if maximum table size was reached.</p>'
+    },
+
+    'netfilter.synproxy_syn_received': {
+        info: 'The number of initial TCP SYN packets received from clients.'
+    },
+
+    'netfilter.synproxy_conn_reopened': {
+        info: 'The number of reopened connections by new TCP SYN packets directly from the TIME-WAIT state.'
+    },
+
+    'netfilter.synproxy_cookies': {
+        info: '<p>SYNPROXY cookie statistics.</p>'+
+        '<p><b>Valid</b>, <b>Invalid</b> - result of cookie validation in TCP ACK packets received from clients. '+
+        '<b>Retransmits</b> - TCP SYN packets retransmitted to the server. '+
+        'It happens when the client repeats TCP ACK and the connection to the server is not yet established.</p>'
     },
 
     // ------------------------------------------------------------------------
@@ -1273,36 +2100,36 @@ netdataDashboard.context = {
         info: 'Calls to the functions responsible for closing (<a href="https://www.informit.com/articles/article.aspx?p=370047&seqNum=4" target="_blank">do_exit</a>) and releasing (<a  href="https://www.informit.com/articles/article.aspx?p=370047&seqNum=4" target="_blank">release_task</a>) tasks.'
     },
 
-    'apps.bandwidth_sent': {
+    'apps.total_bandwidth_sent': {
         info: 'Bytes sent by functions <code>tcp_sendmsg</code> and <code>udp_sendmsg</code>.'
     },
 
-    'apps.bandwidth_recv': {
+    'apps.total_bandwidth_recv': {
         info: 'Bytes received by functions <code>tcp_cleanup_rbuf</code> and <code>udp_recvmsg</code>. We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
     },
 
     'apps.bandwidth_tcp_send': {
-        info: 'Calls for function <code>tcp_sendmsg</code>.'
+        info: 'The function <code>tcp_sendmsg</code> is used to collect number of bytes sent from TCP connections.'
     },
 
     'apps.bandwidth_tcp_recv': {
-        info: 'Calls for functions <code>tcp_cleanup_rbuf</code>. We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+        info: 'The function <code>tcp_cleanup_rbuf</code> is used to collect number of bytes received from TCP connections.'
     },
 
     'apps.bandwidth_tcp_retransmit': {
-        info: 'Calls for functions <code>tcp_retransmit_skb</code>.'
+        info: 'The function <code>tcp_retransmit_skb</code> is called when the host did not receive the expected return from a packet sent.'
     },
 
     'apps.bandwidth_udp_send': {
-        info: 'Calls for function <code>udp_sendmsg</code>.'
+        info: 'The function <code>udp_sendmsg</code> is used to collect number of bytes sent from UDP connections.'
     },
 
     'apps.bandwidth_udp_recv': {
-        info: 'Calls for function <code>udp_recvmsg</code>.'
+        info: 'The function <code>udp_recvmsg</code> is used to collect number of bytes received from UDP connections.'
     },
 
     'apps.dc_hit_ratio': {
-        info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
+        info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>. Netdata also gives a summary for these charts in <a href="#menu_filesystem_submenu_directory_cache__eBPF_">Filesystem submenu</a>.'
     },
 
     'apps.dc_reference': {
@@ -1434,7 +2261,79 @@ netdataDashboard.context = {
                 else
                     return '';
             }
-        ]
+        ],
+        info: 'Amount of traffic that the interface has received and sent.'
+    },
+    'net.packets': {
+        info: 'Number of packets that the interface has received and sent. '+
+        'Received <a href="https://en.wikipedia.org/wiki/Multicast" target="_blank">multicast</a> counter is '+
+        'commonly calculated at the device level (unlike <b>received</b>) and therefore may include packets which did not reach the host.'
+    },
+    'net.errors': {
+        info: '<b>Inbound</b> is the number of bad packets received on this interface. '+
+        'It includes dropped packets due to invalid length, CRC, frame alignment, and other errors. '+
+        '<b>Outbound</b> is the number of transmit problems. '+
+        'It includes frames transmission errors due to loss of carrier, FIFO underrun/underflow, heartbeat, late collisions, and other problems.'
+    },
+    'net.fifo': {
+        info: '<b>Inbound</b> is the number of packets dropped because they did not fit into buffers provided by the host, '+
+        'e.g. packets larger than MTU or next buffer in the ring was not available for a scatter transfer. '+
+        '<b>Outbound</b> is the number of frame transmission errors due to device FIFO underrun/underflow. '+
+        'This condition occurs when the device begins transmission of a frame '+
+        'but is unable to deliver the entire frame to the transmitter in time for transmission.'
+    },
+    'net.drops': {
+        info: 'Packets that have been dropped at the network interface level. '+
+        '<b>Inbound</b> is the number of packets received but not processed, e.g. due to '+
+        '<a href="#menu_system_submenu_softnet_stat">softnet backlog</a> overflow, bad / unintended VLAN tags, '+
+        'unknown or unregistered protocols, IPv6 frames when the server is not configured for IPv6. '+
+        '<b>Outbound</b> is the number of packets dropped on their way to transmission, e.g. due to lack of resources.'
+    },
+    'net.compressed': {
+        info: 'Number of correctly received and transmitted compressed packets. '+
+        'These counters are only meaningful for interfaces which support packet compression (e.g. CSLIP, PPP).'
+    },
+    'net.events': {
+        info: '<b>Frames</b> is an aggregated counter for dropped packets due to '+
+        'invalid length, FIFO overflow, CRC, and frame alignment errors. '+
+        '<b>Collisions</b> is the number of '+
+        '<a href="https://en.wikipedia.org/wiki/Collision_(telecommunications)" target="blank">collisions</a> during packet transmissions. '+
+        '<b>Carrier</b> is an aggregated counter for frame transmission errors due to '+
+        'excessive collisions, loss of carrier, device FIFO underrun/underflow, Heartbeat/SQE Test errors, and  late collisions.'
+    },
+    'net.duplex': {
+        info: '<p>The interface\'s latest or current '+
+        '<a href="https://en.wikipedia.org/wiki/Duplex_(telecommunications)" target="_blank">duplex</a> that the network adapter '+
+        '<a href="https://en.wikipedia.org/wiki/Autonegotiation" target="_blank">negotiated</a> with the device it is connected to. '+
+        '<b>Unknown</b> - the duplex mode can not be determined. '+
+        '<b>Half duplex</b> - the communication is one direction at a time. '+
+        '<b>Full duplex</b> - the interface is able to send and receive data simultaneously.</p>'+
+        '<p><b>State map</b>: 0 - unknown, 1 - half, 2 - full.</p>'
+    },
+    'net.operstate': {
+        info: '</p>The current <a href="https://datatracker.ietf.org/doc/html/rfc2863" target="_blank">operational state</a> of the interface. '+
+        '<b>Unknown</b> - the state can not be determined. '+
+        '<b>NotPresent</b> - the interface has missing (typically, hardware) components. '+
+        '<b>Down</b> - the interface is unable to transfer data on L1, e.g. ethernet is not plugged or interface is administratively down. '+
+        '<b>LowerLayerDown</b> - the interface is down due to state of lower-layer interface(s). '+
+        '<b>Testing</b> - the interface is in testing mode, e.g. cable test. It can’t be used for normal traffic until tests complete. '+
+        '<b>Dormant</b> - the interface is L1 up, but waiting for an external event, e.g. for a protocol to establish. '+
+        '<b>Up</b> - the interface is ready to pass packets and can be used.</p>'+
+        '<p><b>State map</b>: 0 - unknown, 1 - notpresent, 2 - down, 3 - lowerlayerdown, 4 - testing, 5 - dormant, 6 - up.</p>'
+    },
+    'net.carrier': {
+        info: '<p>The current physical link state of the interface.</p>'+
+        '<p><b>State map</b>: 0 - down, 1 - up.</p>'
+    },
+    'net.speed': {
+        info: 'The interface\'s latest or current speed that the network adapter '+
+        '<a href="https://en.wikipedia.org/wiki/Autonegotiation" target="_blank">negotiated</a> with the device it is connected to. '+
+        'This does not give the max supported speed of the NIC.'
+    },
+    'net.mtu': {
+        info: 'The interface\'s currently configured '+
+        '<a href="https://en.wikipedia.org/wiki/Maximum_transmission_unit" target="_blank">Maximum transmission unit</a> (MTU) value. '+
+        'MTU is the size of the largest protocol data unit that can be communicated in a single network layer transaction.'
     },
 
     // ------------------------------------------------------------------------
@@ -1451,6 +2350,19 @@ netdataDashboard.context = {
         heads: [
             netdataDashboard.gaugeChart('New Connections', '12%', 'new', '#5555AA')
         ]
+    },
+
+    // ------------------------------------------------------------------------
+    // IPVS
+    'ipvs.sockets': {
+        info: 'Total created connections for all services and their servers. '+
+        'To see the IPVS connection table, run <code>ipvsadm -Lnc</code>.'
+    },
+    'ipvs.packets': {
+        info: 'Total transferred packets for all services and their servers.'
+    },
+    'ipvs.net': {
+        info: 'Total network traffic for all services and their servers.'
     },
 
     // ------------------------------------------------------------------------
@@ -1482,8 +2394,24 @@ netdataDashboard.context = {
         info: 'Amount of data transferred to and from disk.'
     },
 
+    'disk_ext.io': {
+        info: 'Amount of discarded data that are no longer in use by a mounted file system.'
+    },
+
     'disk.ops': {
         info: 'Completed disk I/O operations. Keep in mind the number of operations requested might be higher, since the system is able to merge adjacent to each other (see merged operations chart).'
+    },
+
+    'disk_ext.ops': {
+        info: '<p>Number (after merges) of completed discard/flush requests.</p>'+
+        '<p><b>Discard</b> commands inform disks which blocks of data are no longer considered to be in use and therefore can be erased internally. '+
+        'They are useful for solid-state drivers (SSDs) and thinly-provisioned storage. '+
+        'Discarding/trimming enables the SSD to handle garbage collection more efficiently, '+
+        'which would otherwise slow future write operations to the involved blocks down.</p>'+
+        '<p><b>Flush</b> operations transfer all modified in-core data (i.e., modified buffer cache pages) to the disk device '+
+        'so that all changed information can be retrieved even if the system crashes or is rebooted. '+
+        'Flush requests are executed by disks. Flush requests are not tracked for partitions. '+
+        'Before being merged, flush operations are counted as writes.</p>'
     },
 
     'disk.qops': {
@@ -1495,14 +2423,16 @@ netdataDashboard.context = {
         info: 'The sum of the duration of all completed I/O operations. This number can exceed the interval if the disk is able to execute I/O operations in parallel.'
     },
     'disk_ext.iotime': {
-        height: 0.5
+        height: 0.5,
+        info: 'The sum of the duration of all completed discard/flush operations. This number can exceed the interval if the disk is able to execute discard/flush operations in parallel.'
     },
     'disk.mops': {
         height: 0.5,
         info: 'The number of merged disk operations. The system is able to merge adjacent I/O operations, for example two 4KB reads can become one 8KB read before given to disk.'
     },
     'disk_ext.mops': {
-        height: 0.5
+        height: 0.5,
+        info: 'The number of merged discard disk operations. Discard operations which are adjacent to each other may be merged for efficiency.'
     },
     'disk.svctm': {
         height: 0.5,
@@ -1517,7 +2447,8 @@ netdataDashboard.context = {
         info: 'The average I/O operation size.'
     },
     'disk_ext.avgsz': {
-        height: 0.5
+        height: 0.5,
+        info: 'The average discard operation size.'
     },
     'disk.await': {
         height: 0.5,
@@ -1525,7 +2456,7 @@ netdataDashboard.context = {
     },
     'disk_ext.await': {
         height: 0.5,
-        info: 'The average time for extended I/O requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.'
+        info: 'The average time for discard/flush requests issued to the device to be served. This includes the time spent by the requests in queue and the time spent servicing them.'
     },
 
     'disk.space': {
@@ -1550,6 +2481,50 @@ netdataDashboard.context = {
     },
     'disk.inodes': {
         info: 'inodes (or index nodes) are filesystem objects (e.g. files and directories). On many types of file system implementations, the maximum number of inodes is fixed at filesystem creation, limiting the maximum number of files the filesystem can hold. It is possible for a device to run out of inodes. When this happens, new files cannot be created on the device, even though there may be free space available.'
+    },
+
+    'disk.bcache_hit_ratio': {
+        info: '<p><b>Bcache (block cache)</b> is a cache in the block layer of Linux kernel, '+
+        'which is used for accessing secondary storage devices. '+
+        'It allows one or more fast storage devices, such as flash-based solid-state drives (SSDs), '+
+        'to act as a cache for one or more slower storage devices, such as hard disk drives (HDDs).</p>'+
+        '<p>Percentage of data requests that were fulfilled right from the block cache. '+
+        'Hits and misses are counted per individual IO as bcache sees them. '+
+        'A partial hit is counted as a miss.</p>'
+    },
+    'disk.bcache_rates': {
+        info: 'Throttling rates. '+
+        'To avoid congestions bcache tracks latency to the cache device, and gradually throttles traffic if the latency exceeds a threshold. ' +
+        'If the writeback percentage is nonzero, bcache tries to keep around this percentage of the cache dirty by '+
+        'throttling background writeback and using a PD controller to smoothly adjust the rate.'
+    },
+    'disk.bcache_size': {
+        info: 'Amount of dirty data for this backing device in the cache.'
+    },
+    'disk.bcache_usage': {
+        info: 'Percentage of cache device which does not contain dirty data, and could potentially be used for writeback.'
+    },
+    'disk.bcache_cache_read_races': {
+        info: '<b>Read races</b> happen when a bucket was reused and invalidated while data was being read from the cache. '+
+        'When this occurs the data is reread from the backing device. '+
+        '<b>IO errors</b> are decayed by the half life. '+
+        'If the decaying count reaches the limit, dirty data is written out and the cache is disabled.'
+    },
+    'disk.bcache': {
+        info: 'Hits and misses are counted per individual IO as bcache sees them; a partial hit is counted as a miss. '+
+        'Collisions happen when data was going to be inserted into the cache from a cache miss, '+
+        'but raced with a write and data was already present. '+
+        'Cache miss reads are rounded up to the readahead size, but without overlapping existing cache entries.'
+    },
+    'disk.bcache_bypass': {
+        info: 'Hits and misses for IO that is intended to skip the cache.'
+    },
+    'disk.bcache_cache_alloc': {
+        info: 'Working set size. '+
+        '<b>Unused</b> is the percentage of the cache that does not contain any data. '+
+        '<b>Dirty</b> is the data that is modified in the cache but not yet written to the permanent storage. '+
+        '<b>Clean</b> data matches the data stored on the permanent storage. '+
+        '<b>Metadata</b> is bcache\'s metadata overhead. '
     },
 
     // ------------------------------------------------------------------------
@@ -3455,6 +4430,13 @@ netdataDashboard.context = {
     },
 
     // ------------------------------------------------------------------------
+    // Perf
+
+    'perf.instructions_per_cycle': {
+        info: 'An IPC < 1.0 likely means memory bound, and an IPC > 1.0 likely means instruction bound. For more details about the metric take a look at this <a href="https://www.brendangregg.com/blog/2017-05-09/cpu-utilization-is-wrong.html" target="_blank">blog post</a>.'
+    },
+
+    // ------------------------------------------------------------------------
     // Filesystem
 
     'filesystem.vfs_deleted_objects': {
@@ -3502,120 +4484,94 @@ netdataDashboard.context = {
     },
 
     'filesystem.ext4_read_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_read_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>ext4_file_read_iter</code>.'
     },
 
     'filesystem.ext4_write_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>ext4_file_write_iter</code>.'
     },
 
     'filesystem.ext4_open_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>ext4_file_open</code>.'
     },
 
     'filesystem.ext4_sync_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>ext4_sync_file</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="http://www.brendangregg.com/blog/2016-10-06/linux-bcc-ext4dist-ext4slower.html" target="_blank">ext4dist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>ext4_sync_file</code>.'
     },
 
     'filesystem.xfs_read_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_read_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>xfs_file_read_iter</code>.'
     },
 
     'filesystem.xfs_write_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>xfs_file_write_iter</code>.'
     },
 
     'filesystem.xfs_open_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>xfs_file_open</code>.'
     },
 
     'filesystem.xfs_sync_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>xfs_file_sync</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/xfsdist_example.txt" target="_blank">xfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>xfs_file_sync</code>.'
     },
 
     'filesystem.nfs_read_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_file_read</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>nfs_file_read</code>.'
     },
 
     'filesystem.nfs_write_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_file_write</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>nfs_file_write</code>.'
     },
 
     'filesystem.nfs_open_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when functions <code>nfs_file_open</code> and <code>nfs4_file_open</code> are called and another for when they finish the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for functions <code>nfs_file_open</code> and <code>nfs4_file_open</code>'
     },
 
     'filesystem.nfs_attribute_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>nfs_getattr</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/nfsdist_example.txt" target="_blank">nfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for the function <code>nfs_getattr</code>.'
     },
 
     'filesystem.zfs_read_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_iter_read</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>zpl_iter_read</code>.'
     },
 
     'filesystem.zfs_write_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_iter_write</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>zpl_iter_write</code>.'
     },
 
     'filesystem.zfs_open_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>zpl_open</code>.'
     },
 
     'filesystem.zfs_sync_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>zpl_fsync</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/zfsdist_example.txt" target="_blank">zfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>zpl_fsync</code>.'
     },
 
     'filesystem.btrfs_read_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_read_iter</code> (kernel newer than 5.9.16) or the function <code>generic_file_read_iter</code> (old kernels) is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>btrfs_file_read_iter</code> (kernel newer than 5.9.16) or the function <code>generic_file_read_iter</code> (old kernels).'
     },
 
     'filesystem.btrfs_write_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_write_iter</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>btrfs_file_write_iter</code>.'
     },
 
     'filesystem.btrfs_open_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_file_open</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>btrfs_file_open</code>.'
     },
 
     'filesystem.btrfs_sync_latency': {
-        info: 'Latency is the time it takes for an event to be completed. Netdata is attaching a kprobe for when the function <code>btrfs_sync_file</code> is called and another for when it finishes the execution. We calculate the difference between the calling and return times, we get the logarithmic for the final result and we sum one value to the respective bin. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/btrfsdist_example.txt" target="_blank">btrfsdist</a> from BCC tools.'
+        info: 'Netdata is attaching <code>kprobes</code> for when the function <code>btrfs_sync_file</code>.'
     },
 
-    // ------------------------------------------------------------------------
-    // eBPF
-
-    'ebpf.tcp_functions': {
-        title : 'TCP calls',
-        info: 'Successful or failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code> and <code>tcp_close</code>.'
+    'mount_points.call': {
+        info: 'Monitor calls to syscalls <code>mount(2)</code> and <code>umount(2)</code> that are responsible for attaching or removing filesystems.'
     },
 
-    'ebpf.tcp_bandwidth': {
-        title : 'TCP bandwidth',
-        info: 'Bytes sent and received for functions <code>tcp_sendmsg</code> and <code>tcp_cleanup_rbuf</code>. We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+    'mount_points.error': {
+        info: 'Monitor errors in calls to syscalls <code>mount(2)</code> and <code>umount(2)</code>.'
     },
 
-    'ebpf.tcp_retransmit': {
-        title : 'TCP retransmit',
-        info: 'Number of packets retransmitted for function <code>tcp_retransmit_skb</code>.'
-    },
-
-    'ebpf.tcp_error': {
-        title : 'TCP errors',
-        info: 'Failed calls that to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code> and <code>tcp_close</code>.'
-    },
-
-    'ebpf.udp_functions': {
-        title : 'UDP calls',
-        info: 'Successful or failed calls to  functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
-    },
-
-    'ebpf.udp_bandwidth': {
-        title : 'UDP bandwidth',
-        info: 'Bytes sent and received for functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
-    },
-
-    'ebpf.file_descriptor': {
-        title : 'File access',
+    'filesystem.file_descriptor': {
         info: 'Calls for internal functions on Linux kernel. The open dimension is attached to the kernel internal function <code>do_sys_open</code> ( For kernels newer than <code>5.5.19</code> we add a kprobe to <code>do_sys_openat2</code>. ), which is the common function called from'+
             ' <a href="https://www.man7.org/linux/man-pages/man2/open.2.html" target="_blank">open(2)</a> ' +
             ' and <a href="https://www.man7.org/linux/man-pages/man2/openat.2.html" target="_blank">openat(2)</a>. ' +
@@ -3623,14 +4579,17 @@ netdataDashboard.context = {
             ' <a href="https://www.man7.org/linux/man-pages/man2/close.2.html" target="_blank">close(2)</a>. '
     },
 
-    'ebpf.file_error': {
-        title : 'File access error',
+    'filesystem.file_error': {
         info: 'Failed calls to the kernel internal function <code>do_sys_open</code> ( For kernels newer than <code>5.5.19</code> we add a kprobe to <code>do_sys_openat2</code>. ), which is the common function called from'+
             ' <a href="https://www.man7.org/linux/man-pages/man2/open.2.html" target="_blank">open(2)</a> ' +
             ' and <a href="https://www.man7.org/linux/man-pages/man2/openat.2.html" target="_blank">openat(2)</a>. ' +
             ' The close dimension is attached to the function <code>__close_fd</code> or <code>close_fd</code> according to your kernel version, which is called from system call' +
             ' <a href="https://www.man7.org/linux/man-pages/man2/close.2.html" target="_blank">close(2)</a>. '
     },
+
+
+    // ------------------------------------------------------------------------
+    // eBPF
 
     'ebpf.process_thread': {
         title : 'Task creation',
@@ -3653,11 +4612,27 @@ netdataDashboard.context = {
     },
 
     'apps.swap_read_call': {
-        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory.'
+        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_swap">System overview</a>.'
     },
 
     'apps.swap_write_call': {
         info: 'The function <code>swap_writepage</code> is called when the kernel writes a page to swap memory.'
+    },
+
+    'apps.shmget_call': {
+        info: 'Number of times the syscall <code>shmget</code> is called. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_ipc_shared_memory">System overview</a>.'
+    },
+
+    'apps.shmat_call': {
+        info: 'Number of times the syscall <code>shmat</code> is called.'
+    },
+
+    'apps.shmdt_call': {
+        info: 'Number of times the syscall <code>shmdt</code> is called.'
+    },
+
+    'apps.shmctl_call': {
+        info: 'Number of times the syscall <code>shmctl</code> is called.'
     },
 
     // ------------------------------------------------------------------------
@@ -3713,26 +4688,6 @@ netdataDashboard.context = {
                     + ' data-after="-CHART_DURATION"'
                     + ' data-points="CHART_DURATION"'
                     + ' data-colors="' + NETDATA.colors[4] + '"'
-                    + ' data-decimal-digits="2"'
-                    + ' role="application"></div>';
-            }
-        ]
-    },
-    'vernemq.queue_messages_in_queues': {
-        mainheads: [
-            function (os, id) {
-                void (os);
-                return '<div data-netdata="' + id + '"'
-                    + ' data-dimensions="queue_messages_current"'
-                    + ' data-chart-library="gauge"'
-                    + ' data-title="Messages in the Queues"'
-                    + ' data-units="messages"'
-                    + ' data-gauge-adjust="width"'
-                    + ' data-width="16%"'
-                    + ' data-before="0"'
-                    + ' data-after="-CHART_DURATION"'
-                    + ' data-points="CHART_DURATION"'
-                    + ' data-colors="' + NETDATA.colors[2] + '"'
                     + ' data-decimal-digits="2"'
                     + ' role="application"></div>';
             }
@@ -4150,6 +5105,22 @@ netdataDashboard.context = {
     'systemd.slice_unit_state': {
         info: 'Scope units are similar to service units, but manage foreign processes instead of starting them as well. ' +
         'See <a href="https://www.freedesktop.org/software/systemd/man/systemd.slice.html#" target="_blank"> systemd.slice(5)</a>.'
+    },
+
+    'anomaly_detection.dimensions': {
+        info: 'Total count of dimensions considered anomalous or normal. '
+    },
+
+    'anomaly_detection.anomaly_rate': {
+        info: 'Percentage of anomalous dimensions. '
+    },
+
+    'anomaly_detection.detector_window': {
+        info: 'The length of the active window used by the detector. '
+    },
+
+    'anomaly_detection.detector_events': {
+        info: 'Flags (0 or 1) to show when an anomaly event has been triggered by the detector. '
     },
 
 };
