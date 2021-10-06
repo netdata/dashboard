@@ -2,7 +2,7 @@
 # Runs various ReviewDog based checks against PR with suggested changes to improve quality
 name: Review
 on:
-  pull_request:
+  pull_request: null
 env:
   DO_NOT_TRACK: 1
 jobs:
