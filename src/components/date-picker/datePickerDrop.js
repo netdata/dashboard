@@ -57,6 +57,14 @@ const DatePickerDrop = ({
     setFocusedInput(e.target.name)
   }, [])
 
+  const togglePicker = useCallback(
+    e => {
+      e.stopPropagation()
+      toggle()
+    },
+    [toggle]
+  )
+
   const applyChanges = () => {
     onChange({
       start: startDate,
@@ -156,7 +164,7 @@ const DatePickerDrop = ({
   return (
     <>
       <AccessorElement
-        onClick={toggle}
+        onClick={togglePicker}
         tagging={tagging}
         isPickerOpen={isOpen}
         isPlaying={isPlaying}
