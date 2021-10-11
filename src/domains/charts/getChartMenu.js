@@ -55,7 +55,7 @@ export default (
     case "isc":
       return emitMultipartMenu("dhcpd")
     case "anomaly":
-      return emitMultipartMenu("detection")
+      return emit({})
 
     case "cgroup": {
       const menuPattern =
