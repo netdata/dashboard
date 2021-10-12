@@ -1003,15 +1003,16 @@ export const DygraphChart = ({
         ? getDataForFakeStacked(chartData.result.data, dimensionsVisibility)
         : chartData.result.data
 
+      const includeZero = dimensionsVisibility.length === 1 ||
+        dimensionsVisibility.filter(x => x === true).length > 1
+
       dygraphInstance.current.updateOptions({
         ...optionsDateWindow,
         colors: isFakeStacked ? transformColors(reverse(dygraphColors)) : dygraphColors,
         file,
         labels: chartData.result.labels,
         fillAlpha: dygraphFillAlpha,
-        ...(dygraphChartType === "stacked" && dimensionsVisibility.some((x) => x === false))
-          ? {includeZero: false}
-          : {},
+        ...(dygraphChartType === "stacked" ? { includeZero } : {}),
         stackedGraph: dygraphChartType === "stacked" && !isFakeStacked,
         // see explanation about reversing before isFakeStacked assignment
         visibility: isFakeStacked ? reverse(dimensionsVisibility) : dimensionsVisibility,
