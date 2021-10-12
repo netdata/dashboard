@@ -4,6 +4,9 @@ on:
   release:
     types:
       - created
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     name: 'Build and Publish Artifacts'
