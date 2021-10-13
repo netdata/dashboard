@@ -1,6 +1,9 @@
 ---
 name: Pull Request NPM Checks
 on: [pull_request]
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   npm-test:
     name: NPM test
