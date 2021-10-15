@@ -21,9 +21,10 @@ import {
 } from './domains/global/actions';
 import {
     createSelectOption,
+    selectDefaultAfter,
     selectGlobalPanAndZoom,
     selectRegistry,
-} from './domains/global/selectors';
+} from "./domains/global/selectors"
 import { seconds4human } from './domains/chart/utils/seconds4human';
 import { zeropad } from './utils/units-conversion';
 import {
@@ -1330,7 +1331,7 @@ function renderPage(menus, data) {
 
     // find the proper duration for per-second updates
     var duration = Math.round(($(div).width() * pcent_width / 100 * data.update_every / 3) / 60) * 60;
-    options.duration = duration;
+    options.duration = duration; // probably obsolete/not needed
     options.update_every = data.update_every;
 
     var html = '';
@@ -3099,9 +3100,9 @@ function saveSnapshotModalInit() {
     $('#saveSnapshotExport').removeClass('disabled');
 
     loadBootstrapSlider(function () {
-        saveSnapshotViewDuration = options.duration;
-        var start_ms = Math.round(Date.now() - saveSnapshotViewDuration * 1000);
         const reduxState = reduxStore.getState()
+        saveSnapshotViewDuration = - selectDefaultAfter(reduxState)
+        var start_ms = Math.round(Date.now() - saveSnapshotViewDuration * 1000);
         const globalPanAndZoom = selectGlobalPanAndZoom(reduxState)
 
         if (Boolean(globalPanAndZoom)) {
@@ -3189,13 +3190,15 @@ window.saveSnapshot = () => {
             var eltxt = document.getElementById('saveSnapshotModalProgressBarText');
 
             options.data.charts_by_name = null;
+            const reduxState = reduxStore.getState()
+            const defaultAfter = selectDefaultAfter(reduxState)
 
             var saveData = {
                 hostname: options.hostname,
                 server: serverDefault,
                 netdata_version: options.data.version,
                 snapshot_version: 1,
-                after_ms: Date.now() - options.duration * 1000,
+                after_ms: Date.now() + defaultAfter * 1000,
                 before_ms: Date.now(),
                 highlight_after_ms: urlOptions.highlight_after,
                 highlight_before_ms: urlOptions.highlight_before,
@@ -3237,8 +3240,6 @@ window.saveSnapshot = () => {
                 saveData.data[chartDataUniqueID] = cstr;
                 return compressed_length(cstr);
             }
-
-            const reduxState = reduxStore.getState()
 
             const globalPanAndZoom = selectGlobalPanAndZoom(reduxState)
             var clearPanAndZoom = false;
