@@ -207,7 +207,7 @@ const accessRegistry: AccessRegistry = ({
         maxRedirects: maxRedirects - 1,
         machineGuid,
         name,
-        registryServer: data.registry.replace("https:", `${location.protocol}`),
+        registryServer: data.registry.replace("https:", `${window.location.protocol}`),
         url,
       })
     }
@@ -301,7 +301,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
   const cloudBaseURL = response.data.cloud_base_url
   const { hostname } = response.data
   const machineGuid = response.data.machine_guid
-  const registryServer = (response.data.registry || "").replace("https:", `${location.protocol}`)
+  const registryServer = (response.data.registry || "").replace("https:", `${window.location.protocol}`)
   const isUsingGlobalRegistry = registryServer === NETDATA_REGISTRY_SERVER
 
   yield put(fetchHelloAction.success({
