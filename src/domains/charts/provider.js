@@ -6,21 +6,18 @@ import { SubMenuByIdProvider } from "./subMenu"
 import { ActiveMenuProvider } from "./active"
 import { ListProvider } from "./list"
 
-const Provider = ({
+export const Provider = ({
   container,
   activeMenuGroupId,
   activeSubMenuId,
-  chartIds,
   getChart,
   dashboardAttributes,
-  hasKubernetes,
+  menuGroupIds,
+  menuGroupById,
+  subMenuById,
+  menuChartsAttributeById,
   children,
 }) => {
-  const { menuGroupIds, menuGroupById, subMenuById, menuChartsAttributeById } = useMemo(
-    () => getMenu(chartIds, getChart, { hasKubernetes }),
-    [chartIds, getChart]
-  )
-
   return (
     <ChartsProvider
       container={container}
@@ -41,4 +38,36 @@ const Provider = ({
   )
 }
 
-export default Provider
+const ProviderContainer = ({
+  container,
+  activeMenuGroupId,
+  activeSubMenuId,
+  chartIds,
+  getChart,
+  dashboardAttributes,
+  hasKubernetes,
+  children,
+}) => {
+  const { menuGroupIds, menuGroupById, subMenuById, menuChartsAttributeById } = useMemo(
+    () => getMenu(chartIds, getChart, { hasKubernetes }),
+    [chartIds, getChart]
+  )
+
+  return (
+    <Provider
+      container={container}
+      activeMenuGroupId={activeMenuGroupId}
+      activeSubMenuId={activeSubMenuId}
+      getChart={getChart}
+      dashboardAttributes={dashboardAttributes}
+      menuGroupIds={menuGroupIds}
+      menuGroupById={menuGroupById}
+      subMenuById={subMenuById}
+      menuChartsAttributeById={menuChartsAttributeById}
+    >
+      {children}
+    </Provider>
+  )
+}
+
+export default ProviderContainer
