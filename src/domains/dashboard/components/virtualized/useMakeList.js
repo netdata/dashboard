@@ -22,7 +22,7 @@ export default ({ ref, measures, cache }) => {
     const goToMenuGroup = async id => {
       await retry(() => {
         const targetIndex = menuGroupIdsRef.current.indexOf(id)
-        if (targetIndex !== -1) return ref.current.scrollToRow(targetIndex)
+        if (targetIndex !== -1) return ref.current && ref.current.scrollToRow(targetIndex)
       }, 5)
 
       await retry(() => {
@@ -65,14 +65,20 @@ export default ({ ref, measures, cache }) => {
       }
     }
 
-    const measure = id => measures.current[id]()
+    const measure = id => {
+      try {
+        measures.current[id]()
+      } catch (e) {}
+    }
 
     const resize = id => {
+      if (!ref.current) return
       measure(id)
       ref.current.forceUpdateGrid()
     }
 
     const resizeAll = () => {
+      if (!ref.current) return
       cache.clearAll()
       ref.current.forceUpdateGrid()
     }
