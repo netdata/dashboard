@@ -7,8 +7,7 @@ export const ChartMenuGroupIcon = ({ icon, ...rest }) => (
 )
 
 export const ChartMenuGroupTitle = ({ icon, title, ...rest }) => (
-  <Flex as={H0} color="key" gap={2} {...rest}>
-    <ChartMenuGroupIcon icon={icon} />
+  <Flex as={H0} color="text" gap={2} {...rest}>
     <span>{title}</span>
   </Flex>
 )
