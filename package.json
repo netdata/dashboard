@@ -120,7 +120,7 @@
     "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
     "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts && npm run resolveAlias",
     "cp-cloud": "cp -R ./lib ../cloud-frontend/node_modules/@netdata/dashboard/",
-    "to-cloud": "yarn ts-bundle && yarn cp-cloud",
+    "to-cloud": "npm run ts-bundle && npm run cp-cloud",
     "eject": "react-scripts eject",
     "prepare": "install-peers && npm run ts-bundle",
     "resolveAlias": "tscpaths -p tsconfig.json -s ./src -o ./lib/src"
