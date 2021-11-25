@@ -1,6 +1,6 @@
 {
   "name": "@netdata/dashboard",
-  "version": "2.20.12",
+  "version": "2.20.14",
   "homepage": ".",
   "main": "./lib/src/index-npm.js",
   "files": [
@@ -18,7 +18,7 @@
     "@material/list": "^4.0.0",
     "@material/menu": "^2.3.0",
     "@material/menu-surface": "^1.0.0",
-    "@netdata/netdata-ui": "^1.6.33",
+    "@netdata/netdata-ui": "^1.7.18",
     "@rmwc/icon": "^5.7.2",
     "@rmwc/list": "^5.7.2",
     "@rmwc/menu": "^5.7.2",
@@ -119,6 +119,8 @@
     "clean": "./node_modules/rimraf/bin.js ./lib",
     "remove-unnecessary-dts": "rimraf ./lib/dashboard-react.d.ts",
     "ts-bundle": "npm run clean && tsc --noEmit false && node copy-assets && npm run remove-unnecessary-dts && npm run resolveAlias",
+    "cp-cloud": "cp -R ./lib ../cloud-frontend/node_modules/@netdata/dashboard/",
+    "to-cloud": "npm run ts-bundle && npm run cp-cloud",
     "eject": "react-scripts eject",
     "prepare": "install-peers && npm run ts-bundle",
     "resolveAlias": "tscpaths -p tsconfig.json -s ./src -o ./lib/src"
