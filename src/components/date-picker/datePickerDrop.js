@@ -141,7 +141,7 @@ const DatePickerDrop = ({
             {isValidTimePeriod && <PeriodIndication startDate={startDate} endDate={endDate} />}
             <Flex alignItems="center" justifyContent="center" gap={4}>
               <Button
-                label="CLEAR"
+                label="Clear"
                 flavour="hollow"
                 onClick={clearChanges}
                 disabled={isClearDisabled}
@@ -149,7 +149,7 @@ const DatePickerDrop = ({
                 data-testid="datePicker-clear"
               />
               <Button
-                label="APPLY"
+                label="Apply"
                 onClick={applyChanges}
                 disabled={!isValidTimePeriod || isApplyDisabled}
                 data-ga={`date-picker::click-apply::${tagging}-${focusTagging}`}
