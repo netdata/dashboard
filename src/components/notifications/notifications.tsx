@@ -20,10 +20,10 @@ export const showCloudInstallationProblemNotification = () => {
   }
   const notificationComponent = createUINotification({
     ...uiNotification,
-    success: false,
+    error: true,
     leftContent: (
       <S.NodeIconContainer>
-        <Icon name="gear" size="large" />
+        <Icon name="gear" size="large" color="error" />
       </S.NodeIconContainer>
     ),
   })
@@ -44,10 +44,10 @@ export const showCloudConnectionProblemNotification = () => {
   }
   const notificationComponent = createUINotification({
     ...uiNotification,
-    success: false,
+    error: true,
     leftContent: (
       <S.NodeIconContainer>
-        <Icon name="gear" size="large" />
+        <Icon name="gear" size="large" color="error" />
       </S.NodeIconContainer>
     ),
   })
