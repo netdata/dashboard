@@ -31,5 +31,5 @@ export const HeaderText = styled(Text)<{ error?: boolean; success?: boolean }>`
 
 export const ContentText = styled(TextSmall)<{ error?: boolean; success?: boolean }>`
   display: block;
-  color: ${({ error }) => (error && getColor("error")) || getColor("text")};
+  color: ${({ error }) => (error && getColor("error")) || getColor("border")};
 `
