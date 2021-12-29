@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { getColor, getSizeBy } from "@netdata/netdata-ui"
+import { getSizeBy } from "@netdata/netdata-ui"
 
 export const NodeIconContainer = styled.div`
   width: ${getSizeBy(5)};
@@ -8,9 +8,6 @@ export const NodeIconContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  & > svg use {
-    fill: ${getColor(["neutral", "limedSpruce"])};
-  }
 `
 
 export const NotificationLink = styled.a`
