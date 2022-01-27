@@ -42,6 +42,7 @@ import { serverDefault } from './utils/server-detection';
 import { name2id } from './utils/name-2-id';
 import { isProperTimezone } from './utils/date-time';
 import { NETDATA_REGISTRY_SERVER } from './utils';
+import { getHashParam } from 'utils/hash-utils';
 import { isDemo } from "./utils/is-demo"
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from './domains/chart/utils/legend-utils';
 import { defaultAttributes } from './domains/chart/utils/transformDataAttributes';
@@ -120,8 +121,8 @@ window.urlOptions = {
     update_always: false,
     pan_and_zoom: false,
     server: null,
-    after: 0,
-    before: 0,
+    after: getHashParam('after') ?? 0,
+    before: getHashParam('before') ?? 0,
     highlight: false,
     highlight_after: 0,
     highlight_before: 0,
