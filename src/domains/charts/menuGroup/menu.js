@@ -34,21 +34,10 @@ const StyledMenuSidebar = styled(Flex).attrs({
   max-height: calc(100vh - ${({ top }) => top});
 `
 
-const StyledMenuSidebarWithoutFixed = styled(Flex).attrs({
-  overflow: { vertical: "auto" },
-})`
-  position: absolute;
-  max-height: calc(100vh - ${({ top }) => top});
-`
-
 export const MenuSidebar = props => {
   const container = useContainer()
   const top = `${container.getBoundingClientRect().top}px`
-  return props.isFixedPosition ? (
-    <StyledMenuSidebar top={top} {...props} />
-  ) : (
-    <StyledMenuSidebarWithoutFixed top={top} {...props} />
-  )
+  return props.isFixedPosition ? <StyledMenuSidebar top={top} {...props} /> : <Flex {...props} />
 }
 
 export const MenuSidebarContainer = ({
