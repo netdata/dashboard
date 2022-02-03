@@ -20,7 +20,6 @@ export const ContainerContext = React.createContext({})
 export const GetChartContext = createContext({})
 export const MenuChartsAttributeById = createContext({})
 export const DashboardAttributesContext = createContext({})
-export const ListContext = createContext(null)
 
 export const ChartsProvider = ({
   container,
