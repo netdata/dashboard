@@ -37,11 +37,16 @@ const StyledMenuSidebar = styled(Flex).attrs({
 export const MenuSidebar = props => {
   const container = useContainer()
   const top = `${container.getBoundingClientRect().top}px`
-  return <StyledMenuSidebar top={top} {...props} />
+  return props.isFixedPosition ? <StyledMenuSidebar top={top} {...props} /> : <Flex {...props} />
 }
 
-export const MenuSidebarContainer = ({ onMenuGroupClick, onSubMenuClick, ...rest }) => (
-  <MenuSidebar {...rest}>
+export const MenuSidebarContainer = ({
+  onMenuGroupClick,
+  onSubMenuClick,
+  isFixedPosition = true,
+  ...rest
+}) => (
+  <MenuSidebar isFixedPosition={isFixedPosition} {...rest}>
     <MenuContainer onMenuGroupClick={onMenuGroupClick} onSubMenuClick={onSubMenuClick} />
   </MenuSidebar>
 )
