@@ -20,7 +20,7 @@ export const SidebarSocialMedia = () => (
     <S.Separator />
     <S.SecondRow>
       <S.SecondRowText>
-          And share the word!
+          And spread the word!
       </S.SecondRowText>
       <S.TwitterIcon href="https://twitter.com/linuxnetdata/" target="_blank">
         <i className="fab fa-twitter" />
