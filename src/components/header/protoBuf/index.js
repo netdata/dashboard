@@ -2,8 +2,6 @@ import styled from "styled-components"
 import React, { useRef } from "react"
 import { useMedia, useToggle } from "react-use"
 import { Drop, Flex, Icon, Pill, Text } from "@netdata/netdata-ui"
-import { useSelector } from "store/redux-separate-context"
-import { selectLacksProtoBufSupport } from "domains/global/selectors"
 
 import Dropdown from "./dropdown"
 
@@ -17,7 +15,6 @@ const breakpoint = "(min-width: 1400px)"
 
 const ProtoBuf = () => {
   const [isOpen, toggle] = useToggle()
-  const lacksProtoBufSupport = useSelector(selectLacksProtoBufSupport)
 
   const ref = useRef()
 
@@ -26,7 +23,6 @@ const ProtoBuf = () => {
   const close = () => {
     toggle(false)
   }
-  if (!lacksProtoBufSupport) return null
 
   return (
     <Flex flex={false}>
