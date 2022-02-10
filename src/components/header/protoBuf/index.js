@@ -48,8 +48,8 @@ const ProtoBuf = () => {
               </Flex>
               <Flex>
                 <Text>
-                  It will not be possible to monitor this node from Netdata Cloud after 2nd of
-                  February. <br /> <br />
+                  It will not be possible to monitor this node from Netdata Cloud after 1st of
+                  March. <br /> <br />
                   This node does not have proto-buf support. In order to learn how to apply
                   proto-buf support to your nodes{" "}
                   <Link href="https://learn.netdata.cloud/docs/agent/claim#remove-and-reconnect-a-node">
