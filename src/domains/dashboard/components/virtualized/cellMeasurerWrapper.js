@@ -50,11 +50,7 @@ const Wrapper = ({ children, style, id }) => {
     }
   }, [id])
 
-  return (
-    <div ref={ref} style={{ ...style, paddingRight: "232px" }}>
-      {children}
-    </div>
-  )
+  return <div ref={ref}>{children}</div>
 }
 
 export default Wrapper
