@@ -50,7 +50,11 @@ const Wrapper = ({ children, style, id }) => {
     }
   }, [id])
 
-  return <div ref={ref}>{children}</div>
+  return (
+    <div ref={ref} style={{ ...style }}>
+      {children}
+    </div>
+  )
 }
 
 export default Wrapper
