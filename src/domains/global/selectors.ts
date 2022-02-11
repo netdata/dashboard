@@ -90,6 +90,10 @@ export const selectIsCloudEnabled = createSelector(
 )
 export const selectHasFetchedInfo = createSelector(selectRegistry, prop("hasFetchedInfo"))
 export const selectFullInfoPayload = createSelector(selectRegistry, prop("fullInfoPayload"))
+export const selectLacksProtoBufSupport = createSelector(
+  selectFullInfoPayload,
+  info => info["agent-claimed"] && !info["aclk-ng-new-cloud-protocol"]
+)
 
 export const selectHasStartedAlarms = createSelector(
   selectGlobal,
