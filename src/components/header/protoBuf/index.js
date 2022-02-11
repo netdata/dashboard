@@ -56,7 +56,7 @@ const ProtoBuf = () => {
                   March. <br /> <br />
                   This node does not have proto-buf support. In order to learn how to apply
                   proto-buf support to your nodes{" "}
-                  <Link href="https://learn.netdata.cloud/docs/agent/claim#remove-and-reconnect-a-node">
+                  <Link href="https://www.netdata.cloud/blog/netdata-clouds-new-architecture">
                     read our documentation.
                   </Link>
                   <br />
