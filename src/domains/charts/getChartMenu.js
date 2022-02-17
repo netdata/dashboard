@@ -6,7 +6,7 @@ export default (
   const subMenuId = family || "all"
   const clusterId = hasKubernetes && chartLabels?.k8s_cluster_id?.[0]
 
-  const [type] = id.split(".")
+  const [type, typeB] = id.split(".")
   const parts = type.split("_")
   const [part1, part2] = parts
 
@@ -34,7 +34,6 @@ export default (
   switch (part1) {
     case "ap":
     case "net":
-    case "disk":
     case "powersupply":
     case "statsd":
       return emit({ menu: part1 })
@@ -56,6 +55,15 @@ export default (
       return emitMultipartMenu("dhcpd")
     case "anomaly":
       return emit({})
+
+    case "disk": {
+      if (/(inodes|space)/.test(typeB) || /(inodes|space)/.test(part2))
+        return emit({ menu: "mount" })
+      return emit({ menu: part1 })
+    }
+    case "mount": {
+      return emit({ menu: part1 })
+    }
 
     case "cgroup": {
       const menuPattern =
