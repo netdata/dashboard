@@ -9,11 +9,7 @@
     "inlineSources": true,
     "sourceRoot": "/",
     "noImplicitAny": false,
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["esnext", "dom", "dom.iterable"],
     "module": "esnext",
     "target": "es2018",
     "jsx": "react",
@@ -28,12 +24,6 @@
     "noEmit": true,
     "declaration": true
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "/node_modules/",
-    "**/*.test.ts",
-    "**/*.test.tsx"
-  ]
+  "include": ["./src/**/*", "src/vendor/dygraph-c91c859.min.js"],
+  "exclude": ["/node_modules/", "**/*.test.ts", "**/*.test.tsx"]
 }
