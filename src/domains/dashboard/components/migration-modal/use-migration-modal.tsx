@@ -3,7 +3,7 @@ import Anchor from "@/src/components/anchor"
 import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
 
-enum MigrationModalStatus {
+export enum MigrationModalStatus {
   PROMO_SIGN_IN_CLOUD = "PROMO_SIGN_IN_CLOUD",
   PROMO_SIGN_UP_CLOUD = "PROMO_SIGN_UP_CLOUD",
   PROMO_IVNITED_TO_SPACE = "PROMO_IVNITED_TO_SPACE",
@@ -11,7 +11,6 @@ enum MigrationModalStatus {
   PROMO_TO_USE_NEW_DASHBAORD = "PROMO_TO_USE_NEW_DASHBAORD",
   FALLBACK_TO_AGENT = "FALLBACK_TO_AGENT",
   NO_INFO_FALLBACK_TO_AGENT = "NO_INFO_FALLBACK_TO_AGENT",
-  ACLK = "ACLK",
 }
 
 type MigrationModalActions = {
@@ -35,7 +34,7 @@ type MigrationModalState = {
   [key in MigrationModalStatus]: MigrationModalContent
 }
 
-const modalStatuses: MigrationModalState = {
+export const modalMigrationStatuses: MigrationModalState = {
   [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: {
     title: "Learn about Netdata Cloud!",
     text: {
@@ -195,38 +194,124 @@ const modalStatuses: MigrationModalState = {
       onClick: () => "show me agent for now",
     },
   },
-  [MigrationModalStatus.ACLK]: {
-    title: "Oops! We aren't able to get information of this node in regards to Netdata Cloud!",
-    text: {
-      header: "This node is currently Connected/Not Connected to Netdata Cloud",
-      bullets: [
-        "The node lost its Netdata Cloud connection at DATE TIME.",
-        "To troubleshoot Netdata Cloud connection issues, please follow this guide. (only shows on Not Connected)",
-      ],
-      footer: "You are Logged in/Logged out/Not signed-up to Netdata Cloud",
-    },
-    tickBoxOption: { text: "Don't show this again", onClick: () => "dont show" },
-    CTA1: {
-      text: "Take me to Netdata Cloud",
-      onClick: () => "Take me to",
-    },
-  },
 }
 
 type UserStatus = "LOGGED_IN" | "LOGGED_OUT" | "UNKNOWN"
 type NodeClaimedStatus = "NOT_CLAIMED" | "UNKNOWN" | "CLAIMED" | "NO_ACCESS"
+type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
+type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
+type NodeLiveness = "LIVE" | "NOT_LIVE"
+
+export type PromoProps = {
+  userSavedPreference?: UserPreference
+  userStatus?: UserStatus
+  nodeClaimedStatus?: NodeClaimedStatus
+  userNodeAccess?: UserNodeAccess
+  nodeLiveness?: NodeLiveness
+}
+
+const isPromoSignUp = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+}: PromoProps): boolean =>
+  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "NOT_CLAIMED"
+
+const isPromoSignIn = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+}: PromoProps): boolean =>
+  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "CLAIMED"
+
+const isPromoInvitedToSpace = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+  userNodeAccess,
+}: PromoProps): boolean =>
+  userSavedPreference !== "AGENT" &&
+  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  nodeClaimedStatus === "CLAIMED" &&
+  userNodeAccess === "NO_ACCESS"
+
+const isPromoToClaimThisNode = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+}: PromoProps): boolean =>
+  userSavedPreference !== "AGENT" &&
+  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  nodeClaimedStatus === "NOT_CLAIMED"
+
+const isPromoToNewDasboardOnCloud = ({
+  userSavedPreference,
+  userStatus,
+  nodeLiveness,
+  userNodeAccess,
+}: PromoProps): boolean =>
+  userSavedPreference === "UNDEFINED" &&
+  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  nodeLiveness === "LIVE" &&
+  userNodeAccess === "ACCESS_OK"
+
+const isNoInfoFallbackToAgent = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+  nodeLiveness,
+  userNodeAccess,
+}: PromoProps): boolean =>
+  userSavedPreference === "CLOUD" &&
+  userStatus === undefined &&
+  !nodeClaimedStatus &&
+  !nodeLiveness &&
+  !userNodeAccess
+
+const isFallbackToAgent = ({
+  userSavedPreference,
+  userStatus,
+  nodeClaimedStatus,
+  nodeLiveness,
+  userNodeAccess,
+}: PromoProps): boolean =>
+  userSavedPreference === "CLOUD" &&
+  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  nodeClaimedStatus === "CLAIMED" &&
+  nodeLiveness === "NOT_LIVE" &&
+  userNodeAccess === "ACCESS_OK"
+
+const modalStatusWithPromoFunctions: Record<string, (props: PromoProps) => boolean> = {
+  [MigrationModalStatus.FALLBACK_TO_AGENT]: isFallbackToAgent,
+  [MigrationModalStatus.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
+  [MigrationModalStatus.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
+  [MigrationModalStatus.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
+  [MigrationModalStatus.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
+  [MigrationModalStatus.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
+  [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
+}
 
 const useMigrationModal = ({
   userStatus,
   nodeClaimedStatus,
-}: {
-  userStatus: UserStatus
-  nodeClaimedStatus: NodeClaimedStatus
-}) => {
-  const [value, setValue] = useLocalStorage("USER_SAVED_PREFERENCE")
-  const modalStatus = useMemo(() => {}, [userStatus])
+  userNodeAccess,
+  nodeLiveness,
+}: PromoProps) => {
+  const [userSavedPreference] = useLocalStorage<UserPreference>("USER_SAVED_PREFERENCE")
 
-  const modalContent = useMemo(() => {}, [modalStatus])
+  const migrationModalStatus = useMemo<MigrationModalStatus>(() => {
+    return Object.keys(modalStatusWithPromoFunctions).find(modalStatus => {
+      return modalStatusWithPromoFunctions[modalStatus]({
+        userStatus,
+        nodeClaimedStatus,
+        userNodeAccess,
+        userSavedPreference,
+        nodeLiveness,
+      })
+    }) as MigrationModalStatus
+  }, [userStatus])
+
+  return { migrationModalStatus: modalMigrationStatuses[migrationModalStatus] }
 }
 
 export default useMigrationModal
