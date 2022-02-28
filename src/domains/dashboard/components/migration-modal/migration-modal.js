@@ -1,4 +1,5 @@
 import React from "react"
+import { useLocalStorage } from "react-use"
 
 import {
   Modal,
@@ -17,20 +18,25 @@ import {
 import useMigrationModal from "./use-migration-modal"
 
 const MigrationModal = () => {
-  const { migrationModalStatus } = useMigrationModal({
+  const { migrationModalPromoInfo } = useMigrationModal({
     userStatus: "LOGGED_IN",
     nodeClaimedStatus: "NOT_CLAIMED",
   })
+  const [tickBoxPrefence, setTickBoxPrefence] = useLocalStorage("USER_SAVED_PREFERENCE")
   return (
     <Modal>
       <ModalContent>
         <ModalHeader>
-          <H3>{migrationModalStatus.title}</H3>
+          <H3>{migrationModalPromoInfo.title}</H3>
         </ModalHeader>
         <ModalBody>
           <Flex padding={[0, 0, 4, 0]} column gap={1}>
-            <Text>{migrationModalStatus.text.header}</Text>
-            {migrationModalStatus.text.bullets.map(bullet => {
+            {typeof migrationModalPromoInfo.text.header === "function" ? (
+              <Text>{migrationModalPromoInfo.text.header()}</Text>
+            ) : (
+              <Text>{migrationModalPromoInfo.text.header}</Text>
+            )}
+            {migrationModalPromoInfo.text.bullets.map(bullet => {
               if (typeof bullet === "function") {
                 return bullet()
               }
@@ -40,15 +46,15 @@ const MigrationModal = () => {
         </ModalBody>
         <ModalFooter>
           <Box>
-            <Checkbox label={migrationModalStatus.tickBoxOption.text} />
+            <Checkbox label={migrationModalPromoInfo.tickBoxOption.text} />
           </Box>
-          {migrationModalStatus.CTA2 && (
-            <Box margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-              <Button width="100%" label={migrationModalStatus.CTA2.text}></Button>
+          {migrationModalPromoInfo.CTA2 && (
+            <Box data-testid="cta2" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
+              <Button width="100%" label={migrationModalPromoInfo.CTA2.text}></Button>
             </Box>
           )}
-          <Box width={{ min: 40 }}>
-            <Button width="100%" label={migrationModalStatus.CTA1.text}></Button>
+          <Box data-testid="cta1" width={{ min: 40 }}>
+            <Button width="100%" label={migrationModalPromoInfo.CTA1.text}></Button>
           </Box>
         </ModalFooter>
       </ModalContent>

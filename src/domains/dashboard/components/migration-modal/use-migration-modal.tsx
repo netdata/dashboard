@@ -3,7 +3,7 @@ import Anchor from "@/src/components/anchor"
 import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
 
-export enum MigrationModalStatus {
+export enum MigrationModalPromos {
   PROMO_SIGN_IN_CLOUD = "PROMO_SIGN_IN_CLOUD",
   PROMO_SIGN_UP_CLOUD = "PROMO_SIGN_UP_CLOUD",
   PROMO_IVNITED_TO_SPACE = "PROMO_IVNITED_TO_SPACE",
@@ -15,7 +15,7 @@ export enum MigrationModalStatus {
 
 type MigrationModalActions = {
   text: string
-  onClick: () => void
+  action: string
 }
 
 type MigrationModalContent = {
@@ -25,17 +25,17 @@ type MigrationModalContent = {
     bullets?: Array<string | ((props?: any) => React.ReactNode)>
     footer?: ((props: any) => React.ReactNode) | string
   }
-  tickBoxOption: { text: string; onClick: () => void }
+  tickBoxOption: { text: string; prefrenceID: MigrationModalPromos }
   CTA1: MigrationModalActions
   CTA2?: MigrationModalActions
 }
 
 type MigrationModalState = {
-  [key in MigrationModalStatus]: MigrationModalContent
+  [key in MigrationModalPromos]: MigrationModalContent
 }
 
 export const modalMigrationStatuses: MigrationModalState = {
-  [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: {
+  [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: {
     title: "Learn about Netdata Cloud!",
     text: {
       header: "Netdata Cloud is a FREE service that complements the Netdata agent, to provide:",
@@ -47,11 +47,14 @@ export const modalMigrationStatuses: MigrationModalState = {
       ],
       footer: "Have a look, you will be surprised!",
     },
-    tickBoxOption: { text: "Remember my choice", onClick: () => "saved" },
-    CTA1: { text: "Wow! Let's go to Netdata Cloud", onClick: () => "Go to Netdata cloud" },
-    CTA2: { text: "Later, show the Agent dashboard for now", onClick: () => "Dashboard agent" },
+    tickBoxOption: {
+      text: "Remember my choice",
+      prefrenceID: MigrationModalPromos.PROMO_SIGN_UP_CLOUD,
+    },
+    CTA1: { text: "Wow! Let's go to Netdata Cloud", action: "path/signup/cloud" },
+    CTA2: { text: "Later, show the Agent dashboard for now", action: "path/agent-dashboard" },
   },
-  [MigrationModalStatus.PROMO_SIGN_IN_CLOUD]: {
+  [MigrationModalPromos.PROMO_SIGN_IN_CLOUD]: {
     title: "Sign-in to Netdata Cloud or get an invitation!",
     text: {
       header: "Netdata Cloud is a FREE service that complements the Netdata agent, to provide:",
@@ -63,26 +66,32 @@ export const modalMigrationStatuses: MigrationModalState = {
       ],
       footer: "Have a look, you will be surprised!",
     },
-    tickBoxOption: { text: "Remember my choice", onClick: () => "saved" },
+    tickBoxOption: {
+      text: "Remember my choice",
+      prefrenceID: MigrationModalPromos.PROMO_SIGN_IN_CLOUD,
+    },
     CTA1: {
       text: "Let me sign-in or get a Netdata Cloud account",
-      onClick: () => "Sign in",
+      action: "path/signin/cloud",
     },
-    CTA2: { text: "Later, show the Agent dashboard for now", onClick: () => "Dashboard agent" },
+    CTA2: { text: "Later, show the Agent dashboard for now", action: "path/agent-dashboard" },
   },
-  [MigrationModalStatus.PROMO_IVNITED_TO_SPACE]: {
+  [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: {
     title: "Get an invitation to this Node’s Space!",
     text: {
       header: "Netdata Cloud is a FREE service that complements the Netdata agent, to provide:",
       footer: "Ask for an invitation to this Space!",
     },
-    tickBoxOption: { text: "Don't remind me of this again", onClick: () => "Do not remind" },
+    tickBoxOption: {
+      text: "Don't remind me of this again",
+      prefrenceID: MigrationModalPromos.PROMO_IVNITED_TO_SPACE,
+    },
     CTA1: {
       text: "Thanks, take me to the Agent dashboard for now",
-      onClick: () => "Take me to agent dashboard",
+      action: "path/agent-dashboard",
     },
   },
-  [MigrationModalStatus.PROMO_CLAIM_NODE]: {
+  [MigrationModalPromos.PROMO_CLAIM_NODE]: {
     title: "This node isn’t connected to Netada Cloud",
     text: {
       header: "For you to be able to see this node on Netdata Cloud you will either need to:",
@@ -113,33 +122,39 @@ export const modalMigrationStatuses: MigrationModalState = {
         },
       ],
     },
-    tickBoxOption: { text: "Don't remind me of this again", onClick: () => "Do not remind" },
+    tickBoxOption: {
+      text: "Don't remind me of this again",
+      prefrenceID: MigrationModalPromos.PROMO_CLAIM_NODE,
+    },
     CTA1: {
       text: "Wow, Lets go to netdata",
-      onClick: () => "Take me to agent dashboard",
+      action: "path/node/cloud",
     },
     CTA2: {
       text: "Later,show the Agent dasboard for now",
-      onClick: () => "Take me to agent dashboard",
+      action: "path/agent-dashboard",
     },
   },
-  [MigrationModalStatus.PROMO_TO_USE_NEW_DASHBAORD]: {
+  [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: {
     title: "Use the Old or the New dashboard?",
     text: {
       header:
         "This node is available in your Netdata Cloud account. So, you have full access to the NEW dashboards, charts, intelligence-assisted troubleshooting and many more!",
     },
-    tickBoxOption: { text: "Remember my choise", onClick: () => "Remember" },
+    tickBoxOption: {
+      text: "Remember my choise",
+      prefrenceID: MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD,
+    },
     CTA1: {
       text: "Wow, Lets go to netdata",
-      onClick: () => "Take me to agent New dashboard",
+      action: "path/dashboard/cloud",
     },
     CTA2: {
       text: "Later,show the Agent dasboard for now",
-      onClick: () => "show me agent for now",
+      action: "path/agent-dashboard",
     },
   },
-  [MigrationModalStatus.FALLBACK_TO_AGENT]: {
+  [MigrationModalPromos.FALLBACK_TO_AGENT]: {
     title: "Oops! This node has lost connection to Netdata Cloud!",
     text: {
       header: () => {
@@ -160,17 +175,20 @@ export const modalMigrationStatuses: MigrationModalState = {
         )
       },
     },
-    tickBoxOption: { text: "Don't show this again", onClick: () => "dont show" },
+    tickBoxOption: {
+      text: "Don't show this again",
+      prefrenceID: MigrationModalPromos.FALLBACK_TO_AGENT,
+    },
     CTA1: {
       text: "Check again",
-      onClick: () => "check again",
+      action: "check again",
     },
     CTA2: {
       text: "Thanks, take me to the Agent dashboard for now",
-      onClick: () => "show me agent for now",
+      action: "path/agent-dashboard",
     },
   },
-  [MigrationModalStatus.NO_INFO_FALLBACK_TO_AGENT]: {
+  [MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]: {
     title: "Oops! We aren't able to get information of this node in regards to Netdata Cloud!",
     text: {
       header: () => {
@@ -184,14 +202,17 @@ export const modalMigrationStatuses: MigrationModalState = {
         )
       },
     },
-    tickBoxOption: { text: "Don't show this again", onClick: () => "dont show" },
+    tickBoxOption: {
+      text: "Don't show this again",
+      prefrenceID: MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT,
+    },
     CTA1: {
       text: "Check again",
-      onClick: () => "check again",
+      action: "check again",
     },
     CTA2: {
       text: "Thanks, take me to the Agent dashboard for now",
-      onClick: () => "show me agent for now",
+      action: "path/agent-dashboard",
     },
   },
 }
@@ -281,15 +302,15 @@ const isFallbackToAgent = ({
   nodeLiveness === "NOT_LIVE" &&
   userNodeAccess === "ACCESS_OK"
 
-const modalStatusWithPromoFunctions: Record<MigrationModalStatus, (props: PromoProps) => boolean> =
+const modalStatusWithPromoFunctions: Record<MigrationModalPromos, (props: PromoProps) => boolean> =
   {
-    [MigrationModalStatus.FALLBACK_TO_AGENT]: isFallbackToAgent,
-    [MigrationModalStatus.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
-    [MigrationModalStatus.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
-    [MigrationModalStatus.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
-    [MigrationModalStatus.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
-    [MigrationModalStatus.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
-    [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
+    [MigrationModalPromos.FALLBACK_TO_AGENT]: isFallbackToAgent,
+    [MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
+    [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
+    [MigrationModalPromos.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
+    [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
+    [MigrationModalPromos.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
+    [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
   }
 
 const useMigrationModal = ({
@@ -298,9 +319,10 @@ const useMigrationModal = ({
   userNodeAccess,
   nodeLiveness,
 }: PromoProps) => {
-  const [userSavedPreference] = useLocalStorage<UserPreference>("USER_SAVED_PREFERENCE")
+  const [userSavedPreference, setUserPrefrence] =
+    useLocalStorage<UserPreference>("USER_SAVED_PREFERENCE")
 
-  const migrationModalStatus = useMemo<MigrationModalStatus>(() => {
+  const migrationModalPromo = useMemo<MigrationModalPromos>(() => {
     return Object.keys(modalStatusWithPromoFunctions).find(modalStatus => {
       return modalStatusWithPromoFunctions[modalStatus]({
         userStatus,
@@ -309,10 +331,14 @@ const useMigrationModal = ({
         userSavedPreference,
         nodeLiveness,
       })
-    }) as MigrationModalStatus
+    }) as MigrationModalPromos
   }, [userStatus])
 
-  return { migrationModalStatus: modalMigrationStatuses[migrationModalStatus] }
+  return {
+    migrationModalPromoInfo: modalMigrationStatuses[migrationModalPromo],
+    migrationModalPromo,
+    setUserPrefrence,
+  }
 }
 
 export default useMigrationModal
