@@ -19,6 +19,7 @@ describe("useMigrationModal", () => {
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_SIGN_UP_CLOUD)
   })
 
   it("should return promo PROMO_SIGN_IN_CLOUD", () => {
@@ -28,6 +29,7 @@ describe("useMigrationModal", () => {
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_SIGN_IN_CLOUD)
   })
 
   it("should return promo PROMO_IVNITED_TO_SPACE ", () => {
@@ -50,6 +52,7 @@ describe("useMigrationModal", () => {
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_IVNITED_TO_SPACE)
   })
 
   it("should return promo PROMO_CLAIM_NODE ", () => {
@@ -70,6 +73,7 @@ describe("useMigrationModal", () => {
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_CLAIM_NODE)
   })
 
   it("should return promo PROMO_TO_USE_NEW_DASHBAORD ", () => {
@@ -94,6 +98,9 @@ describe("useMigrationModal", () => {
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(
+      MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD
+    )
   })
 
   it("should return promo FALLBACK_TO_AGENT ", () => {
@@ -120,6 +127,7 @@ describe("useMigrationModal", () => {
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.FALLBACK_TO_AGENT)
   })
 
   it("should return promo NO_INFO_FALLBACK_TO_AGENT ", () => {
@@ -137,5 +145,8 @@ describe("useMigrationModal", () => {
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
+    expect(result.current.migrationModalPromo).toEqual(
+      MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT
+    )
   })
 })
