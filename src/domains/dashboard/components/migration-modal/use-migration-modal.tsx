@@ -141,6 +141,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     text: {
       header:
         "This node is available in your Netdata Cloud account. So, you have full access to the NEW dashboards, charts, intelligence-assisted troubleshooting and many more!",
+      bullets: [],
     },
     tickBoxOption: {
       text: "Remember my choise",
@@ -237,14 +238,20 @@ const isPromoSignUp = ({
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "NOT_CLAIMED"
+  userSavedPreference &&
+  userSavedPreference !== "AGENT" &&
+  userStatus === "UNKNOWN" &&
+  nodeClaimedStatus === "NOT_CLAIMED"
 
 const isPromoSignIn = ({
   userSavedPreference,
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "CLAIMED"
+  userSavedPreference &&
+  userSavedPreference !== "AGENT" &&
+  userStatus === "UNKNOWN" &&
+  nodeClaimedStatus === "CLAIMED"
 
 const isPromoInvitedToSpace = ({
   userSavedPreference,
@@ -252,6 +259,7 @@ const isPromoInvitedToSpace = ({
   nodeClaimedStatus,
   userNodeAccess,
 }: PromoProps): boolean =>
+  userSavedPreference &&
   userSavedPreference !== "AGENT" &&
   (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
   nodeClaimedStatus === "CLAIMED" &&
@@ -262,6 +270,7 @@ const isPromoToClaimThisNode = ({
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
+  userSavedPreference &&
   userSavedPreference !== "AGENT" &&
   (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
   nodeClaimedStatus === "NOT_CLAIMED"
@@ -272,7 +281,7 @@ const isPromoToNewDasboardOnCloud = ({
   nodeLiveness,
   userNodeAccess,
 }: PromoProps): boolean =>
-  userSavedPreference === "UNDEFINED" &&
+  !userSavedPreference &&
   (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
   nodeLiveness === "LIVE" &&
   userNodeAccess === "ACCESS_OK"

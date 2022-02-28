@@ -77,7 +77,7 @@ describe("useMigrationModal", () => {
   })
 
   it("should return promo PROMO_TO_USE_NEW_DASHBAORD ", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["UNDEFINED", jest.fn()]))
+    useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
 
     const promoPropsWithLoggedIn: PromoProps = {
       userStatus: "LOGGED_IN",

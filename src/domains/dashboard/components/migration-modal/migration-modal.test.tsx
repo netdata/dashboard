@@ -86,6 +86,6 @@ describe("MigrationModal", () => {
     expect(
       screen.getByText(migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD].title)
     ).toBeInTheDocument()
-    expect(screen.getByTestId("body-footer")).toBeInTheDocument()
+    expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
   })
 })
