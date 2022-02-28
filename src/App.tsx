@@ -2,9 +2,9 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import Ps from "perfect-scrollbar"
 import { ThemeProvider } from "styled-components"
 
-import '@formatjs/intl-datetimeformat/polyfill'
-import '@formatjs/intl-datetimeformat/locale-data/en'
-import '@formatjs/intl-datetimeformat/add-all-tz'
+import "@formatjs/intl-datetimeformat/polyfill"
+import "@formatjs/intl-datetimeformat/locale-data/en"
+import "@formatjs/intl-datetimeformat/add-all-tz"
 
 import "@material/menu-surface/dist/mdc.menu-surface.css"
 
@@ -25,11 +25,7 @@ import "styles/fonts.css"
 import { loadCss } from "utils/css-loader"
 import { useDateTime } from "utils/date-time"
 import { useSelector } from "store/redux-separate-context"
-import {
-  selectCloudBaseUrl,
-  selectHasFetchedInfo,
-  selectTheme,
-} from "domains/global/selectors"
+import { selectCloudBaseUrl, selectHasFetchedInfo, selectTheme } from "domains/global/selectors"
 import { Portals } from "domains/chart/components/portals"
 import { useChartsMetadata } from "domains/dashboard/hooks/use-charts-metadata"
 import { PrintModal } from "domains/dashboard/components/print-modal"
@@ -50,9 +46,10 @@ import { serverStatic } from "utils/server-detection"
 import { mapTheme } from "utils/map-theme"
 import { netdataCallback, updateLocaleFunctions } from "./main"
 
+import { MigrationModal } from "@/src/domains/dashboard/components/migration-modal/index.js"
+
 // support legacy code
 window.Ps = Ps
-
 
 const App: React.FC = () => {
   const store = useStore()
@@ -116,7 +113,6 @@ const App: React.FC = () => {
   const theme = useSelector(selectTheme)
   useAlarmFromUrl()
 
-
   return (
     <ThemeProvider theme={mapTheme(theme)}>
       {hasFetchDependencies && (
@@ -126,6 +122,7 @@ const App: React.FC = () => {
       )}
       {chartsMetadata && cloudBaseURL && hasFetchedInfo && haveDOMReadyForParsing && (
         <Layout printMode={isPrintMode}>
+          <MigrationModal></MigrationModal>
           {hasFetchDependencies && (
             <>
               <Portals key={refreshHelper} />
