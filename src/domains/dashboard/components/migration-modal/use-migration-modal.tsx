@@ -80,6 +80,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     title: "Get an invitation to this Node’s Space!",
     text: {
       header: "Netdata Cloud is a FREE service that complements the Netdata agent, to provide:",
+      bullets: [],
       footer: "Ask for an invitation to this Space!",
     },
     tickBoxOption: {
