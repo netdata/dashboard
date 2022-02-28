@@ -22,7 +22,7 @@ type MigrationModalContent = {
   title: string
   text: {
     header: ((props: any) => React.ReactNode) | string
-    bullets?: Array<string | ((props: any) => React.ReactNode)>
+    bullets?: Array<string | ((props?: any) => React.ReactNode)>
     footer?: ((props: any) => React.ReactNode) | string
   }
   tickBoxOption: { text: string; onClick: () => void }
@@ -92,13 +92,13 @@ export const modalMigrationStatuses: MigrationModalState = {
           return (
             <Text>
               {" "}
-              connect this node directly ( documentation on{" "}
+              Connect this node directly ( documentation on{" "}
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
                 href="https://learn.netdata.cloud/docs/agent/claim#how-to-connect-a-node"
               >
-                how to connect a node
+                how to connect a node{" "}
               </Anchor>
               or activate streaming to a parent node that is already connected (documentation on
               <Anchor
@@ -281,15 +281,16 @@ const isFallbackToAgent = ({
   nodeLiveness === "NOT_LIVE" &&
   userNodeAccess === "ACCESS_OK"
 
-const modalStatusWithPromoFunctions: Record<string, (props: PromoProps) => boolean> = {
-  [MigrationModalStatus.FALLBACK_TO_AGENT]: isFallbackToAgent,
-  [MigrationModalStatus.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
-  [MigrationModalStatus.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
-  [MigrationModalStatus.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
-  [MigrationModalStatus.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
-  [MigrationModalStatus.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
-  [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
-}
+const modalStatusWithPromoFunctions: Record<MigrationModalStatus, (props: PromoProps) => boolean> =
+  {
+    [MigrationModalStatus.FALLBACK_TO_AGENT]: isFallbackToAgent,
+    [MigrationModalStatus.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
+    [MigrationModalStatus.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
+    [MigrationModalStatus.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
+    [MigrationModalStatus.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
+    [MigrationModalStatus.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
+    [MigrationModalStatus.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
+  }
 
 const useMigrationModal = ({
   userStatus,
