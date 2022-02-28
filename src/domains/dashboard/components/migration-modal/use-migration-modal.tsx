@@ -30,11 +30,11 @@ type MigrationModalContent = {
   CTA2?: MigrationModalActions
 }
 
-type MigrationModalState = {
+type MigrationModalInfo = {
   [key in MigrationModalPromos]: MigrationModalContent
 }
 
-export const modalMigrationStatuses: MigrationModalState = {
+export const migrationmodalInfo: MigrationModalInfo = {
   [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: {
     title: "Learn about Netdata Cloud!",
     text: {
@@ -335,7 +335,7 @@ const useMigrationModal = ({
   }, [userStatus])
 
   return {
-    migrationModalPromoInfo: modalMigrationStatuses[migrationModalPromo],
+    migrationModalPromoInfo: migrationmodalInfo[migrationModalPromo],
     migrationModalPromo,
     setUserPrefrence,
   }

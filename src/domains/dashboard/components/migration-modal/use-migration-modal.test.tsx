@@ -2,7 +2,7 @@ import { renderHook } from "@testing-library/react-hooks"
 import useMigrationModal, {
   PromoProps,
   MigrationModalPromos,
-  modalMigrationStatuses,
+  migrationmodalInfo,
 } from "./use-migration-modal"
 
 jest.mock("react-use", () => ({
@@ -14,7 +14,7 @@ describe("useMigrationModal", () => {
   afterEach(() => jest.clearAllMocks())
   it("should return promo PROMO_SIGN_UP_CLOUD", () => {
     const promoProps: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
@@ -23,7 +23,7 @@ describe("useMigrationModal", () => {
 
   it("should return promo PROMO_SIGN_IN_CLOUD", () => {
     const promoProps: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "CLAIMED" }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
@@ -41,7 +41,7 @@ describe("useMigrationModal", () => {
       nodeClaimedStatus: "CLAIMED",
       userNodeAccess: "NO_ACCESS",
     }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoPropsWithLoggedIn }))
     const { result: resultWithLogout } = renderHook(() =>
@@ -61,7 +61,7 @@ describe("useMigrationModal", () => {
       userStatus: "LOGGED_OUT",
       nodeClaimedStatus: "NOT_CLAIMED",
     }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.PROMO_CLAIM_NODE]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoPropsWithLoggedIn }))
     const { result: resultWithLogout } = renderHook(() =>
@@ -85,7 +85,7 @@ describe("useMigrationModal", () => {
       nodeLiveness: "LIVE",
       userNodeAccess: "ACCESS_OK",
     }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoPropsWithLoggedIn }))
     const { result: resultWithLogout } = renderHook(() =>
@@ -111,7 +111,7 @@ describe("useMigrationModal", () => {
       userNodeAccess: "ACCESS_OK",
       nodeClaimedStatus: "CLAIMED",
     }
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.FALLBACK_TO_AGENT]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoPropsWithLoggedIn }))
     const { result: resultWithLogout } = renderHook(() =>
@@ -132,7 +132,7 @@ describe("useMigrationModal", () => {
       nodeClaimedStatus: undefined,
     }
 
-    const expectedPromo = modalMigrationStatuses[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]
+    const expectedPromo = migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
 
