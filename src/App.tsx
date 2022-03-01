@@ -46,7 +46,7 @@ import { serverStatic } from "utils/server-detection"
 import { mapTheme } from "utils/map-theme"
 import { netdataCallback, updateLocaleFunctions } from "./main"
 
-import { MigrationModal } from "@/src/domains/dashboard/components/migration-modal/index.js"
+import { MigrationManager } from "@/src/domains/dashboard/components/migration-manager"
 
 // support legacy code
 window.Ps = Ps
@@ -122,7 +122,7 @@ const App: React.FC = () => {
       )}
       {chartsMetadata && cloudBaseURL && hasFetchedInfo && haveDOMReadyForParsing && (
         <Layout printMode={isPrintMode}>
-          <MigrationModal></MigrationModal>
+          <MigrationManager />
           {hasFetchDependencies && (
             <>
               <Portals key={refreshHelper} />
