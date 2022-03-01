@@ -1,16 +1,10 @@
 import React from "react"
 import MigrationModal from "./migration-modal"
-import { render, screen } from "@testing-library/react"
+import { render, screen, fireEvent } from "@testing-library/react"
 import { migrationmodalInfo, MigrationModalPromos } from "./use-migration-modal"
 import { ThemeProvider } from "styled-components"
 import { DarkTheme } from "@netdata/netdata-ui"
 import "@testing-library/jest-dom/extend-expect"
-
-jest.mock("react-use", () => ({
-  useLocalStorage: jest.fn(() => ["NONE", jest.fn()]),
-}))
-
-import { useLocalStorage } from "react-use"
 
 describe("MigrationModal", () => {
   const closeModal = jest.fn()
@@ -219,5 +213,43 @@ describe("MigrationModal", () => {
       screen.getByText(migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT].title)
     ).toBeInTheDocument()
     expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
+  })
+
+  it("should call save the not call user prefrence when remind me checkbox is not selected", () => {
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+        />
+      </ThemeProvider>
+    )
+    const cta1Button = screen.getByTestId("cta1-button")
+
+    fireEvent.click(cta1Button)
+
+    expect(setUserPrefrence).not.toHaveBeenCalled()
+    expect(closeModal).toHaveBeenCalled()
+  })
+
+  it("should call save the user prefrence when remind me checkbox is selected", () => {
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+        />
+      </ThemeProvider>
+    )
+    const remindMeCheckBox = screen.getByTestId("remind-me-checkbox")
+    const cta1Button = screen.getByTestId("cta1-button")
+
+    fireEvent.click(remindMeCheckBox)
+    fireEvent.click(cta1Button)
+
+    expect(setUserPrefrence).toHaveBeenCalled()
+    expect(closeModal).toHaveBeenCalled()
   })
 })

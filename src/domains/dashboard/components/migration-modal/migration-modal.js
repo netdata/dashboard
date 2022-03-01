@@ -84,6 +84,7 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
         <ModalFooter>
           <Box margin={[0, 2, 0, 0]}>
             <Checkbox
+              data-testId="remind-me-checkbox"
               checked={isRememberChoiceChecked}
               onChange={handleCheckBoxChange}
               label={migrationModalPromoInfo.tickBoxOption.text}
@@ -91,6 +92,7 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
           </Box>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
             <Button
+              data-testid="cta1-button"
               onClick={handleClickedCTA1}
               width="100%"
               label={migrationModalPromoInfo.CTA1.text}
@@ -99,6 +101,7 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
           {migrationModalPromoInfo.CTA2 && (
             <Box data-testid="cta2" width={{ min: 40 }}>
               <Button
+                data-testid="cta2-button"
                 danger
                 onClick={handleClickedCTA2}
                 width="100%"
