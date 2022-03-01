@@ -176,6 +176,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
           </Text>
         )
       },
+      bullets: [],
     },
     tickBoxOption: {
       text: "Don't show this again",
@@ -203,6 +204,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
           </Text>
         )
       },
+      bullets: [],
     },
     tickBoxOption: {
       text: "Don't show this again",
@@ -294,7 +296,7 @@ const isNoInfoFallbackToAgent = ({
   userNodeAccess,
 }: PromoProps): boolean =>
   userSavedPreference === "CLOUD" &&
-  userStatus === undefined &&
+  !userStatus &&
   !nodeClaimedStatus &&
   !nodeLiveness &&
   !userNodeAccess

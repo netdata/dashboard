@@ -19,7 +19,7 @@ describe("MigrationModal", () => {
     useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal />
+        <MigrationModal userStatus="UNKNOWN" nodeClaimedStatus="NOT_CLAIMED" />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -45,7 +45,7 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("body-footer")).toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_IVNITED_TO_SPACE", () => {
+  it("should render modal with PROMO_IVNITED_TO_SPACE (LOGGED_IN)", () => {
     useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
@@ -64,7 +64,26 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("body-footer")).toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_CLAIM_NODE", () => {
+  it("should render modal with PROMO_IVNITED_TO_SPACE (LOGGED_OUT)", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          userStatus="LOGGED_OUT"
+          nodeClaimedStatus="CLAIMED"
+          userNodeAccess="NO_ACCESS"
+        />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.queryByTestId("cta2")).not.toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE].title)
+    ).toBeInTheDocument()
+    expect(screen.getByTestId("body-footer")).toBeInTheDocument()
+  })
+
+  it("should render modal with PROMO_CLAIM_NODE (LOGGED_IN)", () => {
     useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
@@ -79,7 +98,22 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("body-footer")).toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_TO_USE_NEW_DASHBAORD", () => {
+  it("should render modal with PROMO_CLAIM_NODE (LOGGED_OUT)", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal userStatus="LOGGED_OUT" nodeClaimedStatus="NOT_CLAIMED" />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.getByTestId("cta2")).toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE].title)
+    ).toBeInTheDocument()
+    expect(screen.getByTestId("body-footer")).toBeInTheDocument()
+  })
+
+  it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (LOGGED_IN)", () => {
     useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
@@ -90,6 +124,79 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("cta2")).toBeInTheDocument()
     expect(
       screen.getByText(migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD].title)
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
+  })
+
+  it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (LOGGED_OUT)", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal userStatus="LOGGED_OUT" userNodeAccess="ACCESS_OK" nodeLiveness="LIVE" />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.getByTestId("cta2")).toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD].title)
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
+  })
+
+  it("should render modal with FALLBACK_TO_AGENT (LOGGED_IN)", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
+
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          nodeClaimedStatus="CLAIMED"
+          userStatus="LOGGED_IN"
+          userNodeAccess="ACCESS_OK"
+          nodeLiveness="NOT_LIVE"
+        />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.getByTestId("cta2")).toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT].title)
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
+  })
+
+  it("should render modal with FALLBACK_TO_AGENT (LOGGED_OUT)", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
+
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          nodeClaimedStatus="CLAIMED"
+          userStatus="LOGGED_OUT"
+          userNodeAccess="ACCESS_OK"
+          nodeLiveness="NOT_LIVE"
+        />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.getByTestId("cta2")).toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT].title)
+    ).toBeInTheDocument()
+    expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
+  })
+
+  it("should render modal with NO_INFO_FALLBACK_TO_AGENT ", () => {
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
+
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal />
+      </ThemeProvider>
+    )
+    expect(screen.getByTestId("cta1")).toBeInTheDocument()
+    expect(screen.getByTestId("cta2")).toBeInTheDocument()
+    expect(
+      screen.getByText(migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT].title)
     ).toBeInTheDocument()
     expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
   })

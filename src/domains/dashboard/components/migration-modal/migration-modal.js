@@ -18,8 +18,8 @@ import {
 import useMigrationModal from "./use-migration-modal"
 
 const MigrationModal = ({
-  userStatus = "UNKNOWN",
-  nodeClaimedStatus = "NOT_CLAIMED",
+  userStatus = "",
+  nodeClaimedStatus = "",
   userNodeAccess = "",
   nodeLiveness = "",
 }) => {
@@ -38,7 +38,7 @@ const MigrationModal = ({
     setTickBoxPrefence(e.currentTarget.checked)
   }
 
-  return (
+  return migrationModalPromoInfo ? (
     <Modal>
       <ModalContent>
         <ModalHeader>
@@ -83,7 +83,7 @@ const MigrationModal = ({
         </ModalFooter>
       </ModalContent>
     </Modal>
-  )
+  ) : null
 }
 
 export default MigrationModal
