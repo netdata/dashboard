@@ -13,13 +13,18 @@ jest.mock("react-use", () => ({
 import { useLocalStorage } from "react-use"
 
 describe("MigrationModal", () => {
+  const closeModal = jest.fn()
+  const setUserPrefrence = jest.fn()
   afterEach(() => jest.clearAllMocks())
 
   it("should render modal with PROMO_SIGN_UP_CLOUD ", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="UNKNOWN" nodeClaimedStatus="NOT_CLAIMED" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -31,10 +36,13 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_SIGN_IN_CLOUD ", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="UNKNOWN" nodeClaimedStatus="CLAIMED" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]}
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -46,13 +54,12 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_IVNITED_TO_SPACE (LOGGED_IN)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
-          userStatus="LOGGED_IN"
-          nodeClaimedStatus="CLAIMED"
-          userNodeAccess="NO_ACCESS"
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
         />
       </ThemeProvider>
     )
@@ -65,13 +72,12 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_IVNITED_TO_SPACE (LOGGED_OUT)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
-          userStatus="LOGGED_OUT"
-          nodeClaimedStatus="CLAIMED"
-          userNodeAccess="NO_ACCESS"
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
         />
       </ThemeProvider>
     )
@@ -84,10 +90,13 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_CLAIM_NODE (LOGGED_IN)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="LOGGED_IN" nodeClaimedStatus="NOT_CLAIMED" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -99,10 +108,13 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_CLAIM_NODE (LOGGED_OUT)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="LOGGED_OUT" nodeClaimedStatus="NOT_CLAIMED" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -114,10 +126,15 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (LOGGED_IN)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="LOGGED_IN" userNodeAccess="ACCESS_OK" nodeLiveness="LIVE" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={
+            migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
+          }
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -129,10 +146,15 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (LOGGED_OUT)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="LOGGED_OUT" userNodeAccess="ACCESS_OK" nodeLiveness="LIVE" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={
+            migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
+          }
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
@@ -144,15 +166,12 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with FALLBACK_TO_AGENT (LOGGED_IN)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
-
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
-          nodeClaimedStatus="CLAIMED"
-          userStatus="LOGGED_IN"
-          userNodeAccess="ACCESS_OK"
-          nodeLiveness="NOT_LIVE"
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
         />
       </ThemeProvider>
     )
@@ -165,15 +184,12 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with FALLBACK_TO_AGENT (LOGGED_OUT)", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
-
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
-          nodeClaimedStatus="CLAIMED"
-          userStatus="LOGGED_OUT"
-          userNodeAccess="ACCESS_OK"
-          nodeLiveness="NOT_LIVE"
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
         />
       </ThemeProvider>
     )
@@ -186,11 +202,15 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with NO_INFO_FALLBACK_TO_AGENT ", () => {
-    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
-
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal userStatus="" nodeClaimedStatus="" userNodeAccess="" nodeLiveness="" />
+        <MigrationModal
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={
+            migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]
+          }
+        />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()
