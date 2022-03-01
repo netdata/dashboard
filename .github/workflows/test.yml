@@ -2,12 +2,12 @@
 name: tests
 
 on:
-  pull_request:
   push:
+    branches: [master]
   workflow_dispatch:
-    inputs:
+
 concurrency:
-  group: dashboard-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -21,7 +21,7 @@ jobs:
 
       - uses: actions/setup-node@v2
         with:
-          node-version: "12.22.0"
+          node-version: "12.x"
           cache: "npm"
       - name: Install dependencies
         run: npm install
@@ -51,7 +51,8 @@ jobs:
       - name: Upload report to test-reports bucket
         if: (steps.run-tests.outcome == 'failure' || steps.run-tests.outcome == 'success') && github.ref == 'refs/heads/develop'
         run: |
-          gsutil -h "Cache-Control: max-age=0, no-store" cp /tmp/coverage_report gs://${{ secrets.TEST_AUTOMATION_STORAGE_BUCKET }}/${{ github.event.repository.name }}/coverage_report
+          gsutil -h "Cache-Control: max-age=0, no-store" cp \
+          /tmp/coverage_report gs://${{ secrets.TEST_AUTOMATION_STORAGE_BUCKET }}/${{ github.event.repository.name }}/coverage_report
           gsutil acl set project-private gs://${{ secrets.TEST_AUTOMATION_STORAGE_BUCKET }}/${{ github.event.repository.name }}/coverage_report
 
       - name: Publish test coverage report
