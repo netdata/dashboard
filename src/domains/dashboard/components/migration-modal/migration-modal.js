@@ -52,9 +52,9 @@ const MigrationModal = ({
 
   return migrationModalPromoInfo ? (
     <Modal>
-      <ModalContent>
+      <ModalContent background="modalBackground">
         <ModalHeader>
-          <H3>{migrationModalPromoInfo.title}</H3>
+          <H3 margin={[0]}>{migrationModalPromoInfo.title}</H3>
         </ModalHeader>
         <ModalBody>
           <Flex width={120} padding={[0, 0, 4, 0]} column gap={3}>
