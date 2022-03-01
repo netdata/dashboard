@@ -72,7 +72,7 @@ const MigrationModal = ({
           <H3>{migrationModalPromoInfo.title}</H3>
         </ModalHeader>
         <ModalBody>
-          <Flex padding={[0, 0, 4, 0]} column gap={3}>
+          <Flex width={120} padding={[0, 0, 4, 0]} column gap={3}>
             {typeof migrationModalPromoInfo.text.header === "function" ? (
               <Text>{migrationModalPromoInfo.text.header()}</Text>
             ) : (
@@ -109,6 +109,7 @@ const MigrationModal = ({
           {migrationModalPromoInfo.CTA2 && (
             <Box data-testid="cta2" width={{ min: 40 }}>
               <Button
+                danger
                 onClick={handleClickedCTA2}
                 width="100%"
                 label={migrationModalPromoInfo.CTA2.text}
