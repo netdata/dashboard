@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react"
-import { useLocalStorage } from "react-use"
+import { useLocalStorage, useSessionStorage } from "react-use"
 
 import {
   Modal,
@@ -15,21 +15,7 @@ import {
   Checkbox,
 } from "@netdata/netdata-ui"
 
-import useMigrationModal from "./use-migration-modal"
-
-const MigrationModal = ({
-  userStatus = "LOGGED_IN",
-  nodeClaimedStatus = "",
-  userNodeAccess = "ACCESS_OK",
-  nodeLiveness = "LIVE",
-}) => {
-  const { migrationModalPromoInfo, setUserPrefrence } = useMigrationModal({
-    userStatus,
-    nodeClaimedStatus,
-    userNodeAccess,
-    nodeLiveness,
-  })
-
+const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal }) => {
   const [tickBoxPrefence, setTickBoxPrefence] = useLocalStorage(
     migrationModalPromoInfo && migrationModalPromoInfo.tickBoxOption.prefrenceID
   )
@@ -43,26 +29,30 @@ const MigrationModal = ({
     const { CTA1 } = migrationModalPromoInfo
     if (isRememberChoiceChecked) {
       console.log("i will save option for CTA1")
-      // setUserPrefrence(CTA1.userPreference)
+      setUserPrefrence(CTA1.userPreference)
+      setTickBoxPrefence(isRememberChoiceChecked)
     }
     if (CTA1.action === "NAVIGATE") {
       console.log("I will navigate to ", CTA1.toPath)
     } else if (CTA1.action === "REFRESH") {
       console.log("I REFRESH THE DATA")
     }
+    closeModal()
   }, [migrationModalPromoInfo.CTA1, setUserPrefrence, isRememberChoiceChecked])
 
   const handleClickedCTA2 = useCallback(() => {
     const { CTA2 } = migrationModalPromoInfo
     if (isRememberChoiceChecked) {
       console.log("i will save option for CTA2")
-      // setUserPrefrence(CTA2.userPreference)
+      setUserPrefrence(CTA2.userPreference)
+      setTickBoxPrefence(isRememberChoiceChecked)
     }
     if (CTA2.action === "NAVIGATE") {
       console.log("I will navigate to ", CTA2.toPath)
     } else if (CTA2.action === "REFRESH") {
       console.log("I REFRESH THE DATA")
     }
+    closeModal()
   }, [migrationModalPromoInfo.CTA2, setUserPrefrence, isRememberChoiceChecked])
 
   return migrationModalPromoInfo ? (
