@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react"
-import { useLocalStorage, useSessionStorage } from "react-use"
 
 import {
   Modal,
@@ -15,10 +14,12 @@ import {
   Checkbox,
 } from "@netdata/netdata-ui"
 
-const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal }) => {
-  const [tickBoxPrefence, setTickBoxPrefence] = useLocalStorage(
-    migrationModalPromoInfo && migrationModalPromoInfo.tickBoxOption.prefrenceID
-  )
+const MigrationModal = ({
+  migrationModalPromoInfo,
+  setUserPrefrence,
+  closeModal,
+  savePromoRemindMeSelection,
+}) => {
   const [isRememberChoiceChecked, setIsRememberChoiceChecked] = useState(false)
 
   const handleCheckBoxChange = e => {
@@ -28,14 +29,11 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
   const handleClickedCTA1 = useCallback(() => {
     const { CTA1 } = migrationModalPromoInfo
     if (isRememberChoiceChecked) {
-      console.log("i will save option for CTA1")
       setUserPrefrence(CTA1.userPreference)
-      setTickBoxPrefence(isRememberChoiceChecked)
+      savePromoRemindMeSelection(isRememberChoiceChecked)
     }
     if (CTA1.action === "NAVIGATE") {
-      console.log("I will navigate to ", CTA1.toPath)
     } else if (CTA1.action === "REFRESH") {
-      console.log("I REFRESH THE DATA")
     }
     closeModal()
   }, [migrationModalPromoInfo.CTA1, setUserPrefrence, isRememberChoiceChecked])
@@ -43,14 +41,11 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
   const handleClickedCTA2 = useCallback(() => {
     const { CTA2 } = migrationModalPromoInfo
     if (isRememberChoiceChecked) {
-      console.log("i will save option for CTA2")
       setUserPrefrence(CTA2.userPreference)
-      setTickBoxPrefence(isRememberChoiceChecked)
+      savePromoRemindMeSelection(isRememberChoiceChecked)
     }
     if (CTA2.action === "NAVIGATE") {
-      console.log("I will navigate to ", CTA2.toPath)
     } else if (CTA2.action === "REFRESH") {
-      console.log("I REFRESH THE DATA")
     }
     closeModal()
   }, [migrationModalPromoInfo.CTA2, setUserPrefrence, isRememberChoiceChecked])
@@ -84,7 +79,7 @@ const MigrationModal = ({ migrationModalPromoInfo, setUserPrefrence, closeModal 
         <ModalFooter>
           <Box margin={[0, 2, 0, 0]}>
             <Checkbox
-              data-testId="remind-me-checkbox"
+              data-testid="remind-me-checkbox"
               checked={isRememberChoiceChecked}
               onChange={handleCheckBoxChange}
               label={migrationModalPromoInfo.tickBoxOption.text}

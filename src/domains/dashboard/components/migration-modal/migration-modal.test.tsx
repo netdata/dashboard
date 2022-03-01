@@ -9,12 +9,15 @@ import "@testing-library/jest-dom/extend-expect"
 describe("MigrationModal", () => {
   const closeModal = jest.fn()
   const setUserPrefrence = jest.fn()
+  const savePromoRemindMeSelection = jest.fn()
+
   afterEach(() => jest.clearAllMocks())
 
   it("should render modal with PROMO_SIGN_UP_CLOUD ", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
@@ -33,6 +36,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]}
@@ -51,6 +55,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
@@ -69,6 +74,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
@@ -87,6 +93,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
@@ -105,6 +112,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
@@ -123,6 +131,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={
@@ -143,6 +152,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={
@@ -163,6 +173,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
@@ -181,6 +192,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
@@ -199,6 +211,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={
@@ -219,6 +232,7 @@ describe("MigrationModal", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
@@ -231,12 +245,14 @@ describe("MigrationModal", () => {
 
     expect(setUserPrefrence).not.toHaveBeenCalled()
     expect(closeModal).toHaveBeenCalled()
+    expect(savePromoRemindMeSelection).not.toHaveBeenCalled()
   })
 
   it("should call save the user prefrence when remind me checkbox is selected", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
@@ -251,5 +267,6 @@ describe("MigrationModal", () => {
 
     expect(setUserPrefrence).toHaveBeenCalled()
     expect(closeModal).toHaveBeenCalled()
+    expect(savePromoRemindMeSelection).toHaveBeenCalled()
   })
 })

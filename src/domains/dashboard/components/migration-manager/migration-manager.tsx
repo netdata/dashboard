@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useLocalStorage } from "react-use"
 
 import {
   MigrationModal,
@@ -8,19 +9,24 @@ import {
 const MigrationManager = () => {
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence } = useMigrationModal({
-    userStatus: "LOGGED_IN",
-    nodeClaimedStatus: undefined,
-    userNodeAccess: "ACCESS_OK",
-    nodeLiveness: "LIVE",
+    userStatus: "UNKNOWN",
+    nodeClaimedStatus: "NOT_CLAIMED",
+    userNodeAccess: undefined,
+    nodeLiveness: undefined,
   })
+
+  const [hasPromoSelectionSaved, savePromoRemindMeSelection] = useLocalStorage(
+    migrationModalPromoInfo.tickBoxOption.prefrenceID
+  )
 
   const closeModal = () => {
     setModalOpen(false)
   }
 
-  if (migrationModalPromoInfo && isModalOpen)
+  if (migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
     return (
       <MigrationModal
+        savePromoRemindMeSelection={savePromoRemindMeSelection}
         migrationModalPromoInfo={migrationModalPromoInfo}
         setUserPrefrence={setUserPrefrence}
         closeModal={closeModal}
