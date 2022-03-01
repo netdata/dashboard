@@ -6,12 +6,17 @@ import { ThemeProvider } from "styled-components"
 import { DarkTheme } from "@netdata/netdata-ui"
 import "@testing-library/jest-dom/extend-expect"
 
+jest.mock("react-use", () => ({
+  useLocalStorage: jest.fn(() => ["NONE", jest.fn()]),
+}))
+
+import { useLocalStorage } from "react-use"
+
 describe("MigrationModal", () => {
-  beforeEach(() => {
-    window.localStorage.clear()
-  })
+  afterEach(() => jest.clearAllMocks())
+
   it("should render modal with PROMO_SIGN_UP_CLOUD ", () => {
-    window.localStorage.setItem("USER_SAVED_PREFERENCE", "CLOUD")
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal />
@@ -26,7 +31,7 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_SIGN_IN_CLOUD ", () => {
-    window.localStorage.setItem("USER_SAVED_PREFERENCE", "CLOUD")
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal userStatus="UNKNOWN" nodeClaimedStatus="CLAIMED" />
@@ -41,7 +46,7 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_IVNITED_TO_SPACE", () => {
-    window.localStorage.setItem("USER_SAVED_PREFERENCE", "CLOUD")
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
@@ -60,7 +65,7 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_CLAIM_NODE", () => {
-    window.localStorage.setItem("USER_SAVED_PREFERENCE", "CLOUD")
+    useLocalStorage.mockImplementation(jest.fn(() => ["CLOUD", jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal userStatus="LOGGED_IN" nodeClaimedStatus="NOT_CLAIMED" />
@@ -75,7 +80,7 @@ describe("MigrationModal", () => {
   })
 
   it("should render modal with PROMO_TO_USE_NEW_DASHBAORD", () => {
-    window.localStorage.setItem("USER_SAVED_PREFERENCE", undefined)
+    useLocalStorage.mockImplementation(jest.fn(() => [undefined, jest.fn()]))
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal userStatus="LOGGED_IN" userNodeAccess="ACCESS_OK" nodeLiveness="LIVE" />
