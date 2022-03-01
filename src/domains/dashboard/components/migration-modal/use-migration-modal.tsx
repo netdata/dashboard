@@ -198,7 +198,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       header: () => {
         return (
           <Text>
-            "This node is available in your Netdata Cloud account. So, you have full access to the
+            This node is available in your Netdata Cloud account. So, you have full access to the
             NEW dashboards, charts, intelligence-assisted troubleshooting and many more!", The node
             lost its Netdata Cloud connection at DATE TIME. To troubleshoot Netdata Cloud connection
             issues, please follow{" "}

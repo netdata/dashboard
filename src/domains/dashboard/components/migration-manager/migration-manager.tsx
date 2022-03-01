@@ -9,15 +9,15 @@ import {
 const MigrationManager = () => {
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence } = useMigrationModal({
-    userStatus: "UNKNOWN",
-    nodeClaimedStatus: "NOT_CLAIMED",
-    userNodeAccess: undefined,
-    nodeLiveness: undefined,
+    userStatus: "LOGGED_IN",
+    nodeClaimedStatus: undefined,
+    userNodeAccess: "ACCESS_OK",
+    nodeLiveness: "LIVE",
   })
 
-  const [hasPromoSelectionSaved, savePromoRemindMeSelection] = useLocalStorage(
-    migrationModalPromoInfo.tickBoxOption.prefrenceID
-  )
+  const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
+
+  const [hasPromoSelectionSaved, savePromoRemindMeSelection] = useLocalStorage(prefrenceID)
 
   const closeModal = () => {
     setModalOpen(false)
