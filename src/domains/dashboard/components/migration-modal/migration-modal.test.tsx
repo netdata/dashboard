@@ -190,7 +190,7 @@ describe("MigrationModal", () => {
 
     render(
       <ThemeProvider theme={DarkTheme}>
-        <MigrationModal />
+        <MigrationModal userStatus="" nodeClaimedStatus="" userNodeAccess="" nodeLiveness="" />
       </ThemeProvider>
     )
     expect(screen.getByTestId("cta1")).toBeInTheDocument()

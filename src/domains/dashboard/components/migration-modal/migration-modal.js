@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useCallback } from "react"
 import { useLocalStorage } from "react-use"
 
 import {
@@ -18,25 +18,52 @@ import {
 import useMigrationModal from "./use-migration-modal"
 
 const MigrationModal = ({
-  userStatus = "",
+  userStatus = "LOGGED_IN",
   nodeClaimedStatus = "",
-  userNodeAccess = "",
-  nodeLiveness = "",
+  userNodeAccess = "ACCESS_OK",
+  nodeLiveness = "LIVE",
 }) => {
-  const { migrationModalPromoInfo, migrationModalPromo } = useMigrationModal({
+  const { migrationModalPromoInfo, setUserPrefrence } = useMigrationModal({
     userStatus,
     nodeClaimedStatus,
     userNodeAccess,
     nodeLiveness,
   })
 
-  const [tickBoxPrefence, setTickBoxPrefence] = useLocalStorage(migrationModalPromo)
-  const [isChecked, setChecked] = useState(tickBoxPrefence || false)
+  const [tickBoxPrefence, setTickBoxPrefence] = useLocalStorage(
+    migrationModalPromoInfo && migrationModalPromoInfo.tickBoxOption.prefrenceID
+  )
+  const [isRememberChoiceChecked, setIsRememberChoiceChecked] = useState(false)
 
   const handleCheckBoxChange = e => {
-    setChecked(e.currentTarget.checked)
-    setTickBoxPrefence(e.currentTarget.checked)
+    setIsRememberChoiceChecked(e.currentTarget.checked)
   }
+
+  const handleClickedCTA1 = useCallback(() => {
+    const { CTA1 } = migrationModalPromoInfo
+    if (isRememberChoiceChecked) {
+      console.log("i will save option for CTA1")
+      // setUserPrefrence(CTA1.userPreference)
+    }
+    if (CTA1.action === "NAVIGATE") {
+      console.log("I will navigate to ", CTA1.toPath)
+    } else if (CTA1.action === "REFRESH") {
+      console.log("I REFRESH THE DATA")
+    }
+  }, [migrationModalPromoInfo.CTA1, setUserPrefrence, isRememberChoiceChecked])
+
+  const handleClickedCTA2 = useCallback(() => {
+    const { CTA2 } = migrationModalPromoInfo
+    if (isRememberChoiceChecked) {
+      console.log("i will save option for CTA2")
+      // setUserPrefrence(CTA2.userPreference)
+    }
+    if (CTA2.action === "NAVIGATE") {
+      console.log("I will navigate to ", CTA2.toPath)
+    } else if (CTA2.action === "REFRESH") {
+      console.log("I REFRESH THE DATA")
+    }
+  }, [migrationModalPromoInfo.CTA2, setUserPrefrence, isRememberChoiceChecked])
 
   return migrationModalPromoInfo ? (
     <Modal>
@@ -67,17 +94,25 @@ const MigrationModal = ({
         <ModalFooter>
           <Box margin={[0, 2, 0, 0]}>
             <Checkbox
-              checked={isChecked}
+              checked={isRememberChoiceChecked}
               onChange={handleCheckBoxChange}
               label={migrationModalPromoInfo.tickBoxOption.text}
             />
           </Box>
-          <Box data-testid="cta1" width={{ min: 40 }}>
-            <Button width="100%" label={migrationModalPromoInfo.CTA1.text}></Button>
+          <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
+            <Button
+              onClick={handleClickedCTA1}
+              width="100%"
+              label={migrationModalPromoInfo.CTA1.text}
+            ></Button>
           </Box>
           {migrationModalPromoInfo.CTA2 && (
-            <Box data-testid="cta2" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-              <Button width="100%" label={migrationModalPromoInfo.CTA2.text}></Button>
+            <Box data-testid="cta2" width={{ min: 40 }}>
+              <Button
+                onClick={handleClickedCTA2}
+                width="100%"
+                label={migrationModalPromoInfo.CTA2.text}
+              ></Button>
             </Box>
           )}
         </ModalFooter>

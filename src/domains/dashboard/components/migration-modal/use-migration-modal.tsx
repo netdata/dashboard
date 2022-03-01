@@ -3,6 +3,13 @@ import Anchor from "@/src/components/anchor"
 import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
 
+type UserStatus = "LOGGED_IN" | "LOGGED_OUT" | "UNKNOWN"
+type NodeClaimedStatus = "NOT_CLAIMED" | "UNKNOWN" | "CLAIMED" | "NO_ACCESS"
+type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
+type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
+type NodeLiveness = "LIVE" | "NOT_LIVE"
+type CTATYPE = "NAVIGATE" | "REFRESH"
+
 export enum MigrationModalPromos {
   PROMO_SIGN_IN_CLOUD = "PROMO_SIGN_IN_CLOUD",
   PROMO_SIGN_UP_CLOUD = "PROMO_SIGN_UP_CLOUD",
@@ -15,7 +22,9 @@ export enum MigrationModalPromos {
 
 type MigrationModalActions = {
   text: string
-  action: string
+  action: CTATYPE
+  toPath?: string
+  userPreference?: UserPreference | "DONT_SHOW"
 }
 
 type MigrationModalContent = {
@@ -51,8 +60,18 @@ export const migrationmodalInfo: MigrationModalInfo = {
       text: "Remember my choice",
       prefrenceID: MigrationModalPromos.PROMO_SIGN_UP_CLOUD,
     },
-    CTA1: { text: "Wow! Let's go to Netdata Cloud", action: "path/signup/cloud" },
-    CTA2: { text: "Later, show the Agent dashboard for now", action: "path/agent-dashboard" },
+    CTA1: {
+      text: "Wow! Let's go to Netdata Cloud",
+      toPath: "path/signup/cloud",
+      action: "NAVIGATE",
+      userPreference: "CLOUD",
+    },
+    CTA2: {
+      text: "Later, show the Agent dashboard for now",
+      action: "NAVIGATE",
+      toPath: "path/agent-dashboard",
+      userPreference: "AGENT",
+    },
   },
   [MigrationModalPromos.PROMO_SIGN_IN_CLOUD]: {
     title: "Sign-in to Netdata Cloud or get an invitation!",
@@ -72,9 +91,16 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Let me sign-in or get a Netdata Cloud account",
-      action: "path/signin/cloud",
+      action: "NAVIGATE",
+      toPath: "path/signin/cloud",
+      userPreference: "CLOUD",
     },
-    CTA2: { text: "Later, show the Agent dashboard for now", action: "path/agent-dashboard" },
+    CTA2: {
+      text: "Later, show the Agent dashboard for now",
+      toPath: "path/agent-dashboard",
+      action: "NAVIGATE",
+      userPreference: "AGENT",
+    },
   },
   [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: {
     title: "Get an invitation to this Node’s Space!",
@@ -89,7 +115,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Thanks, take me to the Agent dashboard for now",
-      action: "path/agent-dashboard",
+      toPath: "path/agent-dashboard",
+      action: "NAVIGATE",
+      userPreference: "AGENT",
     },
   },
   [MigrationModalPromos.PROMO_CLAIM_NODE]: {
@@ -129,11 +157,15 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Wow, Lets go to netdata",
-      action: "path/node/cloud",
+      action: "NAVIGATE",
+      toPath: "path/node/cloud",
+      userPreference: "CLOUD",
     },
     CTA2: {
       text: "Later,show the Agent dasboard for now",
-      action: "path/agent-dashboard",
+      action: "NAVIGATE",
+      toPath: "path/agent-dashboard",
+      userPreference: "AGENT",
     },
   },
   [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: {
@@ -144,16 +176,20 @@ export const migrationmodalInfo: MigrationModalInfo = {
       bullets: [],
     },
     tickBoxOption: {
-      text: "Remember my choise",
+      text: "Remember my choice",
       prefrenceID: MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD,
     },
     CTA1: {
       text: "Wow, Lets go to netdata",
-      action: "path/dashboard/cloud",
+      action: "NAVIGATE",
+      toPath: "path/dashboard/cloud",
+      userPreference: "CLOUD",
     },
     CTA2: {
       text: "Later,show the Agent dasboard for now",
-      action: "path/agent-dashboard",
+      action: "NAVIGATE",
+      toPath: "path/agent-dashboard",
+      userPreference: "AGENT",
     },
   },
   [MigrationModalPromos.FALLBACK_TO_AGENT]: {
@@ -184,11 +220,14 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Check again",
-      action: "check again",
+      action: "REFRESH",
+      userPreference: undefined,
     },
     CTA2: {
       text: "Thanks, take me to the Agent dashboard for now",
-      action: "path/agent-dashboard",
+      toPath: "path/agent",
+      action: "NAVIGATE",
+      userPreference: "AGENT",
     },
   },
   [MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]: {
@@ -212,20 +251,17 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Check again",
-      action: "check again",
+      action: "REFRESH",
+      userPreference: undefined,
     },
     CTA2: {
       text: "Thanks, take me to the Agent dashboard for now",
-      action: "path/agent-dashboard",
+      toPath: "path/agent-dashboard",
+      action: "NAVIGATE",
+      userPreference: "AGENT",
     },
   },
 }
-
-type UserStatus = "LOGGED_IN" | "LOGGED_OUT" | "UNKNOWN"
-type NodeClaimedStatus = "NOT_CLAIMED" | "UNKNOWN" | "CLAIMED" | "NO_ACCESS"
-type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
-type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
-type NodeLiveness = "LIVE" | "NOT_LIVE"
 
 export type PromoProps = {
   userSavedPreference?: UserPreference
