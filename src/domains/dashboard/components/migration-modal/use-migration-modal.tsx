@@ -82,12 +82,12 @@ export const migrationmodalInfo: MigrationModalInfo = {
     text: {
       header: () => (
         <Text strong>
-          Netdata Cloud is a FREE service that complements the Netdata agent, to provide:
+          Netdata Cloud is a FREE service that complements the Netdata Agent, to provide:
         </Text>
       ),
       bullets: [
-        "Infrastructure level dashboards (each chart aggregates data from multiple nodes",
-        "Central dispatch of alarm notifications",
+        "Infrastructure level dashboards (each chart aggregates data from multiple nodes)",
+        "Central dispatch of alert notifications",
         "Custom dashboards editor",
         "Intelligence assisted troubleshooting, to help surface the root cause of issues",
       ],
@@ -98,20 +98,20 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.PROMO_SIGN_IN_CLOUD,
     },
     CTA1: {
-      text: "Sign-in To Netdata cloud",
+      text: "Sign-in or get a Netdata Cloud account",
       action: "NAVIGATE",
       toPath: "path/signin/cloud",
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later,Go to Agent",
+      text: "Later, go to Agent dashboard",
       toPath: "path/agent-dashboard",
       action: "NAVIGATE",
       userPreference: "AGENT",
     },
   },
   [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: {
-    title: "Get an invitation to this Nodes Space!",
+    title: "Get an invitation to this Node’s Space!",
     text: {
       header: () => (
         <Text strong>
@@ -126,7 +126,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.PROMO_IVNITED_TO_SPACE,
     },
     CTA1: {
-      text: "Thanks,Go to Agent dasboard",
+      text: "Thanks, go to Agent dashboard for now",
       toPath: "path/agent-dashboard",
       action: "NAVIGATE",
       userPreference: "AGENT",
