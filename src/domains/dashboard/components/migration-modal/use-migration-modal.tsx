@@ -81,9 +81,16 @@ export const migrationmodalInfo: MigrationModalInfo = {
     title: "Sign-in to Netdata Cloud or get an invitation!",
     text: {
       header: () => (
-        <Text strong>
-          Netdata Cloud is a FREE service that complements the Netdata Agent, to provide:
-        </Text>
+        <>
+          <Text strong>
+            This node is connected to Netdata Cloud but you are not. If you have a Netdata Cloud
+            account sign-in, if not ask for an invitation to it.
+          </Text>
+
+          <Text strong>
+            Netdata Cloud is a FREE service that complements the Netdata Agent, to provide:
+          </Text>
+        </>
       ),
       bullets: [
         "Infrastructure level dashboards (each chart aggregates data from multiple nodes)",
