@@ -65,13 +65,13 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.PROMO_SIGN_UP_CLOUD,
     },
     CTA1: {
-      text: "Wow! Lets, Go to Netdata Cloud",
+      text: "Wow! Let’s go to Netdata Cloud",
       toPath: "path/signup/cloud",
       action: "NAVIGATE",
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later,Go to Agent dashboard",
+      text: "Later, go to Agent dashboard",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",

@@ -95,6 +95,7 @@ const MigrationModal = ({
           </Box>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
             <Button
+              textTransform="none"
               data-testid="cta1-button"
               onClick={handleClickedCTA1}
               width="100%"
@@ -104,6 +105,7 @@ const MigrationModal = ({
           {migrationModalPromoInfo.CTA2 && (
             <Box data-testid="cta2" width={{ min: 40 }}>
               <Button
+                textTransform="none"
                 data-testid="cta2-button"
                 danger
                 onClick={handleClickedCTA2}
