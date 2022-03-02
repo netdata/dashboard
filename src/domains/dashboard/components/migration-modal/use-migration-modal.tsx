@@ -202,8 +202,12 @@ export const migrationmodalInfo: MigrationModalInfo = {
   [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: {
     title: "Use the Old or the New dashboard?",
     text: {
-      header:
-        "This node is available in your Netdata Cloud account. So, you have full access to the NEW dashboards, charts, intelligence-assisted troubleshooting and many more!",
+      header: () => (
+        <Text strong>
+          "This node is available in your Netdata Cloud account. So, you have full access to the NEW
+          dashboards, charts, intelligence-assisted troubleshooting and many more!",
+        </Text>
+      ),
       bullets: [],
     },
     tickBoxOption: {
@@ -229,7 +233,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       header: ({ date = "Monday 21 March" }) => {
         return (
           <>
-            <Text>
+            <Text strong>
               Unfortunately, it seems that this node is not currently connected to Netdata Cloud.
               So, the old agent dashboard is the only option available.
             </Text>
@@ -273,7 +277,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       header: () => {
         return (
           <>
-            <Text>
+            <Text strong>
               Unfortunately, it seems we aren't able to get information on this node in regards to
               Netdata Cloud.
             </Text>
