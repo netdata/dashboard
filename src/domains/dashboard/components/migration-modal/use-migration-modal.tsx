@@ -228,7 +228,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
             <Anchor
               target="_blank"
               rel="noopener noreferrer"
-              href="https://github.com/netdata/product/issues/dummy-link"
+              href="https://learn.netdata.cloud/docs/agent/claim#troubleshooting"
             >
               this guide.
             </Anchor>
@@ -258,12 +258,16 @@ export const migrationmodalInfo: MigrationModalInfo = {
     text: {
       header: () => {
         return (
-          <Text>
-            Unfortunately, it seems we aren't able to get information of this node in regards to
-            Netdata Cloud. This could be from internet connectivity issues from your end or some
-            temporary issue on our services. So, the old agent dashboard is the only option
-            available.
-          </Text>
+          <>
+            <Text>
+              Unfortunately, it seems we aren't able to get information on this node in regards to
+              Netdata Cloud.
+            </Text>
+            <Text>
+              This could be from internet connectivity issues from your end or some temporary issue
+              with our services. So, the old agent dashboard is the only option available.
+            </Text>
+          </>
         )
       },
       bullets: [],
@@ -273,12 +277,12 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT,
     },
     CTA1: {
-      text: "Check again",
+      text: "Check again please",
       action: "REFRESH",
       userPreference: undefined,
     },
     CTA2: {
-      text: "Thanks,Go to Agent dashboard",
+      text: "Thanks, go to Agent dashboard",
       toPath: "path/agent-dashboard",
       action: "NAVIGATE",
       userPreference: "AGENT",
