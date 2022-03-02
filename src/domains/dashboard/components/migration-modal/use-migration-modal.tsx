@@ -87,7 +87,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
             account sign-in, if not ask for an invitation to it.
           </Text>
 
-          <Text strong>
+          <Text>
             Netdata Cloud is a FREE service that complements the Netdata Agent, to provide:
           </Text>
         </>
