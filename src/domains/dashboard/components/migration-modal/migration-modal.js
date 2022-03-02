@@ -59,7 +59,7 @@ const MigrationModal = ({
         <ModalBody>
           <Flex padding={[0, 0, 4, 0]} column gap={3}>
             {typeof migrationModalPromoInfo.text.header === "function" ? (
-              migrationModalPromoInfo.text.header()
+              migrationModalPromoInfo.text.header({})
             ) : (
               <Text>{migrationModalPromoInfo.text.header}</Text>
             )}

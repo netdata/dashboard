@@ -225,21 +225,27 @@ export const migrationmodalInfo: MigrationModalInfo = {
   [MigrationModalPromos.FALLBACK_TO_AGENT]: {
     title: "Oops! This node has lost connection to Netdata Cloud!",
     text: {
-      header: () => {
+      header: ({ date = "Monday 21 March" }) => {
         return (
-          <Text>
-            Unfortunately, it seems that this node is not currently connected to Netdata Cloud. So,
-            the old agent dashboard is the only option available. The node lost its Netdata Cloud
-            connection at DATE TIME. To troubleshoot Netdata Cloud connection issues, please follow
-            this{" "}
-            <Anchor
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://learn.netdata.cloud/docs/agent/claim#troubleshooting"
-            >
-              this guide.
-            </Anchor>
-          </Text>
+          <>
+            <Text>
+              Unfortunately, it seems that this node is not currently connected to Netdata Cloud.
+              So, the old agent dashboard is the only option available.
+            </Text>
+            <Text>
+              The node lost its Netdata Cloud connection at <Text strong>{date}</Text>.
+            </Text>
+            <Text>
+              To troubleshoot Netdata Cloud connection issues, please follow this{" "}
+              <Anchor
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://learn.netdata.cloud/docs/agent/claim#troubleshooting"
+              >
+                this guide.
+              </Anchor>
+            </Text>
+          </>
         )
       },
       bullets: [],
