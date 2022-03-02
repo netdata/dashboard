@@ -161,7 +161,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
               >
                 how to connect a node
               </Anchor>
-              , or
+              ) , or
             </Text>
           )
         },
@@ -174,8 +174,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
                 rel="noopener noreferrer"
                 href="https://learn.netdata.cloud/docs/agent/claim#how-to-connect-a-node"
               >
-                how to configure streaming)
+                how to configure streaming
               </Anchor>
+              )
             </Text>
           )
         },
