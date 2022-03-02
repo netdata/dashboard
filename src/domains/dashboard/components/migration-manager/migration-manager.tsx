@@ -39,7 +39,7 @@ const NO_INFO_FALLBACK_TO_AGENT: PromoProps = {
 const MigrationManager = () => {
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence } = useMigrationModal({
-    ...PROMO_SIGN_IN_CLOUD,
+    ...PROMO_TO_USE_NEW_DASHBAORD,
   })
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
