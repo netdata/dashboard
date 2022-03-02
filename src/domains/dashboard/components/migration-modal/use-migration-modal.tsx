@@ -203,13 +203,13 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD,
     },
     CTA1: {
-      text: "Wow,Go to Netdata",
+      text: "Wow! Let’s go to Netdata Cloud ",
       action: "NAVIGATE",
       toPath: "path/dashboard/cloud",
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later,Go to agent dashboard",
+      text: "Later, go to Agent dashboard",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",
@@ -221,16 +221,16 @@ export const migrationmodalInfo: MigrationModalInfo = {
       header: () => {
         return (
           <Text>
-            This node is available in your Netdata Cloud account. So, you have full access to the
-            NEW dashboards, charts, intelligence-assisted troubleshooting and many more!, The node
-            lost its Netdata Cloud connection at DATE TIME. To troubleshoot Netdata Cloud connection
-            issues, please follow{" "}
+            Unfortunately, it seems that this node is not currently connected to Netdata Cloud. So,
+            the old agent dashboard is the only option available. The node lost its Netdata Cloud
+            connection at DATE TIME. To troubleshoot Netdata Cloud connection issues, please follow
+            this{" "}
             <Anchor
               target="_blank"
               rel="noopener noreferrer"
               href="https://github.com/netdata/product/issues/dummy-link"
             >
-              this guide
+              this guide.
             </Anchor>
           </Text>
         )
@@ -242,12 +242,12 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.FALLBACK_TO_AGENT,
     },
     CTA1: {
-      text: "Check again",
+      text: "Check again please",
       action: "REFRESH",
       userPreference: undefined,
     },
     CTA2: {
-      text: "Thanks, Go to Agent dashboard",
+      text: "Thanks, go to Agent dashboard",
       toPath: "path/agent",
       action: "NAVIGATE",
       userPreference: "AGENT",
