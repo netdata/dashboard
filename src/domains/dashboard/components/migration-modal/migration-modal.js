@@ -52,32 +52,40 @@ const MigrationModal = ({
 
   return migrationModalPromoInfo ? (
     <Modal>
-      <ModalContent background="modalBackground">
+      <ModalContent width={180} background="modalBackground">
         <ModalHeader>
           <H3 margin={[0]}>{migrationModalPromoInfo.title}</H3>
         </ModalHeader>
         <ModalBody>
-          <Flex width={120} padding={[0, 0, 4, 0]} column gap={3}>
+          <Flex padding={[0, 0, 4, 0]} column gap={3}>
             {typeof migrationModalPromoInfo.text.header === "function" ? (
-              <Text>{migrationModalPromoInfo.text.header()}</Text>
+              migrationModalPromoInfo.text.header()
             ) : (
               <Text>{migrationModalPromoInfo.text.header}</Text>
             )}
-            <Flex column gap={3}>
-              {migrationModalPromoInfo.text.bullets.map(bullet => {
-                if (typeof bullet === "function") {
-                  return bullet()
-                }
-                return <Text key={bullet}>{bullet}</Text>
-              })}
-            </Flex>
+            {migrationModalPromoInfo.text.bullets.length > 0 && (
+              <Flex column gap={3}>
+                <Flex column gap={1} as={"ul"}>
+                  {migrationModalPromoInfo.text.bullets.map(bullet => {
+                    if (typeof bullet === "function") {
+                      return <li>{bullet()}</li>
+                    }
+                    return (
+                      <li>
+                        <Text key={bullet}>{bullet}</Text>
+                      </li>
+                    )
+                  })}
+                </Flex>
+              </Flex>
+            )}
             {migrationModalPromoInfo.text.footer && (
               <Text data-testid="body-footer">{migrationModalPromoInfo.text.footer}</Text>
             )}
           </Flex>
         </ModalBody>
         <ModalFooter>
-          <Box margin={[0, 2, 0, 0]}>
+          <Box margin={[0, "auto", 0, 0]}>
             <Checkbox
               data-testid="remind-me-checkbox"
               checked={isRememberChoiceChecked}
