@@ -204,8 +204,8 @@ export const migrationmodalInfo: MigrationModalInfo = {
     text: {
       header: () => (
         <Text strong>
-          "This node is available in your Netdata Cloud account. So, you have full access to the NEW
-          dashboards, charts, intelligence-assisted troubleshooting and many more!",
+          This node is available in your Netdata Cloud account. So, you have full access to the NEW
+          dashboards, charts, intelligence-assisted troubleshooting and many more!,
         </Text>
       ),
       bullets: [],
