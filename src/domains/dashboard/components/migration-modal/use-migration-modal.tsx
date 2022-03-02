@@ -115,7 +115,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     text: {
       header: () => (
         <Text strong>
-          This node is connected to Netdata Cloud but it isnt available on one of your Spaces
+          This node is connected to Netdata Cloud but it isnt available on one of your Spaces.
         </Text>
       ),
       bullets: [],
@@ -152,9 +152,16 @@ export const migrationmodalInfo: MigrationModalInfo = {
                 rel="noopener noreferrer"
                 href="https://learn.netdata.cloud/docs/agent/claim#how-to-connect-a-node"
               >
-                how to connect a node{" "}
+                how to connect a node
               </Anchor>
-              or activate streaming to a parent node that is already connected (documentation on
+              , or
+            </Text>
+          )
+        },
+        () => {
+          return (
+            <Text>
+              Αctivate streaming to a parent node that is already connected (documentation on{" "}
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
@@ -168,17 +175,17 @@ export const migrationmodalInfo: MigrationModalInfo = {
       ],
     },
     tickBoxOption: {
-      text: "Don't remind me of this again",
+      text: "Remember my choice.",
       prefrenceID: MigrationModalPromos.PROMO_CLAIM_NODE,
     },
     CTA1: {
-      text: "Wow, Go to Netdata",
+      text: "Wow! Let’s go to Netdata Cloud",
       action: "NAVIGATE",
       toPath: "path/node/cloud",
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later,Go to Agent dashboard",
+      text: "Later, go to Agent dashboard ",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",
