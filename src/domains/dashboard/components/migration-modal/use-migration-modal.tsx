@@ -395,6 +395,20 @@ const isFallbackToAgent = ({
   nodeLiveness === "NOT_LIVE" &&
   userNodeAccess === "ACCESS_OK"
 
+export const goToAgentDashboard = ({ userSavedPreference }: PromoProps) =>
+  userSavedPreference === "AGENT"
+
+export const goToCloud = ({
+  userSavedPreference,
+  userStatus,
+  nodeLiveness,
+  userNodeAccess,
+}: PromoProps) =>
+  userSavedPreference === "CLOUD" &&
+  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  nodeLiveness === "LIVE" &&
+  userNodeAccess === "ACCESS_OK"
+
 const modalStatusWithPromoFunctions: Record<MigrationModalPromos, (props: PromoProps) => boolean> =
   {
     [MigrationModalPromos.FALLBACK_TO_AGENT]: isFallbackToAgent,
@@ -431,6 +445,7 @@ const useMigrationModal = ({
     migrationModalPromoInfo: migrationmodalInfo[migrationModalPromo],
     migrationModalPromo,
     setUserPrefrence,
+    userSavedPreference,
   }
 }
 
