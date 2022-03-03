@@ -9,7 +9,7 @@ const CloudConnectionStatus = () => {
   const [isModalOpen, setModalOpen] = useState(false)
   const cloudConnectionStatusInfo = useCloudConnectionStatus({
     userStatus: UserStatus.Logged_In,
-    nodeStatus: "Connected",
+    nodeStatus: "Not_Connected",
     date: "Monday May 22th",
   })
   const openModal = useCallback(() => {
@@ -26,7 +26,11 @@ const CloudConnectionStatus = () => {
         Connection to Cloud
       </Pill>
       {isModalOpen && (
-        <CloudConnectionStatusModal {...cloudConnectionStatusInfo} closeModal={closeModal} />
+        <CloudConnectionStatusModal
+          {...cloudConnectionStatusInfo}
+          isCTA1Disabled={false}
+          closeModal={closeModal}
+        />
       )}
     </Flex>
   )

@@ -19,6 +19,7 @@ import { ConnectionModalStatusContent } from "./types"
 type CloudConnectionStatusModalProps = ConnectionModalStatusContent & {
   closeModal: () => void
   onRefresh?: () => void
+  isCTA1Disabled: boolean
 }
 
 const CloudConnectionStatusModal = ({
@@ -27,6 +28,7 @@ const CloudConnectionStatusModal = ({
   CTA1,
   closeModal,
   onRefresh,
+  isCTA1Disabled,
 }: CloudConnectionStatusModalProps) => {
   const handleClickedCTA1 = useCallback(() => {
     console.log("Lets go to netdata cloud")
@@ -65,6 +67,7 @@ const CloudConnectionStatusModal = ({
         <ModalFooter>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
             <Button
+              disabled={isCTA1Disabled}
               textTransform="none"
               data-testid="cta1-button"
               onClick={handleClickedCTA1}
