@@ -10,7 +10,7 @@ import Alarms from "./alarms"
 import News from "./news"
 import Timezone from "./timezone"
 import SignIn from "./signIn"
-
+import { CloudConnectionStatus } from "./ACLK"
 const Wrapper = styled(Flex).attrs({
   as: "header",
   position: "relative",
@@ -29,6 +29,7 @@ const Header = () => (
       <Node />
     </Flex>
     <Flex justifyContent="end" alignItems="center" gap={3}>
+      <CloudConnectionStatus />
       <Version />
       <News />
       <Options />
