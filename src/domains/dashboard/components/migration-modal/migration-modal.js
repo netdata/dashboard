@@ -103,7 +103,13 @@ const MigrationModal = ({
             ></Button>
           </Box>
           {migrationModalPromoInfo.CTA2 && (
-            <Box height={10} className="btn btn-default" data-testid="cta2" width={{ min: 40 }}>
+            <Box
+              onClick={handleClickedCTA2}
+              height={10}
+              className="btn btn-default"
+              data-testid="cta2"
+              width={{ min: 40 }}
+            >
               <Box as={Text} sx={{ fontWeight: "500", lineHeight: "25px" }}>
                 {migrationModalPromoInfo.CTA2.text}
               </Box>
