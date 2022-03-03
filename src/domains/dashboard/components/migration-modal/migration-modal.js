@@ -103,15 +103,10 @@ const MigrationModal = ({
             ></Button>
           </Box>
           {migrationModalPromoInfo.CTA2 && (
-            <Box data-testid="cta2" width={{ min: 40 }}>
-              <Button
-                textTransform="none"
-                data-testid="cta2-button"
-                danger
-                onClick={handleClickedCTA2}
-                width="100%"
-                label={migrationModalPromoInfo.CTA2.text}
-              ></Button>
+            <Box height={10} className="btn btn-default" data-testid="cta2" width={{ min: 40 }}>
+              <Box as={Text} sx={{ fontWeight: "500", lineHeight: "25px" }}>
+                {migrationModalPromoInfo.CTA2.text}
+              </Box>
             </Box>
           )}
         </ModalFooter>
