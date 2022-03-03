@@ -1,21 +1,7 @@
 import React, { useMemo } from "react"
-import { CloudConnectionProps, UserStatus } from "./types"
+import { CloudConnectionProps, UserStatus, ConnectionModalStatusContent } from "./types"
 
 import { Text } from "@netdata/netdata-ui"
-
-type MigrationModalActions = {
-  text: string
-}
-
-type ConnectionModalStatusContent = {
-  title: string
-  text: {
-    header: (props?: any) => React.ReactElement
-    bullets?: Array<string | ((props?: any) => React.ReactNode)>
-    footer?: () => React.ReactElement
-  }
-  CTA1: MigrationModalActions
-}
 
 export const makeCloudConnectionStatusInfo = ({
   nodeStatus,
