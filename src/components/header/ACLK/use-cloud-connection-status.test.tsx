@@ -15,12 +15,8 @@ describe("useCloudConnectionStatus", () => {
     const { result } = renderHook(() => useCloudConnectionStatus({ ...cloudConnectionStatusInfo }))
 
     expect(result.current.text.bullets).toHaveLength(0)
-    expect(result.current.text.footer().props.children.toString()).toBe(
-      ["You are", " ", "Logged In", "to Netdata Cloud"].toString()
-    )
-    expect(result.current.text.header().props.children.toString()).toBe(
-      ["This node is currently ", "Connected", " to Netdata Cloud"].toString()
-    )
+    expect(result.current.text.footer().props.children[2].props.children).toBe("Logged In")
+    expect(result.current.text.header().props.children[2].props.children).toBe("Connected")
   })
 
   it("should return correct status when node i nots connected and user is logged out ", () => {
@@ -33,12 +29,8 @@ describe("useCloudConnectionStatus", () => {
     const { result } = renderHook(() => useCloudConnectionStatus({ ...cloudConnectionStatusInfo }))
 
     expect(result.current.text.bullets).toHaveLength(2)
-    expect(result.current.text.footer().props.children.toString()).toBe(
-      ["You are", " ", "Logged out", "to Netdata Cloud"].toString()
-    )
-    expect(result.current.text.header().props.children.toString()).toBe(
-      ["This node is currently ", "Not connected", " to Netdata Cloud"].toString()
-    )
+    expect(result.current.text.footer().props.children[2].props.children).toBe("Logged out")
+    expect(result.current.text.header().props.children[2].props.children).toBe("Not Connected")
   })
 
   it("should return correct status when user is not signedup ", () => {
@@ -50,8 +42,6 @@ describe("useCloudConnectionStatus", () => {
 
     const { result } = renderHook(() => useCloudConnectionStatus({ ...cloudConnectionStatusInfo }))
 
-    expect(result.current.text.footer().props.children.toString()).toBe(
-      ["You are", " ", "Not signed-up", "to Netdata Cloud"].toString()
-    )
+    expect(result.current.text.footer().props.children[2].props.children).toBe("Not signed-up")
   })
 })
