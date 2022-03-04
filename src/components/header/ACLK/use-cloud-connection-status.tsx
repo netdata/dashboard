@@ -1,5 +1,6 @@
 import React, { useMemo } from "react"
 import { CloudConnectionProps, UserStatus, ConnectionModalStatusContent } from "./types"
+import Anchor from "@/src/components/anchor"
 
 import { Text } from "@netdata/netdata-ui"
 
@@ -12,8 +13,9 @@ export const makeCloudConnectionStatusInfo = ({
   text: {
     header: () => {
       return (
-        <Text strong>
-          This node is currently {nodeStatus === "Connected" ? "Connected" : "Not connected"} to
+        <Text>
+          This node is currently{" "}
+          <Text strong>{nodeStatus === "Connected" ? "Connected" : "Not Connected"}</Text> to
           Netdata Cloud
         </Text>
       )
@@ -22,17 +24,31 @@ export const makeCloudConnectionStatusInfo = ({
       nodeStatus === "Not_Connected"
         ? [
             `The node lost its Netdata Cloud connection at ${date}`,
-            "To troubleshoot Netdata Cloud connection issues, please follow this guide. (only shows on Not Connected)",
+            () => (
+              <Text>
+                To troubleshoot Netdata Cloud connection issues, please follow{" "}
+                <Anchor
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://learn.netdata.cloud/docs/agent/claim#troubleshooting"
+                >
+                  this guide
+                </Anchor>
+                .
+              </Text>
+            ),
           ]
         : [],
     footer: () => (
       <Text>
         You are{" "}
-        {userStatus === UserStatus.Logged_In
-          ? "Logged In"
-          : userStatus === UserStatus.Logged_Out
-          ? "Logged out"
-          : "Not signed-up"}
+        <Text strong>
+          {userStatus === UserStatus.Logged_In
+            ? "Logged In"
+            : userStatus === UserStatus.Logged_Out
+            ? "Logged out"
+            : "Not signed-up"}
+        </Text>{" "}
         to Netdata Cloud
       </Text>
     ),

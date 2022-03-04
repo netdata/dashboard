@@ -28,7 +28,7 @@ const CloudConnectionStatus = () => {
       {isModalOpen && (
         <CloudConnectionStatusModal
           {...cloudConnectionStatusInfo}
-          isCTA1Disabled={false}
+          isCTA1Disabled={true}
           closeModal={closeModal}
         />
       )}
