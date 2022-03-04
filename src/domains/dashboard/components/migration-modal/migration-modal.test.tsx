@@ -5,7 +5,17 @@ import { migrationmodalInfo, MigrationModalPromos } from "./use-migration-modal"
 import { ThemeProvider } from "styled-components"
 import { DarkTheme } from "@netdata/netdata-ui"
 import "@testing-library/jest-dom/extend-expect"
+import { useDispatch, useSelector } from "react-redux"
 
+let assignMock = jest.fn()
+
+delete window.location
+window.location = { assign: assignMock }
+
+jest.mock("react-redux", () => ({
+  useDispatch: jest.fn(() => ({})),
+  useSelector: jest.fn(() => "hello"),
+}))
 describe("MigrationModal", () => {
   const closeModal = jest.fn()
   const setUserPrefrence = jest.fn()
@@ -21,6 +31,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+          migrationModalPromo={MigrationModalPromos.PROMO_SIGN_UP_CLOUD}
         />
       </ThemeProvider>
     )
@@ -40,6 +51,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]}
+          migrationModalPromo={MigrationModalPromos.PROMO_SIGN_IN_CLOUD}
         />
       </ThemeProvider>
     )
@@ -59,6 +71,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
+          migrationModalPromo={MigrationModalPromos.PROMO_IVNITED_TO_SPACE}
         />
       </ThemeProvider>
     )
@@ -78,6 +91,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]}
+          migrationModalPromo={MigrationModalPromos.PROMO_IVNITED_TO_SPACE}
         />
       </ThemeProvider>
     )
@@ -97,6 +111,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
+          migrationModalPromo={MigrationModalPromos.PROMO_CLAIM_NODE}
         />
       </ThemeProvider>
     )
@@ -116,6 +131,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]}
+          migrationModalPromo={MigrationModalPromos.PROMO_CLAIM_NODE}
         />
       </ThemeProvider>
     )
@@ -137,6 +153,7 @@ describe("MigrationModal", () => {
           migrationModalPromoInfo={
             migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
           }
+          migrationModalPromo={MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD}
         />
       </ThemeProvider>
     )
@@ -158,6 +175,7 @@ describe("MigrationModal", () => {
           migrationModalPromoInfo={
             migrationmodalInfo[MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]
           }
+          migrationModalPromo={MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD}
         />
       </ThemeProvider>
     )
@@ -177,6 +195,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
+          migrationModalPromo={MigrationModalPromos.FALLBACK_TO_AGENT}
         />
       </ThemeProvider>
     )
@@ -196,6 +215,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
+          migrationModalPromo={MigrationModalPromos.FALLBACK_TO_AGENT}
         />
       </ThemeProvider>
     )
@@ -217,6 +237,7 @@ describe("MigrationModal", () => {
           migrationModalPromoInfo={
             migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]
           }
+          migrationModalPromo={MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT}
         />
       </ThemeProvider>
     )
@@ -236,6 +257,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+          migrationModalPromo={MigrationModalPromos.PROMO_SIGN_UP_CLOUD}
         />
       </ThemeProvider>
     )
@@ -256,6 +278,7 @@ describe("MigrationModal", () => {
           closeModal={closeModal}
           setUserPrefrence={setUserPrefrence}
           migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
+          migrationModalPromo={migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_UP_CLOUD]}
         />
       </ThemeProvider>
     )
@@ -268,5 +291,54 @@ describe("MigrationModal", () => {
     expect(setUserPrefrence).toHaveBeenCalled()
     expect(closeModal).toHaveBeenCalled()
     expect(savePromoRemindMeSelection).toHaveBeenCalled()
+  })
+
+  it("should not close modal when NO_INFO_FALLBACK_TO_AGENT ", () => {
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={
+            migrationmodalInfo[MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]
+          }
+          migrationModalPromo={MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT}
+        />
+      </ThemeProvider>
+    )
+    const cta1Button = screen.getByTestId("cta1")
+    fireEvent.click(cta1Button)
+
+    expect(closeModal).not.toHaveBeenCalled()
+
+    const cta2Button = screen.getByTestId("cta2")
+    fireEvent.click(cta2Button)
+
+    expect(closeModal).toHaveBeenCalled()
+  })
+
+  it("should render modal with FALLBACK_TO_AGENT (LOGGED_IN)", () => {
+    render(
+      <ThemeProvider theme={DarkTheme}>
+        <MigrationModal
+          savePromoRemindMeSelection={savePromoRemindMeSelection}
+          closeModal={closeModal}
+          setUserPrefrence={setUserPrefrence}
+          migrationModalPromoInfo={migrationmodalInfo[MigrationModalPromos.FALLBACK_TO_AGENT]}
+          migrationModalPromo={MigrationModalPromos.FALLBACK_TO_AGENT}
+        />
+      </ThemeProvider>
+    )
+
+    const cta1Button = screen.getByTestId("cta1")
+    fireEvent.click(cta1Button)
+
+    expect(closeModal).not.toHaveBeenCalled()
+
+    const cta2Button = screen.getByTestId("cta2")
+    fireEvent.click(cta2Button)
+
+    expect(closeModal).toHaveBeenCalled()
   })
 })
