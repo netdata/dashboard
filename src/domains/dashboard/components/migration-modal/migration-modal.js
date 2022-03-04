@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react"
+import GoToCloud from "components/auth/signIn"
 
 import {
   Modal,
@@ -19,6 +20,7 @@ const MigrationModal = ({
   setUserPrefrence,
   closeModal,
   savePromoRemindMeSelection,
+  migrationModalPromo,
 }) => {
   const [isRememberChoiceChecked, setIsRememberChoiceChecked] = useState(false)
 
@@ -26,17 +28,22 @@ const MigrationModal = ({
     setIsRememberChoiceChecked(e.currentTarget.checked)
   }
 
-  const handleClickedCTA1 = useCallback(() => {
-    const { CTA1 } = migrationModalPromoInfo
-    if (isRememberChoiceChecked) {
-      setUserPrefrence(CTA1.userPreference)
-      savePromoRemindMeSelection(isRememberChoiceChecked)
-    }
-    if (CTA1.action === "NAVIGATE") {
-    } else if (CTA1.action === "REFRESH") {
-    }
-    closeModal()
-  }, [migrationModalPromoInfo.CTA1, setUserPrefrence, isRememberChoiceChecked])
+  const handleClickedCTA1 = useCallback(
+    ({ link }) => {
+      const { CTA1 } = migrationModalPromoInfo
+
+      if (CTA1.action === "NAVIGATE") {
+        if (isRememberChoiceChecked) {
+          setUserPrefrence(CTA1.userPreference)
+          savePromoRemindMeSelection(isRememberChoiceChecked)
+        }
+        window.location.href = link
+        closeModal()
+      } else if (CTA1.action === "REFRESH") {
+      }
+    },
+    [migrationModalPromoInfo.CTA1, setUserPrefrence, isRememberChoiceChecked]
+  )
 
   const handleClickedCTA2 = useCallback(() => {
     const { CTA2 } = migrationModalPromoInfo
@@ -94,13 +101,17 @@ const MigrationModal = ({
             />
           </Box>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-            <Button
-              textTransform="none"
-              data-testid="cta1-button"
-              onClick={handleClickedCTA1}
-              width="100%"
-              label={migrationModalPromoInfo.CTA1.text}
-            ></Button>
+            <GoToCloud utmParameters={migrationModalPromo}>
+              {({ link }) => (
+                <Button
+                  textTransform="none"
+                  data-testid="cta1-button"
+                  onClick={() => handleClickedCTA1({ link })}
+                  width="100%"
+                  label={migrationModalPromoInfo.CTA1.text}
+                ></Button>
+              )}
+            </GoToCloud>
           </Box>
           {migrationModalPromoInfo.CTA2 && (
             <Box

@@ -47,9 +47,10 @@ const GO_TO_CLOUD: PromoProps = {
 
 const MigrationManager = () => {
   const [isModalOpen, setModalOpen] = useState(true)
-  const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference } = useMigrationModal({
-    ...PROMO_TO_USE_NEW_DASHBAORD,
-  })
+  const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
+    useMigrationModal({
+      ...NO_INFO_FALLBACK_TO_AGENT,
+    })
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
 
@@ -73,6 +74,7 @@ const MigrationManager = () => {
         migrationModalPromoInfo={migrationModalPromoInfo}
         setUserPrefrence={setUserPrefrence}
         closeModal={closeModal}
+        migrationModalPromo={migrationModalPromo}
       ></MigrationModal>
     )
 
