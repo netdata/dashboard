@@ -23,7 +23,7 @@ export const makeCloudConnectionStatusInfo = ({
     bullets:
       nodeStatus === "NOT_LIVE"
         ? [
-            `The node lost its Netdata Cloud connection at ${date}`,
+            // `The node lost its Netdata Cloud connection at ${date}`,
             () => (
               <Text>
                 To troubleshoot Netdata Cloud connection issues, please follow{" "}

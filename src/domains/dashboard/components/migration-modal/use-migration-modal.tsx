@@ -237,9 +237,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
               Unfortunately, it seems that this node is not currently connected to Netdata Cloud.
               So, the old agent dashboard is the only option available.
             </Text>
-            <Text>
+            {/* <Text>
               The node lost its Netdata Cloud connection at <Text strong>{date}</Text>.
-            </Text>
+            </Text> */}
             <Text>
               To troubleshoot Netdata Cloud connection issues, please follow this{" "}
               <Anchor
