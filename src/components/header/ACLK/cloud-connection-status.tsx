@@ -20,6 +20,10 @@ const CloudConnectionStatus = () => {
     setModalOpen(false)
   }, [])
 
+  const onRefresh = useCallback(() => {
+    console.log("now refreshing")
+  }, [])
+
   return (
     <Flex column>
       <Pill onClick={openModal} flavour="neutral">
@@ -30,6 +34,7 @@ const CloudConnectionStatus = () => {
           {...cloudConnectionStatusInfo}
           isCTA1Disabled={true}
           closeModal={closeModal}
+          onRefresh={onRefresh}
         />
       )}
     </Flex>

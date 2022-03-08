@@ -1,4 +1,5 @@
 import React, { useCallback } from "react"
+import GoToCloud from "components/auth/signIn"
 
 import {
   Modal,
@@ -30,9 +31,10 @@ const CloudConnectionStatusModal = ({
   onRefresh,
   isCTA1Disabled,
 }: CloudConnectionStatusModalProps) => {
-  const handleClickedCTA1 = useCallback(() => {
+  const handleClickedCTA1 = useCallback(({ link }: { link: string }) => {
     console.log("Lets go to netdata cloud")
     closeModal()
+    window.location.href = link
   }, [])
 
   return (
@@ -66,14 +68,18 @@ const CloudConnectionStatusModal = ({
         </ModalBody>
         <ModalFooter>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-            <Button
-              disabled={isCTA1Disabled}
-              textTransform="none"
-              data-testid="cta1-button"
-              onClick={handleClickedCTA1}
-              width="100%"
-              label={CTA1.text}
-            ></Button>
+            <GoToCloud utmParameters={"Connection-to-cloud"}>
+              {({ link }) => (
+                <Button
+                  disabled={isCTA1Disabled}
+                  textTransform="none"
+                  data-testid="cta1-button"
+                  onClick={() => handleClickedCTA1({ link })}
+                  width="100%"
+                  label={CTA1.text}
+                ></Button>
+              )}
+            </GoToCloud>
           </Box>
           <Box
             onClick={onRefresh}

@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react-hooks"
 import useCloudConnectionStatus from "./use-cloud-connection-status"
-import { CloudConnectionProps, UserStatus, NodeStatus } from "./types"
+import { CloudConnectionProps, UserStatus } from "./types"
 
 describe("useCloudConnectionStatus", () => {
   it("should return correct status when node is connected and user logged in ", () => {

@@ -5,7 +5,6 @@ import { migrationmodalInfo, MigrationModalPromos } from "./use-migration-modal"
 import { ThemeProvider } from "styled-components"
 import { DarkTheme } from "@netdata/netdata-ui"
 import "@testing-library/jest-dom/extend-expect"
-import { useDispatch, useSelector } from "react-redux"
 
 let assignMock = jest.fn()
 
