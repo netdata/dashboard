@@ -26,7 +26,7 @@ describe("useCloudConnectionStatus", () => {
 
     const { result } = renderHook(() => useCloudConnectionStatus({ ...cloudConnectionStatusInfo }))
 
-    expect(result.current.text.bullets).toHaveLength(2)
+    expect(result.current.text.bullets).toHaveLength(1)
     expect(result.current.text.footer().props.children[2].props.children).toBe("Logged out")
     expect(result.current.text.header().props.children[2].props.children).toBe("Not Connected")
   })
