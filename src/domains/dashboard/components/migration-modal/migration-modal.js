@@ -73,13 +73,13 @@ const MigrationModal = ({
             {migrationModalPromoInfo.text.bullets.length > 0 && (
               <Flex column gap={3}>
                 <Flex column gap={1} as={"ul"}>
-                  {migrationModalPromoInfo.text.bullets.map(bullet => {
+                  {migrationModalPromoInfo.text.bullets.map((bullet, index) => {
                     if (typeof bullet === "function") {
-                      return <li>{bullet()}</li>
+                      return <li key={bullet}>{bullet()}</li>
                     }
                     return (
-                      <li>
-                        <Text key={bullet}>{bullet}</Text>
+                      <li key={bullet}>
+                        <Text>{bullet}</Text>
                       </li>
                     )
                   })}
