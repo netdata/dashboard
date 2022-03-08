@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { useLocalStorage } from "react-use"
+import { useSelector } from "react-redux"
 
+import { selectUserNodeAccess } from "domains/global/selectors"
 import {
   MigrationModal,
   useMigrationModal,
@@ -49,10 +51,14 @@ const GO_TO_CLOUD: PromoProps = {
 } //CLOUD
 
 const MigrationManager = () => {
+  const userNodeAccess = useSelector(selectUserNodeAccess)
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
     useMigrationModal({
-      ...PROMO_SIGN_IN_CLOUD,
+      ...userNodeAccess,
+      // missing:
+      // userSavedPreference?: UserPreference
+      // nodeLiveness?: NodeLiveness
     })
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""

@@ -3,7 +3,7 @@ import { createAction } from "redux-act"
 import { createRequestAction } from "utils/createRequestAction"
 import { RegistryMachine } from "domains/global/sagas"
 import { storeKey } from "./constants"
-import { ActiveAlarms, ChartsMetadata, Snapshot, Alarm } from "./types"
+import { ActiveAlarms, ChartsMetadata, Snapshot, Alarm, UserNodeAccessMessage } from "./types"
 
 interface RequestCommonColors {
   chartContext: string
@@ -166,4 +166,10 @@ export const setGlobalPauseAction = createAction(`${storeKey}/setGlobalPauseActi
 export const resetGlobalPauseAction = createAction<{ forcePlay?: boolean }>(
   `${storeKey}/resetGlobalPauseAction`
 )
-export const setUTCOffset = createAction<{ utcOffset?: number | string }>(`${storeKey}/setUTCOffset`)
+export const setUTCOffset = createAction<{ utcOffset?: number | string }>(
+  `${storeKey}/setUTCOffset`
+)
+
+export const setUserNodeAccess = createAction<{ message: UserNodeAccessMessage }>(
+  `${storeKey}/setUserNodeAccess`
+)

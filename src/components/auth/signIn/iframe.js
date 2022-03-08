@@ -5,6 +5,7 @@ import { useLocalStorage } from "react-use"
 import { Flex } from "@netdata/netdata-ui"
 import { sendToChildIframe, useListenToPostMessage } from "utils/post-message"
 import { getIframeSrc, NETDATA_REGISTRY_SERVER } from "utils/utils"
+import useUserNodeAccessMessage from "hooks/use-user-node-access"
 import { selectRegistry, selectCloudBaseUrl } from "domains/global/selectors"
 import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
 import { setOfflineAction } from "@/src/domains/dashboard/actions"
@@ -35,6 +36,8 @@ const Iframe = ({ signedIn }) => {
   useListenToPostMessage("hello-from-sign-in", msg => {
     signInMsg.current = msg
   })
+
+  useUserNodeAccessMessage()
 
   const onLoad = useCallback(() => {
     setRendered(true)

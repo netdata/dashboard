@@ -154,3 +154,5 @@ export const selectChartMetadataFromChartsCall = createSelector(
   (_: unknown, { chartId }: { chartId: string, id: string }) => chartId,
   (allMetadata, chartId) => allMetadata?.charts[chartId],
 )
+
+export const selectUserNodeAccess = createSelector(selectGlobal, global => global.userNodeAccess)
