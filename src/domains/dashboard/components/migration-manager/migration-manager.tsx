@@ -10,7 +10,10 @@ import {
 } from "@/src/domains/dashboard/components/migration-modal"
 
 const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
-const PROMO_SIGN_IN_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "CLAIMED" } //CLOUD
+const PROMO_SIGN_IN_CLOUD: PromoProps = {
+  userStatus: "EXPIRED_LOGIN",
+  nodeClaimedStatus: "CLAIMED",
+} //CLOUD
 const PROMO_IVNITED_TO_SPACE: PromoProps = {
   userStatus: "LOGGED_IN",
   nodeClaimedStatus: "CLAIMED",
@@ -49,7 +52,7 @@ const MigrationManager = () => {
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
     useMigrationModal({
-      ...NO_INFO_FALLBACK_TO_AGENT,
+      ...PROMO_SIGN_IN_CLOUD,
     })
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""

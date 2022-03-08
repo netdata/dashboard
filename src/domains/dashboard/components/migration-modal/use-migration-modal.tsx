@@ -3,7 +3,7 @@ import Anchor from "@/src/components/anchor"
 import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
 
-type UserStatus = "LOGGED_IN" | "LOGGED_OUT" | "UNKNOWN"
+type UserStatus = "LOGGED_IN" | "EXPIRED_LOGIN" | "UNKNOWN"
 type NodeClaimedStatus = "NOT_CLAIMED" | "CLAIMED"
 type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
 type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
@@ -333,7 +333,7 @@ const isPromoSignIn = ({
 }: PromoProps): boolean =>
   userSavedPreference &&
   userSavedPreference !== "AGENT" &&
-  (userStatus === "LOGGED_OUT" || userStatus === "UNKNOWN") &&
+  (userStatus === "EXPIRED_LOGIN" || userStatus === "UNKNOWN") &&
   nodeClaimedStatus === "CLAIMED"
 
 const isPromoInvitedToSpace = ({
@@ -355,7 +355,7 @@ const isPromoToClaimThisNode = ({
 }: PromoProps): boolean =>
   userSavedPreference &&
   userSavedPreference !== "AGENT" &&
-  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeClaimedStatus === "NOT_CLAIMED"
 
 const isPromoToNewDasboardOnCloud = ({
@@ -365,7 +365,7 @@ const isPromoToNewDasboardOnCloud = ({
   userNodeAccess,
 }: PromoProps): boolean =>
   !userSavedPreference &&
-  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeLiveness === "LIVE" &&
   userNodeAccess === "ACCESS_OK"
 
@@ -390,7 +390,7 @@ const isFallbackToAgent = ({
   userNodeAccess,
 }: PromoProps): boolean =>
   userSavedPreference === "CLOUD" &&
-  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeClaimedStatus === "CLAIMED" &&
   nodeLiveness === "NOT_LIVE" &&
   userNodeAccess === "ACCESS_OK"
@@ -405,7 +405,7 @@ export const goToCloud = ({
   userNodeAccess,
 }: PromoProps) =>
   userSavedPreference === "CLOUD" &&
-  (userStatus === "LOGGED_IN" || userStatus === "LOGGED_OUT") &&
+  (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeLiveness === "LIVE" &&
   userNodeAccess === "ACCESS_OK"
 

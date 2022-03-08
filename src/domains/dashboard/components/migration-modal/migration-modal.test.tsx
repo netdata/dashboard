@@ -83,7 +83,7 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("body-footer")).toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_IVNITED_TO_SPACE (LOGGED_OUT)", () => {
+  it("should render modal with PROMO_IVNITED_TO_SPACE (EXPIRED_LOGIN)", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
@@ -123,7 +123,7 @@ describe("MigrationModal", () => {
     expect(screen.getByTestId("body-footer")).toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_CLAIM_NODE (LOGGED_OUT)", () => {
+  it("should render modal with PROMO_CLAIM_NODE (EXPIRED_LOGIN)", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
@@ -165,7 +165,7 @@ describe("MigrationModal", () => {
     expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
   })
 
-  it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (LOGGED_OUT)", () => {
+  it("should render modal with PROMO_TO_USE_NEW_DASHBAORD (EXPIRED_LOGIN)", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal
@@ -207,7 +207,7 @@ describe("MigrationModal", () => {
     expect(screen.queryByTestId("body-footer")).not.toBeInTheDocument()
   })
 
-  it("should render modal with FALLBACK_TO_AGENT (LOGGED_OUT)", () => {
+  it("should render modal with FALLBACK_TO_AGENT (EXPIRED_LOGIN)", () => {
     render(
       <ThemeProvider theme={DarkTheme}>
         <MigrationModal

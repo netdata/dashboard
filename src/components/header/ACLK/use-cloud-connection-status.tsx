@@ -45,7 +45,7 @@ export const makeCloudConnectionStatusInfo = ({
         <Text strong>
           {userStatus === UserStatus.Logged_In
             ? "Logged In"
-            : userStatus === UserStatus.Logged_Out
+            : userStatus === UserStatus.Expired_Login
             ? "Logged out"
             : "Not signed-up"}
         </Text>{" "}

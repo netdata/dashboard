@@ -19,7 +19,7 @@ describe("useCloudConnectionStatus", () => {
 
   it("should return correct status when node i nots connected and user is logged out ", () => {
     const cloudConnectionStatusInfo: CloudConnectionProps = {
-      userStatus: UserStatus.Logged_Out,
+      userStatus: UserStatus.Expired_Login,
       nodeStatus: "Not_Connected",
       date: "Monday 22 of May",
     }

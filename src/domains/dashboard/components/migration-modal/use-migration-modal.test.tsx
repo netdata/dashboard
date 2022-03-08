@@ -25,7 +25,7 @@ describe("useMigrationModal", () => {
   it("should return promo PROMO_SIGN_IN_CLOUD", () => {
     const promoProps: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "CLAIMED" }
     const promoPropsWithLoggedOut: PromoProps = {
-      userStatus: "LOGGED_OUT",
+      userStatus: "EXPIRED_LOGIN",
       nodeClaimedStatus: "CLAIMED",
     }
     const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]
@@ -61,7 +61,7 @@ describe("useMigrationModal", () => {
       nodeClaimedStatus: "NOT_CLAIMED",
     }
     const promoPropsWithLoggedOut: PromoProps = {
-      userStatus: "LOGGED_OUT",
+      userStatus: "EXPIRED_LOGIN",
       nodeClaimedStatus: "NOT_CLAIMED",
     }
     const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_CLAIM_NODE]
@@ -85,7 +85,7 @@ describe("useMigrationModal", () => {
       userNodeAccess: "ACCESS_OK",
     }
     const promoPropsWithLoggedOut: PromoProps = {
-      userStatus: "LOGGED_OUT",
+      userStatus: "EXPIRED_LOGIN",
       nodeLiveness: "LIVE",
       userNodeAccess: "ACCESS_OK",
     }
@@ -113,7 +113,7 @@ describe("useMigrationModal", () => {
       nodeClaimedStatus: "CLAIMED",
     }
     const promoPropsWithLoggedOut: PromoProps = {
-      userStatus: "LOGGED_OUT",
+      userStatus: "EXPIRED_LOGIN",
       nodeLiveness: "NOT_LIVE",
       userNodeAccess: "ACCESS_OK",
       nodeClaimedStatus: "CLAIMED",
