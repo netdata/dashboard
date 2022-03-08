@@ -5,6 +5,7 @@ import {
   UserStatus,
   NodeClaimedStatus,
   UserNodeAccess,
+  NodeLiveness,
 } from "domains/dashboard/components/migration-modal"
 
 export type AlarmStatus =
@@ -130,5 +131,6 @@ export interface Snapshot {
 export type UserNodeAccessMessage = {
   userStatus: UserStatus
   nodeClaimedStatus: NodeClaimedStatus
+  nodeLiveness: NodeLiveness
   userNodeAccess: UserNodeAccess
 }

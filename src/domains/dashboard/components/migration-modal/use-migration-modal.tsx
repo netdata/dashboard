@@ -7,7 +7,7 @@ export type UserStatus = "LOGGED_IN" | "EXPIRED_LOGIN" | "UNKNOWN"
 export type NodeClaimedStatus = "NOT_CLAIMED" | "CLAIMED"
 export type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
 type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
-type NodeLiveness = "LIVE" | "NOT_LIVE"
+export type NodeLiveness = "LIVE" | "NOT_LIVE"
 type CTATYPE = "NAVIGATE" | "REFRESH"
 
 export enum MigrationModalPromos {
