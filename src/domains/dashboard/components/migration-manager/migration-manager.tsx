@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"
+import React, { useState, useEffect, useMemo } from "react"
 import { useLocalStorage } from "react-use"
 import { useSelector } from "react-redux"
 
@@ -10,6 +10,7 @@ import {
   goToCloud,
   goToAgentDashboard,
 } from "@/src/domains/dashboard/components/migration-modal"
+import { selectSignInUrl } from "domains/global/selectors"
 
 const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
 const PROMO_SIGN_IN_CLOUD: PromoProps = {
@@ -51,7 +52,15 @@ const GO_TO_CLOUD: PromoProps = {
 } //CLOUD
 
 const MigrationManager = () => {
-  const userNodeAccess = useSelector(selectUserNodeAccess)
+  const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
+
+  const linkToCoud = useMemo(() => {
+    const { href } = window.location
+    const redirectURI = encodeURIComponent(href)
+    return `${cloudUrl}&redirect_uri=${redirectURI}`
+  }, [cloudUrl])
+
+  const userNodeAccess = useSelector(selectUserNodeAccess) as PromoProps
   const [isModalOpen, setModalOpen] = useState(true)
   const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
     useMigrationModal({
@@ -70,8 +79,8 @@ const MigrationManager = () => {
   }
 
   useEffect(() => {
-    if (goToCloud({ userSavedPreference, ...GO_TO_CLOUD })) console.log("Lets go to cloud")
-  }, [])
+    // if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
+  }, [linkToCoud])
   useEffect(() => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
   }, [])
