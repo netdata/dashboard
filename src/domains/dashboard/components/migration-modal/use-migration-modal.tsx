@@ -230,7 +230,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
   [MigrationModalPromos.FALLBACK_TO_AGENT]: {
     title: "Oops! This node has lost connection to Netdata Cloud!",
     text: {
-      header: ({ date = "Monday 21 March" }) => {
+      header: ({ date = "" }) => {
         return (
           <>
             <Text strong>

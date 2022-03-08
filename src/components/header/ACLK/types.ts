@@ -1,10 +1,10 @@
-export type NodeStatus = "Connected" | "Not_Connected"
-export enum UserStatus {
-  Logged_In = "Logged_In",
-  Expired_Login = "Expired_Login",
-  Not_Signed_Up = "Not_Signed_Up",
+import { UserStatus, NodeLiveness } from "@/src/domains/dashboard/components/migration-modal"
+
+export type CloudConnectionProps = {
+  userStatus: UserStatus
+  nodeStatus: NodeLiveness
+  date?: string
 }
-export type CloudConnectionProps = { userStatus: UserStatus; nodeStatus: NodeStatus; date?: string }
 
 export type MigrationModalActions = {
   text: string

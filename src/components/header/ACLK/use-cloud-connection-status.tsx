@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { CloudConnectionProps, UserStatus, ConnectionModalStatusContent } from "./types"
+import { CloudConnectionProps, ConnectionModalStatusContent } from "./types"
 import Anchor from "@/src/components/anchor"
 
 import { Text } from "@netdata/netdata-ui"
@@ -15,13 +15,13 @@ export const makeCloudConnectionStatusInfo = ({
       return (
         <Text>
           This node is currently{" "}
-          <Text strong>{nodeStatus === "Connected" ? "Connected" : "Not Connected"}</Text> to
-          Netdata Cloud
+          <Text strong>{nodeStatus === "LIVE" ? "Connected" : "Not Connected"}</Text> to Netdata
+          Cloud
         </Text>
       )
     },
     bullets:
-      nodeStatus === "Not_Connected"
+      nodeStatus === "NOT_LIVE"
         ? [
             `The node lost its Netdata Cloud connection at ${date}`,
             () => (
@@ -43,9 +43,9 @@ export const makeCloudConnectionStatusInfo = ({
       <Text>
         You are{" "}
         <Text strong>
-          {userStatus === UserStatus.Logged_In
+          {userStatus === "LOGGED_IN"
             ? "Logged In"
-            : userStatus === UserStatus.Expired_Login
+            : userStatus === "EXPIRED_LOGIN"
             ? "Logged out"
             : "Not signed-up"}
         </Text>{" "}

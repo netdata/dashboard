@@ -3,15 +3,20 @@ import useCloudConnectionStatus from "./use-cloud-connection-status"
 import CloudConnectionStatusModal from "./cloud-connection-status-modal"
 
 import { Pill, Flex } from "@netdata/netdata-ui"
-import { UserStatus } from "./types"
+import { useSelector } from "react-redux"
+import { selectUserNodeAccess } from "domains/global/selectors"
+import { PromoProps } from "@/src/domains/dashboard/components/migration-modal"
 
 const CloudConnectionStatus = () => {
+  const userNodeAccess = useSelector(selectUserNodeAccess) as PromoProps
+
   const [isModalOpen, setModalOpen] = useState(false)
   const cloudConnectionStatusInfo = useCloudConnectionStatus({
-    userStatus: UserStatus.Logged_In,
-    nodeStatus: "Not_Connected",
-    date: "Monday May 22th",
+    userStatus: userNodeAccess?.userStatus || "UNKNOWN",
+    nodeStatus: userNodeAccess?.nodeLiveness || "NOT_LIVE",
+    date: "",
   })
+
   const openModal = useCallback(() => {
     setModalOpen(true)
   }, [])
@@ -32,7 +37,7 @@ const CloudConnectionStatus = () => {
       {isModalOpen && (
         <CloudConnectionStatusModal
           {...cloudConnectionStatusInfo}
-          isCTA1Disabled={true}
+          isCTA1Disabled={userNodeAccess?.nodeLiveness !== "LIVE"}
           closeModal={closeModal}
           onRefresh={onRefresh}
         />
