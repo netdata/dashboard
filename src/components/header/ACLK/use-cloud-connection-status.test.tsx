@@ -1,7 +1,5 @@
 import { renderHook } from "@testing-library/react-hooks"
-import useCloudConnectionStatus, {
-  makeCloudConnectionStatusInfo,
-} from "./use-cloud-connection-status"
+import useCloudConnectionStatus from "./use-cloud-connection-status"
 import { CloudConnectionProps, UserStatus, NodeStatus } from "./types"
 
 describe("useCloudConnectionStatus", () => {

@@ -4,7 +4,7 @@ import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
 
 type UserStatus = "LOGGED_IN" | "LOGGED_OUT" | "UNKNOWN"
-type NodeClaimedStatus = "NOT_CLAIMED" | "UNKNOWN" | "CLAIMED" | "NO_ACCESS"
+type NodeClaimedStatus = "NOT_CLAIMED" | "CLAIMED"
 type UserNodeAccess = "NO_ACCESS" | "ACCESS_OK"
 type UserPreference = "AGENT" | "CLOUD" | "UNDEFINED"
 type NodeLiveness = "LIVE" | "NOT_LIVE"
