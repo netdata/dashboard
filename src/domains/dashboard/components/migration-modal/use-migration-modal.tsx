@@ -134,7 +134,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     CTA1: {
       text: "Thanks, go to Agent dashboard for now",
-      toPath: "path/agent-dashboard",
+      toPath: "agent",
       action: "NAVIGATE",
       userPreference: "AGENT",
     },

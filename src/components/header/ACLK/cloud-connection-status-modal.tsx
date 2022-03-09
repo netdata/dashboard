@@ -76,7 +76,7 @@ const CloudConnectionStatusModal = ({
                   onClick={() => handleClickedCTA1({ link })}
                   width="100%"
                   label={CTA1.text}
-                ></Button>
+                />
               )}
             </GoToCloud>
           </Box>

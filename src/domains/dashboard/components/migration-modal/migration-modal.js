@@ -29,7 +29,7 @@ const MigrationModal = ({
   }
 
   const handleClickedCTA1 = useCallback(
-    ({ link }) => {
+    ({ link, toPath }) => {
       const { CTA1 } = migrationModalPromoInfo
 
       if (CTA1.action === "NAVIGATE") {
@@ -37,7 +37,7 @@ const MigrationModal = ({
           setUserPrefrence(CTA1.userPreference)
           savePromoRemindMeSelection(isRememberChoiceChecked)
         }
-        window.location.href = link
+        if (toPath !== "agent") window.location.href = link
         closeModal()
       } else if (CTA1.action === "REFRESH") {
       }
@@ -106,10 +106,12 @@ const MigrationModal = ({
                 <Button
                   textTransform="none"
                   data-testid="cta1-button"
-                  onClick={() => handleClickedCTA1({ link })}
+                  onClick={() =>
+                    handleClickedCTA1({ link, toPath: migrationModalPromoInfo.CTA1.toPath })
+                  }
                   width="100%"
                   label={migrationModalPromoInfo.CTA1.text}
-                ></Button>
+                />
               )}
             </GoToCloud>
           </Box>

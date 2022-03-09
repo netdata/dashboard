@@ -65,9 +65,6 @@ const MigrationManager = () => {
   const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
     useMigrationModal({
       ...userNodeAccess,
-      // missing:
-      // userSavedPreference?: UserPreference
-      // nodeLiveness?: NodeLiveness
     })
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
@@ -79,8 +76,9 @@ const MigrationManager = () => {
   }
 
   useEffect(() => {
-    // if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
+    if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
   }, [linkToCoud])
+
   useEffect(() => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
   }, [])
@@ -93,7 +91,7 @@ const MigrationManager = () => {
         setUserPrefrence={setUserPrefrence}
         closeModal={closeModal}
         migrationModalPromo={migrationModalPromo}
-      ></MigrationModal>
+      />
     )
 
   return null
