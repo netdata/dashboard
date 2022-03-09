@@ -321,17 +321,13 @@ const isPromoSignUp = ({
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference &&
-  userSavedPreference !== "AGENT" &&
-  userStatus === "UNKNOWN" &&
-  nodeClaimedStatus === "NOT_CLAIMED"
+  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "NOT_CLAIMED"
 
 const isPromoSignIn = ({
   userSavedPreference,
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference &&
   userSavedPreference !== "AGENT" &&
   (userStatus === "EXPIRED_LOGIN" || userStatus === "UNKNOWN") &&
   nodeClaimedStatus === "CLAIMED"
@@ -342,7 +338,6 @@ const isPromoInvitedToSpace = ({
   nodeClaimedStatus,
   userNodeAccess,
 }: PromoProps): boolean =>
-  userSavedPreference &&
   userSavedPreference !== "AGENT" &&
   userStatus === "LOGGED_IN" &&
   nodeClaimedStatus === "CLAIMED" &&
@@ -353,7 +348,6 @@ const isPromoToClaimThisNode = ({
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference &&
   userSavedPreference !== "AGENT" &&
   (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeClaimedStatus === "NOT_CLAIMED"
