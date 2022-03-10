@@ -19,12 +19,17 @@ interface IframesMessage<T = unknown> {
   payload: T
 }
 
-
 export const sendToChildIframe = (
-  htmlIframeElement: HTMLIFrameElement, message: IframesMessage,
+  htmlIframeElement: HTMLIFrameElement | string,
+  message: IframesMessage
 ) => {
-  if (htmlIframeElement.contentWindow) {
-    htmlIframeElement.contentWindow.postMessage(message, "*")
+  const iframeElement =
+    typeof htmlIframeElement === "string"
+      ? (document.getElementById(htmlIframeElement) as HTMLIFrameElement)
+      : htmlIframeElement
+
+  if (iframeElement.contentWindow) {
+    iframeElement.contentWindow.postMessage(message, "*")
   }
 }
 
