@@ -37,18 +37,21 @@ export const sendToChildIframe = (
 export const useListenToPostMessage = <T>(
   messageType: IframesMessageType,
   callback?: (newMessage: T) => void,
-  defaultState?: T | (() => T),
+  defaultState?: T | (() => T)
 ): [T | undefined, () => void] => {
   const [lastMessage, setLastMessage] = useState<T | undefined>(defaultState)
-  const handleMessage = useCallback((message) => {
-    const data = message.data as IframesMessage<T>
-    if (data.type === messageType) {
-      setLastMessage(data.payload)
-      if (callback) {
-        callback(data.payload)
+  const handleMessage = useCallback(
+    message => {
+      const data = message.data as IframesMessage<T>
+      if (data.type === messageType) {
+        setLastMessage(data.payload)
+        if (callback) {
+          callback(data.payload)
+        }
       }
-    }
-  }, [callback, messageType])
+    },
+    [callback, messageType]
+  )
   const resetMesssage = useCallback(() => {
     setLastMessage(defaultState as T)
   }, [defaultState])
