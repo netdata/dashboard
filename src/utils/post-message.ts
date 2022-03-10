@@ -13,6 +13,7 @@ type IframesMessageType =
   | "synced-private-registry"
   | "set-is-logout-dropdown-opened"
   | "user-node-access"
+  | "request-refresh-access"
 
 interface IframesMessage<T = unknown> {
   type: IframesMessageType
