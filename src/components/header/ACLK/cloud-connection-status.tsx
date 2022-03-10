@@ -4,6 +4,7 @@ import CloudConnectionStatusModal from "./cloud-connection-status-modal"
 
 import { Pill, Flex } from "@netdata/netdata-ui"
 import { useSelector } from "react-redux"
+import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 import { selectUserNodeAccess } from "domains/global/selectors"
 import { PromoProps } from "@/src/domains/dashboard/components/migration-modal"
 
@@ -25,9 +26,7 @@ const CloudConnectionStatus = () => {
     setModalOpen(false)
   }, [])
 
-  const onRefresh = useCallback(() => {
-    console.log("now refreshing")
-  }, [])
+  const onRefresh = useRequestRefreshOfAccessMessage()
 
   return (
     <Flex column>
