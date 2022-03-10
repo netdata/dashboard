@@ -9,6 +9,7 @@ import useUserNodeAccessMessage from "hooks/use-user-node-access"
 import { selectRegistry, selectCloudBaseUrl } from "domains/global/selectors"
 import { LOCAL_STORAGE_NEEDS_SYNC } from "domains/dashboard/sagas"
 import { setOfflineAction } from "@/src/domains/dashboard/actions"
+import { SIGN_IN_IFRAME_ID } from "components/header/constants"
 
 const IframeContainer = styled(Flex).attrs({ position: "absolute" })`
   display: none;
@@ -72,7 +73,9 @@ const Iframe = ({ signedIn }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [signedIn, registry, lsValue])
 
-  return <IframeContainer as="iframe" src={signInIframeUrl} onLoad={onLoad} />
+  return (
+    <IframeContainer as="iframe" id={SIGN_IN_IFRAME_ID} src={signInIframeUrl} onLoad={onLoad} />
+  )
 }
 
 export default Iframe
