@@ -67,6 +67,8 @@ const MigrationManager = () => {
       ...userNodeAccess,
     })
 
+  console.log({ userNodeAccess })
+
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
 
   const [hasPromoSelectionSaved, savePromoRemindMeSelection] = useLocalStorage(prefrenceID)
