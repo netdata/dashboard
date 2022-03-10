@@ -24,6 +24,7 @@ const SignIn = () => {
             <SignInButton utmParameters={{ content: "topbar" }}>
               {({ isRegistry, link, offline, onSignIn }) => (
                 <Button
+                  data-testid="header-signin"
                   label="Sign in"
                   disabled={offline}
                   {...(isRegistry ? { as: "a", href: link } : { onClick: onSignIn })}
