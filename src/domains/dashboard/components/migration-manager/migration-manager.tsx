@@ -61,7 +61,7 @@ const MigrationManager = () => {
   }, [cloudUrl])
 
   const userNodeAccess = useSelector(selectUserNodeAccess) as PromoProps
-  const [isModalOpen, setModalOpen] = useState(true)
+  const [isModalOpen, setModalOpen] = useState(false)
   const { migrationModalPromoInfo, setUserPrefrence, userSavedPreference, migrationModalPromo } =
     useMigrationModal({
       ...userNodeAccess,
@@ -76,6 +76,13 @@ const MigrationManager = () => {
   const closeModal = () => {
     setModalOpen(false)
   }
+
+  useEffect(() => {
+    let showModalTimer = setTimeout(() => setModalOpen(true), 4000)
+    return () => {
+      clearTimeout(showModalTimer)
+    }
+  }, [])
 
   useEffect(() => {
     if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
