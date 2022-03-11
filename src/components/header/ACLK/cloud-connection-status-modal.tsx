@@ -33,7 +33,7 @@ const CloudConnectionStatusModal = ({
 }: CloudConnectionStatusModalProps) => {
   const handleClickedCTA1 = useCallback(({ link }: { link: string }) => {
     closeModal()
-    window.location.href = link
+    window.open(link, "_blank")
   }, [])
 
   return (

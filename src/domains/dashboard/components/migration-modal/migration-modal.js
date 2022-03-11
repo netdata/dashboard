@@ -37,7 +37,7 @@ const MigrationModal = ({
           setUserPrefrence(CTA1.userPreference)
           savePromoRemindMeSelection(isRememberChoiceChecked)
         }
-        if (toPath !== "agent") window.location.href = link
+        if (toPath !== "agent") window.open(link, "_blank")
         closeModal()
       } else if (CTA1.action === "REFRESH") {
       }
