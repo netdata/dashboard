@@ -328,9 +328,7 @@ const isPromoSignIn = ({
   userStatus,
   nodeClaimedStatus,
 }: PromoProps): boolean =>
-  userSavedPreference !== "AGENT" &&
-  (userStatus === "EXPIRED_LOGIN" || userStatus === "UNKNOWN") &&
-  nodeClaimedStatus === "CLAIMED"
+  userSavedPreference !== "AGENT" && userStatus === "UNKNOWN" && nodeClaimedStatus === "CLAIMED"
 
 const isPromoInvitedToSpace = ({
   userSavedPreference,
@@ -339,7 +337,7 @@ const isPromoInvitedToSpace = ({
   userNodeAccess,
 }: PromoProps): boolean =>
   userSavedPreference !== "AGENT" &&
-  userStatus === "LOGGED_IN" &&
+  (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeClaimedStatus === "CLAIMED" &&
   userNodeAccess === "NO_ACCESS"
 

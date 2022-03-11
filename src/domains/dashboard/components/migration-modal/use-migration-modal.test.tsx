@@ -24,20 +24,13 @@ describe("useMigrationModal", () => {
 
   it("should return promo PROMO_SIGN_IN_CLOUD", () => {
     const promoProps: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "CLAIMED" }
-    const promoPropsWithLoggedOut: PromoProps = {
-      userStatus: "EXPIRED_LOGIN",
-      nodeClaimedStatus: "CLAIMED",
-    }
+
     const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_SIGN_IN_CLOUD]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoProps }))
-    const { result: resultWithLogout } = renderHook(() =>
-      useMigrationModal({ ...promoPropsWithLoggedOut })
-    )
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_SIGN_IN_CLOUD)
-    expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
   })
 
   it("should return promo PROMO_IVNITED_TO_SPACE ", () => {
@@ -47,12 +40,23 @@ describe("useMigrationModal", () => {
       userNodeAccess: "NO_ACCESS",
     }
 
+    const promoPropsWithLoggedOut: PromoProps = {
+      userStatus: "EXPIRED_LOGIN",
+      nodeClaimedStatus: "CLAIMED",
+      userNodeAccess: "NO_ACCESS",
+    }
+
     const expectedPromo = migrationmodalInfo[MigrationModalPromos.PROMO_IVNITED_TO_SPACE]
 
     const { result } = renderHook(() => useMigrationModal({ ...promoPropsWithLoggedIn }))
+    const { result: resultWithLogout } = renderHook(() =>
+      useMigrationModal({ ...promoPropsWithLoggedOut })
+    )
 
     expect(result.current.migrationModalPromoInfo).toEqual(expectedPromo)
     expect(result.current.migrationModalPromo).toEqual(MigrationModalPromos.PROMO_IVNITED_TO_SPACE)
+
+    expect(resultWithLogout.current.migrationModalPromoInfo).toEqual(expectedPromo)
   })
 
   it("should return promo PROMO_CLAIM_NODE ", () => {
