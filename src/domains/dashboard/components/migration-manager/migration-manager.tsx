@@ -79,7 +79,7 @@ const MigrationManager = () => {
 
   useEffect(() => {
     if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
-  }, [linkToCoud])
+  }, [linkToCoud, userNodeAccess, userSavedPreference])
 
   useEffect(() => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
