@@ -31,7 +31,12 @@ const ProtoBuf = () => {
   return (
     <Flex flex={false}>
       <PillContainer ref={ref}>
-        <Pill onClick={toggle} flavour="warning" icon="warning_triangle_hollow">
+        <Pill
+          data-testid="header-options-button"
+          onClick={toggle}
+          flavour="warning"
+          icon="warning_triangle_hollow"
+        >
           {isLargeEnough ? "NOT MONITORED IN CLOUD" : ""}
         </Pill>
       </PillContainer>

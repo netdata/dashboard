@@ -8,6 +8,7 @@ const News = () => {
       {({ toggle, upToDate }) => (
         <Tooltip content="News" align="bottom" plain>
           <Button
+            data-testid="header-news-button"
             themeType="dark"
             name="news"
             icon="insights"

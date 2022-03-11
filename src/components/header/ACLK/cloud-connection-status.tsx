@@ -31,7 +31,7 @@ const CloudConnectionStatus = () => {
 
   return (
     <Flex column>
-      <Pill onClick={openModal} flavour="neutral">
+      <Pill data-testid="header-connection-to-cloud-button" onClick={openModal} flavour="neutral">
         Connection to Cloud
       </Pill>
       {isModalOpen && (

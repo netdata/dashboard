@@ -8,7 +8,7 @@ const Options = () => {
   const dispatch = useDispatch()
   const onClick = useCallback(() => dispatch(setGlobalPauseAction()), [dispatch])
   return (
-    <Flex gap={2}>
+    <Flex gap={2} data-testid="header-options-button">
       <Tooltip content="Import a Netdata snapshot" align="bottom" plain>
         <Button
           flavour="borderless"
