@@ -16,7 +16,7 @@ const Node = () => {
 
   return (
     <Item icon="node_hollow">
-      <Text color="bright" strong truncate>
+      <Text data-testid={`header-nodename-${hostname}`} color="bright" strong truncate>
         {hostname}
       </Text>
     </Item>
