@@ -11,6 +11,7 @@ import {
   goToAgentDashboard,
 } from "@/src/domains/dashboard/components/migration-modal"
 import { selectSignInUrl } from "domains/global/selectors"
+import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 
 const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
 const PROMO_SIGN_IN_CLOUD: PromoProps = {
@@ -77,6 +78,8 @@ const MigrationManager = () => {
     setModalOpen(false)
   }
 
+  const requestRefreshOfAccess = useRequestRefreshOfAccessMessage()
+
   /** We are delaying the show of modal because some time the userNodeAccess is equal to null
    *  and only for a few seconds we are showing the NO_INFO modal an the the userNodeAccess
    *  has a new value and we show a second modal on top of the other. We dont want this
@@ -105,6 +108,7 @@ const MigrationManager = () => {
         setUserPrefrence={setUserPrefrence}
         closeModal={closeModal}
         migrationModalPromo={migrationModalPromo}
+        requestRefreshOfAccess={requestRefreshOfAccess}
       />
     )
 

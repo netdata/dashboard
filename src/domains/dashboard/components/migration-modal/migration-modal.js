@@ -14,7 +14,6 @@ import {
   Box,
   Checkbox,
 } from "@netdata/netdata-ui"
-import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 
 const MigrationModal = ({
   migrationModalPromoInfo,
@@ -22,13 +21,13 @@ const MigrationModal = ({
   closeModal,
   savePromoRemindMeSelection,
   migrationModalPromo,
+  requestRefreshOfAccess,
 }) => {
   const [isRememberChoiceChecked, setIsRememberChoiceChecked] = useState(false)
 
   const handleCheckBoxChange = e => {
     setIsRememberChoiceChecked(e.currentTarget.checked)
   }
-  const requestRefreshOfAccess = useRequestRefreshOfAccessMessage()
 
   const handleClickedCTA1 = useCallback(
     ({ link, toPath }) => {
