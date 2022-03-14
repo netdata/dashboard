@@ -31,10 +31,13 @@ const CloudConnectionStatusModal = ({
   onRefresh,
   isCTA1Disabled,
 }: CloudConnectionStatusModalProps) => {
-  const handleClickedCTA1 = useCallback(({ link }: { link: string }) => {
-    closeModal()
-    window.open(link, "_blank")
-  }, [])
+  const handleClickedCTA1 = useCallback(
+    ({ link }: { link: string }) => {
+      closeModal()
+      window.open(link, "_blank")
+    },
+    [closeModal]
+  )
 
   return (
     <Modal>
