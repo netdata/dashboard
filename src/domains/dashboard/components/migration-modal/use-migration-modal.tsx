@@ -431,7 +431,7 @@ const useMigrationModal = ({
         nodeLiveness,
       })
     }) as MigrationModalPromos
-  }, [userStatus])
+  }, [userStatus, nodeClaimedStatus, userNodeAccess, nodeLiveness, userSavedPreference])
 
   return {
     migrationModalPromoInfo: migrationmodalInfo[migrationModalPromo],
