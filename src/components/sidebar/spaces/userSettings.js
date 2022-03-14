@@ -14,11 +14,9 @@ const SignInItem = () => {
     window.open(link, "_blank", "noopener,noreferrer")
   }
   return (
-    <SignIn utmParameters={{ content: "userSettings"}}>
+    <SignIn utmParameters={{ content: "userSettings" }}>
       {({ isRegistry, link, onSignIn }) => (
-        <Text onClick={isRegistry ? e => onClick(e, link) : onSignIn}>
-          Sign in
-        </Text>
+        <Text onClick={isRegistry ? e => onClick(e, link) : onSignIn}>Sign in</Text>
       )}
     </SignIn>
   )
@@ -48,7 +46,13 @@ const UserSettings = () => {
       ...(signedIn
         ? [
             {
-              children: <SignOut flavour="borderless" height={{ max: "18px" }} />,
+              children: (
+                <SignOut
+                  data-testid="signout-button-sidebar"
+                  flavour="borderless"
+                  height={{ max: "18px" }}
+                />
+              ),
             },
           ]
         : [{ children: <SignInItem /> }]),
@@ -59,6 +63,7 @@ const UserSettings = () => {
   return (
     <ThemeProvider theme={DarkTheme}>
       <Button
+        data-testid="avatar-button-sidebar"
         flavour="borderless"
         neutral
         icon="user"

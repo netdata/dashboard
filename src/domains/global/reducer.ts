@@ -36,6 +36,7 @@ import {
   setGlobalPauseAction,
   resetGlobalPauseAction,
   setUTCOffset,
+  setUserNodeAccess,
 } from "./actions"
 import {
   Options,
@@ -44,6 +45,7 @@ import {
   clearLocalStorage,
 } from "./options"
 import { CLOUD_BASE_URL_DISABLED } from "./constants"
+import { UserNodeAccessMessage } from "./types"
 
 interface CommonMinMax {
   [commonKey: string]: {
@@ -124,6 +126,7 @@ export type StateT = {
 
   snapshot: Snapshot | null
   options: Options
+  userNodeAccess: UserNodeAccessMessage
 }
 
 export const initialDefaultAfter = isMainJs ? getInitialAfterFromWindow() : -900
@@ -178,6 +181,7 @@ export const initialState: StateT = {
   },
 
   options: optionsMergedWithLocalStorage,
+  userNodeAccess: null,
 }
 
 export const globalReducer = createReducer<StateT>({}, initialState)
@@ -594,3 +598,5 @@ globalReducer.on(chartsMetadataRequestSuccess, (state, { data }) => ({
     data,
   },
 }))
+
+globalReducer.on(setUserNodeAccess, (state, { message }) => ({ ...state, userNodeAccess: message }))

@@ -66,6 +66,7 @@ const VersionControl = ({ currentVersion, releaseChannel }) => {
   return (
     <Tooltip content={isNewVersionAvailable ? "Need help?" : "Check Version"} align="bottom" plain>
       <Button
+        data-testid="header-version-control-button"
         flavour="borderless"
         themeType="dark"
         small
