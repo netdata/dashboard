@@ -4,15 +4,11 @@ import { createStore, Reducer } from "redux"
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { render } from "@testing-library/react"
 
-export function storeProviderMock<T, RT>(reducerProvider: (arg?: T) => Reducer<RT>) {
+export function storeProviderMock<T, RT>(reducerProvider: (arg?: T) => Reducer<RT>): any {
   return (ui: JSX.Element, state?: T) => {
     const store = createStore(reducerProvider(state))
     return {
-      ...render(
-        <Provider store={store}>
-          {ui}
-        </Provider>,
-      ),
+      ...render(<Provider store={store}>{ui}</Provider>),
       store,
     }
   }
