@@ -45,10 +45,12 @@ const MigrationModal = ({
       }
     },
     [
-      migrationModalPromoInfo.CTA1,
+      migrationModalPromoInfo,
       setUserPrefrence,
       isRememberChoiceChecked,
       requestRefreshOfAccess,
+      savePromoRemindMeSelection,
+      closeModal,
     ]
   )
 
@@ -64,10 +66,12 @@ const MigrationModal = ({
     }
     closeModal()
   }, [
-    migrationModalPromoInfo.CTA2,
+    migrationModalPromoInfo,
     setUserPrefrence,
     isRememberChoiceChecked,
     requestRefreshOfAccess,
+    savePromoRemindMeSelection,
+    closeModal,
   ])
 
   return migrationModalPromoInfo ? (
