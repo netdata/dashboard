@@ -7,9 +7,11 @@ import { useSelector } from "react-redux"
 import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 import { selectUserNodeAccess } from "domains/global/selectors"
 import { PromoProps } from "@/src/domains/dashboard/components/migration-modal"
+import { selectIsCloudEnabled } from "domains/global/selectors"
 
 const CloudConnectionStatus = () => {
   const userNodeAccess = useSelector(selectUserNodeAccess) as PromoProps
+  const cloudEnabled = useSelector(selectIsCloudEnabled)
 
   const [isModalOpen, setModalOpen] = useState(false)
   const cloudConnectionStatusInfo = useCloudConnectionStatus({
@@ -27,6 +29,8 @@ const CloudConnectionStatus = () => {
   }, [])
 
   const onRefresh = useRequestRefreshOfAccessMessage()
+
+  if (!cloudEnabled) return null
 
   return (
     <Flex column>

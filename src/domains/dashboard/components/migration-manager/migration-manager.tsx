@@ -12,6 +12,7 @@ import {
 } from "@/src/domains/dashboard/components/migration-modal"
 import { selectSignInUrl } from "domains/global/selectors"
 import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
+import { selectIsCloudEnabled } from "domains/global/selectors"
 
 // const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
 // const PROMO_SIGN_IN_CLOUD: PromoProps = {
@@ -54,6 +55,7 @@ import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 
 const MigrationManager = () => {
   const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
+  const cloudEnabled = useSelector(selectIsCloudEnabled)
 
   const linkToCoud = useMemo(() => {
     const { href } = window.location
@@ -98,7 +100,7 @@ const MigrationManager = () => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
   }, [userSavedPreference])
 
-  if (migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
+  if (cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
     return (
       <MigrationModal
         savePromoRemindMeSelection={savePromoRemindMeSelection}
