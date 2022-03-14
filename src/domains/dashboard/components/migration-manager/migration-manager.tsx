@@ -13,44 +13,44 @@ import {
 import { selectSignInUrl } from "domains/global/selectors"
 import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 
-const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
-const PROMO_SIGN_IN_CLOUD: PromoProps = {
-  userStatus: "UNKNOWN",
-  nodeClaimedStatus: "CLAIMED",
-} //CLOUD
-const PROMO_IVNITED_TO_SPACE: PromoProps = {
-  userStatus: "LOGGED_IN",
-  nodeClaimedStatus: "CLAIMED",
-  userNodeAccess: "NO_ACCESS",
-} //CLOUD
+// const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
+// const PROMO_SIGN_IN_CLOUD: PromoProps = {
+//   userStatus: "UNKNOWN",
+//   nodeClaimedStatus: "CLAIMED",
+// } //CLOUD
+// const PROMO_IVNITED_TO_SPACE: PromoProps = {
+//   userStatus: "LOGGED_IN",
+//   nodeClaimedStatus: "CLAIMED",
+//   userNodeAccess: "NO_ACCESS",
+// } //CLOUD
 
-const PROMO_CLAIM_NODE: PromoProps = { userStatus: "LOGGED_IN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
-const PROMO_TO_USE_NEW_DASHBAORD: PromoProps = {
-  userStatus: "LOGGED_IN",
-  nodeLiveness: "LIVE",
-  userNodeAccess: "ACCESS_OK",
-} //UNDEFIND
+// const PROMO_CLAIM_NODE: PromoProps = { userStatus: "LOGGED_IN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
+// const PROMO_TO_USE_NEW_DASHBAORD: PromoProps = {
+//   userStatus: "LOGGED_IN",
+//   nodeLiveness: "LIVE",
+//   userNodeAccess: "ACCESS_OK",
+// } //UNDEFIND
 
-const FALLBACK_TO_AGENT: PromoProps = {
-  userStatus: "LOGGED_IN",
-  nodeLiveness: "NOT_LIVE",
-  userNodeAccess: "ACCESS_OK",
-  nodeClaimedStatus: "CLAIMED",
-} //CLOUD
+// const FALLBACK_TO_AGENT: PromoProps = {
+//   userStatus: "LOGGED_IN",
+//   nodeLiveness: "NOT_LIVE",
+//   userNodeAccess: "ACCESS_OK",
+//   nodeClaimedStatus: "CLAIMED",
+// } //CLOUD
 
-const NO_INFO_FALLBACK_TO_AGENT: PromoProps = {
-  userStatus: undefined,
-  nodeLiveness: undefined,
-  userNodeAccess: undefined,
-  nodeClaimedStatus: undefined,
-} //CLOUD
+// const NO_INFO_FALLBACK_TO_AGENT: PromoProps = {
+//   userStatus: undefined,
+//   nodeLiveness: undefined,
+//   userNodeAccess: undefined,
+//   nodeClaimedStatus: undefined,
+// } //CLOUD
 
-const GO_TO_CLOUD: PromoProps = {
-  userStatus: "LOGGED_IN",
-  nodeLiveness: "LIVE",
-  userNodeAccess: "ACCESS_OK",
-  nodeClaimedStatus: "CLAIMED",
-} //CLOUD
+// const GO_TO_CLOUD: PromoProps = {
+//   userStatus: "LOGGED_IN",
+//   nodeLiveness: "LIVE",
+//   userNodeAccess: "ACCESS_OK",
+//   nodeClaimedStatus: "CLAIMED",
+// } //CLOUD
 
 const MigrationManager = () => {
   const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
