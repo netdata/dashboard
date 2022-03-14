@@ -96,7 +96,7 @@ const MigrationManager = () => {
 
   useEffect(() => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
-  }, [])
+  }, [userSavedPreference])
 
   if (migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
     return (
