@@ -73,6 +73,7 @@ const CloudConnectionStatusModal = ({
             <GoToCloud utmParameters={"Connection-to-cloud"}>
               {({ link }) => (
                 <Button
+                  data-ga={`connection-to-cloud::click-ct1::ad`}
                   disabled={isCTA1Disabled}
                   textTransform="none"
                   data-testid="cta1-button"
@@ -84,6 +85,7 @@ const CloudConnectionStatusModal = ({
             </GoToCloud>
           </Box>
           <Box
+            data-ga={`connection-to-cloud::click-check-now::ad`}
             onClick={onRefresh}
             height={10}
             className="btn btn-default"
