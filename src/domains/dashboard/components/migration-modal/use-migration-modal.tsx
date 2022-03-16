@@ -381,7 +381,7 @@ const isFallbackToAgent = ({
   nodeLiveness,
   userNodeAccess,
 }: PromoProps): boolean =>
-  userSavedPreference === "CLOUD" &&
+  userSavedPreference !== "AGENT" &&
   (userStatus === "LOGGED_IN" || userStatus === "EXPIRED_LOGIN") &&
   nodeClaimedStatus === "CLAIMED" &&
   nodeLiveness === "NOT_LIVE" &&
