@@ -111,6 +111,7 @@ const MigrationModal = ({
         <ModalFooter>
           <Box margin={[0, "auto", 0, 0]}>
             <Checkbox
+              data-ga={`${migrationModalPromo}::click-remind-me::ad`}
               data-testid="remind-me-checkbox"
               checked={isRememberChoiceChecked}
               onChange={handleCheckBoxChange}
@@ -121,6 +122,7 @@ const MigrationModal = ({
             <GoToCloud utmParameters={migrationModalPromo}>
               {({ link }) => (
                 <Button
+                  data-ga={`${migrationModalPromo}::click-ct1::ad`}
                   textTransform="none"
                   data-testid="cta1-button"
                   onClick={() =>
@@ -134,6 +136,7 @@ const MigrationModal = ({
           </Box>
           {migrationModalPromoInfo.CTA2 && (
             <Box
+              data-ga={`${migrationModalPromo}::click-ct2::ad`}
               onClick={handleClickedCTA2}
               height={10}
               className="btn btn-default"
