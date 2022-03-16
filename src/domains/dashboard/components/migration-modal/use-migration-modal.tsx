@@ -133,7 +133,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       prefrenceID: MigrationModalPromos.PROMO_IVNITED_TO_SPACE,
     },
     CTA1: {
-      text: "Thanks, go to Agent dashboard for now",
+      text: "Thanks, stay at Agent dashboard for now",
       toPath: "agent",
       action: "NAVIGATE",
       userPreference: "AGENT",
@@ -265,7 +265,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: undefined,
     },
     CTA2: {
-      text: "Thanks, go to Agent dashboard",
+      text: "Thanks, stay at Agent dashboard",
       toPath: "path/agent",
       action: "NAVIGATE",
       userPreference: "AGENT",
@@ -300,7 +300,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: undefined,
     },
     CTA2: {
-      text: "Thanks, go to Agent dashboard",
+      text: "Thanks, stay at Agent dashboard",
       toPath: "path/agent-dashboard",
       action: "NAVIGATE",
       userPreference: "AGENT",
