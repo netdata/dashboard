@@ -70,7 +70,7 @@ const CloudConnectionStatusModal = ({
         </ModalBody>
         <ModalFooter>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-            <GoToCloud utmParameters={"Connection-to-cloud"}>
+            <GoToCloud utmParameters={{ content: "connection-to-cloud" }}>
               {({ link }) => (
                 <Button
                   data-ga={`connection-to-cloud::click-ct1::ad`}
