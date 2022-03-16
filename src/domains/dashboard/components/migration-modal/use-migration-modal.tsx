@@ -71,7 +71,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later, go to Agent dashboard",
+      text: "Later, stay at the agent dashboard",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",
@@ -111,7 +111,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later, go to Agent dashboard",
+      text: "Later, stay at the Agent dashboard",
       toPath: "path/agent-dashboard",
       action: "NAVIGATE",
       userPreference: "AGENT",
@@ -193,7 +193,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later, go to Agent dashboard ",
+      text: "Later, stay at the Agent dashboard",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",
@@ -221,7 +221,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
       userPreference: "CLOUD",
     },
     CTA2: {
-      text: "Later, go to Agent dashboard",
+      text: "Later, stay at the Agent dashboard",
       action: "NAVIGATE",
       toPath: "path/agent-dashboard",
       userPreference: "AGENT",
