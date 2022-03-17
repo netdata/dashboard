@@ -15,7 +15,7 @@ import {
   Checkbox,
 } from "@netdata/netdata-ui"
 
-const utm_campaign = "agent_nudge_to_cloud"
+const campaign = "agent_nudge_to_cloud"
 
 const MigrationModal = ({
   migrationModalPromoInfo,
@@ -121,7 +121,7 @@ const MigrationModal = ({
             />
           </Box>
           <Box data-testid="cta1" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-            <GoToCloud utmParameters={{ content: migrationModalPromo, utm_campaign }}>
+            <GoToCloud utmParameters={{ content: migrationModalPromo, campaign }}>
               {({ link }) => (
                 <Button
                   data-ga={`${migrationModalPromo}::click-ct1::ad`}
