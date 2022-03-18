@@ -2,6 +2,8 @@ import React, { useMemo } from "react"
 import Anchor from "@/src/components/anchor"
 import { Text } from "@netdata/netdata-ui"
 import { useLocalStorage } from "react-use"
+import { utmUrlSuffix } from "utils/utils"
+import { utmParametersToString } from "domains/global/selectors"
 
 export type UserStatus = "LOGGED_IN" | "EXPIRED_LOGIN" | "UNKNOWN"
 export type NodeClaimedStatus = "NOT_CLAIMED" | "CLAIMED"
@@ -42,6 +44,14 @@ type MigrationModalContent = {
 type MigrationModalInfo = {
   [key in MigrationModalPromos]: MigrationModalContent
 }
+
+const campaign = "agent_nudge_to_cloud"
+
+const makeUTMParameters = (modalPromo: MigrationModalPromos) =>
+  `${utmUrlSuffix}${utmParametersToString({
+    content: modalPromo,
+    campaign,
+  })}`
 
 export const migrationmodalInfo: MigrationModalInfo = {
   [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: {
@@ -157,7 +167,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://learn.netdata.cloud/docs/agent/claim#how-to-connect-a-node"
+                href={`https://learn.netdata.cloud/docs/agent/claim?${makeUTMParameters(
+                  MigrationModalPromos.PROMO_CLAIM_NODE
+                ).substring(1)}#how-to-connect-a-node`}
               >
                 how to connect a node
               </Anchor>
@@ -172,7 +184,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://learn.netdata.cloud/docs/agent/claim#how-to-connect-a-node"
+                href={`https://learn.netdata.cloud/docs/metrics-storage-management/enable-streaming?${makeUTMParameters(
+                  MigrationModalPromos.PROMO_CLAIM_NODE
+                ).substring(1)}`}
               >
                 how to configure streaming
               </Anchor>
@@ -245,7 +259,9 @@ export const migrationmodalInfo: MigrationModalInfo = {
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://learn.netdata.cloud/docs/agent/claim#troubleshooting"
+                href={`https://learn.netdata.cloud/docs/agent/claim?${makeUTMParameters(
+                  MigrationModalPromos.FALLBACK_TO_AGENT
+                ).substring(1)}#troubleshooting`}
               >
                 this guide.
               </Anchor>
