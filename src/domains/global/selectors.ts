@@ -60,7 +60,7 @@ export const selectRegistry = createSelector(selectGlobal, prop("registry"))
 
 export const selectCloudBaseUrl = createSelector(selectRegistry, prop("cloudBaseURL"))
 
-const utmParametersToString = (utmParameters = {}) =>
+export const utmParametersToString = (utmParameters = {}) =>
   Object.keys(utmParameters).reduce((acc, key) => (acc += `&utm_${key}=${utmParameters[key]}`), "")
 
 export const selectSignInUrl = utmParameters =>
