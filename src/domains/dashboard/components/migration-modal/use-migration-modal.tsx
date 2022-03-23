@@ -150,7 +150,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
   },
   [MigrationModalPromos.PROMO_CLAIM_NODE]: {
-    title: "This node isn’t connected to Netada Cloud",
+    title: "This node isn’t connected to Netdata Cloud",
     text: {
       header: () => (
         <Text strong>
@@ -163,7 +163,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
           return (
             <Text>
               {" "}
-              Connect this node directly ( documentation on{" "}
+              Connect this node directly (documentation on{" "}
               <Anchor
                 target="_blank"
                 rel="noopener noreferrer"
