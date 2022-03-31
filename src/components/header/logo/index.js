@@ -10,7 +10,7 @@ const Netdata = styled(Text)`
 
 const Logo = () => (
   <Item hasBorder>
-    <NetdataLogo width={24} height={24} fill="#00AB44" />
+    <NetdataLogo width={24} height={24} />
     <Netdata>NETDATA</Netdata>
     <Text>Agent</Text>
   </Item>
