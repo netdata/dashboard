@@ -12,7 +12,7 @@ const styledActive = css`
 const MenuItem = styled(TextSmall).attrs(({ active, id, title, link, children }) => ({
   as: "a",
   strong: active,
-  padding: [0.5, 7],
+  padding: [0.5, 3],
   role: "listitem",
   children: title || children,
   href: `#${link}`,

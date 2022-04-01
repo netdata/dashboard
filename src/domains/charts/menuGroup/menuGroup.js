@@ -27,7 +27,8 @@ const Container = styled(Flex)`
   &&& {
     border-left: 2px solid transparent;
     ${props => props.active && styledActive}
-    ${props => props.active && `${MenuGroupLabelWrapper} { font-weight: bold; }`}
+    ${props =>
+      props.active && `${MenuGroupLabelWrapper} { font-weight: bold; }`}
 
     text-decoration: none;
     &:hover {
@@ -45,7 +46,7 @@ export const MenuGroupIcon = ({ icon }) => <Icon dangerouslySetInnerHTML={{ __ht
 export const MenuGroupIconContainer = withMenuGroup(MenuGroupIcon, ({ icon }) => ({ icon }))
 
 export const MenuGroupItemWrapper = forwardRef(({ id, ...rest }, ref) => (
-  <Container ref={ref} as="a" gap={2} padding={[1, 5]} data-sidebar-menugroupid={id} {...rest} />
+  <Container ref={ref} as="a" gap={2} padding={[1, 2]} data-sidebar-menugroupid={id} {...rest} />
 ))
 
 export const MenuGroupItemContainer = withMenuGroup(MenuGroupItemWrapper, ({ id, link }) => ({
