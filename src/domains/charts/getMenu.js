@@ -5,7 +5,7 @@ import getChartMenu from "./getChartMenu"
 import getChartHeads from "./getChartHeads"
 import getMenuChartAttributes from "./getMenuChartAttributes"
 
-export const getMenuInfo = (chartIds, getChart, hasKubernetes) => {
+export const getMenuInfo = (chartIds, getChart, { hasKubernetes, composite } = {}) => {
   const submenuNames = {}
   const chartMenus = {}
   const menuChartsAttributeById = {}
@@ -16,7 +16,7 @@ export const getMenuInfo = (chartIds, getChart, hasKubernetes) => {
   chartIds.forEach(id => {
     const chart = getChart(id)
     menuChartsAttributeById[id] = getMenuChartAttributes(chart)
-    chartMenus[id] = getChartMenu(chart, submenuNames, hasKubernetes)
+    chartMenus[id] = getChartMenu(chart, submenuNames, { hasKubernetes, composite })
   })
 
   const sortedChartIds = [...chartIds].sort(
@@ -47,7 +47,7 @@ export const getMenuInfo = (chartIds, getChart, hasKubernetes) => {
   }
 }
 
-export default (chartIds, getChart, { hasKubernetes } = {}) => {
+export default (chartIds, getChart, { hasKubernetes, composite } = {}) => {
   const {
     chartMenus,
     menuChartsAttributeById,
@@ -55,7 +55,7 @@ export default (chartIds, getChart, { hasKubernetes } = {}) => {
     menuGroupChartIds,
     subMenus,
     submenuNames,
-  } = getMenuInfo(chartIds, getChart, hasKubernetes)
+  } = getMenuInfo(chartIds, getChart, { hasKubernetes, composite })
 
   const menuGroupById = Object.keys(menuGroups).reduce((acc, menuId) => {
     const chartIds = menuGroupChartIds[menuId]

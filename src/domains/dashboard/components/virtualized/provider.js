@@ -23,6 +23,7 @@ const Provider = ({
   chartIds,
   theme,
   hasKubernetes,
+  composite,
   children,
 }) => {
   const ref = useRef()
@@ -45,6 +46,7 @@ const Provider = ({
               onAttributesChange={onAttributesChange}
               dashboardAttributes={dashboardAttributes}
               hasKubernetes={hasKubernetes}
+              composite={composite}
             >
               {children}
             </DashboardMenuProvider>
