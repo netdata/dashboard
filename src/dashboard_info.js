@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
+/* eslint-disable */
 
 // Codacy declarations
 /* global NETDATA */
