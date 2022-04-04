@@ -82,7 +82,7 @@ export default (
 
     case "prometheus": {
       if (parts.length !== 1) {
-        if (composite && typeC) return emit({ menuPattern: `${type} ${typeB.replace("_", " ")}` })
+        if (composite && typeC) return emit({ menuPattern: `${type} ${typeB.replace("-", " ")}` })
 
         return emit({ menuPattern: "prometheus" })
       }
