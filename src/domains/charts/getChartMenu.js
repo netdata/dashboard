@@ -87,7 +87,7 @@ export default (
         return emit({ menuPattern: "prometheus" })
       }
 
-      if (composite && typeC) return emit({ menu: `${type} ${typeB.replace("_", " ")}` })
+      if (composite && typeC) return emit({ menu: `${type} ${typeB.replace("-", " ")}` })
 
       const familyPart = family.split("_")[0]
       return emit({ menu: `prometheus ${familyPart}` })
