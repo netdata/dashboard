@@ -14,10 +14,11 @@ const Provider = ({
   getChart,
   dashboardAttributes,
   hasKubernetes,
+  composite,
   children,
 }) => {
   const { menuGroupIds, menuGroupById, subMenuById, menuChartsAttributeById } = useMemo(
-    () => getMenu(chartIds, getChart, { hasKubernetes }),
+    () => getMenu(chartIds, getChart, { hasKubernetes, composite }),
     [chartIds, getChart]
   )
 

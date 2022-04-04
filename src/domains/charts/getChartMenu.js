@@ -1,12 +1,12 @@
 export default (
   { id, name, family, context, priority, chartLabels },
   submenuNames,
-  hasKubernetes
+  { hasKubernetes, composite } = {}
 ) => {
   const subMenuId = family || "all"
   const clusterId = hasKubernetes && chartLabels?.k8s_cluster_id?.[0]
 
-  const [type, typeB] = id.split(".")
+  const [type, typeB, typeC] = id.split(".")
   const parts = type.split("_")
   const [part1, part2] = parts
 
@@ -81,7 +81,13 @@ export default (
     }
 
     case "prometheus": {
-      if (parts.length !== 1) return emit({ menuPattern: "prometheus" })
+      if (parts.length !== 1) {
+        if (composite && typeC) return emit({ menuPattern: `${type} ${typeB.replace("-", " ")}` })
+
+        return emit({ menuPattern: "prometheus" })
+      }
+
+      if (composite && typeC) return emit({ menu: `${type} ${typeB.replace("-", " ")}` })
 
       const familyPart = family.split("_")[0]
       return emit({ menu: `prometheus ${familyPart}` })
