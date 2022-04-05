@@ -15,6 +15,7 @@ export const getMenuInfo = (chartIds, getChart, { hasKubernetes, composite } = {
 
   chartIds.forEach(id => {
     const chart = getChart(id)
+    if (!chart) return
     menuChartsAttributeById[id] = getMenuChartAttributes(chart)
     chartMenus[id] = getChartMenu(chart, submenuNames, { hasKubernetes, composite })
   })
