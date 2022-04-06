@@ -172,10 +172,14 @@ body.modal-open {
 /* All levels of nav */
 .dashboard-sidebar .nav > li > a {
     display: block;
-    padding: 4px 20px;
+    padding: 4px 8px;
     font-size: 13px;
     font-weight: 500;
     color: #767676;
+}
+
+.dashboard-sidebar .nav > li > .nav > li > a {
+    padding: 2px 12px;
 }
 
 .dashboard-sidebar .nav > li > a > .svg-inline--fa {
@@ -185,7 +189,7 @@ body.modal-open {
 
 .dashboard-sidebar .nav > li > a:hover,
 .dashboard-sidebar .nav > li > a:focus {
-    padding-left: 19px;
+    padding-left: 7px;
     color: #563d7c;
     text-decoration: none;
     background-color: transparent;
@@ -195,7 +199,7 @@ body.modal-open {
 .dashboard-sidebar .nav > .active > a,
 .dashboard-sidebar .nav > .active:hover > a,
 .dashboard-sidebar .nav > .active:focus > a {
-    padding-left: 18px;
+    padding-left: 6px;
     font-weight: bold;
     color: #563d7c;
     background-color: transparent;
@@ -211,20 +215,19 @@ body.modal-open {
 .dashboard-sidebar .nav .nav > li > a {
     padding-top: 1px;
     padding-bottom: 1px;
-    padding-left: 30px;
     font-size: 12px;
     font-weight: normal;
 }
 
 .dashboard-sidebar .nav .nav > li > a:hover,
 .dashboard-sidebar .nav .nav > li > a:focus {
-    padding-left: 29px;
+    padding-left: 11px;
 }
 
 .dashboard-sidebar .nav .nav > .active > a,
 .dashboard-sidebar .nav .nav > .active:hover > a,
 .dashboard-sidebar .nav .nav > .active:focus > a {
-    padding-left: 28px;
+    padding-left: 6px;
     font-weight: 500;
 }
 
