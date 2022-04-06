@@ -1,12 +1,11 @@
 import React from "react"
 import { useSelector } from "react-redux"
-import { Flex, Button, Documentation } from "@netdata/netdata-ui"
+import { Icon, Flex, Button, Documentation } from "@netdata/netdata-ui"
 import { selectIsCloudEnabled } from "domains/global/selectors"
 import ExpandButton from "./expandButton"
 import UserSettings from "./userSettings"
 import SpacesSkeleton from "./spacesSkeleton"
 import SpacesIframe from "./spacesIframe"
-import NetdataLogo from "../netdataLogo"
 
 const Spaces = ({ isOpen, toggle, isSignedIn }) => {
   const cloudEnabled = useSelector(selectIsCloudEnabled)
@@ -24,7 +23,7 @@ const Spaces = ({ isOpen, toggle, isSignedIn }) => {
       overflow="hidden"
     >
       <Flex column gap={4} alignItems="center" height="100%" overflow="hidden">
-        <NetdataLogo width={32} height={32} />
+        <Icon color="success" name="netdataPress" height="32px" width="32px" />
         {!isOpen && (
           <ExpandButton
             icon="chevron_right_s"
