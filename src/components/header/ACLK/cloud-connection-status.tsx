@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import useCloudConnectionStatus from "./use-cloud-connection-status"
 import CloudConnectionStatusModal from "./cloud-connection-status-modal"
 
@@ -19,6 +19,14 @@ const CloudConnectionStatus = () => {
     nodeStatus: userNodeAccess?.nodeLiveness || "NOT_LIVE",
     date: "",
   })
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.documentElement.style.overflow = "hidden"
+    } else {
+      document.documentElement.style.overflow = "auto"
+    }
+  }, [isModalOpen])
 
   const openModal = useCallback(() => {
     setModalOpen(true)

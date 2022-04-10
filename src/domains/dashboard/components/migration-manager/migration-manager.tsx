@@ -78,6 +78,9 @@ const MigrationManager = () => {
     setModalOpen(false)
   }
 
+  const isPromoEligibleForShow =
+    cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved
+
   const requestRefreshOfAccess = useRequestRefreshOfAccessMessage()
 
   /** We are delaying the show of modal because some time the userNodeAccess is equal to null
@@ -101,14 +104,14 @@ const MigrationManager = () => {
   }, [userSavedPreference])
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isPromoEligibleForShow) {
       document.documentElement.style.overflow = "hidden"
     } else {
       document.documentElement.style.overflow = "auto"
     }
   }, [isModalOpen])
 
-  if (cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
+  if (isPromoEligibleForShow)
     return (
       <MigrationModal
         savePromoRemindMeSelection={savePromoRemindMeSelection}
