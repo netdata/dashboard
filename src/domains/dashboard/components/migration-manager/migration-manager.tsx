@@ -100,6 +100,14 @@ const MigrationManager = () => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
   }, [userSavedPreference])
 
+  useEffect(() => {
+    if (isModalOpen) {
+      document.documentElement.style.overflow = "hidden"
+    } else {
+      document.documentElement.style.overflow = "auto"
+    }
+  }, [isModalOpen])
+
   if (cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
     return (
       <MigrationModal
