@@ -13,6 +13,8 @@ import {
 import { selectSignInUrl } from "domains/global/selectors"
 import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 import { selectIsCloudEnabled } from "domains/global/selectors"
+import { selectRegistry } from "domains/global/selectors"
+import { utmParametersToString } from "domains/global/selectors"
 
 // const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
 // const PROMO_SIGN_IN_CLOUD: PromoProps = {
@@ -56,6 +58,7 @@ import { selectIsCloudEnabled } from "domains/global/selectors"
 const MigrationManager = () => {
   const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
   const cloudEnabled = useSelector(selectIsCloudEnabled)
+  const registry = useSelector(selectRegistry)
 
   const linkToCoud = useMemo(() => {
     const { href } = window.location
@@ -96,7 +99,12 @@ const MigrationManager = () => {
   }, [])
 
   useEffect(() => {
-    if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
+    if (goToCloud({ userSavedPreference, ...userNodeAccess })) {
+      window.location.href = `${linkToCoud}${utmParametersToString({
+        content: "agent-auto-redirect",
+        term: registry.machineGuid,
+      })}`
+    }
   }, [linkToCoud, userNodeAccess, userSavedPreference])
 
   useEffect(() => {
