@@ -56,9 +56,12 @@ import { utmParametersToString } from "domains/global/selectors"
 // } //CLOUD
 
 const MigrationManager = () => {
-  const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
   const cloudEnabled = useSelector(selectIsCloudEnabled)
   const registry = useSelector(selectRegistry)
+
+  const cloudUrl = useSelector(state =>
+    selectSignInUrl({ content: "agent-auto-redirect", term: registry.machineGuid })(state as any)
+  )
 
   const linkToCoud = useMemo(() => {
     const { href } = window.location
@@ -100,10 +103,7 @@ const MigrationManager = () => {
 
   useEffect(() => {
     if (goToCloud({ userSavedPreference, ...userNodeAccess })) {
-      window.location.href = `${linkToCoud}${utmParametersToString({
-        content: "agent-auto-redirect",
-        term: registry.machineGuid,
-      })}`
+      window.location.href = linkToCoud
     }
   }, [linkToCoud, userNodeAccess, userSavedPreference])
 
