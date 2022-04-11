@@ -13,6 +13,7 @@ import {
 import { selectSignInUrl } from "domains/global/selectors"
 import { useRequestRefreshOfAccessMessage } from "hooks/use-user-node-access"
 import { selectIsCloudEnabled } from "domains/global/selectors"
+import { selectRegistry } from "domains/global/selectors"
 
 // const PROMO_SIGN_UP_CLOUD: PromoProps = { userStatus: "UNKNOWN", nodeClaimedStatus: "NOT_CLAIMED" } //CLOUD
 // const PROMO_SIGN_IN_CLOUD: PromoProps = {
@@ -54,8 +55,12 @@ import { selectIsCloudEnabled } from "domains/global/selectors"
 // } //CLOUD
 
 const MigrationManager = () => {
-  const cloudUrl = useSelector(state => selectSignInUrl("go-to-cloud-migration")(state as any))
   const cloudEnabled = useSelector(selectIsCloudEnabled)
+  const registry = useSelector(selectRegistry)
+
+  const cloudUrl = useSelector(state =>
+    selectSignInUrl({ content: "agent-auto-redirect", term: registry.machineGuid })(state as any)
+  )
 
   const linkToCoud = useMemo(() => {
     const { href } = window.location
@@ -72,11 +77,20 @@ const MigrationManager = () => {
 
   const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
 
-  const [hasPromoSelectionSaved, savePromoRemindMeSelection] = useLocalStorage(prefrenceID)
+  /**
+   * There is seem to be a bug when we are using the useLocalStorage,
+   * the value to be returned does not change when prefrenceID is changing.
+   * For that reason we acces the localStorage directly
+   */
+  const [, savePromoRemindMeSelection] = useLocalStorage(prefrenceID)
+  const hasPromoSelectionSaved = localStorage.getItem(prefrenceID)
 
   const closeModal = () => {
     setModalOpen(false)
   }
+
+  const isPromoEligibleForShow =
+    cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved
 
   const requestRefreshOfAccess = useRequestRefreshOfAccessMessage()
 
@@ -93,14 +107,24 @@ const MigrationManager = () => {
   }, [])
 
   useEffect(() => {
-    if (goToCloud({ userSavedPreference, ...userNodeAccess })) window.location.href = linkToCoud
+    if (goToCloud({ userSavedPreference, ...userNodeAccess })) {
+      window.location.href = linkToCoud
+    }
   }, [linkToCoud, userNodeAccess, userSavedPreference])
 
   useEffect(() => {
     if (goToAgentDashboard({ userSavedPreference })) console.log("Lets go to Agent")
   }, [userSavedPreference])
 
-  if (cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved)
+  useEffect(() => {
+    if (isPromoEligibleForShow) {
+      document.documentElement.style.overflow = "hidden"
+    } else {
+      document.documentElement.style.overflow = "auto"
+    }
+  }, [isModalOpen])
+
+  if (isPromoEligibleForShow)
     return (
       <MigrationModal
         savePromoRemindMeSelection={savePromoRemindMeSelection}
