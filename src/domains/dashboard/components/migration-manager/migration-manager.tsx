@@ -122,7 +122,7 @@ const MigrationManager = () => {
     } else {
       document.documentElement.style.overflow = "auto"
     }
-  }, [isModalOpen])
+  }, [isModalOpen, isPromoEligibleForShow])
 
   if (isPromoEligibleForShow)
     return (
