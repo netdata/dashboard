@@ -21,34 +21,29 @@ const Wrapper = ({ children, style, id }) => {
   }, [id])
 
   const prevHeightRef = useRef()
+  const height = ref.current?.firstChild?.clientHeight
+
   useEffect(() => {
     let timeoutId
     let cancelDeffered
 
     const resize = () => {
-      timeoutId = setTimeout(() => {
-        cancelDeffered = deffered(() => {
-          if (
-            !prevHeightRef.current ||
-            (prevHeightRef.current &&
-              ref.current &&
-              Math.abs(prevHeightRef.current - ref.current.firstChild.clientHeight) > 10)
-          ) {
-            list.resize(id)
-          }
-          prevHeightRef.current = ref.current?.firstChild.clientHeight
-          resize()
-        })
-      }, 400)
+      cancelDeffered = deffered(() => {
+        if (
+          !prevHeightRef.current ||
+          (prevHeightRef.current && ref.current && Math.abs(prevHeightRef.current - height) > 10)
+        ) {
+          list.resize(id)
+        }
+        prevHeightRef.current = height
+        resize()
+      })
     }
 
     resize()
 
-    return () => {
-      cancelDeffered?.()
-      clearTimeout(timeoutId)
-    }
-  }, [id])
+    return cancelDeffered
+  }, [id, height])
 
   return (
     <div ref={ref} style={{ ...style }}>
