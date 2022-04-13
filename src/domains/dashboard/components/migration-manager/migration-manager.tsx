@@ -90,7 +90,10 @@ const MigrationManager = () => {
   }
 
   const isPromoEligibleForShow =
-    cloudEnabled && migrationModalPromoInfo && isModalOpen && !hasPromoSelectionSaved
+    cloudEnabled &&
+    migrationModalPromoInfo &&
+    isModalOpen &&
+    (!hasPromoSelectionSaved || hasPromoSelectionSaved === "undefined")
 
   const requestRefreshOfAccess = useRequestRefreshOfAccessMessage()
 
