@@ -48,30 +48,33 @@ const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
   const cache = useMemo(() => new CellMeasurerCache({ defaultHeight: 1000, fixedWidth: true }), [])
   const widthRef = useRef(0)
 
-  const rowRenderMeasurer = ({ index, parent, key, style }) => {
-    const id = ids[index]
-    return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-        width={widthRef.current}
-      >
-        {({ measure }) => {
-          measures.current[id] = measure
-          const Component = getComponent(id, index)
+  const rowRenderMeasurer = useMemo(
+    () => ({ index, parent, key, style, isScrolling, isVisible }) => {
+      const id = ids[index]
+      return (
+        <CellMeasurer
+          cache={cache}
+          columnIndex={0}
+          key={key}
+          parent={parent}
+          rowIndex={index}
+          width={widthRef.current}
+        >
+          {({ measure }) => {
+            measures.current[id] = measure
+            const Component = getComponent(id, index)
 
-          return (
-            <CellMeasurerWrapper style={style} index={index} id={id} measure={measure}>
-              <Component id={id} />
-            </CellMeasurerWrapper>
-          )
-        }}
-      </CellMeasurer>
-    )
-  }
+            return (
+              <CellMeasurerWrapper style={style} index={index} id={id} measure={measure}>
+                <Component id={id} isVisible={isVisible} isScrolling={isScrolling} />
+              </CellMeasurerWrapper>
+            )
+          }}
+        </CellMeasurer>
+      )
+    },
+    [ids.length]
+  )
 
   const list = useMakeList({ ref, measures, cache })
   const throttleScrollRef = useRef()
