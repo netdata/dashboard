@@ -22,7 +22,17 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
     && chartEnriched.chartLabels?.k8s_cluster_id
     && chartEnriched.chartLabels.k8s_cluster_id[0]
 
-  if (clusterId) {
+  // eslint-disable-next-line no-case-declarations
+  const clusterName = hasKubernetes
+    // eslint-disable-next-line camelcase
+    && chartEnriched.chartLabels?.k8s_cluster_name
+    && chartEnriched.chartLabels.k8s_cluster_name[0]
+
+  if (clusterName) {
+    chartEnriched.menu = `Kubernetes ${clusterName}`
+    chartEnriched.submenu = chartEnriched.family || "all"
+    return chartEnriched
+  } else if (clusterId) {
     chartEnriched.menu = `Kubernetes ${clusterId}`
     chartEnriched.submenu = chartEnriched.family || "all"
     return chartEnriched
