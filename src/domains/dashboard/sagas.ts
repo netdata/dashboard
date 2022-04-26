@@ -25,7 +25,7 @@ function setGlobalChartUnderlaySaga({ payload }: Action<SetGlobalChartUnderlayAc
       window.urlOptions.netdataHighlightCallback(true, after, before)
     }
   } else {
-    // TODO: Consider a setting to control wether the component sets these hash params
+    // TODO: Consider a setting to control whether the component sets these hash params
     const hashParams = getHashParams()
     const highlight_after = Math.round(after).toString()
     const highlight_before = Math.round(before).toString()

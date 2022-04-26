@@ -127,7 +127,7 @@ export const useFormatters = ({
   const [min, setMin] = useState<number>()
   const [max, setMax] = useState<number>()
 
-  // todo most of this state is not needed, that hook can be refractored
+  // todo most of this state is not needed, that hook can be refactored
   const [unitsCurrent, setUnitsCurrent] = useState<string>(units)
 
   const [decimals, setDecimals] = useState<number>(-1)
@@ -177,13 +177,13 @@ export const useFormatters = ({
           setUnitsCurrent(switchedUnits)
           // that.legendSetUnitsString(that.units_current);
           // that.legendSetUnitsString just populates some DOM with unitsCurrent
-          // on all occurences just take the unitsCurrent from this state
+          // on all occurrences just take the unitsCurrent from this state
         },
         temperatureSetting,
         secondsAsTimeSetting
       )
 
-      // as function, so useState() interpretes it properly
+      // as function, so useState() interprets it properly
       setConvertUnits(() => newConvertUnits)
 
       const convertedMin = newConvertUnits(newMin)

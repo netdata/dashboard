@@ -34,7 +34,7 @@ export const legendPluginModuleString = (withContext: boolean, chartMetadata: Ch
 
 export const legendResolutionTooltip = (chartData: ChartData, chartMetadata: ChartMetadata) => {
   const collected = chartMetadata.update_every
-  // todo if there's no data (but maybe there wont be situation like this), then use "collected"
+  // todo if there's no data (but maybe there won't be situation like this), then use "collected"
   const viewed = chartData.view_update_every
   if (collected === viewed) {
     return `resolution ${seconds4human(collected)}`

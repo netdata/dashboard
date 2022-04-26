@@ -51,7 +51,7 @@ describe("legend-utils", () => {
         isModifierKeyPressed: true,
       })).toEqual(["dim1", "dim2", "dim3"])
     })
-    it("selects - modifier, allmost all dimensions are active. should return empty array", () => {
+    it("selects - modifier, almost all dimensions are active. should return empty array", () => {
       expect(getNewSelectedDimensions({
         allDimensions: ["dim1", "dim2", "dim3"],
         selectedDimensions: ["dim1", "dim2"],

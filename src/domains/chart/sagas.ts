@@ -276,7 +276,7 @@ function fetchDataForSnapshotSaga({ payload }: Action<FetchDataForSnapshotPayloa
       snapshotData: data,
       id,
     }))
-    // temporarly, until main.js finished rewrite
+    // temporarily, until main.js finished rewrite
     // @ts-ignore
     window.chartUpdated({
       chartDataUniqueID,

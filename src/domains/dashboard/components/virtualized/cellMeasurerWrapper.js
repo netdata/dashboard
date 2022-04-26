@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react"
 import { useList } from "domains/charts"
 
-const deffered = callback => {
+const deferred = callback => {
   if (window.requestIdleCallback) {
     const id = requestIdleCallback(callback)
     return () => cancelIdleCallback(id)
@@ -24,10 +24,10 @@ const Wrapper = ({ children, style, id }) => {
   const height = ref.current?.firstChild?.clientHeight
 
   useEffect(() => {
-    let cancelDeffered
+    let cancelDeferred
 
     const resize = () => {
-      cancelDeffered = deffered(() => {
+      cancelDeferred = deferred(() => {
         if (
           !prevHeightRef.current ||
           (prevHeightRef.current && ref.current && Math.abs(prevHeightRef.current - height) > 10)
@@ -40,7 +40,7 @@ const Wrapper = ({ children, style, id }) => {
 
     resize()
 
-    return cancelDeffered
+    return cancelDeferred
   }, [id, height])
 
   return (
