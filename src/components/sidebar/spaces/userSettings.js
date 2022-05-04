@@ -11,7 +11,7 @@ import SignIn from "components/auth/signIn"
 const SignInItem = () => {
   const onClick = (e, link) => {
     e.stopPropagation()
-    window.open(link, "_blank", "noopener,noreferrer")
+    window.location.href = link
   }
   return (
     <SignIn utmParameters={{ content: "userSettings" }}>
