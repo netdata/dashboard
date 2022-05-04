@@ -36,7 +36,7 @@ type MigrationModalContent = {
     bullets?: Array<string | ((props?: any) => React.ReactNode)>
     footer?: ((props: any) => React.ReactNode) | string
   }
-  tickBoxOption: { text: string; prefrenceID: MigrationModalPromos }
+  tickBoxOption: { text: string; preferenceID: MigrationModalPromos }
   CTA1: MigrationModalActions
   CTA2?: MigrationModalActions
 }
@@ -72,7 +72,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Remember my choice",
-      prefrenceID: MigrationModalPromos.PROMO_SIGN_UP_CLOUD,
+      preferenceID: MigrationModalPromos.PROMO_SIGN_UP_CLOUD,
     },
     CTA1: {
       text: "Wow! Let’s go to Netdata Cloud",
@@ -112,7 +112,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Remember my choice",
-      prefrenceID: MigrationModalPromos.PROMO_SIGN_IN_CLOUD,
+      preferenceID: MigrationModalPromos.PROMO_SIGN_IN_CLOUD,
     },
     CTA1: {
       text: "Sign-in or get a Netdata Cloud account",
@@ -140,7 +140,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Don't remind me of this again",
-      prefrenceID: MigrationModalPromos.PROMO_IVNITED_TO_SPACE,
+      preferenceID: MigrationModalPromos.PROMO_IVNITED_TO_SPACE,
     },
     CTA1: {
       text: "Thanks, stay at Agent dashboard for now",
@@ -198,7 +198,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Remember my choice.",
-      prefrenceID: MigrationModalPromos.PROMO_CLAIM_NODE,
+      preferenceID: MigrationModalPromos.PROMO_CLAIM_NODE,
     },
     CTA1: {
       text: "Wow! Let’s go to Netdata Cloud",
@@ -226,7 +226,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Remember my choice",
-      prefrenceID: MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD,
+      preferenceID: MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD,
     },
     CTA1: {
       text: "Wow! Let’s go to Netdata Cloud ",
@@ -273,7 +273,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Don't show this again",
-      prefrenceID: MigrationModalPromos.FALLBACK_TO_AGENT,
+      preferenceID: MigrationModalPromos.FALLBACK_TO_AGENT,
     },
     CTA1: {
       text: "Check again please",
@@ -308,7 +308,7 @@ export const migrationmodalInfo: MigrationModalInfo = {
     },
     tickBoxOption: {
       text: "Don't show this again",
-      prefrenceID: MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT,
+      preferenceID: MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT,
     },
     CTA1: {
       text: "Check again please",
@@ -417,16 +417,18 @@ export const goToCloud = ({
   nodeLiveness === "LIVE" &&
   userNodeAccess === "ACCESS_OK"
 
-const modalStatusWithPromoFunctions: Record<MigrationModalPromos, (props: PromoProps) => boolean> =
-  {
-    [MigrationModalPromos.FALLBACK_TO_AGENT]: isFallbackToAgent,
-    [MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
-    [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
-    [MigrationModalPromos.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
-    [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
-    [MigrationModalPromos.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
-    [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
-  }
+const modalStatusWithPromoFunctions: Record<
+  MigrationModalPromos,
+  (props: PromoProps) => boolean
+> = {
+  [MigrationModalPromos.FALLBACK_TO_AGENT]: isFallbackToAgent,
+  [MigrationModalPromos.NO_INFO_FALLBACK_TO_AGENT]: isNoInfoFallbackToAgent,
+  [MigrationModalPromos.PROMO_TO_USE_NEW_DASHBAORD]: isPromoToNewDasboardOnCloud,
+  [MigrationModalPromos.PROMO_CLAIM_NODE]: isPromoToClaimThisNode,
+  [MigrationModalPromos.PROMO_IVNITED_TO_SPACE]: isPromoInvitedToSpace,
+  [MigrationModalPromos.PROMO_SIGN_IN_CLOUD]: isPromoSignIn,
+  [MigrationModalPromos.PROMO_SIGN_UP_CLOUD]: isPromoSignUp,
+}
 
 const useMigrationModal = ({
   userStatus,
@@ -434,8 +436,9 @@ const useMigrationModal = ({
   userNodeAccess,
   nodeLiveness,
 }: PromoProps) => {
-  const [userSavedPreference, setUserPrefrence] =
-    useLocalStorage<UserPreference>("USER_SAVED_PREFERENCE")
+  const [userSavedPreference, setUserPrefrence] = useLocalStorage<UserPreference>(
+    "USER_SAVED_PREFERENCE"
+  )
 
   const migrationModalPromo = useMemo<MigrationModalPromos>(() => {
     return Object.keys(modalStatusWithPromoFunctions).find(modalStatus => {

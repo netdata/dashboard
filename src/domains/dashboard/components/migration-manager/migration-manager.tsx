@@ -75,15 +75,15 @@ const MigrationManager = () => {
       ...userNodeAccess,
     })
 
-  const prefrenceID = migrationModalPromoInfo?.tickBoxOption.prefrenceID || ""
+  const preferenceID = migrationModalPromoInfo?.tickBoxOption.preferenceID || ""
 
   /**
    * There is seem to be a bug when we are using the useLocalStorage,
-   * the value to be returned does not change when prefrenceID is changing.
+   * the value to be returned does not change when preferenceID is changing.
    * For that reason we acces the localStorage directly
    */
-  const [, savePromoRemindMeSelection] = useLocalStorage(prefrenceID)
-  const hasPromoSelectionSaved = localStorage.getItem(prefrenceID)
+  const [, savePromoRemindMeSelection] = useLocalStorage(preferenceID)
+  const hasPromoSelectionSaved = localStorage.getItem(preferenceID)
 
   const closeModal = () => {
     setModalOpen(false)
