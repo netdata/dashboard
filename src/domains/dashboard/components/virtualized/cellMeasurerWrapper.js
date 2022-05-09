@@ -24,7 +24,6 @@ const Wrapper = ({ children, style, id }) => {
   const height = ref.current?.firstChild?.clientHeight
 
   useEffect(() => {
-    let timeoutId
     let cancelDeffered
 
     const resize = () => {
@@ -36,7 +35,6 @@ const Wrapper = ({ children, style, id }) => {
           list.resize(id)
         }
         prevHeightRef.current = height
-        resize()
       })
     }
 
