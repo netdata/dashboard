@@ -8,7 +8,7 @@ export const ContentWrapper = props => (
   <Flex
     column
     height="100%"
-    padding={[2, 0, 2, 4]}
+    padding={[0, 0, 2, 4]}
     overflow={{ horizontal: "hidden" }}
     className="node-view__container"
     {...props}
