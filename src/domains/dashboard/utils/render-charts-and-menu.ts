@@ -43,8 +43,6 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
     case "net":
     case "disk":
     case "powersupply":
-    case "statsd":
-      chartEnriched.menu = tmp
       break
 
     case "cpufreq":
