@@ -207,8 +207,8 @@ const convertibleUnits: ConvertibleUnits = {
       },
     },
     time: {
-      check() {
-        return currentSecondsAsTimeSetting
+      check(max) {
+        return currentSecondsAsTimeSetting && max >= 1
       },
       convert(seconds: number) {
         // eslint-disable-next-line no-use-before-define
