@@ -1011,7 +1011,6 @@ function enrichChartData(chart) {
         case 'net':
         case 'disk':
         case 'powersupply':
-        case 'statsd':
             chart.menu = tmp;
             break;
 
