@@ -237,15 +237,15 @@ const convertibleUnits: ConvertibleUnits = {
       convert: twoFixed(0.001),
     },
     "MM:SS.ms": {
-      check: (max: number) => max >= 60000 && max < 3600_000,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 60000 && max < 3600_000,
       convert: (value: number) => seconds2time(value / 1000, "MINUTES"),
     },
     "HH:MM:SS.ms": {
-      check: (max: number) => max >= 3600_000 && max < 86_400_000,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 3600_000 && max < 86_400_000,
       convert: (value: number) => seconds2time(value / 1000, "HOURS"),
     },
     "dHH:MM:SS.ms": {
-      check: (max: number) => max >= 86_400_000,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 86_400_000,
       convert: (value: number) => seconds2time(value / 1000, "DAYS"),
     },
   },
@@ -264,15 +264,15 @@ const convertibleUnits: ConvertibleUnits = {
       convert: twoFixed(1),
     },
     "MM:SS.ms": {
-      check: (max: number) => max >= 60 && max < 3600,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 60 && max < 3600,
       convert: (value: number) => seconds2time(value, "MINUTES"),
     },
     "HH:MM:SS.ms": {
-      check: (max: number) => max >= 3600 && max < 86_400,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 3600 && max < 86_400,
       convert: (value: number) => seconds2time(value, "HOURS"),
     },
     "dHH:MM:SS.ms": {
-      check: (max: number) => max >= 86_400,
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 86_400,
       convert: (value: number) => seconds2time(value, "DAYS"),
     },
   },
