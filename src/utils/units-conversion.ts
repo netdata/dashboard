@@ -1,14 +1,27 @@
-export const zeropad = (x: number) => {
+export const zeropad = (x: string | number) => {
   if (x > -10 && x < 10) {
-    return `0${x.toString()}`
+    return `0${x}`
   }
-  return x.toString()
+  return `${x}`
 }
 
 interface ScalableUnits {
   [unitGroupName: string]: {
     [unitName: string]: number
   }
+}
+
+export const leaveAtLeast1Decimal = (number: number) => {
+  const decimalPortion = `${number}`.split(".")[1]
+  if (decimalPortion && decimalPortion.length > 1) {
+    return `${number}`
+  }
+
+  let tms = number * 10
+  const integer = Math.floor(tms / 10)
+
+  tms -= integer * 10
+  return `${integer}.${tms}`
 }
 
 const scalableUnits: ScalableUnits = {
@@ -185,8 +198,15 @@ const convertibleUnits: ConvertibleUnits = {
     },
   },
   seconds: {
+    milliseconds: {
+      check(max: number) {
+        return max < 1
+      },
+      convert(seconds: number) {
+        return `${Math.round(seconds * 1000)}`
+      },
+    },
     time: {
-      // check(max) {
       check() {
         return currentSecondsAsTimeSetting
       },
@@ -207,7 +227,7 @@ const convertibleUnits: ConvertibleUnits = {
 
         tms -= millisecondsRet * 10
 
-        return `${(millisecondsRet).toString()}.${tms.toString()}`
+        return `${millisecondsRet.toString()}.${tms.toString()}`
       },
     },
     seconds: {
@@ -222,8 +242,7 @@ const convertibleUnits: ConvertibleUnits = {
 
         millisecondsReturn = Math.round(millisecondsReturn / 10)
 
-        return `${seconds.toString()}.${
-          zeropad(millisecondsReturn)}`
+        return `${seconds.toString()}.${zeropad(millisecondsReturn)}`
       },
     },
     "M:SS.ms": {
@@ -241,9 +260,7 @@ const convertibleUnits: ConvertibleUnits = {
 
         millisecondsReturn = Math.round(millisecondsReturn / 10)
 
-        return `${minutes.toString()}:${
-          zeropad(seconds)}.${
-          zeropad(millisecondsReturn)}`
+        return `${minutes.toString()}:${zeropad(seconds)}.${zeropad(millisecondsReturn)}`
       },
     },
   },
@@ -287,24 +304,30 @@ export const unitsConversionCreator = {
     const minutes = Math.floor(secondsReturn / 60)
     secondsReturn -= minutes * 60
 
-    secondsReturn = Math.round(secondsReturn)
+    const daysString = days ? `${days}d:` : ""
+    const hoursString = hours || days ? `${zeropad(hours)}:` : ""
+    const minutesString = minutes || hours ? `${zeropad(minutes)}:` : ""
+    const fixedNr = days ? 0 : 3
+    let secondsString = leaveAtLeast1Decimal(Number(secondsReturn.toFixed(fixedNr)))
+    if (minutesString) {
+      secondsString = zeropad(secondsString)
+    }
 
-    const msTxt = ""
-
-    return `${((days > 0) ? `${days.toString()}d:` : "").toString()
-      + zeropad(hours)}:${
-      zeropad(minutes)}:${
-      zeropad(secondsReturn)
-    }${msTxt}`
+    return `${daysString}${hoursString}${minutesString}${secondsString}`
   },
 
   // get a function that converts the units
   // + every time units are switched call the callback
   get(
-    uuid: string, min: number, max: number, units: string | undefined,
-    desiredUnits: undefined | null | string, commonUnitsName: string | null | undefined,
-    switchUnitsCallback: (units: string) => void, temperatureSetting: "celsius" | "fahrenheit",
-    secondsAsTimeSetting: boolean,
+    uuid: string,
+    min: number,
+    max: number,
+    units: string | undefined,
+    desiredUnits: undefined | null | string,
+    commonUnitsName: string | null | undefined,
+    switchUnitsCallback: (units: string) => void,
+    temperatureSetting: "celsius" | "fahrenheit",
+    secondsAsTimeSetting: boolean
   ) {
     // validate the parameters
     if (typeof units === "undefined") {

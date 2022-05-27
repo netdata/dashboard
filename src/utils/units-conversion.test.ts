@@ -1,4 +1,4 @@
-import { unitsConversionCreator } from "./units-conversion"
+import { leaveAtLeast1Decimal, unitsConversionCreator } from "./units-conversion"
 
 const uuid = "12345"
 const getConvertUnits = ({ min, max, units, callback }) =>
@@ -11,6 +11,23 @@ const MS_IN_DAY = 24 * MS_IN_HOUR
 const MINUTE = 60
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
+
+describe("leaveAtLeast1Decimal", () => {
+  it("returns single decimal given integer", () => {
+    expect(leaveAtLeast1Decimal(5)).toEqual("5.0")
+  })
+
+  it("returns single decimal given float with single decimal", () => {
+    expect(leaveAtLeast1Decimal(5.0)).toEqual("5.0")
+    expect(leaveAtLeast1Decimal(5.5)).toEqual("5.5")
+  })
+
+  it("returns the same nr of decimals for floats with more than 1 decimal", () => {
+    expect(leaveAtLeast1Decimal(5.01)).toEqual("5.01")
+    expect(leaveAtLeast1Decimal(5.09)).toEqual("5.09")
+    expect(leaveAtLeast1Decimal(5.009)).toEqual("5.009")
+  })
+})
 
 describe("units conversion", () => {
   it("doesn't convert milliseconds for small numbers", () => {
@@ -48,5 +65,29 @@ describe("units conversion", () => {
     expect(convertUnits(50)).toBe("0:00.05")
     expect(convertUnits(5000)).toBe("0:05.00")
     expect(convertUnits(5 * MS_IN_MINUTE)).toBe("5:00.00")
+  })
+
+  it("converts down to milliseconds for max < 1", () => {
+    const callback = jest.fn()
+    const convertUnits = getConvertUnits({
+      min: 0.3,
+      max: 0.9,
+      units: "seconds",
+      callback,
+    })
+    expect(callback).toHaveBeenCalledWith("milliseconds")
+    expect(convertUnits(0.002)).toBe("2")
+    expect(convertUnits(0.9)).toBe("900")
+  })
+
+  it("converts seconds", () => {
+    const callback = jest.fn()
+    const convertUnits = getConvertUnits({ min: 1, max: 50, units: "seconds", callback })
+    expect(callback).toHaveBeenCalledWith("time")
+    expect(convertUnits(5)).toBe("5.0")
+    expect(convertUnits(5.1)).toBe("5.1")
+    expect(convertUnits(5.01)).toBe("5.01")
+    expect(convertUnits(5.0019)).toBe("5.002")
+    expect(convertUnits(5.0001)).toBe("5.0")
   })
 })
