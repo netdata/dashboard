@@ -80,7 +80,7 @@ describe("units conversion", () => {
     expect(convertUnits(0.9)).toBe("900")
   })
 
-  it("converts seconds", () => {
+  it("converts seconds smaller than 1 minutes", () => {
     const callback = jest.fn()
     const convertUnits = getConvertUnits({ min: 1, max: 50, units: "seconds", callback })
     expect(callback).toHaveBeenCalledWith("time")
@@ -89,5 +89,15 @@ describe("units conversion", () => {
     expect(convertUnits(5.01)).toBe("5.01")
     expect(convertUnits(5.0019)).toBe("5.002")
     expect(convertUnits(5.0001)).toBe("5.0")
+  })
+
+  it("converts seconds higher than 1 minute", () => {
+    const callback = jest.fn()
+    const convertUnits = getConvertUnits({ min: 1, max: 20 * MINUTE, units: "seconds", callback })
+    expect(callback).toHaveBeenCalledWith("time")
+    expect(convertUnits(5 * MINUTE)).toBe("05:00.0")
+    expect(convertUnits(50 * MINUTE)).toBe("50:00.0")
+    expect(convertUnits(5 * HOUR)).toBe("05:00:00.0")
+    expect(convertUnits(50 * HOUR)).toBe("2d:02:00:00")
   })
 })

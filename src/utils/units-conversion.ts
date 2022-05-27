@@ -308,7 +308,9 @@ export const unitsConversionCreator = {
     const hoursString = hours || days ? `${zeropad(hours)}:` : ""
     const minutesString = minutes || hours ? `${zeropad(minutes)}:` : ""
     const fixedNr = days ? 0 : 3
-    let secondsString = leaveAtLeast1Decimal(Number(secondsReturn.toFixed(fixedNr)))
+    let secondsString = days
+      ? Math.round(secondsReturn)
+      : leaveAtLeast1Decimal(Number(secondsReturn.toFixed(fixedNr)))
     if (minutesString) {
       secondsString = zeropad(secondsString)
     }
