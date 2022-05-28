@@ -5,6 +5,7 @@ export default (
 ) => {
   const subMenuId = family || "all"
   const clusterId = hasKubernetes && chartLabels?.k8s_cluster_id?.[0]
+  const clusterName = hasKubernetes && chartLabels?.k8s_cluster_name?.[0]
 
   const [type, typeB, typeC] = id.split(".")
   const parts = type.split("_")
@@ -29,7 +30,8 @@ export default (
     return emit({ menuPattern })
   }
 
-  if (clusterId) return emit({ menu: `Kubernetes ${clusterId}` })
+  if (clusterName) return emit({ menu: `Kubernetes ${clusterName}` })
+  else if (clusterId) return emit({ menu: `Kubernetes ${clusterId}` })
 
   switch (part1) {
     case "ap":
