@@ -8,7 +8,7 @@ export const ChartMenuGroupIcon = ({ icon, ...rest }) => (
 
 export const ChartMenuGroupTitle = ({ title, ...rest }) =>
   title ? (
-    <H0 color="text" {...rest}>
+    <H0 color="sectionTitle" {...rest}>
       {title}
     </H0>
   ) : null

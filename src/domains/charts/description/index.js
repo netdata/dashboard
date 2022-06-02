@@ -20,7 +20,12 @@ const Description = ({ children, onClick, ...rest }) => {
   )
 
   return children ? (
-    <Text color="textDescription" dangerouslySetInnerHTML={{ __html: children }} onClick={click} {...rest} />
+    <Text
+      color="sectionDescription"
+      dangerouslySetInnerHTML={{ __html: children }}
+      onClick={click}
+      {...rest}
+    />
   ) : null
 }
 
