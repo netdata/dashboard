@@ -1,6 +1,6 @@
 import React, { memo, forwardRef } from "react"
 import styled from "styled-components"
-import { Flex } from "@netdata/netdata-ui"
+import { Flex, Text } from "@netdata/netdata-ui"
 import { useContainer } from "domains/charts/charts"
 import { withMenuGroupIds } from "./context"
 import { MenuGroupContainer } from "./menuGroup"
@@ -40,15 +40,53 @@ export const MenuSidebar = props => {
   return props.isFixedPosition ? <StyledMenuSidebar top={top} {...props} /> : <Flex {...props} />
 }
 
+const StyledText = styled(Text)`
+  line-height: 25px;
+`
+
+const NodeInfo = memo(({ showCounters, chartsCount, metricsCount, alarmsCount, nodeName }) => {
+  const shouldShowCounters = showCounters && chartsCount && metricsCount && alarmsCount
+
+  if (!shouldShowCounters) return null
+  return (
+    <StyledText margin={[5]} color="textLite">
+      Every second, Netdata collects
+      <Text strong color="textLite" margin={[0, 1]}>
+        {metricsCount}
+      </Text>
+      metrics on {nodeName}, presents them in
+      <Text strong color="textLite" margin={[0, 1]}>
+        {chartsCount}
+      </Text>
+      charts, and monitors them with
+      <Text strong color="textLite" margin={[0, 1]}>
+        {alarmsCount}
+      </Text>
+      alarms.
+    </StyledText>
+  )
+})
+
 export const MenuSidebarContainer = ({
   onMenuGroupClick,
   onSubMenuClick,
   isFixedPosition = true,
   ...rest
-}) => (
-  <MenuSidebar isFixedPosition={isFixedPosition} {...rest}>
-    <MenuContainer onMenuGroupClick={onMenuGroupClick} onSubMenuClick={onSubMenuClick} />
-  </MenuSidebar>
-)
+}) => {
+  const { showCounters, chartsCount, metricsCount, alarmsCount, nodeName } = rest
+
+  return (
+    <MenuSidebar isFixedPosition={isFixedPosition} {...rest}>
+      <MenuContainer onMenuGroupClick={onMenuGroupClick} onSubMenuClick={onSubMenuClick} />
+      <NodeInfo
+        nodeName={nodeName}
+        chartsCount={chartsCount}
+        metricsCount={metricsCount}
+        alarmsCount={alarmsCount}
+        showCounters={showCounters}
+      />
+    </MenuSidebar>
+  )
+}
 
 export const SidebarContainer = memo(MenuSidebarContainer)
