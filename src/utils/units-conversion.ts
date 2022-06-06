@@ -1,14 +1,49 @@
-export const zeropad = (x: number) => {
+export const zeropad = (x: string | number) => {
   if (x > -10 && x < 10) {
-    return `0${x.toString()}`
+    return `0${x}`
   }
-  return x.toString()
+  return `${x}`
 }
 
 interface ScalableUnits {
   [unitGroupName: string]: {
     [unitName: string]: number
   }
+}
+
+export const leaveAtLeast1Decimal = (number: number) => {
+  const decimalPortion = `${number}`.split(".")[1]
+  if (decimalPortion && decimalPortion.length > 1) {
+    return `${number}`
+  }
+
+  let tms = number * 10
+  const integer = Math.floor(tms / 10)
+
+  tms -= integer * 10
+  return `${integer}.${tms}`
+}
+
+type TimeUnit = "MINUTES" | "HOURS" | "DAYS"
+const seconds2time = (seconds: number, maxTimeUnit: TimeUnit) => {
+  let secondsReturn = Math.abs(seconds)
+
+  const days = maxTimeUnit === "DAYS" ? Math.floor(secondsReturn / 86400) : 0
+  secondsReturn -= days * 86400
+
+  const hours =
+    maxTimeUnit === "DAYS" || maxTimeUnit === "HOURS" ? Math.floor(secondsReturn / 3600) : 0
+  secondsReturn -= hours * 3600
+
+  const minutes = Math.floor(secondsReturn / 60)
+  secondsReturn -= minutes * 60
+
+  const daysString = maxTimeUnit === "DAYS" ? `${days}d:` : ""
+  const hoursString = maxTimeUnit === "DAYS" || maxTimeUnit === "HOURS" ? `${zeropad(hours)}:` : ""
+  const minutesString = `${zeropad(minutes)}:`
+  let secondsString = zeropad(secondsReturn.toFixed(2))
+
+  return `${daysString}${hoursString}${minutesString}${secondsString}`
 }
 
 const scalableUnits: ScalableUnits = {
@@ -161,10 +196,15 @@ interface ConvertibleUnits {
     }
   }
 }
+
+const twoFixed =
+  (multiplier: number = 1) =>
+  (value: number) =>
+    (value * multiplier).toFixed(2)
+
 const convertibleUnits: ConvertibleUnits = {
   Celsius: {
     Fahrenheit: {
-      // check(max) {
       check() {
         return currentTemperatureSetting === "fahrenheit"
       },
@@ -175,7 +215,6 @@ const convertibleUnits: ConvertibleUnits = {
   },
   celsius: {
     fahrenheit: {
-      // check(max) {
       check() {
         return currentTemperatureSetting === "fahrenheit"
       },
@@ -184,67 +223,57 @@ const convertibleUnits: ConvertibleUnits = {
       },
     },
   },
-  seconds: {
-    time: {
-      // check(max) {
-      check() {
-        return currentSecondsAsTimeSetting
-      },
-      convert(seconds: number) {
-        // eslint-disable-next-line no-use-before-define
-        return unitsConversionCreator.seconds2time(seconds)
-      },
-    },
-  },
   milliseconds: {
+    microseconds: {
+      check: (max: number) => max < 1,
+      convert: twoFixed(1000),
+    },
     milliseconds: {
-      check(max: number) {
-        return currentSecondsAsTimeSetting && max < 1000
-      },
-      convert(milliseconds: number) {
-        let tms = Math.round(milliseconds * 10)
-        const millisecondsRet = Math.floor(tms / 10)
-
-        tms -= millisecondsRet * 10
-
-        return `${(millisecondsRet).toString()}.${tms.toString()}`
-      },
+      check: (max: number) => max >= 1 && max < 1000,
+      convert: twoFixed(),
     },
     seconds: {
-      check(max: number) {
-        return currentSecondsAsTimeSetting && max >= 1000 && max < 60000
-      },
-      convert(milliseconds: number) {
-        let millisecondsReturn = Math.round(milliseconds)
-
-        const seconds = Math.floor(millisecondsReturn / 1000)
-        millisecondsReturn -= seconds * 1000
-
-        millisecondsReturn = Math.round(millisecondsReturn / 10)
-
-        return `${seconds.toString()}.${
-          zeropad(millisecondsReturn)}`
-      },
+      check: (max: number) => max >= 1000 && max < 60000,
+      convert: twoFixed(0.001),
     },
-    "M:SS.ms": {
-      check(max) {
-        return currentSecondsAsTimeSetting && max >= 60000
-      },
-      convert(milliseconds: number) {
-        let millisecondsReturn = Math.round(milliseconds)
+    "MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 60000 && max < 3600_000,
+      convert: (value: number) => seconds2time(value / 1000, "MINUTES"),
+    },
+    "HH:MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 3600_000 && max < 86_400_000,
+      convert: (value: number) => seconds2time(value / 1000, "HOURS"),
+    },
+    "dHH:MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 86_400_000,
+      convert: (value: number) => seconds2time(value / 1000, "DAYS"),
+    },
+  },
 
-        const minutes = Math.floor(millisecondsReturn / 60000)
-        millisecondsReturn -= minutes * 60000
-
-        const seconds = Math.floor(millisecondsReturn / 1000)
-        millisecondsReturn -= seconds * 1000
-
-        millisecondsReturn = Math.round(millisecondsReturn / 10)
-
-        return `${minutes.toString()}:${
-          zeropad(seconds)}.${
-          zeropad(millisecondsReturn)}`
-      },
+  seconds: {
+    microseconds: {
+      check: (max: number) => max < 0.001,
+      convert: twoFixed(1000_000),
+    },
+    milliseconds: {
+      check: (max: number) => max >= 0.001 && max < 1,
+      convert: twoFixed(1000),
+    },
+    seconds: {
+      check: (max: number) => max >= 1 && max < 60,
+      convert: twoFixed(1),
+    },
+    "MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 60 && max < 3600,
+      convert: (value: number) => seconds2time(value, "MINUTES"),
+    },
+    "HH:MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 3600 && max < 86_400,
+      convert: (value: number) => seconds2time(value, "HOURS"),
+    },
+    "dHH:MM:SS.ms": {
+      check: (max: number) => currentSecondsAsTimeSetting && max >= 86_400,
+      convert: (value: number) => seconds2time(value, "DAYS"),
     },
   },
 }
@@ -275,36 +304,18 @@ export const unitsConversionCreator = {
     this.latest = {}
   },
 
-  seconds2time(seconds: number) {
-    let secondsReturn = Math.abs(seconds)
-
-    const days = Math.floor(secondsReturn / 86400)
-    secondsReturn -= days * 86400
-
-    const hours = Math.floor(secondsReturn / 3600)
-    secondsReturn -= hours * 3600
-
-    const minutes = Math.floor(secondsReturn / 60)
-    secondsReturn -= minutes * 60
-
-    secondsReturn = Math.round(secondsReturn)
-
-    const msTxt = ""
-
-    return `${((days > 0) ? `${days.toString()}d:` : "").toString()
-      + zeropad(hours)}:${
-      zeropad(minutes)}:${
-      zeropad(secondsReturn)
-    }${msTxt}`
-  },
-
   // get a function that converts the units
   // + every time units are switched call the callback
   get(
-    uuid: string, min: number, max: number, units: string | undefined,
-    desiredUnits: undefined | null | string, commonUnitsName: string | null | undefined,
-    switchUnitsCallback: (units: string) => void, temperatureSetting: "celsius" | "fahrenheit",
-    secondsAsTimeSetting: boolean,
+    uuid: string,
+    min: number,
+    max: number,
+    units: string | undefined,
+    desiredUnits: undefined | null | string,
+    commonUnitsName: string | null | undefined,
+    switchUnitsCallback: (units: string) => void,
+    temperatureSetting: "celsius" | "fahrenheit",
+    secondsAsTimeSetting: boolean
   ) {
     // validate the parameters
     if (typeof units === "undefined") {

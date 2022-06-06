@@ -1,7 +1,5 @@
 import { identity } from "ramda"
-import {
-  useCallback, useState, useMemo, useRef,
-} from "react"
+import { useCallback, useState, useMemo, useRef } from "react"
 
 import { useSelector } from "store/redux-separate-context"
 import { selectTemperatureSetting, selectSecondsAsTimeSetting } from "domains/global/selectors"
@@ -29,7 +27,8 @@ const fastNumberFormat = (min: number, max: number) => {
     }
 
     return formattersFixed[key]
-  } if (min === 0) {
+  }
+  if (min === 0) {
     if (typeof formattersZeroBased[key] === "undefined") {
       formattersZeroBased[key] = new Intl.NumberFormat(undefined, {
         useGrouping: true,
@@ -50,61 +49,65 @@ const fastNumberFormat = (min: number, max: number) => {
   })
 }
 
-const getLegendFormatValue = (
-  convertUnits: Converter, intlNumberFormat: Intl.NumberFormat | null, valueDecimalDetail: number,
-) => (value: number | string | null) => {
-  if (typeof value !== "number") {
-    return "-"
-  }
-
-  const convertedValue = convertUnits(value)
-  if (typeof convertedValue !== "number") {
-    return convertedValue
-  }
-
-  if (intlNumberFormat !== null) {
-    return intlNumberFormat.format(convertedValue)
-  }
-
-  let dmin
-  let dmax
-  if (valueDecimalDetail !== -1) {
-    dmin = valueDecimalDetail
-    dmax = valueDecimalDetail
-  } else {
-    dmin = 0
-    const abs = (convertedValue < 0) ? -convertedValue : convertedValue
-    if (abs > 1000) {
-      dmax = 0
-    } else if (abs > 10) {
-      dmax = 1
-    } else if (abs > 1) {
-      dmax = 2
-    } else if (abs > 0.1) {
-      dmax = 2
-    } else if (abs > 0.01) {
-      dmax = 4
-    } else if (abs > 0.001) {
-      dmax = 5
-    } else if (abs > 0.0001) {
-      dmax = 6
-    } else {
-      dmax = 7
+const getLegendFormatValue =
+  (
+    convertUnits: Converter,
+    intlNumberFormat: Intl.NumberFormat | null,
+    valueDecimalDetail: number
+  ) =>
+  (value: number | string | null) => {
+    if (typeof value !== "number") {
+      return "-"
     }
-  }
 
-  return fastNumberFormat(dmin, dmax).format(convertedValue)
-}
+    const convertedValue = convertUnits(value)
+    if (typeof convertedValue !== "number") {
+      return convertedValue
+    }
+
+    if (intlNumberFormat !== null) {
+      return intlNumberFormat.format(convertedValue)
+    }
+
+    let dmin
+    let dmax
+    if (valueDecimalDetail !== -1) {
+      dmin = valueDecimalDetail
+      dmax = valueDecimalDetail
+    } else {
+      dmin = 0
+      const abs = convertedValue < 0 ? -convertedValue : convertedValue
+      if (abs > 1000) {
+        dmax = 0
+      } else if (abs > 10) {
+        dmax = 1
+      } else if (abs > 1) {
+        dmax = 2
+      } else if (abs > 0.1) {
+        dmax = 2
+      } else if (abs > 0.01) {
+        dmax = 4
+      } else if (abs > 0.001) {
+        dmax = 5
+      } else if (abs > 0.0001) {
+        dmax = 6
+      } else {
+        dmax = 7
+      }
+    }
+
+    return fastNumberFormat(dmin, dmax).format(convertedValue)
+  }
 
 type LegendFormatValue = (value: string | number | null) => string | number
 
 interface Arguments {
-  attributes: Attributes,
-  data: ChartData,
-  units: string,
-  unitsCommon: string | undefined,
-  unitsDesired: string,
-  uuid: string,
+  attributes: Attributes
+  data: ChartData
+  units: string
+  unitsCommon: string | undefined
+  unitsDesired: string
+  uuid: string
 }
 export const useFormatters = ({
   attributes,
@@ -135,113 +138,130 @@ export const useFormatters = ({
     decimalDigits = -1,
   } = attributes
 
-
-  const legendFormatValue: LegendFormatValue = useMemo(() => (
-    getLegendFormatValue(
-      convertUnits, intlNumberFormat, decimalDigits,
-    )
-  ), [convertUnits, decimalDigits, intlNumberFormat])
-
+  const legendFormatValue: LegendFormatValue = useMemo(
+    () => getLegendFormatValue(convertUnits, intlNumberFormat, decimalDigits),
+    [convertUnits, decimalDigits, intlNumberFormat]
+  )
 
   const legendFormatValueRef = useRef(legendFormatValue)
   const updateLegendFormatValueRef = (
-    newConvertUnits: Converter, newIntlNumberFormat: any, newDecimalDigits: any,
+    newConvertUnits: Converter,
+    newIntlNumberFormat: any,
+    newDecimalDigits: any
   ) => {
     legendFormatValueRef.current = getLegendFormatValue(
-      newConvertUnits, newIntlNumberFormat, newDecimalDigits,
+      newConvertUnits,
+      newIntlNumberFormat,
+      newDecimalDigits
     )
   }
 
-  const legendFormatValueDecimalsFromMinMax = useCallback((newMin: number, newMax: number) => {
-    if (safeEqualCheck(min, newMin) && safeEqualCheck(max, newMax)) {
+  const legendFormatValueDecimalsFromMinMax = useCallback(
+    (newMin: number, newMax: number) => {
+      if (safeEqualCheck(min, newMin) && safeEqualCheck(max, newMax)) {
+        return legendFormatValueRef.current
+      }
+      // we should call the convertUnits-creation only when original app was doing this
+      // so we don't get new updates in improper places
+      setMin(newMin)
+      setMax(newMax)
+
+      const newConvertUnits = unitsConversionCreator.get(
+        uuid,
+        newMin,
+        newMax,
+        units,
+        unitsDesired,
+        unitsCommon,
+        switchedUnits => {
+          setUnitsCurrent(switchedUnits)
+          // that.legendSetUnitsString(that.units_current);
+          // that.legendSetUnitsString just populates some DOM with unitsCurrent
+          // on all occurences just take the unitsCurrent from this state
+        },
+        temperatureSetting,
+        secondsAsTimeSetting
+      )
+
+      // as function, so useState() interpretes it properly
+      setConvertUnits(() => newConvertUnits)
+
+      const convertedMin = newConvertUnits(newMin)
+      const convertedMax = newConvertUnits(newMax)
+
+      // if number is returned, we format it!!!!
+      if (typeof convertedMin !== "number" || typeof convertedMax !== "number") {
+        updateLegendFormatValueRef(newConvertUnits, intlNumberFormat, decimalDigits)
+        return legendFormatValueRef.current
+      }
+
+      let newDecimals
+
+      if (data.min === data.max) {
+        // it is a fixed number, let the visualizer decide based on the value
+        newDecimals = -1
+      } else if (decimalDigits !== -1) {
+        // there is an override
+        newDecimals = decimalDigits
+      } else {
+        // ok, let's calculate the proper number of decimal points
+        let delta
+
+        if (convertedMin === convertedMax) {
+          delta = Math.abs(convertedMin)
+        } else {
+          delta = Math.abs(convertedMax - convertedMin)
+        }
+
+        if (delta > 1000) {
+          newDecimals = 0
+        } else if (delta > 10) {
+          newDecimals = 1
+        } else if (delta > 1) {
+          newDecimals = 2
+        } else if (delta > 0.1) {
+          newDecimals = 2
+        } else if (delta > 0.01) {
+          newDecimals = 4
+        } else if (delta > 0.001) {
+          newDecimals = 5
+        } else if (delta > 0.0001) {
+          newDecimals = 6
+        } else {
+          newDecimals = 7
+        }
+      }
+
+      let newIntlNumberFormat = intlNumberFormat
+
+      if (newDecimals !== decimals) {
+        if (newDecimals < 0) {
+          newIntlNumberFormat = null
+        } else {
+          newIntlNumberFormat = fastNumberFormat(newDecimals, newDecimals)
+        }
+        setIntlNumberFormat(() => newIntlNumberFormat)
+        setDecimals(newDecimals)
+      }
+      updateLegendFormatValueRef(newConvertUnits, newIntlNumberFormat, newDecimals)
       return legendFormatValueRef.current
-    }
-    // we should call the convertUnits-creation only when original app was doing this
-    // so we don't get new updates in improper places
-    setMin(newMin)
-    setMax(newMax)
-
-    const newConvertUnits = unitsConversionCreator.get(
-      uuid, newMin, newMax, units, unitsDesired, unitsCommon,
-      (switchedUnits) => {
-        setUnitsCurrent(switchedUnits)
-        // that.legendSetUnitsString(that.units_current);
-        // that.legendSetUnitsString just populates some DOM with unitsCurrent
-        // on all occurences just take the unitsCurrent from this state
-      }, temperatureSetting, secondsAsTimeSetting,
-    )
-
-    // as function, so useState() interpretes it properly
-    setConvertUnits(() => newConvertUnits)
-
-    const convertedMin = newConvertUnits(newMin)
-    const convertedMax = newConvertUnits(newMax)
-
-    if (typeof convertedMin !== "number" || typeof convertedMax !== "number") {
-      updateLegendFormatValueRef(newConvertUnits, intlNumberFormat, decimalDigits)
-      return legendFormatValueRef.current
-    }
-
-    let newDecimals
-
-    if (data.min === data.max) {
-      // it is a fixed number, let the visualizer decide based on the value
-      newDecimals = -1
-    } else if (decimalDigits !== -1) {
-      // there is an override
-      newDecimals = decimalDigits
-    } else {
-      // ok, let's calculate the proper number of decimal points
-      let delta
-
-      if (convertedMin === convertedMax) {
-        delta = Math.abs(convertedMin)
-      } else {
-        delta = Math.abs(convertedMax - convertedMin)
-      }
-
-      if (delta > 1000) {
-        newDecimals = 0
-      } else if (delta > 10) {
-        newDecimals = (1)
-      } else if (delta > 1) {
-        newDecimals = 2
-      } else if (delta > 0.1) {
-        newDecimals = 2
-      } else if (delta > 0.01) {
-        newDecimals = 4
-      } else if (delta > 0.001) {
-        newDecimals = 5
-      } else if (delta > 0.0001) {
-        newDecimals = 6
-      } else {
-        newDecimals = 7
-      }
-    }
-
-
-    let newIntlNumberFormat = intlNumberFormat
-
-    if (newDecimals !== decimals) {
-      if (newDecimals < 0) {
-        newIntlNumberFormat = null
-      } else {
-        newIntlNumberFormat = fastNumberFormat(
-          newDecimals,
-          newDecimals,
-        )
-      }
-      setIntlNumberFormat(() => newIntlNumberFormat)
-      setDecimals(newDecimals)
-    }
-    updateLegendFormatValueRef(newConvertUnits, newIntlNumberFormat, newDecimals)
-    return legendFormatValueRef.current
-  }, [
-    decimals, decimalDigits, min, max, uuid, temperatureSetting,
-    units, unitsDesired, unitsCommon, secondsAsTimeSetting,
-    data.min, data.max, intlNumberFormat,
-  ])
-
+    },
+    [
+      decimals,
+      decimalDigits,
+      min,
+      max,
+      uuid,
+      temperatureSetting,
+      units,
+      unitsDesired,
+      unitsCommon,
+      secondsAsTimeSetting,
+      data.min,
+      data.max,
+      intlNumberFormat,
+    ]
+  )
 
   return {
     legendFormatValue,

@@ -37,7 +37,6 @@ export default (
     case "ap":
     case "net":
     case "powersupply":
-    case "statsd":
       return emit({ menu: part1 })
 
     case "cpufreq":
