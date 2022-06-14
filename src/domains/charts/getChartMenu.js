@@ -63,9 +63,18 @@ export default (
       return emit({ menu: part1 })
     }
 
+    case "k8s": {
+      if (part2 == "state") {
+        if (clusterName) return emit({ menu: `Kubernetes State ${clusterName}` })
+        else if (clusterId) return emit({ menu: `Kubernetes State ${clusterId}` })
+      }
+
+      return emit({ menu: `Kubernetes ${part2}` })
+    }
+
     case "cgroup": {
-      if (clusterName) return emit({ menu: `Kubernetes ${clusterName}` })
-      else if (clusterId) return emit({ menu: `Kubernetes ${clusterId}` })
+      if (clusterName) return emit({ menu: `Kubernetes Containers ${clusterName}` })
+      else if (clusterId) return emit({ menu: `Kubernetes Containers ${clusterId}` })
 
       const menuPattern =
         id.match(/.*[._/-:]qemu[._/-:]*/) || id.match(/.*[._/-:]kvm[._/-:]*/) ? "cgqemu" : "cgroup"
