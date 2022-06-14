@@ -30,9 +30,6 @@ export default (
     return emit({ menuPattern })
   }
 
-  if (clusterName) return emit({ menu: `Kubernetes ${clusterName}` })
-  else if (clusterId) return emit({ menu: `Kubernetes ${clusterId}` })
-
   switch (part1) {
     case "ap":
     case "net":
@@ -67,6 +64,9 @@ export default (
     }
 
     case "cgroup": {
+      if (clusterName) return emit({ menu: `Kubernetes ${clusterName}` })
+      else if (clusterId) return emit({ menu: `Kubernetes ${clusterId}` })
+
       const menuPattern =
         id.match(/.*[._/-:]qemu[._/-:]*/) || id.match(/.*[._/-:]kvm[._/-:]*/) ? "cgqemu" : "cgroup"
       const sectionTitle = parts.length === 1 ? "cgroups" : undefined
