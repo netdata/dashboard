@@ -69,6 +69,11 @@ export default (
         else if (clusterId) return emit({ menu: `Kubernetes State ${clusterId}` })
       }
 
+      if (part2 == "container") {
+        if (clusterName) return emit({ menu: `Kubernetes Containers ${clusterName}` })
+        else if (clusterId) return emit({ menu: `Kubernetes Containers ${clusterId}` })
+      }
+
       return emit({ menu: `Kubernetes ${part2}` })
     }
 
