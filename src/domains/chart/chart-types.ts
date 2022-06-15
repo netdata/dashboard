@@ -92,7 +92,7 @@ export interface ChartMetadata {
   url?: string
 }
 
-// type created temporarly during old main.js enrichChartData function
+// type created temporarily during old main.js enrichChartData function
 export interface ChartEnriched extends ChartMetadata {
   menu: string
   menu_pattern: string

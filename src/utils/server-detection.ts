@@ -8,7 +8,7 @@ import { isDevelopmentEnv, isMainJs, isTestingEnv } from "utils/env"
 // this part needs to be static and should run immediately because otherwise document.currentScript
 // will be null
 const currentScript = isTestingEnv
-  ? { src: "http://localhost:3000/some-script.js" } // test env doesnt have document.currentScript
+  ? { src: "http://localhost:3000/some-script.js" } // test env doesn't have document.currentScript
   : document.currentScript
 
 const getScriptSource = () => {

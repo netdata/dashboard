@@ -27,7 +27,7 @@ const areNotificationsAvailable = "Notification" in window
 const notificationCallback = window.netdataAlarmsNotifCallback
 
 
-// todo this doesnt change in the session, but should be moved to the redux state anyway
+// todo this doesn't change in the session, but should be moved to the redux state anyway
 let firstNotificationId = 0
 let lastNotificationId = 0
 

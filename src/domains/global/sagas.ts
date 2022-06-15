@@ -346,7 +346,7 @@ const constructOptionStorageKey = (key: string) => `options.${key}`
 function setOptionSaga({ payload }: Action<SetOptionAction>) {
   const { key, value } = payload
   if (key === "stop_updates_when_focus_is_lost") {
-    // old dashboard was saving that property to localStorage, but was always ommiting it when
+    // old dashboard was saving that property to localStorage, but was always omitting it when
     // reading. it was only possible to persist this setting via url (update_always hash param)
     return
   }

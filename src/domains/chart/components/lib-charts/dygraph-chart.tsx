@@ -248,7 +248,7 @@ const getInitialDygraphOptions = ({
     axes: {
       x: {
         pixelsPerLabel: dygraphXPixelsPerLabel,
-        // unsufficient typings for Dygraph
+        // insufficient typings for Dygraph
         // @ts-ignore
         ticker: Dygraph.dateTicker,
         axisLabelWidth: dygraphXAxisLabelWidth,

@@ -1,4 +1,4 @@
-# UI for Netdata Dashboard and Cloud Charts 
+# UI for Netdata Dashboard and Cloud Charts
 
 ## Available Scripts
 

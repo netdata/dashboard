@@ -237,7 +237,7 @@ export const ChartWithLoader = ({
    */
   useEffect(() => {
     if (shouldFetch && actualChartMetadata && !isFetchingData) {
-      // todo can be overriden by main.js
+      // todo can be overridden by main.js
       const forceDataPoints = window.NETDATA.options.force_data_points
 
       let after

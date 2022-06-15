@@ -45,7 +45,7 @@ describe("useDateTime", () => {
 
   it("uses old formatters when Intl.DateTimeFormat is not available", () => {
     // some tweaks to force re-running the date-time module
-    // (with overriden window.Intl property)
+    // (with overridden window.Intl property)
     jest.resetModules()
 
     // turn off Intl (simulate older browsers)
