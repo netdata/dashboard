@@ -11,6 +11,8 @@ import News from "./news"
 import Timezone from "./timezone"
 import SignIn from "./signIn"
 import { CloudConnectionStatus } from "./ACLK"
+import { DiscoverCloud } from "@/src/components/discover-cloud"
+
 const Wrapper = styled(Flex).attrs({
   as: "header",
   position: "relative",
@@ -24,22 +26,25 @@ const Wrapper = styled(Flex).attrs({
 `
 
 const Header = () => (
-  <Wrapper>
-    <Flex alignItems="center" gap={3}>
-      <Node />
-    </Flex>
-    <Flex justifyContent="end" alignItems="center" gap={3}>
-      <CloudConnectionStatus />
-      <Version />
-      <News />
-      <Options />
-      <ProtoBuf />
-      <Timezone />
-      <GlobalControls />
-      <Alarms />
-      <SignIn />
-    </Flex>
-  </Wrapper>
+  <Flex column width="100%">
+    <Wrapper>
+      <Flex alignItems="center" gap={3}>
+        <Node />
+      </Flex>
+      <Flex justifyContent="end" alignItems="center" gap={3}>
+        <CloudConnectionStatus />
+        <Version />
+        <News />
+        <Options />
+        <ProtoBuf />
+        <Timezone />
+        <GlobalControls />
+        <Alarms />
+        <SignIn />
+      </Flex>
+    </Wrapper>
+    <DiscoverCloud />
+  </Flex>
 )
 
 export default Header
