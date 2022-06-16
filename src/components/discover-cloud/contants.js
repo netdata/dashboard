@@ -1,0 +1,56 @@
+export const TabsContent = {
+  Home: {
+    id: "Home",
+    label: "Home",
+    header: "You are viewing the Home Tab",
+    text: "Here we will display the functionallity of the home",
+    icon: "room_home",
+  },
+  Overview: {
+    id: "Overview",
+    label: "Overview",
+    header: "You are viewing the Overview Tab",
+    text: "Here we will display the functionallity of the Overview",
+    icon: "room_overview",
+  },
+  Nodes: {
+    id: "Nodes",
+    label: "Nodes",
+    header: "You are viewing the Nodes Tab",
+    text: "Here we will display the functionallity of the Nodes",
+    icon: "nodes_hollow",
+  },
+  Dashboards: {
+    id: "Dashboards",
+    label: "Dashboards",
+    header: "You are viewing the Dashboards Tab",
+    text: "Here we will display the functionallity of the Dashboards",
+    icon: "dashboard",
+  },
+  Alerts: {
+    id: "Alerts",
+    label: "Alerts",
+    header: "You are viewing the Alerts Tab",
+    text: "Here we will display the functionallity of the Alerts",
+    icon: "alarm",
+  },
+  Anomaly: {
+    id: "Anomaly",
+    label: "Anomaly",
+    header: "You are viewing the Anomaly Tab",
+    text: "Here we will display the functionallity of the Anomaly",
+    icon: "anomaliesLens",
+  },
+  Pricing: {
+    id: "Pricing",
+    label: "Pricing",
+    header: "You are viewing the Pricing Tab",
+    text: "Here we will display the functionallity of the Pricing",
+  },
+  Privacy: {
+    id: "Privacy",
+    label: "Privacy",
+    header: "You are viewing the Privacy Tab",
+    text: "Here we will display the functionallity of the Privacy",
+  },
+}
