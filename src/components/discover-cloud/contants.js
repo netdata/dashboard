@@ -1,8 +1,8 @@
-import { Text, Flex } from "@netdata/netdata-ui"
+import { Text } from "@netdata/netdata-ui"
 import Anchor from "@/src/components/anchor"
 import React from "react"
 
-const TabsContentText = ({ children }) => <Text>{children}</Text>
+const TabsContentText = ({ children }) => <Text fontSize="16px">{children}</Text>
 
 export const TabsContent = {
   Home: {
@@ -17,11 +17,12 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "room_home",
+    image: "images/home.png",
   },
   Overview: {
     id: "Overview",
     label: "Overview",
-    header: "You are viewing the Overview Tab",
+    header: "Overview",
     text: () => (
       <>
         <TabsContentText>
@@ -43,6 +44,7 @@ export const TabsContent = {
       </>
     ),
     icon: "room_overview",
+    image: "images/Overview.png",
   },
   Nodes: {
     id: "Nodes",
@@ -56,11 +58,12 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "nodes_hollow",
+    image: "images/nodes.png",
   },
   Dashboards: {
     id: "Dashboards",
     label: "Dashboards",
-    header: "You are viewing the Dashboards Tab",
+    header: "Dashboards",
     text: () => (
       <TabsContentText>
         With Netdata Cloud, you can build new dashboards that target your infrastructure's unique
@@ -69,11 +72,12 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "dashboard",
+    image: "images/dashboards.png",
   },
   Alerts: {
     id: "Alerts",
     label: "Alerts",
-    header: "You are viewing the Alerts Tab",
+    header: "Alerts",
     text: () => (
       <TabsContentText>
         The Alerts view gives you a high level of availability and performance information for every
@@ -83,11 +87,12 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "alarm",
+    image: "images/alerts.png",
   },
-  Anomaies: {
-    id: "Anomaies",
+  Anomalies: {
+    id: "Anomalies",
     label: "Anomalies",
-    header: "You are viewing the Anomaly Tab",
+    header: "Anomaies",
     text: () => (
       <TabsContentText>
         The Anomalies view on Netdata Cloud lets you quickly surface potentially anomalous metrics
@@ -100,7 +105,7 @@ export const TabsContent = {
   Pricing: {
     id: "Pricing",
     label: "Pricing",
-    header: "You are viewing the Pricing Tab",
+    header: "Pricing",
     text: () => (
       <TabsContentText>
         Netdata Cloud’s distributed architecture—with processing occurring at the individual
@@ -109,11 +114,12 @@ export const TabsContent = {
         providing our current functionality for free, always.
       </TabsContentText>
     ),
+    image: "images/pricing.png",
   },
   Privacy: {
     id: "Privacy",
     label: "Privacy",
-    header: "You are viewing the Privacy Tab",
+    header: "Privacy",
     text: () => (
       <>
         <TabsContentText>
