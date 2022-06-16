@@ -17,18 +17,20 @@ import GoToCloud from "components/auth/signIn"
 const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud }) => {
   return (
     <Modal backdrop={false}>
-      <ModalContent width={180} background="modalBackground">
+      <ModalContent background="modalBackground">
         <ModalHeader>
           <H3 margin={[0]}>{header}</H3>
           <ModalCloseButton onClose={closeModal} />
         </ModalHeader>
         <ModalBody>
-          <Flex padding={[0, 0, 4, 0]} column gap={3}>
-            {text}
-          </Flex>
-          <Flex justifyContent="center" alignItems="center" height={50}>
-            <H3>Here will be the image or video</H3>
-          </Flex>
+          <Box width={230} height={130}>
+            <Flex padding={[0, 0, 4, 0]} column gap={3}>
+              {text}
+            </Flex>
+            <Flex justifyContent="center" alignItems="center" height={50}>
+              <H3>Here will be the image or video</H3>
+            </Flex>
+          </Box>
         </ModalBody>
         <ModalFooter>
           <Box data-testid="go-to-cloud-cta" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
