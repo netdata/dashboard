@@ -25,7 +25,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud }) => {
         <ModalBody>
           <Box width={230} height={130}>
             <Flex padding={[0, 0, 4, 0]} column gap={3}>
-              {text}
+              {text()}
             </Flex>
             <Flex justifyContent="center" alignItems="center" height={50}>
               <H3>Here will be the image or video</H3>
