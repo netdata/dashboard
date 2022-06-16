@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { Flex } from "@netdata/netdata-ui"
+import { Flex, Box } from "@netdata/netdata-ui"
 import Node from "./node"
 import Options from "./options"
 import ProtoBuf from "./protoBuf"
@@ -26,25 +26,25 @@ const Wrapper = styled(Flex).attrs({
 `
 
 const Header = () => (
-  <Flex column width="100%">
-    <Wrapper>
-      <Flex alignItems="center" gap={3}>
-        <Node />
-      </Flex>
-      <Flex justifyContent="end" alignItems="center" gap={3}>
-        <CloudConnectionStatus />
-        <Version />
-        <News />
-        <Options />
-        <ProtoBuf />
-        <Timezone />
-        <GlobalControls />
-        <Alarms />
-        <SignIn />
-      </Flex>
-    </Wrapper>
-    <DiscoverCloud />
-  </Flex>
+  <Wrapper>
+    <Flex alignItems="center" gap={3}>
+      <Node />
+    </Flex>
+    <Flex justifyContent="end" alignItems="center" gap={3}>
+      <CloudConnectionStatus />
+      <Version />
+      <News />
+      <Options />
+      <ProtoBuf />
+      <Timezone />
+      <GlobalControls />
+      <Alarms />
+      <SignIn />
+    </Flex>
+    <Box position="absolute" top="56px" left="0px">
+      <DiscoverCloud />
+    </Box>
+  </Wrapper>
 )
 
 export default Header
