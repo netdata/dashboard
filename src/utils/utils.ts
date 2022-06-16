@@ -24,19 +24,36 @@ export const getInitialAfterFromWindow = () => {
   // based on https://github.com/netdata/dashboard/blob/7a7b538b00f1c5a4e1550f69cb5333212bb68f95/src/main.js#L1753
   // eslint-disable-next-line max-len
   // var duration = Math.round(($(div).width() * pcent_width / 100 * data.update_every / 3) / 60) * 60;
-  return -Math.round((div.getBoundingClientRect().width / 3) / 60) * 60
+  return -Math.round(div.getBoundingClientRect().width / 3 / 60) * 60
 }
 
 export const SPACE_PANEL_STATE = "space-panel-state"
 
 export const useNewKeysOnlyIfDifferent = <T extends {}>(
-  keys: (keyof T)[], obj1: T | null, obj2: T,
+  keys: (keyof T)[],
+  obj1: T | null,
+  obj2: T
 ): T => {
   if (!obj1) {
     return obj2
   }
-  return keys.reduce<T>((acc, key) => ({
-    ...acc,
-    [key]: equals(obj1[key], obj2![key]) ? obj1[key] : obj2[key],
-  }), obj2)
+  return keys.reduce<T>(
+    (acc, key) => ({
+      ...acc,
+      [key]: equals(obj1[key], obj2![key]) ? obj1[key] : obj2[key],
+    }),
+    obj2
+  )
+}
+
+export type AnyFunction<T = any> = (...args: T[]) => any
+
+export type FunctionArguments<T extends Function> = T extends (...args: infer R) => any ? R : never
+
+export function callAll<T extends AnyFunction>(...fns: (T | undefined)[]) {
+  return function mergedFn(arg: FunctionArguments<T>[0]) {
+    fns.forEach(fn => {
+      fn?.(arg)
+    })
+  }
 }
