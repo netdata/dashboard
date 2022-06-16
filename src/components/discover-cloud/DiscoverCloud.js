@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Text, Flex, TabSeparator, NavigationTabs } from "@netdata/netdata-ui"
+import { Text, Flex, NavigationTabs } from "@netdata/netdata-ui"
 
 import CloudTab from "./cloudTab"
 import DiscoverCloudModal from "./discoverCloudModal"
@@ -34,7 +34,7 @@ const DiscoverCloud = () => {
   }
 
   return (
-    <Wrapper padding={[0, 0, 0, 4]} background={"panel"} position="relative" height={15}>
+    <Wrapper padding={[0, 0, 0, 4]} position="relative" height={15}>
       <InnerPostioner
         padding={[4, 2, 4, 2]}
         gap={4}
@@ -42,24 +42,27 @@ const DiscoverCloud = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Text>Discover cloud functionalities:</Text>
-        <NavigationTabs>
-          {Object.keys(TabsContent).map((key, index) => {
-            const { label, icon, id } = TabsContent[key]
-            const slectedContentId = seletedModalContent ? seletedModalContent.id : null
-            return (
-              <CloudTab
-                key={key}
-                icon={icon}
-                active={id === slectedContentId}
-                label={label}
-                showBorderLeft={index === 0}
-                onActivate={callAll(handleOpenModal, () => handleSetModalContent(TabsContent[key]))}
-              />
-            )
-          })}
-          <TabSeparator />
-        </NavigationTabs>
+        <Text color="primary">Discover cloud functionalities:</Text>
+        <Flex>
+          <NavigationTabs>
+            {Object.keys(TabsContent).map((key, index) => {
+              const { label, icon, id } = TabsContent[key]
+              const slectedContentId = seletedModalContent ? seletedModalContent.id : null
+              return (
+                <CloudTab
+                  key={key}
+                  icon={icon}
+                  active={id === slectedContentId}
+                  label={label}
+                  showBorderLeft={index === 0}
+                  onActivate={callAll(handleOpenModal, () =>
+                    handleSetModalContent(TabsContent[key])
+                  )}
+                />
+              )
+            })}
+          </NavigationTabs>
+        </Flex>
       </InnerPostioner>
       {isModalOpen && seletedModalContent && (
         <DiscoverCloudModal
