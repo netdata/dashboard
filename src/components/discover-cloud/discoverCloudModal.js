@@ -14,7 +14,7 @@ import {
 
 import GoToCloud from "components/auth/signIn"
 
-const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud }) => {
+const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }) => {
   return (
     <Modal backdrop={false}>
       <ModalContent background="modalBackground">
@@ -23,14 +23,14 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud }) => {
           <ModalCloseButton onClose={closeModal} />
         </ModalHeader>
         <ModalBody>
-          <Box width={230} height={130}>
+          <Flex column width={230} height={130}>
             <Flex padding={[0, 0, 4, 0]} column gap={3}>
               {text()}
             </Flex>
-            <Flex justifyContent="center" alignItems="center" height={50}>
-              <H3>Here will be the image or video</H3>
+            <Flex overflow="hidden">
+              {image && <Box as="img" width="100%" height="100%" src={image}></Box>}
             </Flex>
-          </Box>
+          </Flex>
         </ModalBody>
         <ModalFooter>
           <Box data-testid="go-to-cloud-cta" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
@@ -42,7 +42,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud }) => {
                   data-testid="cta1-button"
                   onClick={() => handleGoToCloud({ link })}
                   width="100%"
-                  label={"Go to Cloud"}
+                  label="Signin to Netdata Cloud!"
                 />
               )}
             </GoToCloud>
