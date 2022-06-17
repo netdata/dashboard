@@ -64,8 +64,8 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
               </Flex>
               {text()}
             </Flex>
-            <Flex height="100%" width="100%" overflow="hidden">
-              {image && (
+            {image && (
+              <Flex height="auto" width="100%" overflow="hidden">
                 <Box
                   sx={{
                     width: "100%",
@@ -74,8 +74,10 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
                   as="img"
                   src={image}
                 ></Box>
-              )}
-              {video && (
+              </Flex>
+            )}
+            {video && (
+              <Flex height="100%" width="100%">
                 <Box sx={{ width: "100%", height: "100%" }}>
                   <iframe
                     width="100%"
@@ -86,8 +88,8 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
                     allowFullScreen
                   />
                 </Box>
-              )}
-            </Flex>
+              </Flex>
+            )}
           </Flex>
         </ModalBody>
         <ModalFooter></ModalFooter>
