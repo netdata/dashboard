@@ -58,7 +58,7 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "nodes_hollow",
-    image: "images/nodes.png",
+    image: "images/nodes.jpg",
   },
   Dashboards: {
     id: "Dashboards",
