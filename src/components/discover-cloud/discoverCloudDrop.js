@@ -37,6 +37,7 @@ const DiscoverCloudDrop = ({
         onEsc={closeDropdown}
         align={{ top: "bottom", left: "left" }}
         target={parentRef.current}
+        onClickOutside={closeDropdown}
       >
         <ModalContent background="modalBackground">
           <ModalHeader>
