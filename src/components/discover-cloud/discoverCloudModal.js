@@ -3,13 +3,16 @@ import {
   Flex,
   Button,
   Box,
+  Text,
   H3,
+  H4,
   Modal,
   ModalContent,
   ModalBody,
   ModalFooter,
   ModalHeader,
   ModalCloseButton,
+  Icon,
 } from "@netdata/netdata-ui"
 
 import GoToCloud from "components/auth/signIn"
@@ -19,35 +22,62 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
     <Modal backdrop={false}>
       <ModalContent background="modalBackground">
         <ModalHeader>
-          <H3 margin={[0]}>{header}</H3>
+          <Flex gap={2}>
+            <Icon color="white" name="netdata" />
+            <H3 margin={[0]}>Discover Cloud Benefits:</H3>
+          </Flex>
+
           <ModalCloseButton onClose={closeModal} />
         </ModalHeader>
         <ModalBody>
           <Flex column width={230} height={130}>
             <Flex padding={[0, 0, 4, 0]} column gap={3}>
+              <Flex alignItems="center">
+                <H4 margin={[0]}>{header}</H4>
+                <Box
+                  sx={{ marginLeft: "auto" }}
+                  data-testid="go-to-cloud-cta"
+                  margin={[0, 2, 0, 0]}
+                  width={{ min: 40 }}
+                >
+                  <GoToCloud
+                    utmParameters={{ content: "cloud-tabs", campaign: "agent-go-to-cloud" }}
+                  >
+                    {({ link }) => (
+                      <Box
+                        label={
+                          <Text textTransform="none" strong color="panel">
+                            Sign in to Netdata Cloud!
+                          </Text>
+                        }
+                        width="100%"
+                        onClick={() => handleGoToCloud({ link })}
+                        data-testid="cta1-button"
+                        as={Button}
+                        data-ga={"go-to-cloud-button"}
+                        data-testid="cta1-button"
+                      />
+                    )}
+                  </GoToCloud>
+                </Box>
+              </Flex>
               {text()}
             </Flex>
             <Flex overflow="hidden">
-              {image && <Box as="img" width="100%" height="100%" src={image}></Box>}
+              {image && (
+                <Box
+                  sx={{
+                    width: "100%",
+                    height: "auto",
+                  }}
+                  as="img"
+                  src={image}
+                ></Box>
+              )}
             </Flex>
           </Flex>
         </ModalBody>
-        <ModalFooter>
-          <Box data-testid="go-to-cloud-cta" margin={[0, 2, 0, 0]} width={{ min: 40 }}>
-            <GoToCloud utmParameters={{ content: "cloud-tabs", campaign: "agent-go-to-cloud" }}>
-              {({ link }) => (
-                <Button
-                  data-ga={"go-to-cloud-button"}
-                  textTransform="none"
-                  data-testid="cta1-button"
-                  onClick={() => handleGoToCloud({ link })}
-                  width="100%"
-                  label="Signin to Netdata Cloud!"
-                />
-              )}
-            </GoToCloud>
-          </Box>
-        </ModalFooter>
+        <ModalFooter></ModalFooter>
       </ModalContent>
     </Modal>
   )

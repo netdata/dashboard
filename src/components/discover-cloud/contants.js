@@ -8,7 +8,7 @@ export const TabsContent = {
   Home: {
     id: "Home",
     label: "Home",
-    header: "You are viewing the Home Tab",
+    header: "Home Tab",
     text: () => (
       <TabsContentText>
         The Home view in Netdata cloud provides summarized relevant information in an easily

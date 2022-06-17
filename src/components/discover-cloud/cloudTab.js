@@ -1,4 +1,4 @@
-import { Text, Flex, Button, Box, NavigationTab, Icon } from "@netdata/netdata-ui"
+import { Text, NavigationTab, Icon } from "@netdata/netdata-ui"
 import React from "react"
 
 const CloudTab = ({ label, active, showBorderLeft, icon, onActivate }) => {
