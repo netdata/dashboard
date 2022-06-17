@@ -9,9 +9,9 @@ import {
   Modal,
   ModalContent,
   ModalBody,
-  ModalFooter,
   ModalHeader,
   ModalCloseButton,
+  ModalFooter,
   Icon,
 } from "@netdata/netdata-ui"
 
@@ -19,7 +19,7 @@ import GoToCloud from "components/auth/signIn"
 
 const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }) => {
   return (
-    <Modal backdrop={false}>
+    <Modal borderShadow backdrop={false}>
       <ModalContent background="modalBackground">
         <ModalHeader>
           <Flex gap={2}>
@@ -30,7 +30,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
           <ModalCloseButton onClose={closeModal} />
         </ModalHeader>
         <ModalBody>
-          <Flex column width={230} height={130}>
+          <Flex column width={189} height={130}>
             <Flex padding={[0, 0, 4, 0]} column gap={3}>
               <Flex alignItems="center">
                 <H4 margin={[0]}>{header}</H4>
@@ -54,6 +54,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
                         onClick={() => handleGoToCloud({ link })}
                         data-testid="cta1-button"
                         as={Button}
+                        small
                         data-ga={"go-to-cloud-button"}
                         data-testid="cta1-button"
                       />
