@@ -42,9 +42,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
                   margin={[0, 2, 0, 0]}
                   width={{ min: 40 }}
                 >
-                  <GoToCloud
-                    utmParameters={{ content: "cloud-tabs", campaign: "agent-go-to-cloud" }}
-                  >
+                  <GoToCloud utmParameters={{ campaign: "discover_cloud" }}>
                     {({ link }) => (
                       <Box
                         label={
