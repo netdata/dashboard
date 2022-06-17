@@ -17,6 +17,8 @@ import {
 
 import GoToCloud from "components/auth/signIn"
 
+export const TITLE = "Discover the free benefits of Netdata Cloud"
+
 const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, video }) => {
   return (
     <Modal borderShadow backdrop={false}>
@@ -24,7 +26,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
         <ModalHeader>
           <Flex gap={2}>
             <Icon color="white" name="netdata" />
-            <H3 margin={[0]}>Discover Cloud Benefits:</H3>
+            <H3 margin={[0]}>{TITLE}:</H3>
           </Flex>
 
           <ModalCloseButton onClose={closeModal} />
