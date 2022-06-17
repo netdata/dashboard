@@ -101,6 +101,8 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "anomaliesLens",
+    video:
+      "https://user-images.githubusercontent.com/24860547/165943403-1acb9759-7446-4704-8955-c566d04ad7ab.mp4",
   },
   Pricing: {
     id: "Pricing",
@@ -115,6 +117,7 @@ export const TabsContent = {
       </TabsContentText>
     ),
     image: "images/pricing.png",
+    icon: "pricing",
   },
   Privacy: {
     id: "Privacy",
@@ -156,5 +159,6 @@ export const TabsContent = {
         </TabsContentText>
       </>
     ),
+    icon: "privacy",
   },
 }

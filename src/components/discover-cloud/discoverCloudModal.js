@@ -17,7 +17,7 @@ import {
 
 import GoToCloud from "components/auth/signIn"
 
-const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }) => {
+const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, video }) => {
   return (
     <Modal borderShadow backdrop={false}>
       <ModalContent background="modalBackground">
@@ -31,7 +31,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
         </ModalHeader>
         <ModalBody>
           <Flex column width={189} height={130}>
-            <Flex padding={[0, 0, 4, 0]} column gap={3}>
+            <Flex padding={[0, 0, 4, 0]} column gap={4}>
               <Flex alignItems="center">
                 <H4 margin={[0]}>{header}</H4>
                 <Box
@@ -64,7 +64,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
               </Flex>
               {text()}
             </Flex>
-            <Flex overflow="hidden">
+            <Flex height="100%" width="100%" overflow="hidden">
               {image && (
                 <Box
                   sx={{
@@ -74,6 +74,18 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image }
                   as="img"
                   src={image}
                 ></Box>
+              )}
+              {video && (
+                <Box sx={{ width: "100%", height: "100%" }}>
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={video}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </Box>
               )}
             </Flex>
           </Flex>
