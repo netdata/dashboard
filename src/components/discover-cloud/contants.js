@@ -19,10 +19,10 @@ export const TabsContent = {
     icon: "room_home",
     image: "images/home.png",
   },
-  SingleNodeView: {
-    id: "SingleNodeView",
-    label: "Single Node",
-    header: "Single Node",
+  nodeView: {
+    id: "nodeView",
+    label: "Node View",
+    header: "Node View",
     text: () => (
       <>
         <TabsContentText>
@@ -39,7 +39,7 @@ export const TabsContent = {
       </>
     ),
     icon: "nodes_hollow",
-    image: "images/singleNodeView.png",
+    image: "images/nodeView.png",
   },
   Overview: {
     id: "Overview",
