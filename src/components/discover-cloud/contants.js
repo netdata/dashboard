@@ -87,7 +87,7 @@ export const TabsContent = {
       </TabsContentText>
     ),
     icon: "alarm",
-    image: "images/alerts.png",
+    image: "images/alerts.jpg",
   },
   Anomalies: {
     id: "Anomalies",
