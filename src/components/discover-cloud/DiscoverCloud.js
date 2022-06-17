@@ -2,7 +2,7 @@ import React, { useState } from "react"
 import { Text, Flex, NavigationTabs } from "@netdata/netdata-ui"
 
 import CloudTab from "./cloudTab"
-import DiscoverCloudModal from "./discoverCloudModal"
+import DiscoverCloudModal, { TITLE } from "./discoverCloudModal"
 
 import { callAll } from "@/src/utils/utils"
 import { TabsContent } from "./contants"
@@ -42,7 +42,7 @@ const DiscoverCloud = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Text color="primary">Discover cloud functionalities:</Text>
+        <Text color="primary">{TITLE}:</Text>
         <Flex>
           <NavigationTabs>
             {Object.keys(TabsContent).map((key, index) => {
