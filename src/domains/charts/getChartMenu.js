@@ -64,17 +64,22 @@ export default (
     }
 
     case "k8s": {
-      if (part2 == "state") {
-        if (clusterName) return emit({ menu: `Kubernetes State ${clusterName}` })
-        else if (clusterId) return emit({ menu: `Kubernetes State ${clusterId}` })
+      if (composite) {
+        if (part2 == "state") {
+          if (clusterName) return emit({ menu: `Kubernetes State ${clusterName}` })
+          else if (clusterId) return emit({ menu: `Kubernetes State ${clusterId}` })
+        }
+
+        if (part2 == "container") {
+          if (clusterName) return emit({ menu: `Kubernetes Containers ${clusterName}` })
+          else if (clusterId) return emit({ menu: `Kubernetes Containers ${clusterId}` })
+        }
+
+        return emit({ menu: `Kubernetes ${part2}` })
       }
 
-      if (part2 == "container") {
-        if (clusterName) return emit({ menu: `Kubernetes Containers ${clusterName}` })
-        else if (clusterId) return emit({ menu: `Kubernetes Containers ${clusterId}` })
-      }
-
-      return emit({ menu: `Kubernetes ${part2}` })
+      const menuPattern = parts.length > 1 ? part1 : undefined
+      return emit({ menuPattern })
     }
 
     case "cgroup": {
