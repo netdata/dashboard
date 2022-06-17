@@ -41,7 +41,7 @@ const Header = () => (
       <Alarms />
       <SignIn />
     </Flex>
-    <Box sx={{ background: "#272B30" }} position="absolute" top="56px" left="0px">
+    <Box sx={{ background: "#272B30" }} position="absolute" top="52px" left="0px" right="0px">
       <DiscoverCloud />
     </Box>
   </Wrapper>
