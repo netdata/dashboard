@@ -8,7 +8,7 @@ export const TabsContent = {
   Home: {
     id: "Home",
     label: "Home",
-    header: "Home Tab",
+    header: "Home",
     text: () => (
       <TabsContentText>
         The Home view in Netdata cloud provides summarized relevant information in an easily
@@ -18,6 +18,28 @@ export const TabsContent = {
     ),
     icon: "room_home",
     image: "images/home.png",
+  },
+  SingleNodeView: {
+    id: "SingleNodeView",
+    label: "Single Node",
+    header: "Single Node",
+    text: () => (
+      <>
+        <TabsContentText>
+          "The single node view you are currently using will of course be available on Netdata Cloud
+          as well. In addition, the charts and visualization on Netdata Cloud will be more flexible
+          and powerful for troubleshooting than what is available on the agent.
+        </TabsContentText>
+        <TabsContentText>
+          Netdata Cloud also comes with the Metric Correlations feature that lets you quickly find
+          metrics and charts related to a particular window of interest that you want to explore
+          further. By displaying the standard Netdata dashboard, filtered to show only charts that
+          are relevant to the window of interest, you can get to the root cause sooner."
+        </TabsContentText>
+      </>
+    ),
+    icon: "nodes_hollow",
+    image: "images/singleNodeView.png",
   },
   Overview: {
     id: "Overview",
