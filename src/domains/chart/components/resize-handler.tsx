@@ -4,7 +4,6 @@ import { setResizeHeightAction } from "domains/chart/actions"
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { useDispatch } from "store/redux-separate-context"
 
-export const LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD = "chart_heights."
 export const LOCALSTORAGE_HEIGHT_KEY_PREFIX = "chart_height."
 
 interface Props {

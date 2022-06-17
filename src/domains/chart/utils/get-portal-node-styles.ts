@@ -1,7 +1,4 @@
-import {
-  LOCALSTORAGE_HEIGHT_KEY_PREFIX,
-  LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD,
-} from "domains/chart/components/resize-handler"
+import { LOCALSTORAGE_HEIGHT_KEY_PREFIX } from "domains/chart/components/resize-handler"
 
 import { LEGEND_BOTTOM_SINGLE_LINE_HEIGHT } from "domains/chart/utils/legend-utils"
 import { Attributes } from "./transformDataAttributes"
@@ -17,8 +14,6 @@ type GetPortalNodeStyles = (
   minWidth: string | undefined
 }
 
-const oldDefaultHeights = ["180px", "90px"]
-
 const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) => {
   const persitedHeight = localStorage.getItem(`${LOCALSTORAGE_HEIGHT_KEY_PREFIX}${heightID}`)
   if (persitedHeight) {
@@ -31,20 +26,6 @@ const getHeightFromLocalStorage = (heightID: string, isLegendOnBottom: boolean) 
     }px`
   }
 
-  // We'll support the old key for few months, so that user's custom heights will be working,
-  // but we'll save any changes only to the new key.
-  const persistedHeightOld = localStorage.getItem(
-    `${LOCALSTORAGE_HEIGHT_KEY_PREFIX_OLD}${heightID}`,
-  )
-  if (persistedHeightOld) {
-    if (oldDefaultHeights.includes(persistedHeightOld)) {
-      // If saved value looks like `oldDefaultHeights`, then it is most likely an automatic value
-      // from old dashboard. Don't import it anymore. On next resize the height will be persisted
-      // to the new key.
-      return null
-    }
-    return persistedHeightOld
-  }
   return null
 }
 
