@@ -294,6 +294,7 @@ body.modal-open {
 
 .netdata-chartblock-container {
     display: inline-block;
+    overflow: hidden;
 }
 
 /* https://github.com/seiyria/bootstrap-slider/issues/746 */
