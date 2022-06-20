@@ -1,6 +1,6 @@
 import React from "react"
 import styled from "styled-components"
-import { Flex } from "@netdata/netdata-ui"
+import { Flex, Box } from "@netdata/netdata-ui"
 import Node from "./node"
 import Options from "./options"
 import ProtoBuf from "./protoBuf"
@@ -11,6 +11,8 @@ import News from "./news"
 import Timezone from "./timezone"
 import SignIn from "./signIn"
 import { CloudConnectionStatus } from "./ACLK"
+import { DiscoverCloud } from "@/src/components/discover-cloud"
+
 const Wrapper = styled(Flex).attrs({
   as: "header",
   position: "relative",
@@ -39,6 +41,9 @@ const Header = () => (
       <Alarms />
       <SignIn />
     </Flex>
+    <Box sx={{ background: "#272B30" }} position="absolute" top="52px" left="0px" right="0px">
+      <DiscoverCloud />
+    </Box>
   </Wrapper>
 )
 
