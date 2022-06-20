@@ -1,1 +1,1 @@
-export { default as DiscoverCloud } from "./DiscoverCloud"
+export { default as DiscoverCloud } from "./discoverCloud"
