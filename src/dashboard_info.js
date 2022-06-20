@@ -428,7 +428,7 @@ netdataDashboard.menu = {
     'web_log': {
         title: undefined,
         icon: '<i class="fas fa-file-alt"></i>',
-        info: 'Information extracted from a server log file. <code>web_log</code> plugin incrementally parses the server log file to provide, in real-time, a break down of key server performance metrics. For web servers, an extended log file format may optionally be used (for <code>nginx</code> and <code>apache</code>) offering timing information and bandwidth for both requests and responses. <code>web_log</code> plugin may also be configured to provide a break down of requests per URL pattern (check <a href="https://github.com/netdata/netdata/blob/master/collectors/python.d.plugin/web_log/web_log.conf" target="_blank"><code>/etc/netdata/python.d/web_log.conf</code></a>).'
+        info: 'Information extracted from a server log file. <code>web_log</code> plugin incrementally parses the server log file to provide, in real-time, a break down of key server performance metrics. For web servers, an extended log file format may optionally be used (for <code>nginx</code> and <code>apache</code>) offering timing information and bandwidth for both requests and responses. <code>web_log</code> plugin may also be configured to provide a break down of requests per URL pattern (check <a href="https://github.com/netdata/go.d.plugin/blob/master/config/go.d/web_log.conf" target="_blank"><code>/etc/netdata/go.d/web_log.conf</code></a>).'
     },
 
     'squid': {
@@ -612,7 +612,7 @@ netdataDashboard.menu = {
     'filesystem': {
         title: 'Filesystem',
         icon: '<i class="fas fa-hdd"></i>',
-        info: 'Number of filesystem events for <a href="#menu_filesystem_submenu_vfs">Virtual File System</a>, <a href="#menu_filesystem_submenu_file_access">File Access</a>, <a href="#menu_filesystem_submenu_directory_cache__eBPF_">Directory cache</a>, and file system latency (<a href="#menu_filesystem_submenu_btrfs_latency">BTRFS</a>, <a href="#menu_filesystem_submenu_ext4_latency">EXT4</a>, <a href="#menu_filesystem_submenu_nfs_latency">NFS</a>, <a href="#menu_filesystem_submenu_xfs_latency">XFS</a>, and <a href="#menu_filesystem_submenu_xfs_latency">ZFS</a>) when your disk has the file system. Filesystem charts have relationship with <a href="#menu_system_submenu_swap">SWAP</a>, <a href="#menu_disk">Disk</a>, and <a href="#menu_mount">Mount Points</a>.'
+        info: 'Number of filesystem events for <a href="#menu_filesystem_submenu_vfs">Virtual File System</a>, <a href="#menu_filesystem_submenu_file_access">File Access</a>, <a href="#menu_filesystem_submenu_directory_cache__eBPF_">Directory cache</a>, and file system latency (<a href="#menu_filesystem_submenu_btrfs_latency">BTRFS</a>, <a href="#menu_filesystem_submenu_ext4_latency">EXT4</a>, <a href="#menu_filesystem_submenu_nfs_latency">NFS</a>, <a href="#menu_filesystem_submenu_xfs_latency">XFS</a>, and <a href="#menu_filesystem_submenu_xfs_latency">ZFS</a>) when your disk has the file system. Filesystem charts have relationship with <a href="#menu_system_submenu_swap">SWAP</a>, <a href="#menu_disk">Disk</a>, <a href="#menu_mem_submenu_synchronization__eBPF_">Sync</a>, and <a href="#menu_mount">Mount Points</a>.'
     },
 
     'vernemq': {
@@ -740,7 +740,7 @@ netdataDashboard.submenu = {
     },
 
     'web_log.urls': {
-        info: 'Number of requests for each <code>URL pattern</code> defined in <a href="https://github.com/netdata/netdata/blob/master/collectors/python.d.plugin/web_log/web_log.conf" target="_blank"><code>/etc/netdata/python.d/web_log.conf</code></a>. This chart counts all requests matching the URL patterns defined, independently of the web server response codes (i.e. both successful and unsuccessful).'
+        info: 'Number of requests for each <code>URL pattern</code> defined in <a href="https://github.com/netdata/go.d.plugin/blob/master/config/go.d/web_log.conf" target="_blank"><code>/etc/netdata/go.d/web_log.conf</code></a>. This chart counts all requests matching the URL patterns defined, independently of the web server response codes (i.e. both successful and unsuccessful).'
     },
 
     'web_log.clients': {
@@ -930,7 +930,7 @@ netdataDashboard.submenu = {
 
     'mem.page_cache': {
         title: 'page cache (eBPF)',
-        info: 'Monitor calls to functions used to manipulate <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows page cache manipulation per <a href="#menu_apps_submenu_page_cache">application</a>.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#memory" target="_blank">functions</a> used to manipulate the <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. This chart has a relationship with <a href="#menu_filesystem">File Systems</a>, <a href="#menu_mem_submenu_synchronization__eBPF_">Sync</a>, and <a href="#menu_disk">Hard Disk</a>.'
     },
 
     'apps.page_cache': {
@@ -984,7 +984,6 @@ netdataDashboard.submenu = {
 
     'ip.kernel': {
         title: 'kernel functions (eBPF)',
-        info: 'Next charts are made when <code>ebpf.plugin</code> is running on your host. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows calls for kernel functions per <a href="#menu_apps_submenu_net">application</a>.'
     },
 
     'apps.net': {
@@ -1067,8 +1066,10 @@ netdataDashboard.submenu = {
     'netdata.ebpf': {
         title: 'eBPF.plugin',
         info: 'eBPF (extended Berkeley Packet Filter) is used to collect metrics from inside Linux kernel giving a zoom inside your <a href="#ebpf_system_process_thread">Process</a>, '+
-              '<a href="#menu_disk">Hard Disk</a>, <a href="#menu_filesystem">Filesystems</a> (<a href="#menu_filesystem_submenu_file_access">File Access</a>, and ' +
-              '<a href="#menu_filesystem_submenu_directory_cache__eBPF_">Directory Cache</a>).'
+              '<a href="#menu_disk">Hard Disk</a>, <a href="#menu_filesystem">File systems</a> (<a href="#menu_filesystem_submenu_file_access">File Access</a>, and ' +
+              '<a href="#menu_filesystem_submenu_directory_cache__eBPF_">Directory Cache</a>), Memory (<a href="#ebpf_global_swap">Swap I/O</a>, <a href="#menu_mem_submenu_page_cache">Page Cache</a>), ' +
+              'IRQ (<a href="#ebpf_global_hard_irq">Hard IRQ</a> and <a href="#ebpf_global_soft_irq">Soft IRQ</a> ), <a href="#ebpf_global_shm">Shared Memory</a>, ' +
+              'Syscalls (<a href="#menu_mem_submenu_synchronization__eBPF_">Sync</a>, <a href="#menu_mount_submenu_mount__eBPF_">Mount</a>), and <a href="#menu_ip_submenu_kernel">Network</a>.'
     },
 };
 
@@ -1123,8 +1124,7 @@ const netDuplexInfo = '<p>The interface\'s latest or current ' +
     '<a href="https://en.wikipedia.org/wiki/Autonegotiation" target="_blank">negotiated</a> with the device it is connected to.</p>' +
     '<p><b>Unknown</b> - the duplex mode can not be determined. ' +
     '<b>Half duplex</b> - the communication is one direction at a time. ' +
-    '<b>Full duplex</b> - the interface is able to send and receive data simultaneously.</p>' +
-    '<p><b>State map</b>: 0 - unknown, 1 - half, 2 - full.</p>'
+    '<b>Full duplex</b> - the interface is able to send and receive data simultaneously.</p>'
 const netOperstateInfo = '<p>The current ' +
     '<a href="https://datatracker.ietf.org/doc/html/rfc2863" target="_blank">operational state</a> of the interface.</p>' +
     '<p><b>Unknown</b> - the state can not be determined. ' +
@@ -1133,10 +1133,8 @@ const netOperstateInfo = '<p>The current ' +
     '<b>LowerLayerDown</b> - the interface is down due to state of lower-layer interface(s). ' +
     '<b>Testing</b> - the interface is in testing mode, e.g. cable test. It can’t be used for normal traffic until tests complete. ' +
     '<b>Dormant</b> - the interface is L1 up, but waiting for an external event, e.g. for a protocol to establish. ' +
-    '<b>Up</b> - the interface is ready to pass packets and can be used.</p>' +
-    '<p><b>State map</b>: 0 - unknown, 1 - notpresent, 2 - down, 3 - lowerlayerdown, 4 - testing, 5 - dormant, 6 - up.</p>'
-const netCarrierInfo = '<p>The current physical link state of the interface.</p>' +
-    '<p><b>State map</b>: 0 - down, 1 - up.</p>'
+    '<b>Up</b> - the interface is ready to pass packets and can be used.</p>'
+const netCarrierInfo = 'The current physical link state of the interface.'
 const netSpeedInfo = 'The interface\'s latest or current speed that the network adapter ' +
     '<a href="https://en.wikipedia.org/wiki/Autonegotiation" target="_blank">negotiated</a> with the device it is connected to. ' +
     'This does not give the max supported speed of the NIC.'
@@ -1231,6 +1229,60 @@ const ebpfVFSCreate = 'Number of calls to <a href="https://learn.netdata.cloud/d
 const ebpfVFSCreateError = 'Number of failed calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#vfs" target="_blank">VFS creator function</a>. Netdata gives a summary for this chart in ' +
     '<a href="#ebpf_global_vfs_create_error">Virtual File System</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
     'Netdata shows virtual file system per <a href="#ebpf_apps_vfs_create_error">application</a>.' + ebpfChartProvides
+const ebpfSwapRead = 'Number of failed calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#swap" target="_blank">swap reader function</a>. Netdata gives a summary for this chart in ' +
+    '<a href="#ebpf_global_swap">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows swap per <a href="#ebpf_apps_swap_read">application</a>.' + ebpfChartProvides
+const ebpfSwapWrite = 'Number of failed calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#swap" target="_blank">swap writer function</a>. Netdata gives a summary for this chart in ' +
+    '<a href="#ebpf_global_swap">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows swap per <a href="#ebpf_apps_swap_write">application</a>.' + ebpfChartProvides
+const ebpfCachestatRatio = 'The <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-ratio" target="_blank">ratio</a> shows the percentage of data accessed directly in memory. ' +
+    'Netdata gives a summary for this chart in <a href="#menu_mem_submenu_page_cache">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows page cache hit per <a href="#ebpf_apps_cachestat_ratio">application</a>.' + ebpfChartProvides
+const ebpfCachestatDirties = 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#dirty-pages" target="_blank">modified pages</a> in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_dirty">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows page cache hit per <a href="#ebpf_apps_cachestat_dirties">application</a>.' + ebpfChartProvides
+const ebpfCachestatHits = 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-hits" target="_blank">access</a> to data in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_hits">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows page cache hit per <a href="#ebpf_apps_cachestat_hits">application</a>.' + ebpfChartProvides
+const ebpfCachestatMisses = 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-misses" target="_blank">access</a> to data was not present in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_misses">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows page cache misses per <a href="#ebpf_apps_cachestat_misses">application</a>.' + ebpfChartProvides
+const ebpfSHMget = 'Number of calls to <code>shmget</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is ' +
+    '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_apps_shm_get">application</a>.' + ebpfChartProvides
+const ebpfSHMat = 'Number of calls to <code>shmat</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is ' +
+    '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_apps_shm_at">application</a>.' + ebpfChartProvides
+const ebpfSHMctl = 'Number of calls to <code>shmctl</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is ' +
+    '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_apps_shm_ctl">application</a>.' + ebpfChartProvides
+const ebpfSHMdt = 'Number of calls to <code>shmdt</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is ' +
+    '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_apps_shm_dt">application</a>.' + ebpfChartProvides
+const ebpfIPV4conn = 'Number of calls to IPV4 TCP function responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-outbound-connections" target="_blank">starting connections</a>. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_outbound_conn">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows outbound connections per <a href="#ebpf_apps_outbound_conn_ipv4">application</a>.' + ebpfChartProvides
+const ebpfIPV6conn = 'Number of calls to IPV6 TCP function responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-outbound-connections" target="_blank">starting connections</a>. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_outbound_conn">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows outbound connections per <a href="#ebpf_apps_outbound_conn_ipv6">application</a>.' + ebpfChartProvides
+const ebpfBandwidthSent = 'Total bytes sent with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> internal functions. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_bandwidth_tcp_bytes">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows bandwidth per <a href="#ebpf_apps_bandwidth_sent">application</a>.' + ebpfChartProvides
+const ebpfBandwidthRecv = 'Total bytes received with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> internal functions. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_bandwidth_tcp_bytes">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows bandwidth per <a href="#ebpf_apps_bandwidth_received">application</a>.' + ebpfChartProvides
+const ebpfTCPSendCall = 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> functions responsible to send data. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_bandwidth_call">Network Stack</a>. ' +
+    'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows TCP calls per <a href="#ebpf_apps_bandwidth_tcp_sent">application</a>.' + ebpfChartProvides
+const ebpfTCPRecvCall = 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> functions responsible to receive data. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_bandwidth_call">Network Stack</a>. ' +
+    'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, ' +
+    'Netdata shows TCP calls per <a href="#ebpf_apps_bandwidth_tcp_received">application</a>.' + ebpfChartProvides
+const ebpfTCPRetransmit = 'Number of times a <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-retransmit" target="_blank">TCP</a> packet was retransmitted. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_retransmit">Network Stack</a>. ' +
+    'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows TCP calls per <a href="#ebpf_apps_tcp_retransmit">application</a>.' + ebpfChartProvides
+const ebpfUDPsend = 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> functions responsible to send data. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_udp_bandwidth_call">Network Stack</a>. ' +
+    'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows UDP calls per <a href="#ebpf_apps_udp_sendmsg">application</a>.' + ebpfChartProvides
+const ebpfUDPrecv = 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> functions responsible to receive data. ' +
+    'Netdata gives a summary for this chart in <a href="#ebpf_global_udp_bandwidth_call">Network Stack</a>. ' +
+    'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows UDP calls per <a href="#ebpf_apps_udp_recv">application</a>.' + ebpfChartProvides
 
 netdataDashboard.context = {
     'system.cpu': {
@@ -1255,29 +1307,61 @@ netdataDashboard.context = {
         height: 0.7
     },
 
-    'system.cpu_pressure': {
-        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a> ' +
-            'identifies and quantifies the disruptions caused by resource contentions. ' +
-            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on CPU. ' +
-            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    'system.cpu_some_pressure': {
+        info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on CPU. ' +
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.cpu_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting for CPU time.'
+    },
+    'system.cpu_full_pressure': {
+        info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on CPU resource simultaneously. ' +
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.cpu_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to CPU congestion.'
     },
 
     'system.memory_some_pressure': {
-        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a> ' +
-            'identifies and quantifies the disruptions caused by resource contentions. ' +
-            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on memory. ' +
-            'The "full" line indicates the share of time in which <b>all non-idle</b> tasks are stalled on memory simultaneously. ' +
-            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. ' +
-            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on memory. ' +
+            'In this state the CPU is still doing productive work. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.memory_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting due to memory congestion.'
+    },
+    'system.memory_full_pressure': {
+        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on memory resource simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
+            'This has severe impact on performance. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.memory_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to memory congestion.'
     },
 
     'system.io_some_pressure': {
-        info: '<a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a> ' +
-            'identifies and quantifies the disruptions caused by resource contentions. ' +
-            'The "some" line indicates the share of time in which at least <b>some</b> tasks are stalled on I/O. ' +
-            'The "full" line indicates the share of time in which <b>all non-idle</b> tasks are stalled on I/O simultaneously. ' +
-            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. ' +
-            'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on I/O. ' +
+            'In this state the CPU is still doing productive work. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.io_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting due to I/O congestion.'
+    },
+    'system.io_full_pressure': {
+        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> line indicates the share of time in which <b>all non-idle tasks</b> are stalled on I/O resource simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
+            'This has severe impact on performance. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'system.io_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to I/O congestion.'
     },
 
     'system.io': {
@@ -1352,7 +1436,7 @@ netdataDashboard.context = {
     },
 
     'system.hardirq_latency': {
-        info: 'Total time spent servicing hardware interrupts. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/hardirqs_example.txt" target="_blank">hardirqs</a> from BCC tools.'
+        info: 'Total time spent servicing <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#hard-irq" target="_blank">hardware interrupts</a>. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/hardirqs_example.txt" target="_blank">hardirqs</a> from BCC tools.' + ebpfChartProvides + '<div id="ebpf_global_hard_irq"></div>'
     },
 
     'system.softirqs': {
@@ -1371,7 +1455,7 @@ netdataDashboard.context = {
     },
 
     'system.softirq_latency': {
-        info: 'Total time spent servicing software interrupts. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/softirqs_example.txt" target="_blank">softirqs</a> from BCC tools.'
+        info: 'Total time spent servicing <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#soft-irq" target="_blank">software interrupts</a>. Based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/softirqs_example.txt" target="_blank">softirqs</a> from BCC tools.' + ebpfChartProvides + '<div id="ebpf_global_soft_irq"></div>'
     },
 
     'system.processes': {
@@ -1437,7 +1521,7 @@ netdataDashboard.context = {
     },
 
     'system.swapcalls': {
-        info: 'Monitor calls to functions <code>swap_readpage</code> and <code>swap_writepage</code>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows swap access per <a href="#menu_apps_submenu_swap">application</a>.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#swap" target="_blank">functions</a> used to manipulate swap data. Netdata shows swap metrics per <a href="#ebpf_apps_swap_read">application</a> and <a href="#ebpf_services_swap_read">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_swap"></div>'
     },
 
     'system.ipc_semaphores': {
@@ -1462,7 +1546,7 @@ netdataDashboard.context = {
     },
 
     'system.shared_memory_calls': {
-        info: 'Monitor calls to functions <code>shmget</code>, <code>shmat</code>, <code>shmdt</code>, and <code>shmctl</code>. When integration with apps is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata also shows shared memory system call usage <a href="#menu_apps_submenu_ipc_shared_memory">per application</a>.'
+        info: 'Number of calls to syscalls responsible to manipulate <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#ipc-shared-memory" target="_blank">shared memories</a>. Netdata shows shared memory metrics per <a href="#ebpf_apps_shm_get">application</a> and <a href="#ebpf_services_shm_get">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_shm"></div>'
     },
 
     'system.message_queue_messages': {
@@ -1648,7 +1732,12 @@ netdataDashboard.context = {
     },
 
     'mem.available': {
-        info: 'Available Memory is estimated by the kernel, as the amount of RAM that can be used by userspace processes, without causing swapping.'
+        info: function (os) {
+            if (os === "freebsd")
+                return 'The amount of memory that can be used by user-space processes without causing swapping. Calculated as the sum of free, cached, and inactive memory.';
+            else
+                return 'Available Memory is estimated by the kernel, as the amount of RAM that can be used by userspace processes, without causing swapping.';
+        }
     },
 
     'mem.writeback': {
@@ -1700,35 +1789,35 @@ netdataDashboard.context = {
     },
 
     'mem.cachestat_ratio': {
-        info: 'When the processor needs to read or write a location in main memory, it checks for a corresponding entry in the page cache. If the entry is there, a page cache hit has occurred and the read is from the cache. If the entry is not there, a page cache miss has occurred and the kernel allocates a new entry and copies in data from the disk. Netdata calculates the percentage of accessed files that are cached on memory. <a href="https://github.com/iovisor/bcc/blob/master/tools/cachestat.py#L126-L138" target="_blank">The ratio</a> is calculated counting the accessed cached pages (without counting dirty pages and pages added because of read misses) divided by total access without dirty pages.'
+        info: 'The <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-ratio" target="_blank">ratio</a> shows the percentage of data accessed directly in memory. Netdata shows the ratio per <a href="#ebpf_apps_cachestat_ratio">application</a> and <a href="#ebpf_services_cachestat_ratio">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides
     },
 
     'mem.cachestat_dirties': {
-        info: 'Number of <a href="https://en.wikipedia.org/wiki/Page_cache#Memory_conservation" target="_blank">dirty(modified) pages</a> cache. Pages in the page cache modified after being brought in are called dirty pages. Since non-dirty pages in the page cache have identical copies in <a href="https://en.wikipedia.org/wiki/Secondary_storage" target="_blank">secondary storage</a> (e.g. hard disk drive or solid-state drive), discarding and reusing their space is much quicker than paging out application memory, and is often preferred over flushing the dirty pages into secondary storage and reusing their space.'
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#dirty-pages" target="_blank">modified pages</a> in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata shows the dity page <a href="#ebpf_apps_cachestat_dirties">application</a> and <a href="#ebpf_services_cachestat_dirties">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_cachestat_dirty"></div>'
     },
 
     'mem.cachestat_hits': {
-        info: 'When the processor needs to read or write a location in main memory, it checks for a corresponding entry in the page cache. If the entry is there, a page cache hit has occurred and the read is from the cache. Hits show pages accessed that were not modified (we are excluding dirty pages), this counting also excludes the recent pages inserted for read.'
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-hits" target="_blank">access</a> to data in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata shows the hits per <a href="#ebpf_apps_cachestat_hits">application</a> and <a href="#ebpf_services_cachestat_hits">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_cachestat_hits"></div>'
     },
 
     'mem.cachestat_misses': {
-        info: 'When the processor needs to read or write a location in main memory, it checks for a corresponding entry in the page cache. If the entry is not there, a page cache miss has occurred and the cache allocates a new entry and copies in data for the main memory. Misses count page insertions to the memory not related to writing.'
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-misses" target="_blank">access</a> to data that was not present in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata shows the missed access per <a href="#ebpf_apps_cachestat_misses">application</a> and <a href="#ebpf_services_cachestat_misses">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_cachestat_misses"></div>'
     },
 
     'mem.sync': {
-        info: 'System calls for <a href="https://man7.org/linux/man-pages/man2/sync.2.html" target="_blank">sync() and syncfs()</a> which flush the file system buffers to storage devices. Performance perturbations might be caused by these calls. The <code>sync()</code> calls are based on the eBPF <a href="https://github.com/iovisor/bcc/blob/master/tools/syncsnoop.py" target="_blank">syncsnoop</a> from BCC tools.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#file-system-sync" target="_blank">syscalls</a> that sync filesystem metadata or cached. This chart has a relationship with <a href="#menu_filesystem">File systems</a> and Linux <a href="#menu_mem_submenu_page_cache">Page Cache</a>.' + ebpfChartProvides
     },
 
     'mem.file_sync': {
-        info: 'System calls for <a href="https://man7.org/linux/man-pages/man2/fsync.2.html" target="_blank">fsync() and fdatasync()</a> transfer all modified page caches for the files on disk devices. These calls block until the device reports that the transfer has been completed.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#file-sync" target="_blank">syscalls</a> responsible to transfer modified Linux page cache to disk. This chart has a relationship with <a href="#menu_filesystem">File systems</a> and Linux <a href="#menu_mem_submenu_page_cache">Page Cache</a>.' + ebpfChartProvides
     },
 
     'mem.memory_map': {
-        info: 'System calls for <a href="https://man7.org/linux/man-pages/man2/msync.2.html" target="_blank">msync()</a> which flushes changes made to the in-core copy of a file that was mapped.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#memory-map-sync" target="_blank">syscall</a> responsible to the in-core copy of a file that was mapped. This chart has a relationship with <a href="#menu_filesystem">File systems</a> and Linux <a href="#menu_mem_submenu_page_cache">Page Cache</a>.' + ebpfChartProvides
     },
 
     'mem.file_segment': {
-        info: 'System calls for <a href="https://man7.org/linux/man-pages/man2/sync_file_range.2.html" target="_blank">sync_file_range()</a> permits fine control when synchronizing the open file referred to by the file descriptor fd with disk. This system call is extremely dangerous and should not be used in portable programs.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#file-range-sync" target="_blank">syscall</a> responsible to sync file segments. This chart has a relationship with <a href="#menu_filesystem">File systems</a> and Linux <a href="#menu_mem_submenu_page_cache">Page Cache</a>.' + ebpfChartProvides
     },
 
     'filesystem.dc_hit_ratio': {
@@ -1810,6 +1899,66 @@ netdataDashboard.context = {
         '<b>ECTP0</b> and <b>ECTP1</b> - ECN capable transport.</p>'
     },
 
+    'ip.inbound_conn': {
+        info: 'Number of calls to functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-inbound-connections" target="_blank">receiving connections</a>.' + ebpfChartProvides
+    },
+
+    'ip.tcp_outbound_conn': {
+        info: 'Number of calls to TCP functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-outbound-connections" target="_blank">starting connections</a>. ' +
+        'Netdata shows TCP outbound connections metrics per <a href="#ebpf_apps_outbound_conn_ipv4">application</a> and <a href="#ebpf_services_outbound_conn_ipv4">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_outbound_conn"></div>'
+    },
+
+    'ip.tcp_functions': {
+        info: 'Number of calls to TCP functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth-functions" target="_blank">exchanging data</a>. ' +
+       'Netdata shows TCP outbound connections metrics per <a href="#ebpf_apps_bandwidth_tcp_sent">application</a> and <a href="#ebpf_services_bandwidth_tcp_sent">cgroup (systemd Services)</a> if ' +
+       '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+       '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_tcp_bandwidth_call"></div>'
+    },
+
+    'ip.total_tcp_bandwidth': {
+        info: 'Total bytes sent and received with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP internal functions</a>. ' +
+        'Netdata shows TCP bandwidth metrics per <a href="#ebpf_apps_bandwidth_sent">application</a> and <a href="#ebpf_services_bandwidth_sent">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_bandwidth_tcp_bytes"></div>'
+    },
+
+    'ip.tcp_error': {
+        info: 'Number of failed calls to TCP functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP bandwidth</a>. ' +
+        'Netdata shows TCP error per <a href="#ebpf_apps_tcp_sendmsg_error">application</a> and <a href="#ebpf_services_tcp_sendmsg_error">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_tcp_bandwidth_error"></div>'
+    },
+
+    'ip.tcp_retransmit': {
+        info: 'Number of times a TCP packet was <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-retransmit" target="_blank">retransmitted</a>. ' +
+        'Netdata shows TCP retransmit per <a href="#ebpf_apps_tcp_retransmit">application</a> and <a href="#ebpf_services_tcp_retransmit">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_tcp_retransmit"></div>'
+    },
+
+    'ip.udp_functions': {
+        info: 'Number of calls to UDP functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">exchanging data</a>. ' +
+        'Netdata shows TCP outbound connections metrics per <a href="#ebpf_apps_udp_sendmsg">application</a> and <a href="#ebpf_services_udp_sendmsg">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_udp_bandwidth_call"></div>'
+    },
+
+    'ip.total_udp_bandwidth': {
+        info: 'Total bytes sent and received with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-bandwidth" target="_blank">UDP internal functions</a>. ' +
+        'Netdata shows UDP bandwidth metrics per <a href="#ebpf_apps_bandwidth_udp_sendmsg">application</a> and <a href="#ebpf_services_bandwidth_udp_sendmsg">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_bandwidth_udp_sendmsg"></div>'
+    },
+
+    'ip.udp_error': {
+        info: 'Number of failed calls to UDP functions responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-bandwidth" target="_blank">UDP bandwidth</a>. ' +
+        'Netdata shows UDP error per <a href="#ebpf_apps_udp_sendmsg_error">application</a> and <a href="#ebpf_services_udp_sendmsg_error">cgroup (systemd Services)</a> if ' +
+        '<a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> or ' +
+        '<a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + '<div id="ebpf_global_udp_bandwidth_error"></div>'
+    },
+
     'ip.tcpreorders': {
         info: '<p>TCP prevents out-of-order packets by either sequencing them in the correct order or '+
         'by requesting the retransmission of out-of-order packets.</p>'+
@@ -1857,42 +2006,6 @@ netdataDashboard.context = {
         'lingered around for long enough. '+
         '<b>Failed</b> - happens when the kernel attempted to send an RST but failed because there was no memory available.</p>'
     },
-
-    'ip.tcp_functions': {
-        title : 'TCP calls',
-        info: 'Successful or failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code>, and <code>tcp_close</code>.'
-    },
-
-    'ip.total_tcp_bandwidth': {
-        title : 'TCP bandwidth',
-        info: 'Bytes sent and received by functions <code>tcp_sendmsg</code> and <code>tcp_cleanup_rbuf</code>. We use <code>tcp_cleanup_rbuf</code> instead of <code>tcp_recvmsg</code>, because the last one misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
-    },
-
-    'ip.tcp_error': {
-        title : 'TCP errors',
-        info: 'Failed calls to functions <code>tcp_sendmsg</code>, <code>tcp_cleanup_rbuf</code>, and <code>tcp_close</code>.'
-    },
-
-    'ip.tcp_retransmit': {
-        title : 'TCP retransmit',
-        info: 'Number of packets retransmitted by function <code>tcp_retransmit_skb</code>.'
-    },
-
-    'ip.udp_functions': {
-        title : 'UDP calls',
-        info: 'Successful or failed calls to functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
-    },
-
-    'ip.total_udp_bandwidth': {
-        title : 'UDP bandwidth',
-        info: 'Bytes sent and received by functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
-    },
-
-    'ip.udp_error': {
-        title : 'UDP errors',
-        info: 'Failed calls to functions <code>udp_sendmsg</code> and <code>udp_recvmsg</code>.'
-    },
-
 
     'ip.tcp_syn_queue': {
         info: '<p>The SYN queue of the kernel tracks TCP handshakes until connections get fully established. ' +
@@ -2807,32 +2920,56 @@ netdataDashboard.context = {
         info: 'Number of errors to create a new <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#process-exit" target="_blank">task</a>. Netdata gives a summary for this chart in <a href="#ebpf_system_task_error">Process</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows process per <a href="#ebpf_services_task_error">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_task_error"></div>'
     },
 
+    'apps.outbound_conn_v4': {
+        info: 'Number of calls to IPV4 TCP function responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-outbound-connections" target="_blank">starting connections</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_outbound_conn">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows outbound connections per <a href="#ebpf_services_outbound_conn_ipv4">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_outbound_conn_ipv4"></div>'
+    },
+
+    'apps.outbound_conn_v6': {
+        info: 'Number of calls to IPV6 TCP function responsible for <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-outbound-connections" target="_blank">starting connections</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_outbound_conn">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows outbound connections per <a href="#ebpf_services_outbound_conn_ipv6">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_outbound_conn_ipv6"></div>'
+    },
+
     'apps.total_bandwidth_sent': {
-        info: 'Bytes sent by functions <code>tcp_sendmsg</code> and <code>udp_sendmsg</code>.'
+        info: 'Total bytes sent with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> internal functions. Netdata gives a summary for this chart in <a href="#ebpf_global_bandwidth_tcp_bytes">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows bandwidth per <a href="#ebpf_services_bandwidth_sent">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_bandwidth_sent"></div>'
     },
 
     'apps.total_bandwidth_recv': {
-        info: 'Bytes received by functions <code>tcp_cleanup_rbuf</code> and <code>udp_recvmsg</code>. We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+        info: 'Total bytes received with <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> internal functions. Netdata gives a summary for this chart in <a href="#ebpf_global_bandwidth_tcp_bytes">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows bandwidth per <a href="#ebpf_services_bandwidth_received">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_bandwidth_received"></div>'
     },
 
     'apps.bandwidth_tcp_send': {
-        info: 'The function <code>tcp_sendmsg</code> is used to collect number of bytes sent from TCP connections.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> functions responsible to send data. Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_bandwidth_call">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows TCP calls per <a href="#ebpf_services_bandwidth_tcp_sent">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_bandwidth_tcp_sent"></div>'
     },
 
     'apps.bandwidth_tcp_recv': {
-        info: 'The function <code>tcp_cleanup_rbuf</code> is used to collect number of bytes received from TCP connections.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-bandwidth" target="_blank">TCP</a> functions responsible to receive data. Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_bandwidth_call">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows TCP calls per <a href="#ebpf_services_bandwidth_tcp_received">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_bandwidth_tcp_received"></div>'
     },
 
     'apps.bandwidth_tcp_retransmit': {
-        info: 'The function <code>tcp_retransmit_skb</code> is called when the host did not receive the expected return from a packet sent.'
+        info: 'Number of times a <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#tcp-retransmit" target="_blank">TCP</a> packet was retransmitted. Netdata gives a summary for this chart in <a href="#ebpf_global_tcp_retransmit">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows TCP calls per <a href="#ebpf_services_tcp_retransmit">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_tcp_retransmit"></div>'
     },
 
     'apps.bandwidth_udp_send': {
-        info: 'The function <code>udp_sendmsg</code> is used to collect number of bytes sent from UDP connections.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> functions responsible to send data. Netdata gives a summary for this chart in <a href="#ebpf_global_udp_bandwidth_call">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows UDP calls per <a href="#ebpf_services_udp_sendmsg">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_udp_sendmsg"></div>'
     },
 
     'apps.bandwidth_udp_recv': {
-        info: 'The function <code>udp_recvmsg</code> is used to collect number of bytes received from UDP connections.'
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#udp-functions" target="_blank">UDP</a> functions responsible to receive data. Netdata gives a summary for this chart in <a href="#ebpf_global_udp_bandwidth_call">Network Stack</a>. When the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows UDP calls per <a href="#ebpf_services_udp_recv">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_udp_recv"></div>'
+    },
+
+    'apps.cachestat_ratio' : {
+        info: 'The <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-ratio" target="_blank">ratio</a> shows the percentage of data accessed directly in memory. Netdata gives a summary for this chart in <a href="#menu_mem_submenu_page_cache">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows page cache hit per <a href="#ebpf_services_cachestat_ratio">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_cachestat_ratio"></div>'
+    },
+
+    'apps.cachestat_dirties' : {
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#dirty-pages" target="_blank">modified pages</a> in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_dirty">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows page cache hit per <a href="#ebpf_services_cachestat_dirties">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_cachestat_dirties"></div>'
+    },
+
+    'apps.cachestat_hits' : {
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-hits" target="_blank">access</a> to data in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_hits">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows page cache hit per <a href="#ebpf_services_cachestat_hits">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_cachestat_hits"></div>'
+    },
+
+    'apps.cachestat_misses' : {
+        info: 'Number of <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#page-cache-misses" target="_blank">access</a> to data was not present in <a href="https://en.wikipedia.org/wiki/Page_cache" target="_blank">Linux page cache</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_cachestat_misses">Memory</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows page cache misses per <a href="#ebpf_services_cachestat_misses">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_cachestat_misses"></div>'
     },
 
     'apps.dc_hit_ratio': {
@@ -2848,7 +2985,31 @@ netdataDashboard.context = {
     },
 
     'apps.dc_not_found': {
-        info: 'Number of times a file was not found on the file system. Netdata gives a summary for this chart in  <a href="#ebpf_dc_reference">directory cache</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows directory cache per <a href="#ebpf_services_dc_not_found">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_dc_not_found"></div>'
+        info: 'Number of times a file was not found on the file system. Netdata gives a summary for this chart in <a href="#ebpf_dc_reference">directory cache</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows directory cache per <a href="#ebpf_services_dc_not_found">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_dc_not_found"></div>'
+    },
+
+    'apps.swap_read_call': {
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#swap">swap reader function</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_swap">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows swap metrics per <a href="#ebpf_services_swap_read">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_swap_read"></div>'
+    },
+
+    'apps.swap_write_call': {
+        info: 'Number of calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#swap">swap writer function</a>. Netdata gives a summary for this chart in <a href="#ebpf_global_swap">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows swap metrics per <a href="#ebpf_services_swap_write">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_swap_write"></div>'
+    },
+
+    'apps.shmget_call': {
+        info: 'Number of calls to <code>shmget</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_services_shm_get">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_shm_get"></div>'
+    },
+
+    'apps.shmat_call': {
+        info: 'Number of calls to <code>shmat</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_services_shm_at">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_shm_at"></div>'
+    },
+
+    'apps.shmdt_call': {
+        info: 'Number of calls to <code>shmdt</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_services_shm_dt">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_shm_dt"></div>'
+    },
+
+    'apps.shmctl_call': {
+        info: 'Number of calls to <code>shmctl</code>. Netdata gives a summary for this chart in <a href="#ebpf_global_shm">System Overview</a>, and when the integration is <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">enabled</a>, Netdata shows shared memory metrics per <a href="#ebpf_services_shm_ctl">cgroup (systemd Services)</a>.' + ebpfChartProvides + '<div id="ebpf_apps_shm_ctl"></div>'
     },
 
     // ------------------------------------------------------------------------
@@ -3900,14 +4061,33 @@ netdataDashboard.context = {
         'When an application has used its allotted CPU quota for a given period, it gets throttled until the next period.'
     },
 
+    'cgroup.cpu_shares': {
+        info: '<p>The weight of each group living in the same hierarchy, that translates into the amount of CPU it is expected to get. '+
+        'The percentage of CPU assigned to the cgroup is the value of shares divided by the sum of all shares in all cgroups in the same level.</p>'+
+        '<p>For example, tasks in two cgroups that have <b>cpu.shares</b> set to 100 will receive equal CPU time, '+
+        'but tasks in a cgroup that has <b>cpu.shares</b> set to 200 receive twice the CPU time of tasks in a cgroup where <b>cpu.shares</b> is set to 100.</p>'
+    },
+
     'cgroup.cpu_per_core': {
         info: 'Total CPU utilization per core within the system-wide CPU resources.'
     },
 
-    'cgroup.cpu_pressure': {
+    'cgroup.cpu_some_pressure': {
         info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-        '<b>Some</b> indicates the share of time in which at least some tasks are stalled on CPU. '+
-        'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on CPU. ' +
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.cpu_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting for CPU time.'
+    },
+
+    'cgroup.cpu_full_pressure': {
+        info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on CPU resource simultaneously. ' +
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.cpu_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to CPU congestion.'
     },
 
     'cgroup.mem_utilization': {
@@ -3993,18 +4173,25 @@ netdataDashboard.context = {
         '<b>Swap</b> - major page faults.</p>'
     },
 
-    'cgroup.memory_pressure': {
+    'cgroup.memory_some_pressure': {
         info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-        '<b>Some</b> indicates the share of time in which at least some tasks are stalled on memory. '+
-        'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on memory. ' +
+            'In this state the CPU is still doing productive work. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.memory_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting due to memory congestion.'
     },
 
     'cgroup.memory_full_pressure': {
-        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-        '<b>Full</b> indicates the share of time in which all non-idle tasks are stalled on memory simultaneously. '+
-        'In this state actual CPU cycles are going to waste, '+
-        'and a workload that spends extended time in this state is considered to be thrashing. '+
-        'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on memory resource simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
+            'This has severe impact on performance. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.memory_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to memory congestion.'
     },
 
     'cgroup.io': {
@@ -4064,26 +4251,33 @@ netdataDashboard.context = {
         info: 'The number of I/O operations performed on specific devices as seen by the throttling policy.'
     },
 
-    'cgroup.io_pressure': {
+    'cgroup.io_some_pressure': {
         info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-        '<b>Some</b> indicates the share of time in which at least some tasks are stalled on I/O. '+
-        'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on I/O. ' +
+            'In this state the CPU is still doing productive work. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.io_some_pressure_stall_time': {
+        info: 'The amount of time some processes have been waiting due to I/O congestion.'
     },
 
     'cgroup.io_full_pressure': {
-        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-        '<b>Full</b> indicates the share of time in which all non-idle tasks are stalled on I/O simultaneously. '+
-        'In this state actual CPU cycles are going to waste, '+
-        'and a workload that spends extended time in this state is considered to be thrashing. '+
-        'The ratios (in %) are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
+            '<b>Full</b> line indicates the share of time in which <b>all non-idle tasks</b> are stalled on I/O resource simultaneously. ' +
+            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
+            'This has severe impact on performance. '+
+            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+    },
+    'cgroup.io_full_pressure_stall_time': {
+        info: 'The amount of time all non-idle processes have been stalled due to I/O congestion.'
     },
 
     'cgroup.swap_read': {
-        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory. This chart is provided by eBPF plugin.'
+        info: ebpfSwapRead
     },
 
     'cgroup.swap_write': {
-        info: 'The function <code>swap_writepage</code> is called when the kernel writes a page to swap memory. This chart is provided by eBPF plugin.'
+        info: ebpfSwapWrite
     },
 
     'cgroup.fd_open': {
@@ -4178,76 +4372,88 @@ netdataDashboard.context = {
         info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>. Netdata also gives a summary for these charts in <a href="#menu_filesystem_submenu_directory_cache__eBPF_">Filesystem submenu</a>.'
     },
 
-    'cgroup.dc_reference': {
-        info: 'Counters of file accesses. <code>Reference</code> is when there is a file access, see the <code>filesystem.dc_reference</code> chart for more context. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
-    },
-
-    'cgroup.dc_not_cache': {
-        info: 'Counters of file accesses. <code>Slow</code> is when there is a file access and the file is not present in the directory cache, see the <code>filesystem.dc_reference</code> chart for more context. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
-    },
-
-    'cgroup.dc_not_found': {
-        info: 'Counters of file accesses. <code>Miss</code> is when there is file access and the file is not found in the filesystem, see the <code>filesystem.dc_reference</code> chart for more context. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>.'
-    },
-
     'cgroup.shmget': {
-        info: 'Number of times the syscall <code>shmget</code> is called. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_ipc_shared_memory">System overview</a>.'
+        info: ebpfSHMget
     },
 
     'cgroup.shmat': {
-        info: 'Number of times the syscall <code>shmat</code> is called.'
+        info: ebpfSHMat
     },
 
     'cgroup.shmdt': {
-        info: 'Number of times the syscall <code>shmdt</code> is called.'
+        info: ebpfSHMdt
     },
 
     'cgroup.shmctl': {
-        info: 'Number of times the syscall <code>shmctl</code> is called.'
+        info: ebpfSHMctl
+    },
+
+    'cgroup.outbound_conn_v4': {
+        info: ebpfIPV4conn
+    },
+
+    'cgroup.outbound_conn_v6': {
+        info: ebpfIPV6conn
     },
 
     'cgroup.net_bytes_send': {
-        info: 'Bytes sent by functions <code>tcp_sendmsg</code>.'
+        info: ebpfBandwidthSent
     },
 
     'cgroup.net_bytes_recv': {
-        info: 'Bytes received by functions <code>tcp_cleanup_rbuf</code> . We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+        info: ebpfBandwidthRecv
     },
 
     'cgroup.net_tcp_send': {
-        info: 'The function <code>tcp_sendmsg</code> is used to collect number of bytes sent from TCP connections.'
+        info: ebpfTCPSendCall
     },
 
     'cgroup.net_tcp_recv': {
-        info: 'The function <code>tcp_cleanup_rbuf</code> is used to collect number of bytes received from TCP connections.'
+        info: ebpfTCPRecvCall
     },
 
     'cgroup.net_retransmit': {
-        info: 'The function <code>tcp_retransmit_skb</code> is called when the host did not receive the expected return from a packet sent.'
+        info: ebpfTCPRetransmit
     },
 
     'cgroup.net_udp_send': {
-        info: 'The function <code>udp_sendmsg</code> is used to collect number of bytes sent from UDP connections.'
+        info: ebpfUDPsend
     },
 
     'cgroup.net_udp_recv': {
-        info: 'The function <code>udp_recvmsg</code> is used to collect number of bytes received from UDP connections.'
+        info: ebpfUDPrecv
     },
 
-    'cgroup.cachestat_ratio': {
+    'cgroup.dc_hit_ratio': {
         info: ebpfDCHit
     },
 
-    'cgroup.cachestat_dirties': {
+    'cgroup.dc_reference': {
         info: ebpfDCReference
     },
 
-    'cgroup.cachestat_hits': {
+    'cgroup.dc_not_cache': {
         info: ebpfDCNotCache
     },
 
-    'cgroup.cachestat_misses': {
+    'cgroup.dc_not_found': {
         info: ebpfDCNotFound
+    },
+
+    'cgroup.cachestat_ratio': {
+        info: ebpfCachestatRatio
+    },
+
+    'cgroup.cachestat_dirties': {
+        info: ebpfCachestatDirties
+    },
+
+    'cgroup.cachestat_hits': {
+        info: ebpfCachestatHits
+    },
+
+    'cgroup.cachestat_misses': {
+        info: ebpfCachestatMisses
     },
 
     // ------------------------------------------------------------------------
@@ -4369,11 +4575,11 @@ netdataDashboard.context = {
     },
 
     'services.swap_read': {
-        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory. This chart is provided by eBPF plugin.'
+        info: ebpfSwapRead + '<div id="ebpf_services_swap_read"></div>'
     },
 
     'services.swap_write': {
-        info: 'The function <code>swap_writepage</code> is called when the kernel writes a page to swap memory. This chart is provided by eBPF plugin.'
+        info: ebpfSwapWrite + '<div id="ebpf_services_swap_write"></div>'
     },
 
     'services.fd_open': {
@@ -4464,64 +4670,88 @@ netdataDashboard.context = {
         info: ebpfTaskError + '<div id="ebpf_services_task_error"></div>'
     },
 
-    'services.cachestat_ratio': {
+    'services.dc_hit_ratio': {
         info: ebpfDCHit + '<div id="ebpf_services_dc_hit"></div>'
     },
 
-    'services.cachestat_dirties': {
+    'services.dc_reference': {
         info: ebpfDCReference + '<div id="ebpf_services_dc_reference"></div>'
     },
 
-    'services.cachestat_hits': {
+    'services.dc_not_cache': {
         info: ebpfDCNotCache + '<div id="ebpf_services_dc_not_cache"></div>'
     },
 
-    'services.cachestat_misses': {
+    'services.dc_not_found': {
         info: ebpfDCNotFound + '<div id="ebpf_services_dc_not_found"></div>'
     },
 
+    'services.cachestat_ratio': {
+        info: ebpfCachestatRatio + '<div id="ebpf_services_cachestat_ratio"></div>'
+    },
+
+    'services.cachestat_dirties': {
+        info: ebpfCachestatDirties + '<div id="ebpf_services_cachestat_dirties"></div>'
+    },
+
+    'services.cachestat_hits': {
+        info: ebpfCachestatHits + '<div id="ebpf_services_cachestat_hits"></div>'
+    },
+
+    'services.cachestat_misses': {
+        info: ebpfCachestatMisses + '<div id="ebpf_services_cachestat_misses"></div>'
+    },
+
     'services.shmget': {
-        info: 'Number of times the syscall <code>shmget</code> is called. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_ipc_shared_memory">System overview</a>.'
+        info: ebpfSHMget + '<div id="ebpf_services_shm_get"></div>'
     },
 
     'services.shmat': {
-        info: 'Number of times the syscall <code>shmat</code> is called.'
+        info: ebpfSHMat + '<div id="ebpf_services_shm_at"></div>'
     },
 
     'services.shmdt': {
-        info: 'Number of times the syscall <code>shmdt</code> is called.'
+        info: ebpfSHMdt + '<div id="ebpf_services_shm_dt"></div>'
     },
 
     'services.shmctl': {
-        info: 'Number of times the syscall <code>shmctl</code> is called.'
+        info: ebpfSHMctl + '<div id="ebpf_services_shm_ctl"></div>'
+    },
+
+    'services.outbound_conn_v4': {
+        info: ebpfIPV4conn + '<div id="ebpf_services_outbound_conn_ipv4"></div>'
+    },
+
+    'services.outbound_conn_v6': {
+        info: ebpfIPV6conn + '<div id="ebpf_services_outbound_conn_ipv6"></div>'
     },
 
     'services.net_bytes_send': {
-        info: 'Bytes sent by functions <code>tcp_sendmsg</code>.'
+        info: ebpfBandwidthSent + '<div id="ebpf_services_bandwidth_sent"></div>'
     },
 
     'services.net_bytes_recv': {
-        info: 'Bytes received by functions <code>tcp_cleanup_rbuf</code> . We use <code>tcp_cleanup_rbuf</code> instead <code>tcp_recvmsg</code>, because this last misses <code>tcp_read_sock()</code> traffic and we would also need to have more probes to get the socket and package size.'
+        info: ebpfBandwidthRecv + '<div id="ebpf_services_bandwidth_received"></div>'
     },
 
     'services.net_tcp_send': {
-        info: 'The function <code>tcp_sendmsg</code> is used to collect number of bytes sent from TCP connections.'
+        info: ebpfTCPSendCall + '<div id="ebpf_services_bandwidth_tcp_sent"></div>'
     },
 
     'services.net_tcp_recv': {
-        info: 'The function <code>tcp_cleanup_rbuf</code> is used to collect number of bytes received from TCP connections.'
+        info: ebpfTCPRecvCall + '<div id="ebpf_services_bandwidth_tcp_received"></div>'
     },
 
     'services.net_retransmit': {
-        info: 'The function <code>tcp_retransmit_skb</code> is called when the host did not receive the expected return from a packet sent.'
+        info: ebpfTCPRetransmit + '<div id="ebpf_services_tcp_retransmit"></div>'
     },
 
     'services.net_udp_send': {
-        info: 'The function <code>udp_sendmsg</code> is used to collect number of bytes sent from UDP connections.'
+        info: ebpfUDPsend + '<div id="ebpf_services_udp_sendmsg"></div>'
     },
 
     'services.net_udp_recv': {
-        info: 'The function <code>udp_recvmsg</code> is used to collect number of bytes received from UDP connections.'
+       info: ebpfUDPrecv + '<div id="ebpf_services_udp_recv"></div>'
     },
 
     // ------------------------------------------------------------------------
@@ -4769,7 +4999,7 @@ netdataDashboard.context = {
     },
 
     'web_log.clients_all': {
-        info: 'Unique client IPs accessing the web server since the last restart of netdata. This plugin keeps in memory all the unique IPs that have accessed the web server. On very busy web servers (several millions of unique IPs) you may want to disable this chart (check <a href="https://github.com/netdata/netdata/blob/master/collectors/python.d.plugin/web_log/web_log.conf" target="_blank"><code>/etc/netdata/python.d/web_log.conf</code></a>).'
+        info: 'Unique client IPs accessing the web server since the last restart of netdata. This plugin keeps in memory all the unique IPs that have accessed the web server. On very busy web servers (several millions of unique IPs) you may want to disable this chart (check <a href="https://github.com/netdata/go.d.plugin/blob/master/config/go.d/web_log.conf" target="_blank"><code>/etc/netdata/go.d/web_log.conf</code></a>).'
     },
 
     // ------------------------------------------------------------------------
@@ -4900,7 +5130,7 @@ netdataDashboard.context = {
     },
 
     'web_log.squid_clients_all': {
-        info: 'Unique client IPs accessing squid since the last restart of netdata. This plugin keeps in memory all the unique IPs that have accessed the server. On very busy squid servers (several millions of unique IPs) you may want to disable this chart (check <a href="https://github.com/netdata/netdata/blob/master/collectors/python.d.plugin/web_log/web_log.conf" target="_blank"><code>/etc/netdata/python.d/web_log.conf</code></a>).'
+        info: 'Unique client IPs accessing squid since the last restart of netdata. This plugin keeps in memory all the unique IPs that have accessed the server. On very busy squid servers (several millions of unique IPs) you may want to disable this chart (check <a href="https://github.com/netdata/go.d.plugin/blob/master/config/go.d/web_log.conf" target="_blank"><code>/etc/netdata/go.d/web_log.conf</code></a>).'
     },
 
     'web_log.squid_transport_methods': {
@@ -5321,7 +5551,7 @@ netdataDashboard.context = {
     },
 
     'boinc.sched': {
-        info: 'Counts of active tasks in each scheduling state.  <code>Scheduled</code> tasks are the ones which will run if the system is permitted to process tasks.  <code>Preempted</code> tasks are on standby, and will run if a <code>Scheduled</code> task stops running for some reason.  <code>Uninitialized</code> tasks should never be present, and indicate that the scheduler has not tried to schedule them yet.'
+        info: 'Counts of active tasks in each scheduling state.  <code>Scheduled</code> tasks are the ones which will run if the system is permitted to process tasks.  <code>Preempted</code> tasks are on standby, and will run if a <code>Scheduled</code> task stops running for some reason.  <code>Uninitialized</code> tasks should never be present, and indicate tha the scheduler has not tried to schedule them yet.'
     },
 
     'boinc.process': {
@@ -6070,11 +6300,11 @@ netdataDashboard.context = {
     },
 
     'mount_points.call': {
-        info: 'Monitor calls to syscalls <code>mount(2)</code> and <code>umount(2)</code> that are responsible for attaching or removing filesystems.'
+        info: 'Monitor calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#mount-points" target="_blank">syscalls</a> that are responsible for attaching (<code>mount(2)</code>) or removing filesystems (<code>umount(2)</code>). This chart has relationship with <a href="#menu_filesystem">File systems</a>.' + ebpfChartProvides
     },
 
     'mount_points.error': {
-        info: 'Monitor errors in calls to syscalls <code>mount(2)</code> and <code>umount(2)</code>.'
+        info: 'Monitor errors in calls to <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#mount-points" target="_blank">syscalls</a> that are responsible for attaching (<code>mount(2)</code>) or removing filesystems (<code>umount(2)</code>). This chart has relationship with <a href="#menu_filesystem">File systems</a>.' + ebpfChartProvides
     },
 
     'filesystem.file_descriptor': {
@@ -6087,33 +6317,6 @@ netdataDashboard.context = {
         info: 'Number of failed calls to the kernel internal function responsible <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#file-descriptor" target="_blank">to open and closing files</a>. ' +
               'Netdata shows file error per <a href="#ebpf_apps_file_open_error">application</a> and <a href="#ebpf_services_file_open_error">cgroup (systemd Services)</a> if <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">apps</a> ' +
               'or <a href="https://learn.netdata.cloud/docs/agent/collectors/ebpf.plugin#integration-with-cgroupsplugin" target="_blank">cgroup (systemd Services)</a> plugins are enabled.' + ebpfChartProvides + ' to monitor <a href="#menu_filesystem">File systems</a>.'
-    },
-
-    // ------------------------------------------------------------------------
-    // eBPF
-
-    'apps.swap_read_call': {
-        info: 'The function <code>swap_readpage</code> is called when the kernel reads a page from swap memory. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_swap">System overview</a>.'
-    },
-
-    'apps.swap_write_call': {
-        info: 'The function <code>swap_writepage</code> is called when the kernel writes a page to swap memory.'
-    },
-
-    'apps.shmget_call': {
-        info: 'Number of times the syscall <code>shmget</code> is called. Netdata also gives a summary for these charts in <a href="#menu_system_submenu_ipc_shared_memory">System overview</a>.'
-    },
-
-    'apps.shmat_call': {
-        info: 'Number of times the syscall <code>shmat</code> is called.'
-    },
-
-    'apps.shmdt_call': {
-        info: 'Number of times the syscall <code>shmdt</code> is called.'
-    },
-
-    'apps.shmctl_call': {
-        info: 'Number of times the syscall <code>shmctl</code> is called.'
     },
 
     // ------------------------------------------------------------------------
@@ -6630,5 +6833,193 @@ netdataDashboard.context = {
     'fail2ban.banned_ips': {
         info: '<p>The number of banned IP addresses.</p>'
     },
+
+    // ------------------------------------------------------------------------
+    // K8s state: Node.
+
+    'k8s_state.node_allocatable_cpu_requests_utilization': {
+        info: 'The percentage of allocated CPU resources used by Pod requests. '+
+        'A Pod is scheduled to run on a Node only if the Node has enough CPU resources available to satisfy the Pod CPU request.'
+    },
+    'k8s_state.node_allocatable_cpu_requests_used': {
+        info: 'The amount of allocated CPU resources used by Pod requests. ' +
+        '1000 millicpu is equivalent to '+
+        '<a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units" target="_blank">1 physical or virtual CPU core</a>.'
+    },
+    'k8s_state.node_allocatable_cpu_limits_utilization': {
+        info: 'The percentage of allocated CPU resources used by Pod limits. '+
+        'Total limits may be over 100 percent (overcommitted).'
+    },
+    'k8s_state.node_allocatable_cpu_limits_used': {
+        info: 'The amount of allocated CPU resources used by Pod limits. ' +
+        '1000 millicpu is equivalent to '+
+        '<a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units" target="_blank">1 physical or virtual CPU core</a>.'
+    },
+    'k8s_state.node_allocatable_mem_requests_utilization': {
+        info: 'The percentage of allocated memory resources used by Pod requests. '+
+        'A Pod is scheduled to run on a Node only if the Node has enough memory resources available to satisfy the Pod memory request.'
+    },
+    'k8s_state.node_allocatable_mem_requests_used': {
+        info: 'The amount of allocated memory resources used by Pod requests.'
+    },
+    'k8s_state.node_allocatable_mem_limits_utilization': {
+        info: 'The percentage of allocated memory resources used by Pod limits. '+
+        'Total limits may be over 100 percent (overcommitted).'
+    },
+    'k8s_state.node_allocatable_mem_limits_used': {
+        info: 'The amount of allocated memory resources used by Pod limits.'
+    },
+    'k8s_state.node_allocatable_pods_utilization': {
+        info: 'Pods limit utilization.'
+    },
+    'k8s_state.node_allocatable_pods_usage': {
+        info: '<p>Pods limit usage.</p>'+
+        '<p><b>Available</b> - the number of Pods available for scheduling. '+
+        '<b>Allocated</b> - the number of Pods that have been scheduled.</p>'
+    },
+    'k8s_state.node_condition': {
+        info: 'Health status. '+
+        'If the status of the Ready condition remains False for longer than the <code>pod-eviction-timeout</code> (the default is 5 minutes), '+
+        'then the node controller triggers API-initiated eviction for all Pods assigned to that node. '+
+        '<a href="https://kubernetes.io/docs/concepts/architecture/nodes/#condition" target="_blank">More info.</a>'
+    },
+    'k8s_state.node_pods_readiness': {
+        info: 'The percentage of Pods that are ready to serve requests.'
+    },
+    'k8s_state.node_pods_readiness_state': {
+        info: '<p>Pods readiness state.</p>'+
+        '<p><b>Ready</b> - the Pod has passed its readiness probe and ready to serve requests. '+
+        '<b>Unready</b> - the Pod has not passed its readiness probe yet.</p>'
+    },
+    'k8s_state.node_pods_condition': {
+        info: '<p>Pods state. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions" target="_blank">More info.</a></p>'+
+        '<b>PodReady</b> -  the Pod is able to serve requests and should be added to the load balancing pools of all matching Services. '+
+        '<b>PodScheduled</b> - the Pod has been scheduled to a node. '+
+        '<b>PodInitialized</b> - all init containers have completed successfully. '+
+        '<b>ContainersReady</b> - all containers in the Pod are ready.</p>'
+    },
+    'k8s_state.node_pods_phase': {
+        info: '<p>Pods phase. The phase of a Pod is a high-level summary of where the Pod is in its lifecycle. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase" target="_blank">More info.</a></p>'+
+        '<p><b>Running</b> - the Pod has been bound to a node, and all of the containers have been created. '+
+        'At least one container is still running, or is in the process of starting or restarting. ' +
+        '<b>Failed</b> - all containers in the Pod have terminated, and at least one container has terminated in failure. '+
+        'That is, the container either exited with non-zero status or was terminated by the system. ' +
+        '<b>Succedeed</b> - all containers in the Pod have terminated in success, and will not be restarted. ' +
+        '<b>Pending</b> - the Pod has been accepted by the Kubernetes cluster, but one or more of the containers has not been set up and made ready to run.</p>'
+    },
+    'k8s_state.node_containers': {
+        info: 'The total number of containers and init containers.'
+    },
+    'k8s_state.node_containers_state': {
+        info: '<p>The number of containers in different lifecycle states. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states" target="_blank">More info.</a></p>'+
+        '<p><b>Running</b> - a container is executing without issues. '+
+        '<b>Waiting</b> - a container is still running the operations it requires in order to complete start up. '+
+        '<b>Terminated</b> - a container began execution and then either ran to completion or failed for some reason.</p>'
+    },
+    'k8s_state.node_init_containers_state': {
+        info: '<p>The number of init containers in different lifecycle states. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states" target="_blank">More info.</a></p>'+
+        '<p><b>Running</b> - a container is executing without issues. '+
+        '<b>Waiting</b> - a container is still running the operations it requires in order to complete start up. '+
+        '<b>Terminated</b> - a container began execution and then either ran to completion or failed for some reason.</p>'
+    },
+    'k8s_state.node_age': {
+        info: 'The lifetime of the Node.'
+    },
+
+    // K8s state: Pod.
+
+    'k8s_state.pod_cpu_requests_used': {
+        info: 'The overall CPU resource requests for a Pod. '+
+        'This is the sum of the CPU requests for all the Containers in the Pod. '+
+        'Provided the system has CPU time free, a container is guaranteed to be allocated as much CPU as it requests. '+
+        '1000 millicpu is equivalent to '+
+        '<a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units" target="_blank">1 physical or virtual CPU core</a>.'
+    },
+    'k8s_state.pod_cpu_limits_used': {
+        info: 'The overall CPU resource limits for a Pod. '+
+        'This is the sum of the CPU limits for all the Containers in the Pod. '+
+        'If set, containers cannot use more CPU than the configured limit. '+
+        '1000 millicpu is equivalent to '+
+        '<a href="https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units" target="_blank">1 physical or virtual CPU core</a>.'
+    },
+    'k8s_state.pod_mem_requests_used': {
+        info: 'The overall memory resource requests for a Pod. '+
+        'This is the sum of the memory requests for all the Containers in the Pod.'
+    },
+    'k8s_state.pod_mem_limits_used': {
+        info: 'The overall memory resource limits for a Pod. '+
+        'This is the sum of the memory limits for all the Containers in the Pod. '+
+        'If set, containers cannot use more RAM than the configured limit.'
+    },
+    'k8s_state.pod_condition': {
+        info: 'The current state of the Pod. ' +
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-conditions" target="_blank">More info.</a></p>'+
+        '<p><b>PodReady</b> - the Pod is able to serve requests and should be added to the load balancing pools of all matching Services. ' +
+        '<b>PodScheduled</b> - the Pod has been scheduled to a node. ' +
+        '<b>PodInitialized</b> - all init containers have completed successfully. ' +
+        '<b>ContainersReady</b> - all containers in the Pod are ready. '
+    },
+    'k8s_state.pod_phase': {
+        info: 'High-level summary of where the Pod is in its lifecycle. ' +
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-phase" target="_blank">More info.</a></p>'+
+        '<p><b>Running</b> - the Pod has been bound to a node, and all of the containers have been created. '+
+        'At least one container is still running, or is in the process of starting or restarting. ' +
+        '<b>Failed</b> - all containers in the Pod have terminated, and at least one container has terminated in failure. '+
+        'That is, the container either exited with non-zero status or was terminated by the system. ' +
+        '<b>Succedeed</b> - all containers in the Pod have terminated in success, and will not be restarted. ' +
+        '<b>Pending</b> - the Pod has been accepted by the Kubernetes cluster, but one or more of the containers has not been set up and made ready to run. '+
+        'This includes time a Pod spends waiting to be scheduled as well as the time spent downloading container images over the network. '
+    },
+    'k8s_state.pod_age': {
+        info: 'The <a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#pod-lifetime" target="_blank">lifetime</a> of the Pod. '
+    },
+    'k8s_state.pod_containers': {
+        info: 'The number of containers and init containers belonging to the Pod.'
+    },
+    'k8s_state.pod_containers_state': {
+        info: 'The state of each container inside this Pod. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states" target="_blank">More info.</a> '+
+        '<p><b>Running</b> - a container is executing without issues. '+
+        '<b>Waiting</b> - a container is still running the operations it requires in order to complete start up. '+
+        '<b>Terminated</b> - a container began execution and then either ran to completion or failed for some reason.</p>'
+    },
+    'k8s_state.pod_init_containers_state': {
+        info: 'The state of each init container inside this Pod. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states" target="_blank">More info.</a> '+
+        '<p><b>Running</b> - a container is executing without issues. '+
+        '<b>Waiting</b> - a container is still running the operations it requires in order to complete start up. '+
+        '<b>Terminated</b> - a container began execution and then either ran to completion or failed for some reason.</p>'
+    },
+
+    // K8s state: Pod container.
+
+    'k8s_state.pod_container_readiness_state': {
+        info: 'Specifies whether the container has passed its readiness probe. '+
+        'Kubelet uses readiness probes to know when a container is ready to start accepting traffic.'
+    },
+    'k8s_state.pod_container_restarts': {
+        info: 'The number of times the container has been restarted.'
+    },
+    'k8s_state.pod_container_state': {
+        info: 'Current state of the container. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-states" target="_blank">More info.</a> '+
+        '<p><b>Running</b> - a container is executing without issues. '+
+        '<b>Waiting</b> - a container is still running the operations it requires in order to complete start up. '+
+        '<b>Terminated</b> - a container began execution and then either ran to completion or failed for some reason.</p>'
+    },
+    'k8s_state.pod_container_waiting_state_reason': {
+        info: 'Reason the container is not yet running. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-state-waiting" target="_blank">More info.</a> '
+    },
+    'k8s_state.pod_container_terminated_state_reason': {
+        info: 'Reason from the last termination of the container. '+
+        '<a href="https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#container-state-terminated" target="_blank">More info.</a>'
+    },
+
+    // ------------------------------------------------------------------------
 
 };
