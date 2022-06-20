@@ -1645,10 +1645,15 @@ netdataDashboard.context = {
         'A high percentage of local hinting faults indicates that the workload is closer to being converged. '+
         '<b>PagesMigrated</b> - pages were migrated because they were misplaced. '+
         'As migration is a copying operation, it contributes the largest part of the overhead created by NUMA balancing.</p>'
-    },
-
+    },    
+    
     'mem.available': {
-        info: 'Available Memory is estimated by the kernel, as the amount of RAM that can be used by userspace processes, without causing swapping.'
+        info: function (os) {
+            if (os === "freebsd")
+                return 'The amount of memory that can be used by user-space processes without causing swapping. Calculated as the sum of free, cached, and inactive memory.';
+            else
+                return 'Available Memory is estimated by the kernel, as the amount of RAM that can be used by userspace processes, without causing swapping.';
+        }
     },
 
     'mem.writeback': {
