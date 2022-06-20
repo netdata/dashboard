@@ -73,7 +73,6 @@ const DiscoverCloudDrop = ({
                           as={Button}
                           small
                           data-ga={"go-to-cloud-button"}
-                          data-testid="cta1-button"
                         />
                       )}
                     </GoToCloud>
@@ -97,6 +96,7 @@ const DiscoverCloudDrop = ({
                 <Flex height="100%" width="100%">
                   <Box sx={{ width: "100%", height: "100%" }}>
                     <iframe
+                      title={`discover-cloud-iframe}`}
                       width="100%"
                       height="100%"
                       src={video}

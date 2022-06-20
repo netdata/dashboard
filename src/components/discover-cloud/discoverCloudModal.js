@@ -52,7 +52,6 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
                         }
                         width="100%"
                         onClick={() => handleGoToCloud({ link })}
-                        data-testid="cta1-button"
                         as={Button}
                         small
                         data-ga={"go-to-cloud-button"}
@@ -80,6 +79,7 @@ const DiscoverCloudModal = ({ closeModal, text, header, handleGoToCloud, image, 
               <Flex height="100%" width="100%">
                 <Box sx={{ width: "100%", height: "100%" }}>
                   <iframe
+                    title={`discover-cloud-iframe}`}
                     width="100%"
                     height="100%"
                     src={video}
