@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react"
 import { Text, Flex, NavigationTabs } from "@netdata/netdata-ui"
 
 import CloudTab from "./cloudTab"
-import DiscoverCloudModal, { TITLE } from "./discoverCloudModal"
+import { TITLE } from "./discoverCloudModal"
 
 import { callAll } from "@/src/utils/utils"
 import { TabsContent } from "./contants"
