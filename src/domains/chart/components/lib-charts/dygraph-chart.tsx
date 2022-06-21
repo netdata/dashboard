@@ -15,7 +15,6 @@ import { DygraphArea, NetdataDygraph } from "types/vendor-overrides"
 import { TimeRange } from "types/common"
 import { useDateTime } from "utils/date-time"
 import { debounce } from "utils/debounce"
-import { hasHashParam } from "utils/hash-utils"
 
 import {
   selectCommonMin,
