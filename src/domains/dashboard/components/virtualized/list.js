@@ -39,7 +39,13 @@ const makeThrottleScroll = () =>
     onActiveSubMenuId(subMenuId)
   })
 
-const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
+const List = ({
+  onActiveMenuGroupId,
+  onActiveSubMenuId,
+  getComponent,
+  dashboardOptions = { firstMenuGroup: true, onboarding: true },
+}) => {
+  const { firstMenuGroup, onboarding } = dashboardOptions
   const container = useContainer()
   const ids = useMenuGroupIds()
 
@@ -49,30 +55,37 @@ const List = ({ onActiveMenuGroupId, onActiveSubMenuId, getComponent }) => {
   const widthRef = useRef(0)
 
   const rowRenderMeasurer = useMemo(
-    () => ({ index, parent, key, style, isScrolling, isVisible }) => {
-      const id = ids[index]
-      return (
-        <CellMeasurer
-          cache={cache}
-          columnIndex={0}
-          key={key}
-          parent={parent}
-          rowIndex={index}
-          width={widthRef.current}
-        >
-          {({ measure }) => {
-            measures.current[id] = measure
-            const Component = getComponent(id, index)
+    () =>
+      ({ index, parent, key, style, isScrolling, isVisible }) => {
+        const id = ids[index]
+        return (
+          <CellMeasurer
+            cache={cache}
+            columnIndex={0}
+            key={key}
+            parent={parent}
+            rowIndex={index}
+            width={widthRef.current}
+          >
+            {({ measure }) => {
+              measures.current[id] = measure
+              const hasFirstMenuGroup = index === 0 && firstMenuGroup
+              const Component = getComponent(id, hasFirstMenuGroup)
 
-            return (
-              <CellMeasurerWrapper style={style} index={index} id={id} measure={measure}>
-                <Component id={id} isVisible={isVisible} isScrolling={isScrolling} />
-              </CellMeasurerWrapper>
-            )
-          }}
-        </CellMeasurer>
-      )
-    },
+              return (
+                <CellMeasurerWrapper style={style} index={index} id={id} measure={measure}>
+                  <Component
+                    id={id}
+                    isVisible={isVisible}
+                    isScrolling={isScrolling}
+                    onboarding={onboarding}
+                  />
+                </CellMeasurerWrapper>
+              )
+            }}
+          </CellMeasurer>
+        )
+      },
     [ids.length]
   )
 
