@@ -8,6 +8,7 @@ import ReplicatedNodes from "./replicatedNodes"
 import SpacePanelIframe from "./spacePanelIframe"
 import SignInPrompt from "./prompts/signIn"
 import OfflinePrompt from "./prompts/offline"
+import VisitedNodes from "./visitedNodes"
 
 const replicatedNodesSelector = createSelector(
   state => state.global.chartsMetadata.data || {},
@@ -62,7 +63,7 @@ const Space = ({ isOpen, toggle }) => {
               )}
               {!!visitedNodes.length && (
                 <Text strong color="border">
-                  VisitedNodes
+                  <VisitedNodes machinesArray={visitedNodes} />
                 </Text>
               )}
             </>
