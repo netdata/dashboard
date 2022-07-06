@@ -708,87 +708,22 @@ export const DygraphChart = ({
           },
 
           wheel(event: WheelEvent, dygraph: Dygraph) {
-            // Take the offset of a mouse event on the dygraph canvas and
-            // convert it to a pair of percentages from the bottom left.
-            // (Not top left, bottom is where the lower value is.)
-            function offsetToPercentage(g: Dygraph, offsetX: number, offsetY: number) {
-              // This is calculating the pixel offset of the leftmost date.
-              const xOffset = g.toDomXCoord(g.xAxisRange()[0])
-              const yar0 = g.yAxisRange(0)
+            if (!event.shiftKey && !event.altKey) return
 
-              // This is calculating the pixel of the highest value. (Top pixel)
-              const yOffset = g.toDomYCoord(yar0[1])
+            latestIsUserAction.current = true
+            event.preventDefault()
+            event.stopPropagation()
 
-              // x y w and h are relative to the corner of the drawing area,
-              // so that the upper corner of the drawing area is (0, 0).
-              const x = offsetX - xOffset
-              const y = offsetY - yOffset
-
-              // This is computing the rightmost pixel, effectively defining the
-              // width.
-              // const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - xOffset
-              const w = g.toDomXCoord(g.xAxisRange()[1]) - xOffset
-
-              // This is computing the lowest pixel, effectively defining the height.
-              // const h = g.toDomCoords(null, yar0[0])[1] - yOffset
-              const h = g.toDomYCoord(yar0[0]) - yOffset
-
-              // Percentage from the left.
-              const xPct = w === 0 ? 0 : (x / w)
-              // Percentage from the top.
-              const yPct = h === 0 ? 0 : (y / h)
-
-              // The (1-) part below changes it from "% distance down from the top"
-              // to "% distance up from the bottom".
-              return [xPct, (1 - yPct)]
-            }
-
-            function adjustAxis(axis: [number, number], zoomInPercentage: number, bias: number) {
-              const delta = axis[1] - axis[0]
+            // https://dygraphs.com/gallery/interaction-api.js
+            const zoom = (g, zoomInPercentage, bias) => {
+              bias = bias || 0.5
+              const [afterAxis, beforeAxis] = g.xAxisRange()
+              const delta = afterAxis - beforeAxis
               const increment = delta * zoomInPercentage
-              const foo = [increment * bias, increment * (1 - bias)]
+              const [afterIncrement, beforeIncrement] = [increment * bias, increment * (1 - bias)]
 
-              return [axis[0] + foo[0], axis[1] - foo[1]]
-            }
-
-            // Adjusts [x, y] toward each other by zoomInPercentage%
-            // Split it so the left/bottom axis gets xBias/yBias of that change and
-            // tight/top gets (1-xBias)/(1-yBias) of that change.
-            //
-            // If a bias is missing it splits it down the middle.
-            function zoomRange(g: Dygraph, zoomInPercentage: number, xBias: number, yBias: number) {
-              const yAxes = g.yAxisRanges()
-              const newYAxes = []
-              for (let i = 0; i < yAxes.length; i += 1) {
-                newYAxes[i] = adjustAxis(yAxes[i], zoomInPercentage, (yBias || 0.5))
-              }
-
-              return adjustAxis(g.xAxisRange(), zoomInPercentage, (xBias || 0.5))
-            }
-
-            if (event.altKey || event.shiftKey) {
-              latestIsUserAction.current = true
-
-              // http://dygraphs.com/gallery/interaction-api.js
-              let normalDef
-              // @ts-ignore
-              if (typeof event.wheelDelta === "number" && !Number.isNaN(event.wheelDelta)) {
-                // chrome
-                // @ts-ignore
-                normalDef = event.wheelDelta / 40
-              } else {
-                // firefox
-                normalDef = event.deltaY * -1.2
-              }
-
-              const normal = (event.detail) ? event.detail * -1 : normalDef
-              const percentage = normal / 50
-
-              const percentages = offsetToPercentage(dygraph, event.offsetX, event.offsetY)
-              const xPct = percentages[0]
-              const yPct = percentages[1]
-
-              const [after, before] = zoomRange(dygraph, percentage, xPct, yPct)
+              const after = afterAxis + afterIncrement
+              const before = beforeAxis - beforeIncrement
 
               propsRef.current.updateChartPanOrZoom({
                 after,
@@ -800,9 +735,34 @@ export const DygraphChart = ({
                   })
                 },
               })
-
-              event.preventDefault()
             }
+
+            const offsetToPercentage = (g, offsetX) => {
+              // This is calculating the pixel offset of the leftmost date.
+              const [axisAfterOffset] = g.toDomCoords(g.xAxisRange()[0], null)
+              // x and w are relative to the corner of the drawing area,
+              // so that the upper corner of the drawing area is (0, 0).
+              const x = offsetX - axisAfterOffset
+              // This is computing the rightmost pixel, effectively defining the
+              // width.
+              const w = g.toDomCoords(g.xAxisRange()[1], null)[0] - axisAfterOffset
+
+              // Percentage from the left.
+              return w == 0 ? 0 : x / w
+            }
+
+            const normalDef =
+              typeof event.wheelDelta === "number" && !Number.isNaN(event.wheelDelta)
+                ? event.wheelDelta / 40
+                : event.deltaY * -1.2
+
+            const normal = event.detail ? event.detail * -1 : normalDef
+            const percentage = normal / 50
+
+            if (!event.offsetX) event.offsetX = event.layerX - event.target.offsetLeft
+            const xPct = offsetToPercentage(dygraph, event.offsetX)
+
+            zoom(dygraph, percentage, xPct)
           },
 
           click(event: MouseEvent) {
