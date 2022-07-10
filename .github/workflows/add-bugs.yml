@@ -1,4 +1,4 @@
-Add bugs to bugs project
+name: Add bugs to bugs project
 
 on:
   issues:
