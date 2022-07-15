@@ -718,7 +718,7 @@ export const DygraphChart = ({
             const zoom = (g, zoomInPercentage, bias) => {
               bias = bias || 0.5
               const [afterAxis, beforeAxis] = g.xAxisRange()
-              const delta = afterAxis - beforeAxis
+              const delta = beforeAxis - afterAxis
               const increment = delta * zoomInPercentage
               const [afterIncrement, beforeIncrement] = [increment * bias, increment * (1 - bias)]
 
