@@ -8,6 +8,7 @@ export default (
   const clusterName = hasKubernetes && chartLabels?.k8s_cluster_name?.[0]
 
   const [type, typeB, typeC] = id.split(".")
+
   const parts = type.split("_")
   const [part1, part2] = parts
 
@@ -65,14 +66,16 @@ export default (
 
     case "k8s": {
       if (composite) {
-        if (part2 == "state") {
+        if (part2 === "state") {
           if (clusterName) return emit({ menu: `Kubernetes State ${clusterName}` })
           else if (clusterId) return emit({ menu: `Kubernetes State ${clusterId}` })
+          else return emit({ menu: "Kubernetes State" })
         }
 
-        if (part2 == "container") {
+        if (!part2 || part2 === "container") {
           if (clusterName) return emit({ menu: `Kubernetes Containers ${clusterName}` })
           else if (clusterId) return emit({ menu: `Kubernetes Containers ${clusterId}` })
+          else return emit({ menu: "Kubernetes Containers" })
         }
 
         return emit({ menu: `Kubernetes ${part2}` })
