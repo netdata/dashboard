@@ -3211,6 +3211,7 @@ NETDATA.gaugeInitialize = function (callback) {
         })
             .done(function () {
                 NETDATA.registerChartLibrary('gauge', NETDATA.gauge_js);
+                NETDATA.registerChartLibrary('number', NETDATA.gauge_js);
             })
             .fail(function () {
                 NETDATA.chartLibraries.gauge.enabled = false;
