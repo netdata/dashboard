@@ -335,9 +335,9 @@ netdataDashboard.menu = {
     },
 
     'postgres': {
-        title: 'Postgres',
+        title: 'PostgreSQL',
         icon: '<i class="fas fa-database"></i>',
-        info: 'Performance metrics for <b>PostgresSQL</b>, the object-relational database (ORDBMS).'
+        info: 'Performance metrics for <b>PostgreSQL</b>, the open source object-relational database management system (ORDBMS).'
     },
 
     'redis': {
@@ -462,8 +462,9 @@ netdataDashboard.menu = {
     },
 
     'chrony': {
+        title: 'Chrony',
         icon: '<i class="fas fa-clock"></i>',
-        info: 'chronyd parameters about the system’s clock performance.'
+        info: 'The system’s clock performance and peers activity status.'
     },
 
     'couchdb': {
@@ -686,6 +687,12 @@ netdataDashboard.menu = {
         title: 'Fail2ban',
         icon: '<i class="fas fa-shield-alt"></i>',
         info: 'Netdata keeps track of the current jail status by reading the Fail2ban log file.'
+    },
+
+    'wireguard': {
+        title: 'WireGuard',
+        icon: '<i class="fas fa-dragon"></i>',
+        info: 'VPN network interfaces and peers traffic.'
     },
 };
 
@@ -1284,6 +1291,41 @@ const ebpfUDPrecv = 'Number of calls to <a href="https://learn.netdata.cloud/doc
     'Netdata gives a summary for this chart in <a href="#ebpf_global_udp_bandwidth_call">Network Stack</a>. ' +
     'When the integration is <a href="https://learn.netdata.cloud/guides/troubleshoot/monitor-debug-applications-ebpf" target="_blank">enabled</a>, Netdata shows UDP calls per <a href="#ebpf_apps_udp_recv">application</a>.' + ebpfChartProvides
 
+const cgroupCPULimit = 'Total CPU utilization within the configured or system-wide (if not set) limits. When the CPU utilization of a cgroup exceeds the limit for the configured period, the tasks belonging to its hierarchy will be throttled and are not allowed to run again until the next period.'
+const cgroupCPU = 'Total CPU utilization within the system-wide CPU resources (all cores). The amount of time spent by tasks of the cgroup in <a href="https://en.wikipedia.org/wiki/CPU_modes#Mode_types" target="_blank">user and kernel</a> modes.'
+const cgroupThrottled = 'The percentage of runnable periods when tasks in a cgroup have been throttled. The tasks have not been allowed to run because they have exhausted all of the available time as specified by their CPU quota.'
+const cgroupThrottledDuration = 'The total time duration for which tasks in a cgroup have been throttled. When an application has used its allotted CPU quota for a given period, it gets throttled until the next period.'
+const cgroupCPUShared = '<p>The weight of each group living in the same hierarchy, that translates into the amount of CPU it is expected to get. The percentage of CPU assigned to the cgroup is the value of shares divided by the sum of all shares in all cgroups in the same level.</p> <p>For example, tasks in two cgroups that have <b>cpu.shares</b> set to 100 will receive equal CPU time, but tasks in a cgroup that has <b>cpu.shares</b> set to 200 receive twice the CPU time of tasks in a cgroup where <b>cpu.shares</b> is set to 100.</p>'
+const cgroupCPUPerCore = 'Total CPU utilization per core within the system-wide CPU resources.'
+const cgroupCPUSomePressure = 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on CPU. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupCPUSomePressureStallTime = 'The amount of time some processes have been waiting for CPU time.'
+const cgroupCPUFullPressure = 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on CPU resource simultaneously. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupCPUFullPressureStallTime = 'The amount of time all non-idle processes have been stalled due to CPU congestion.'
+
+const cgroupMemUtilization = 'RAM utilization within the configured or system-wide (if not set) limits. When the RAM utilization of a cgroup exceeds the limit, OOM killer will start killing the tasks belonging to the cgroup.'
+const cgroupMemUsageLimit = 'RAM usage within the configured or system-wide (if not set) limits. When the RAM usage of a cgroup exceeds the limit, OOM killer will start killing the tasks belonging to the cgroup.'
+const cgroupMemUsage = 'The amount of used RAM and swap memory.'
+const cgroupMem = 'Memory usage statistics. The individual metrics are described in the memory.stat section for <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/memory.html#per-memory-cgroup-local-status" target="_blank">cgroup-v1</a> and <a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#memory-interface-files" target="_blank">cgroup-v2</a>.'
+const cgroupMemFailCnt = 'The number of memory usage hits limits.'
+const cgroupWriteback = '<b>Dirty</b> is the amount of memory waiting to be written to disk. <b>Writeback</b> is how much memory is actively being written to disk.'
+const cgroupMemActivity = '<p>Memory accounting statistics.</p><p><b>In</b> - a page is accounted as either mapped anon page (RSS) or cache page (Page Cache) to the cgroup. <b>Out</b> - a page is unaccounted from the cgroup.</p>'
+const cgroupPgFaults = '<p>Memory <a href="https://en.wikipedia.org/wiki/Page_fault" target="_blank">page fault</a> statistics.</p><p><b>Pgfault</b> - all page faults. <b>Swap</b> - major page faults.</p>'
+const cgroupMemorySomePressure = 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on memory. In this state the CPU is still doing productive work. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupMemorySomePressureStallTime = 'The amount of time some processes have been waiting due to memory congestion.'
+const cgroupMemoryFullPressure = 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on memory resource simultaneously. In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. This has severe impact on performance. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupMemoryFullPressureStallTime = 'The amount of time all non-idle processes have been stalled due to memory congestion.'
+
+const cgroupIO = 'The amount of data transferred to and from specific devices as seen by the CFQ scheduler. It is not updated when the CFQ scheduler is operating on a request queue.'
+const cgroupServicedOps = 'The number of I/O operations performed on specific devices as seen by the CFQ scheduler.'
+const cgroupQueuedOps = 'The number of requests queued for I/O operations.'
+const cgroupMergedOps = 'The number of BIOS requests merged into requests for I/O operations.'
+const cgroupThrottleIO = 'The amount of data transferred to and from specific devices as seen by the throttling policy.'
+const cgroupThrottleIOServicesOps = 'The number of I/O operations performed on specific devices as seen by the throttling policy.'
+const cgroupIOSomePressure = 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on I/O. In this state the CPU is still doing productive work. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupIOSomePRessureStallTime = 'The amount of time some processes have been waiting due to I/O congestion.'
+const cgroupIOFullPressure = 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. <b>Full</b> line indicates the share of time in which <b>all non-idle tasks</b> are stalled on I/O resource simultaneously. In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. This has severe impact on performance. The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+const cgroupIOFullPressureStallTime = 'The amount of time all non-idle processes have been stalled due to I/O congestion.'
+
 netdataDashboard.context = {
     'system.cpu': {
         info: function (os) {
@@ -1702,6 +1744,11 @@ netdataDashboard.context = {
     'mem.committed': {
         colors: NETDATA.colors[3],
         info: 'Committed Memory, is the sum of all memory which has been allocated by processes.'
+    },
+
+    'mem.real': {
+        colors: NETDATA.colors[3],
+        info: 'Total amount of real (physical) memory used.'
     },
 
     'mem.oom_kill': {
@@ -3135,6 +3182,64 @@ netdataDashboard.context = {
         info: netMTUInfo
     },
 
+    'k8s.cgroup.net_net': {
+        mainheads: [
+            function (_, id) {
+                var iface;
+                try {
+                    iface = ' ' + id.substring(id.lastIndexOf('.net_') + 5, id.length);
+                } catch (e) {
+                    iface = '';
+                }
+                return netdataDashboard.gaugeChart('Received' + iface, '12%', 'received');
+
+            },
+            function (_, id) {
+                var iface;
+                try {
+                    iface = ' ' + id.substring(id.lastIndexOf('.net_') + 5, id.length);
+                } catch (e) {
+                    iface = '';
+                }
+                return netdataDashboard.gaugeChart('Sent' + iface, '12%', 'sent');
+            }
+        ],
+        info: netBytesInfo
+    },
+    'k8s.cgroup.net_packets': {
+        info: netPacketsInfo
+    },
+    'k8s.cgroup.net_errors': {
+        info: netErrorsInfo
+    },
+    'k8s.cgroup.net_fifo': {
+        info: netFIFOInfo
+    },
+    'k8s.cgroup.net_drops': {
+        info: netDropsInfo
+    },
+    'k8s.cgroup.net_compressed': {
+        info: netCompressedInfo
+    },
+    'k8s.cgroup.net_events': {
+        info: netEventsInfo
+    },
+    'k8s.cgroup.net_operstate': {
+        info: netOperstateInfo
+    },
+    'k8s.cgroup.net_duplex': {
+        info: netDuplexInfo
+    },
+    'k8s.cgroup.net_carrier': {
+        info: netCarrierInfo
+    },
+    'k8s.cgroup.net_speed': {
+        info: netSpeedInfo
+    },
+    'k8s.cgroup.net_mtu': {
+        info: netMTUInfo
+    },
+
     // ------------------------------------------------------------------------
     // WIRELESS NETWORK INTERFACES
 
@@ -3693,7 +3798,7 @@ netdataDashboard.context = {
     // ------------------------------------------------------------------------
     // POSTGRESQL
 
-
+    // python version start
     'postgres.db_stat_blks': {
         info: 'Blocks reads from disk or cache.<ul>' +
             '<li><strong>blks_read:</strong> number of disk blocks read in this database.</li>' +
@@ -3774,6 +3879,111 @@ netdataDashboard.context = {
             '<li><strong>percent_towards_wraparound:</strong> transaction wraparound may occur when this value reaches 100.</li>' +
             '</ul>' +
             'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    // python version end
+    'postgres.connections_utilization': {
+        info: 'Connections in use as percentage of <i>max_connections</i>. Connection "slots" that are reserved for superusers (<i>superuser_reserved_connections</i>) are subtracted from the limit. If the utilization is 100% new connections will be accepted only for superusers, and no new replication connections will be accepted.'
+    },
+    'postgres.connections_usage': {
+        info: '<p>Connections usage. The maximum number of concurrent connections to the database server is <i>max_connections</i> minus <i>superuser_reserved_connections</i>.</p><p><b>Available</b> - new connections allowed. <b>Used</b> - connections currently in use.</p>'
+    },
+    'postgres.checkpoints': {
+        info: '<p>Number of checkpoints that have been performed. Checkpoints are periodic maintenance operations the database performs to make sure that everything it’s been caching in memory has been synchronized with the disk. It’s desirable when checkpoints are scheduled rather than requested, as the latter can indicate that your databases are under heavy load.</p><p><b>Scheduled</b> - checkpoints triggered due that the time elapsed from the previous checkpoint is more than pg setting <i>checkpoint_timeout</i>. <b>Requested</b> - checkpoints ran due to uncheckpointed WAL size grew to more than <i>max_wal_size</i> setting.</p>'
+    },
+    'postgres.checkpoint_time': {
+        info: '<p>Checkpoint timing information.</p><p><b>Write</b> - amount of time that has been spent in the portion of checkpoint processing where files are written to disk. <b>Sync</b> - amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk.</p>'
+    },
+    'postgres.bgwriter_buffers_alloc': {
+        info: 'Allocated and re-allocated buffers. If a backend process requests data it is either found in a block in shared buffer cache or the block has to be allocated (read from disk). The latter is counted as <b>Allocated</b>.'
+    },
+    'postgres.bgwriter_buffers_written': {
+        info: '<p>Amount of data flushed from memory to disk.</p><p><b>Checkpoint</b> - buffers written during checkpoints. <b>Backend</b> -  buffers written directly by a backend. It may happen that a dirty page is requested by a backend process. In this case the page is synched to disk before the page is returned to the client. <b>Clean</b> - buffers written by the background writer. PostgreSQL may clear pages with a low usage count in advance. The process scans for dirty pages with a low usage count so that they could be cleared if necessay. Buffers written by this process increment the counter.</p>'
+    },
+    'postgres.bgwriter_maxwritten_clean': {
+        info: 'Number of times the background writer stopped a cleaning scan because it had written too many buffers (exceeding the value of <i>bgwriter_lru_maxpages</i>).'
+    },
+    'postgres.bgwriter_buffers_backend_fsync': {
+        info: 'Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write). Any values above zero can indicate problems with storage when fsync queue is completely filled. '
+    },
+    'postgres.wal_archive_files': {
+        info: '<p>WAL archiving.</p><p><b>Ready</b> - WAL files waiting to be archived. A non-zero value can indicate <i>archive_command</i> is in error, see <a href="https://www.postgresql.org/docs/current/static/continuous-archiving.html" target="_blank">Continuous Archiving and Point-in-Time Recovery</a> <b>Done</b> - WAL files successfully archived.'
+    },
+    'postgres.autovacuum_workers': {
+        info: 'PostgreSQL databases require periodic maintenance known as vacuuming. For many installations, it is sufficient to let vacuuming be performed by the autovacuum daemon. For more information see <a href="https://www.postgresql.org/docs/current/static/routine-vacuuming.html#AUTOVACUUM" target="_blank">The Autovacuum Daemon</a>.'
+    },
+    'postgres.percent_towards_emergency_autovacuum': {
+        info: 'Percentage towards emergency autovacuum for one or more tables. A forced autovacuum will run once this value reaches 100%. For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    'postgres.percent_towards_txid_wraparound': {
+        info: 'Percentage towards transaction wraparound. A transaction wraparound may occur when this value reaches 100%. For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    'postgres.oldest_transaction_xid': {
+        info: 'The oldest current transaction ID (XID). If for some reason autovacuum fails to clear old XIDs from a table, the system will begin to emit warning messages when the database\'s oldest XIDs reach eleven million transactions from the wraparound point. For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
+    },
+    'postgres.uptime': {
+        info: 'The time elapsed since the Postgres process was started.'
+    },
+
+    'postgres.replication_standby_app_wal_delta': {
+        info: '<p>Replication WAL delta.</p><p><b>SentDelta</b> - sent over the network. <b>WriteDelta</b> - written to disk. <b>FlushDelta</b> - flushed to disk. <b>ReplayDelta</b> - replayed into the database.</p>'
+    },
+    'postgres.replication_standby_app_wal_lag': {
+        info: '<p>Replication WAL lag.</p><p><b>WriteLag</b> - time elapsed between flushing recent WAL locally and receiving notification that the standby server has written it, but not yet flushed it or applied it. <b>FlushLag</b> - time elapsed between flushing recent WAL locally and receiving notification that the standby server has written and flushed it, but not yet applied it. <b>ReplayLag</b> - time elapsed between flushing recent WAL locally and receiving notification that the standby server has written, flushed and applied it.</p>'
+    },
+    'postgres.replication_slot_files': {
+        info: '<p>Replication slot files. For more information see <a href="https://www.postgresql.org/docs/current/static/warm-standby.html#STREAMING-REPLICATION-SLOTS" target="_blank">Replication Slots</a>.</p><p><b>WalKeep</b> - WAL files retained by the replication slot. <b>PgReplslotFiles</b> - files present in pg_replslot.</p>'
+    },
+
+    'postgres.db_transactions_ratio': {
+        info: 'Percentage of commited/rollback transactions.'
+    },
+    'postgres.db_transactions': {
+        info: '<p>Number of transactions that have been performed</p><p><b>Commited</b> - transactions that have been committed. All changes made by the committed transaction become visible to others and are guaranteed to be durable if a crash occurs. <b>Rollback</b> - transactions that have been rolled back. Rollback aborts the current transaction and causes all the updates made by the transaction to be discarded. Single queries that have failed outside the transactions are also accounted as rollbacks.</p>'
+    },
+    'postgres.db_connections_utilization': {
+        info: 'Connections in use as percentage of the database\'s <i>CONNECTION LIMIT</i> (if set) or <i>max_connections</i>.'
+    },
+    'postgres.db_connections': {
+        info: 'Number of backends currently connected to this database.'
+    },    
+    'postgres.db_buffer_cache_hit_ratio': {
+        info: 'Buffer cache hit ratio. When clients request data, postgres checks shared memory and if there are no relevant data there it has to read it from disk, thus queries become slower.'
+    },
+    'postgres.db_blocks_read': {
+        info: '<p>Number of blocks read from shared buffer cache or from disk.</p><p><b>disk</b> - number of disk blocks read. <b>memory</b> - number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system\'s file system cache).</p>'
+    },
+    'postgres.db_rows_read_ratio': {
+        info: 'Percentage of returned/fetched rows.'
+    },
+    'postgres.db_rows_read': {
+        info: '<p>Read queries throughput.</p><p><b>Returned</b> - number of rows returned by queries. The value keeps track of the number of rows read/scanned, not the rows actually returned to the client. <b>Fetched</b> - number of rows fetched that contained data necessary to execute the query successfully.</p>'
+    },
+    'postgres.db_rows_written': {
+        info: '<p>Write queries throughput.</p><p><b>Inserted</b> - number of rows inserted by queries. <b>Deleted</b> - number of rows deleted by queries. <b>Updated</b> - number of rows updated by queries.</p>'
+    },
+    'postgres.db_conflicts': {
+        info: 'Number of queries canceled due to conflicts with recovery. Conflicts occur only on standby servers.'
+    },
+    'postgres.db_conflicts_stat': {
+        info: '<p>Number of queries canceled due to conflicts with recovery.</p><p><b>Tablespace</b> - queries that have been canceled due to dropped tablespaces. <b>Lock</b> - queries that have been canceled due to lock timeouts. <b>Snapshot</b> - queries that have been canceled due to old snapshots. <b>Bufferpin</b> - queries that have been canceled due to pinned buffers. <b>Deadlock</b> - queries that have been canceled due to deadlocks.</p>'
+    },
+    'postgres.db_deadlocks': {
+        info: 'Number of detected deadlocks. When a transaction cannot acquire the requested lock within a certain amount of time (configured by <b>deadlock_timeout</b>), it begins deadlock detection.'
+    },
+    'postgres.db_locks_held': {
+        info: 'Number of held locks. Some of these lock modes are acquired by PostgreSQL automatically before statement execution, while others are provided to be used by applications. All lock modes acquired in a transaction are held for the duration of the transaction. For lock modes details, see <a href="https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-TABLES" target="_blank">table-level locks</a>.'
+    },
+    'postgres.db_locks_awaited': {
+        info: 'Number of awaited locks. It indicates that some transaction is currently waiting to acquire a lock, which implies that some other transaction is holding a conflicting lock mode on the same lockable object. For lock modes details, see <a href="https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-TABLES" target="_blank">table-level locks</a>.'
+    },
+    'postgres.db_temp_files': {
+        info: 'Number of temporary files created by queries. Complex queries may require more memory than is available (specified by <b>work_mem</b>). When this happens, Postgres reverts to using temporary files - they are actually stored on disk, but only exist for the duration of the request. After the request returns, the temporary files are deleted.'
+    },
+    'postgres.db_temp_files_data': {
+        info: 'Amount of data written temporarily to disk to execute queries.'
+    },
+    'postgres.db_size': {
+        info: 'Actual on-disk usage of the database\'s data directory and any associated tablespaces.'
     },
 
 
@@ -4003,8 +4213,7 @@ netdataDashboard.context = {
     'cgroup.cpu_limit': {
         valueRange: "[0, null]",
         mainheads: [
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 cgroupCPULimitIsSet = 1;
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="used"'
@@ -4021,15 +4230,11 @@ netdataDashboard.context = {
                     + ' role="application"></div>';
             }
         ],
-        info: 'Total CPU utilization within the configured or system-wide (if not set) limits. '+
-        'When the CPU utilization of a cgroup exceeds the limit for the configured period, '+
-        'the tasks belonging to its hierarchy will be throttled and are not allowed to run again until the next period.'
+        info: cgroupCPULimit
     },
-
     'cgroup.cpu': {
         mainheads: [
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 if (cgroupCPULimitIsSet === 0) {
                     return '<div data-netdata="' + id + '"'
                         + ' data-chart-library="gauge"'
@@ -4046,60 +4251,107 @@ netdataDashboard.context = {
                     return '';
             }
         ],
-        info: 'Total CPU utilization within the system-wide CPU resources (all cores). '+
-        'The amount of time spent by tasks of the cgroup in '+
-        '<a href="https://en.wikipedia.org/wiki/CPU_modes#Mode_types" target="_blank">user and kernel</a> modes.'
+        info: cgroupCPU
     },
-
     'cgroup.throttled': {
-        info: 'The percentage of runnable periods when tasks in a cgroup have been throttled. '+ 
-        'The tasks have not been allowed to run because they have exhausted all of the available time as specified by their CPU quota.'
+        info: cgroupThrottled
     },
-
     'cgroup.throttled_duration': {
-        info: 'The total time duration for which tasks in a cgroup have been throttled. '+
-        'When an application has used its allotted CPU quota for a given period, it gets throttled until the next period.'
+        info: cgroupThrottledDuration
     },
-
     'cgroup.cpu_shares': {
-        info: '<p>The weight of each group living in the same hierarchy, that translates into the amount of CPU it is expected to get. '+
-        'The percentage of CPU assigned to the cgroup is the value of shares divided by the sum of all shares in all cgroups in the same level.</p>'+
-        '<p>For example, tasks in two cgroups that have <b>cpu.shares</b> set to 100 will receive equal CPU time, '+
-        'but tasks in a cgroup that has <b>cpu.shares</b> set to 200 receive twice the CPU time of tasks in a cgroup where <b>cpu.shares</b> is set to 100.</p>'
+        info: cgroupCPUShared
     },
-
     'cgroup.cpu_per_core': {
-        info: 'Total CPU utilization per core within the system-wide CPU resources.'
+        info: cgroupCPUPerCore
     },
-
     'cgroup.cpu_some_pressure': {
-        info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on CPU. ' +
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupCPUSomePressure
     },
     'cgroup.cpu_some_pressure_stall_time': {
-        info: 'The amount of time some processes have been waiting for CPU time.'
+        info: cgroupCPUSomePressureStallTime
     },
-
     'cgroup.cpu_full_pressure': {
-        info: 'CPU <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
-            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on CPU resource simultaneously. ' +
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupCPUFullPressure
     },
     'cgroup.cpu_full_pressure_stall_time': {
-        info: 'The amount of time all non-idle processes have been stalled due to CPU congestion.'
+        info: cgroupCPUFullPressureStallTime
+    },
+
+    'k8s.cgroup.cpu_limit': {
+        valueRange: "[0, null]",
+        mainheads: [
+            function (_, id) {
+                cgroupCPULimitIsSet = 1;
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="used"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="CPU"'
+                    + ' data-units="%"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[4] + '"'
+                    + ' role="application"></div>';
+            }
+        ],
+        info: cgroupCPULimit
+    },
+    'k8s.cgroup.cpu': {
+        mainheads: [
+            function (_, id) {
+                if (cgroupCPULimitIsSet === 0) {
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="CPU"'
+                        + ' data-units="%"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[4] + '"'
+                        + ' role="application"></div>';
+                } else
+                    return '';
+            }
+        ],
+        info: cgroupCPU
+    },
+    'k8s.cgroup.throttled': {
+        info: cgroupThrottled
+    },
+    'k8s.cgroup.throttled_duration': {
+        info: cgroupThrottledDuration
+    },
+    'k8s.cgroup.cpu_shares': {
+        info: cgroupCPUShared
+    },
+    'k8s.cgroup.cpu_per_core': {
+        info: cgroupCPUPerCore
+    },
+    'k8s.cgroup.cpu_some_pressure': {
+        info: cgroupCPUSomePressure
+    },
+    'k8s.cgroup.cpu_some_pressure_stall_time': {
+        info: cgroupCPUSomePressureStallTime
+    },
+    'k8s.cgroup.cpu_full_pressure': {
+        info: cgroupCPUFullPressure
+    },
+    'k8s.cgroup.cpu_full_pressure_stall_time': {
+        info: cgroupCPUFullPressureStallTime
     },
 
     'cgroup.mem_utilization': {
-        info: 'RAM utilization within the configured or system-wide (if not set) limits. '+
-        'When the RAM utilization of a cgroup exceeds the limit, '+
-        'OOM killer will start killing the tasks belonging to the cgroup.'
+        info: cgroupMemUtilization
     },
-
     'cgroup.mem_usage_limit': {
         mainheads: [
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 cgroupMemLimitIsSet = 1;
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="used"'
@@ -4117,15 +4369,11 @@ netdataDashboard.context = {
                     + ' role="application"></div>';
             }
         ],
-        info: 'RAM usage within the configured or system-wide (if not set) limits. '+
-        'When the RAM usage of a cgroup exceeds the limit, '+
-        'OOM killer will start killing the tasks belonging to the cgroup.'
+        info: cgroupMemUsageLimit
     },
-
     'cgroup.mem_usage': {
         mainheads: [
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 if (cgroupMemLimitIsSet === 0) {
                     return '<div data-netdata="' + id + '"'
                         + ' data-chart-library="gauge"'
@@ -4142,79 +4390,125 @@ netdataDashboard.context = {
                     return '';
             }
         ],
-        info: 'The amount of used RAM and swap memory.'
+        info: cgroupMemUsage
     },
-
     'cgroup.mem': {
-        info: 'Memory usage statistics. '+
-        'The individual metrics are described in the memory.stat section for '+
-        '<a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/memory.html#per-memory-cgroup-local-status" target="_blank">cgroup-v1 </a>'+
-        'and '+
-        '<a href="https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v2.html#memory-interface-files" target="_blank">cgroup-v2</a>.'
+        info: cgroupMem
     },
-
     'cgroup.mem_failcnt': {
-        info: 'The number of memory usage hits limits.'
+        info: cgroupMemFailCnt
     },
-
     'cgroup.writeback': {
-        info: '<b>Dirty</b> is the amount of memory waiting to be written to disk. <b>Writeback</b> is how much memory is actively being written to disk.'
+        info: cgroupWriteback
     },
-
     'cgroup.mem_activity': {
-        info: '<p>Memory accounting statistics.</p>'+
-        '<p><b>In</b> - a page is accounted as either mapped anon page (RSS) or cache page (Page Cache) to the cgroup. '+
-        '<b>Out</b> - a page is unaccounted from the cgroup.</p>'
+        info: cgroupMemActivity
     },
-
     'cgroup.pgfaults': {
-        info: '<p>Memory <a href="https://en.wikipedia.org/wiki/Page_fault" target="_blank">page fault</a> statistics.</p>'+
-        '<p><b>Pgfault</b> - all page faults. '+
-        '<b>Swap</b> - major page faults.</p>'
+        info: cgroupPgFaults
     },
-
     'cgroup.memory_some_pressure': {
-        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on memory. ' +
-            'In this state the CPU is still doing productive work. '+
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupMemorySomePressure
     },
     'cgroup.memory_some_pressure_stall_time': {
-        info: 'The amount of time some processes have been waiting due to memory congestion.'
+        info: cgroupMemorySomePressureStallTime
     },
-
     'cgroup.memory_full_pressure': {
-        info: 'Memory <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
-            '<b>Full</b> indicates the share of time in which <b>all non-idle tasks</b> are stalled on memory resource simultaneously. ' +
-            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
-            'This has severe impact on performance. '+
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupMemoryFullPressure
     },
     'cgroup.memory_full_pressure_stall_time': {
-        info: 'The amount of time all non-idle processes have been stalled due to memory congestion.'
+        info: cgroupMemoryFullPressureStallTime
+    },
+
+    'k8s.cgroup.mem_utilization': {
+        info: cgroupMemUtilization
+    },
+    'k8s.cgroup.mem_usage_limit': {
+        mainheads: [
+            function (_, id) {
+                cgroupMemLimitIsSet = 1;
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="used"'
+                    + ' data-append-options="percentage"'
+                    + ' data-gauge-max-value="100"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Memory"'
+                    + ' data-units="%"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[1] + '"'
+                    + ' role="application"></div>';
+            }
+        ],
+        info: cgroupMemUsageLimit
+    },
+    'k8s.cgroup.mem_usage': {
+        mainheads: [
+            function (_, id) {
+                if (cgroupMemLimitIsSet === 0) {
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="Memory"'
+                        + ' data-units="MB"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[1] + '"'
+                        + ' role="application"></div>';
+                } else
+                    return '';
+            }
+        ],
+        info: cgroupMemUsage
+    },
+    'k8s.cgroup.mem': {
+        info: cgroupMem
+    },
+    'k8s.cgroup.mem_failcnt': {
+        info: cgroupMemFailCnt
+    },
+    'k8s.cgroup.writeback': {
+        info: cgroupWriteback
+    },
+    'k8s.cgroup.mem_activity': {
+        info: cgroupMemActivity
+    },
+    'k8s.cgroup.pgfaults': {
+        info: cgroupPgFaults
+    },
+    'k8s.cgroup.memory_some_pressure': {
+        info: cgroupMemorySomePressure
+    },
+    'k8s.cgroup.memory_some_pressure_stall_time': {
+        info: cgroupMemorySomePressureStallTime
+    },
+    'k8s.cgroup.memory_full_pressure': {
+        info: cgroupMemoryFullPressure
+    },
+    'k8s.cgroup.memory_full_pressure_stall_time': {
+        info: cgroupMemoryFullPressureStallTime
     },
 
     'cgroup.io': {
-        info: 'The amount of data transferred to and from specific devices as seen by the CFQ scheduler. '+
-        'It is not updated when the CFQ scheduler is operating on a request queue.'
+        info: cgroupIO
     },
-
     'cgroup.serviced_ops': {
-        info: 'The number of I/O operations performed on specific devices as seen by the CFQ scheduler.'
+        info: cgroupServicedOps
     },
-
     'cgroup.queued_ops': {
-        info: 'The number of requests queued for I/O operations.'
+        info: cgroupQueuedOps
     },
-
     'cgroup.merged_ops': {
-        info: 'The number of BIOS requests merged into requests for I/O operations.'
+        info: cgroupMergedOps
     },
-
     'cgroup.throttle_io': {
         mainheads: [
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="read"'
                     + ' data-chart-library="gauge"'
@@ -4228,8 +4522,7 @@ netdataDashboard.context = {
                     + ' data-colors="' + NETDATA.colors[2] + '"'
                     + ' role="application"></div>';
             },
-            function (os, id) {
-                void (os);
+            function (_, id) {
                 return '<div data-netdata="' + id + '"'
                     + ' data-dimensions="write"'
                     + ' data-chart-library="gauge"'
@@ -4244,214 +4537,220 @@ netdataDashboard.context = {
                     + ' role="application"></div>';
             }
         ],
-        info: 'The amount of data transferred to and from specific devices as seen by the throttling policy.'
+        info: cgroupThrottleIO
     },
-
     'cgroup.throttle_serviced_ops': {
-        info: 'The number of I/O operations performed on specific devices as seen by the throttling policy.'
+        info: cgroupThrottleIOServicesOps
     },
-
     'cgroup.io_some_pressure': {
-        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. '+
-            '<b>Some</b> indicates the share of time in which at least <b>some tasks</b> are stalled on I/O. ' +
-            'In this state the CPU is still doing productive work. '+
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupIOSomePressure
     },
     'cgroup.io_some_pressure_stall_time': {
-        info: 'The amount of time some processes have been waiting due to I/O congestion.'
+        info: cgroupIOSomePRessureStallTime
     },
-
     'cgroup.io_full_pressure': {
-        info: 'I/O <a href="https://www.kernel.org/doc/html/latest/accounting/psi.html" target="_blank">Pressure Stall Information</a>. ' +
-            '<b>Full</b> line indicates the share of time in which <b>all non-idle tasks</b> are stalled on I/O resource simultaneously. ' +
-            'In this state actual CPU cycles are going to waste, and a workload that spends extended time in this state is considered to be thrashing. '+
-            'This has severe impact on performance. '+
-            'The ratios are tracked as recent trends over 10-, 60-, and 300-second windows.'
+        info: cgroupIOFullPressure
     },
     'cgroup.io_full_pressure_stall_time': {
-        info: 'The amount of time all non-idle processes have been stalled due to I/O congestion.'
+        info: cgroupIOFullPressureStallTime
+    },
+
+    'k8s.cgroup.io': {
+        info: cgroupIO
+    },
+    'k8s.cgroup.serviced_ops': {
+        info: cgroupServicedOps
+    },
+    'k8s.cgroup.queued_ops': {
+        info: cgroupQueuedOps
+    },
+    'k8s.cgroup.merged_ops': {
+        info: cgroupMergedOps
+    },
+    'k8s.cgroup.throttle_io': {
+        mainheads: [
+            function (_, id) {
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="read"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Read Disk I/O"'
+                    + ' data-units="KB/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[2] + '"'
+                    + ' role="application"></div>';
+            },
+            function (_, id) {
+                return '<div data-netdata="' + id + '"'
+                    + ' data-dimensions="write"'
+                    + ' data-chart-library="gauge"'
+                    + ' data-title="Write Disk I/O"'
+                    + ' data-units="KB/s"'
+                    + ' data-gauge-adjust="width"'
+                    + ' data-width="12%"'
+                    + ' data-before="0"'
+                    + ' data-after="-CHART_DURATION"'
+                    + ' data-points="CHART_DURATION"'
+                    + ' data-colors="' + NETDATA.colors[3] + '"'
+                    + ' role="application"></div>';
+            }
+        ],
+        info: cgroupThrottleIO
+    },
+    'k8s.cgroup.throttle_serviced_ops': {
+        info: cgroupThrottleIOServicesOps
+    },
+    'k8s.cgroup.io_some_pressure': {
+        info: cgroupIOSomePressure
+    },
+    'k8s.cgroup.io_some_pressure_stall_time': {
+        info: cgroupIOSomePRessureStallTime
+    },
+    'k8s.cgroup.io_full_pressure': {
+        info: cgroupIOFullPressure
+    },
+    'k8s.cgroup.io_full_pressure_stall_time': {
+        info: cgroupIOFullPressureStallTime
     },
 
     'cgroup.swap_read': {
         info: ebpfSwapRead
     },
-
     'cgroup.swap_write': {
         info: ebpfSwapWrite
     },
-
     'cgroup.fd_open': {
         info: ebpfFileOpen
     },
-
     'cgroup.fd_open_error': {
         info: ebpfFileOpenError
     },
-
     'cgroup.fd_close': {
         info: ebpfFileClosed
     },
-
     'cgroup.fd_close_error': {
         info: ebpfFileCloseError
     },
-
     'cgroup.vfs_unlink': {
         info: ebpfVFSUnlink
     },
-
     'cgroup.vfs_write': {
         info: ebpfVFSWrite
     },
-
     'cgroup.vfs_write_error': {
         info: ebpfVFSWriteError
     },
-
     'cgroup.vfs_read': {
         info: ebpfVFSRead
     },
-
     'cgroup.vfs_read_error': {
         info: ebpfVFSReadError
     },
-
     'cgroup.vfs_write_bytes': {
         info: ebpfVFSWriteBytes
     },
-
     'cgroup.vfs_read_bytes': {
         info: ebpfVFSReadBytes
     },
-
     'cgroup.vfs_fsync': {
         info: ebpfVFSSync
     },
-
     'cgroup.vfs_fsync_error': {
         info: ebpfVFSSyncError
     },
-
     'cgroup.vfs_open': {
         info: ebpfVFSOpen
     },
-
     'cgroup.vfs_open_error': {
         info: ebpfVFSOpenError
     },
-
     'cgroup.vfs_create': {
         info: ebpfVFSCreate
     },
-
     'cgroup.vfs_create_error': {
         info: ebpfVFSCreateError
     },
-
     'cgroup.process_create': {
         info: ebpfProcessCreate
     },
-
     'cgroup.thread_create': {
         info: ebpfThreadCreate
     },
-
     'cgroup.task_exit': {
         info: ebpfTaskExit
     },
-
     'cgroup.task_close': {
         info: ebpfTaskClose
     },
-
     'cgroup.task_error': {
         info: ebpfTaskError
     },
-
     'cgroup.dc_ratio': {
         info: 'Percentage of file accesses that were present in the directory cache. 100% means that every file that was accessed was present in the directory cache. If files are not present in the directory cache 1) they are not present in the file system, 2) the files were not accessed before. Read more about <a href="https://www.kernel.org/doc/htmldocs/filesystems/the_directory_cache.html" target="_blank">directory cache</a>. Netdata also gives a summary for these charts in <a href="#menu_filesystem_submenu_directory_cache__eBPF_">Filesystem submenu</a>.'
     },
-
     'cgroup.shmget': {
         info: ebpfSHMget
     },
-
     'cgroup.shmat': {
         info: ebpfSHMat
     },
-
     'cgroup.shmdt': {
         info: ebpfSHMdt
     },
-
     'cgroup.shmctl': {
         info: ebpfSHMctl
     },
-
     'cgroup.outbound_conn_v4': {
         info: ebpfIPV4conn
     },
-
     'cgroup.outbound_conn_v6': {
         info: ebpfIPV6conn
     },
-
     'cgroup.net_bytes_send': {
         info: ebpfBandwidthSent
     },
-
     'cgroup.net_bytes_recv': {
         info: ebpfBandwidthRecv
     },
-
     'cgroup.net_tcp_send': {
         info: ebpfTCPSendCall
     },
-
     'cgroup.net_tcp_recv': {
         info: ebpfTCPRecvCall
     },
-
     'cgroup.net_retransmit': {
         info: ebpfTCPRetransmit
     },
-
     'cgroup.net_udp_send': {
         info: ebpfUDPsend
     },
-
     'cgroup.net_udp_recv': {
         info: ebpfUDPrecv
     },
-
     'cgroup.dc_hit_ratio': {
         info: ebpfDCHit
     },
-
     'cgroup.dc_reference': {
         info: ebpfDCReference
     },
-
     'cgroup.dc_not_cache': {
         info: ebpfDCNotCache
     },
-
     'cgroup.dc_not_found': {
         info: ebpfDCNotFound
     },
-
     'cgroup.cachestat_ratio': {
         info: ebpfCachestatRatio
     },
-
     'cgroup.cachestat_dirties': {
         info: ebpfCachestatDirties
     },
-
     'cgroup.cachestat_hits': {
         info: ebpfCachestatHits
     },
-
     'cgroup.cachestat_misses': {
         info: ebpfCachestatMisses
     },
@@ -5303,51 +5602,54 @@ netdataDashboard.context = {
     },
 
     // ------------------------------------------------------------------------
-
-    'chrony.system': {
-        info: 'In normal operation, chronyd never steps the system clock, because any jump in the timescale can have adverse consequences for certain application programs. Instead, any error in the system clock is corrected by slightly speeding up or slowing down the system clock until the error has been removed, and then returning to the system clock’s normal speed. A consequence of this is that there will be a period when the system clock (as read by other programs using the <code>gettimeofday()</code> system call, or by the <code>date</code> command in the shell) will be different from chronyd\'s estimate of the current true time (which it reports to NTP clients when it is operating in server mode). The value reported on this line is the difference due to this effect.',
-        colors: NETDATA.colors[3]
-    },
-
-    'chrony.offsets': {
-        info: '<code>last offset</code> is the estimated local offset on the last clock update. <code>RMS offset</code> is a long-term average of the offset value.',
-        height: 0.5
-    },
+    // Chrony
 
     'chrony.stratum': {
-        info: 'The <code>stratum</code> indicates how many hops away from a computer with an attached reference clock we are. Such a computer is a stratum-1 computer.',
-        decimalDigits: 0,
-        height: 0.5
+        info: 'The stratum indicates the distance (hops) to the computer with the reference clock. The higher the stratum number, the more the timing accuracy and stability degrades.',
     },
 
-    'chrony.root': {
-        info: 'Estimated delays against the root time server this system is synchronized with. <code>delay</code> is the total of the network path delays to the stratum-1 computer from which the computer is ultimately synchronised. <code>dispersion</code> is the total dispersion accumulated through all the computers back to the stratum-1 computer from which the computer is ultimately synchronised. Dispersion is due to system clock resolution, statistical measurement variations etc.'
+    'chrony.current_correction': {
+        info: 'Any error in the system clock is corrected by slightly speeding up or slowing down the system clock until the error has been removed, and then returning to the system clock’s normal speed. A consequence of this is that there will be a period when the system clock (as read by other programs) will be different from chronyd\'s estimate of the current true time (which it reports to NTP clients when it is operating as a server). The reported value is the difference due to this effect.',
+    },
+
+    'chrony.root_delay': {
+        info: 'The total of the network path delays to the stratum-1 computer from which the computer is ultimately synchronised.'
+    },
+
+    'chrony.root_dispersion': {
+        info: 'The total dispersion accumulated through all the computers back to the stratum-1 computer from which the computer is ultimately synchronised. Dispersion is due to system clock resolution, statistical measurement variations, etc.'
+    },
+
+    'chrony.last_offset': {
+        info: 'The estimated local offset on the last clock update. A positive value indicates the local time (as previously estimated true time) was ahead of the time sources.',
     },
 
     'chrony.frequency': {
-        info: 'The <code>frequency</code> is the rate by which the system\'s clock would be would be wrong if chronyd was not correcting it. It is expressed in ppm (parts per million). For example, a value of 1ppm would mean that when the system\'s clock thinks it has advanced 1 second, it has actually advanced by 1.000001 seconds relative to true time.',
-        colors: NETDATA.colors[0]
+        info: 'The <b>frequency</b> is the rate by which the system’s clock would be wrong if chronyd was not correcting it. It is expressed in ppm (parts per million). For example, a value of 1 ppm would mean that when the system’s clock thinks it has advanced 1 second, it has actually advanced by 1.000001 seconds relative to true time.',
     },
 
-    'chrony.residualfreq': {
-        info: 'This shows the <code>residual frequency</code> for the currently selected reference source. ' +
-            'It reflects any difference between what the measurements from the reference source indicate the ' +
-            'frequency should be and the frequency currently being used. The reason this is not always zero is ' +
-            'that a smoothing procedure is applied to the frequency. Each time a measurement from the reference ' +
-            'source is obtained and a new residual frequency computed, the estimated accuracy of this residual ' +
-            'is compared with the estimated accuracy (see <code>skew</code>) of the existing frequency value. ' +
-            'A weighted average is computed for the new frequency, with weights depending on these accuracies. ' +
-            'If the measurements from the reference source follow a consistent trend, the residual will be ' +
-            'driven to zero over time.',
-        height: 0.5,
-        colors: NETDATA.colors[3]
+    'chrony.residual_frequency': {
+        info: 'The <b>residual frequency</b> for the currently selected reference source. This reflects any difference between what the measurements from the reference source indicate the frequency should be and the frequency currently being used. The reason this is not always zero is that a smoothing procedure is applied to the frequency.',
     },
 
     'chrony.skew': {
         info: 'The estimated error bound on the frequency.',
-        height: 0.5,
-        colors: NETDATA.colors[5]
     },
+
+    'chrony.ref_measurement_time': {
+        info: 'The time elapsed since the last measurement from the reference source was processed.',
+    },
+
+    'chrony.leap_status': {
+        info: '<p>The current leap status of the source.</p><p><b>Normal</b> - indicates the normal status (no leap second). <b>InsertSecond</b> - indicates that a leap second will be inserted at the end of the month. <b>DeleteSecond</b> - indicates that a leap second will be deleted at the end of the month. <b>Unsynchronised</b> - the server has not synchronized properly with the NTP server.</p>',
+    },
+
+    'chrony.activity': {
+        info: '<p>The number of servers and peers that are online and offline.</p><p><b>Online</b> - the server or peer is currently online (i.e. assumed by chronyd to be reachable). <b>Offline</b> - the server or peer is currently offline (i.e. assumed by chronyd to be unreachable, and no measurements from it will be attempted). <b>BurstOnline</b> - a burst command has been initiated for the server or peer and is being performed. After the burst is complete, the server or peer will be returned to the online state. <b>BurstOffline</b> - a burst command has been initiated for the server or peer and is being performed. After the burst is complete, the server or peer will be returned to the offline state. <b>Unresolved</b> - the name of the server or peer was not resolved to an address yet.</p>',
+    },
+
+    // ------------------------------------------------------------------------
+    // Couchdb
 
     'couchdb.active_tasks': {
         info: 'Active tasks running on this CouchDB <b>cluster</b>. Four types of tasks currently exist: indexer (view building), replication, database compaction and view compaction.'
