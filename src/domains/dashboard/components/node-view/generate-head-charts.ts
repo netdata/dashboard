@@ -10,12 +10,18 @@ export const generateHeadCharts = (type: string, chart: ChartMetadata, duration:
   //   return '';
   // }
 
-  const hcharts = netdataDashboard.anyAttribute(netdataDashboard.context, type, chart.context, [])
-  return hcharts.map((hChart: HeadDescription) => (typeof hChart === "function"
-    ? hChart(netdataDashboard.os, chart.id)
-      .replace(/CHART_DURATION/g, duration.toString())
-      .replace(/CHART_UNIQUE_ID/g, chart.id)
-    : hChart.replace(/CHART_DURATION/g, duration.toString())
-      .replace(/CHART_UNIQUE_ID/g, chart.id)
-  ))
+  const hcharts = netdataDashboard.anyAttribute(
+    netdataDashboard.context,
+    type,
+    chart.context,
+    [],
+    chart.domain
+  )
+  return hcharts.map((hChart: HeadDescription) =>
+    typeof hChart === "function"
+      ? hChart(netdataDashboard.os, chart.id)
+          .replace(/CHART_DURATION/g, duration.toString())
+          .replace(/CHART_UNIQUE_ID/g, chart.id)
+      : hChart.replace(/CHART_DURATION/g, duration.toString()).replace(/CHART_UNIQUE_ID/g, chart.id)
+  )
 }
