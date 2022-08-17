@@ -211,8 +211,8 @@ export const netdataDashboard = {
     return this.anyAttribute(this.submenu, "height", key, 1.0) * relative
   },
 
-  contextInfo(id: string) {
-    const x = this.anyAttribute(this.context, "info", id, null)
+  contextInfo(id: string, domain?: string) {
+    const x = this.anyAttribute(this.context, "info", id, null, domain)
 
     if (x !== null) {
       return `<div class="shorten dashboard-context-info"
