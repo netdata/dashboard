@@ -3907,10 +3907,10 @@ netdataDashboard.context = {
                 }
             ],
         },
-        info: '<p>A connection is an established line of communication between a client and the PostgreSQL server. Each connection adds to the load on the PostgreSQL server. To guard against running out of memory or overloading the database the <i>max_connections</i> parameter (default = 100) defines the maximum number of concurrent connections to the database server. A separate parameter, <i>superuser_reserved_connections</i> (default = 3), defines the quota for superuser connections (so that superusers can connect even if all other connection slots are blocked).</p><p></p><p><b>Total connection utilization across all databases.</b> Utilization is measured as a percentage of (<i>max_connections</i> - <i>superuser_reserved_connections</i>). If the utilization is 100% no more new connections will be accepted (superuser connections will stil be accepted if superuser quota is available).</p>'
+        info: '<p>A connection is an established line of communication between a client and the PostgreSQL server. Each connection adds to the load on the PostgreSQL server. To guard against running out of memory or overloading the database the <i>max_connections</i> parameter (default = 100) defines the maximum number of concurrent connections to the database server. A separate parameter, <i>superuser_reserved_connections</i> (default = 3), defines the quota for superuser connections (so that superusers can connect even if all other connection slots are blocked).</p><p><br></p><p><b>Total connection utilization</b> across all databases. Utilization is measured as a percentage of (<i>max_connections</i> - <i>superuser_reserved_connections</i>). If the utilization is 100% no more new connections will be accepted (superuser connections will still be accepted if superuser quota is available).</p>'
     },
     'postgres.connections_usage': {
-        info: '<p><b>Connections usage.</b> The maximum number of concurrent connections to the database server is (<i>max_connections</i> - <i>superuser_reserved_connections</i>). As a general rule, if you need more than 200 connections it is advisable to use connection pooling.</p><p><b>Available</b> - new connections allowed. </p><p><b>Used</b> - connections currently in use.</p>'
+        info: '<p><b>Connections usage</b> across all databases. The maximum number of concurrent connections to the database server is (<i>max_connections</i> - <i>superuser_reserved_connections</i>). As a general rule, if you need more than 200 connections it is advisable to use connection pooling.</p><p><b>Available</b> - new connections allowed. </p><p><b>Used</b> - connections currently in use.</p>'
     },
     'postgres.checkpoints': {
         info: '<p>Number of checkpoints that have been performed. Checkpoints are periodic maintenance operations the database performs to make sure that everything it’s been caching in memory has been synchronized with the disk. It’s desirable when checkpoints are scheduled rather than requested, as the latter can indicate that your databases are under heavy load.</p><p><b>Scheduled</b> - checkpoints triggered due that the time elapsed from the previous checkpoint is more than pg setting <i>checkpoint_timeout</i>. <b>Requested</b> - checkpoints ran due to uncheckpointed WAL size grew to more than <i>max_wal_size</i> setting.</p>'
@@ -3989,6 +3989,7 @@ netdataDashboard.context = {
         info: 'Number of current connections per database.'
     },    
     'postgres.db_buffer_cache_hit_ratio': {
+        /*
         room: { 
             mainheads: [
                 function (_, id) {
@@ -4009,12 +4010,35 @@ netdataDashboard.context = {
                 }
             ],
         },
+        */
         info: 'Buffer cache hit ratio. When clients request data, postgres checks shared memory and if there are no relevant data there it has to read it from disk, thus queries become slower.'
     },
     'postgres.db_blocks_read': {
         info: '<p>Number of blocks read from shared buffer cache or from disk.</p><p><b>disk</b> - number of disk blocks read. <b>memory</b> - number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system\'s file system cache).</p>'
     },
     'postgres.db_rows_read_ratio': {
+        /*
+        room: {
+            mainheads: [
+                function (_, id) {
+                    cgroupMemLimitIsSet = 1;
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-append-options="percentage"'
+                        + ' data-gauge-max-value="100"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="Rows Fetched vs Returned"'
+                        + ' data-units="%"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[1] + '"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },
+        */
         info: 'Percentage of returned/fetched rows.'
     },
     'postgres.db_rows_read': {
