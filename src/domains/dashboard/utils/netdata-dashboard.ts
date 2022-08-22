@@ -127,11 +127,13 @@ export const netdataDashboard = {
       + " role=\"application\"></div>"
   },
 
-  anyAttribute(obj: AnyStringKeyT, attr: string, key: string, def: unknown) {
+  anyAttribute(obj: AnyStringKeyT, attr: string, key: string, def: unknown, domain?: string) {
     if (typeof (obj[key]) !== "undefined") {
-      const x = obj[key][attr]
+      const config = obj[key]
+      const configWithDomain = domain ? {...config, ...config[domain]} : config
+      const x = configWithDomain[attr]
 
-      if (typeof (x) === "undefined") {
+      if (x === undefined) {
         return def
       }
 
@@ -209,8 +211,8 @@ export const netdataDashboard = {
     return this.anyAttribute(this.submenu, "height", key, 1.0) * relative
   },
 
-  contextInfo(id: string) {
-    const x = this.anyAttribute(this.context, "info", id, null)
+  contextInfo(id: string, domain?: string) {
+    const x = this.anyAttribute(this.context, "info", id, null, domain)
 
     if (x !== null) {
       return `<div class="shorten dashboard-context-info"

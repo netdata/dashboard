@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-/* eslint-disable */
 
 // Codacy declarations
 /* global NETDATA */
@@ -338,6 +337,12 @@ netdataDashboard.menu = {
         title: 'PostgreSQL',
         icon: '<i class="fas fa-database"></i>',
         info: 'Performance metrics for <b>PostgreSQL</b>, the open source object-relational database management system (ORDBMS).'
+    },
+
+    'pgbouncer': {
+        title: 'PgBouncer',
+        icon: '<i class="fas fa-exchange-alt"></i>',
+        info: 'Performance metrics for PgBouncer, an open source connection pooler for PostgreSQL.'
     },
 
     'redis': {
@@ -3797,95 +3802,31 @@ netdataDashboard.context = {
 
     // ------------------------------------------------------------------------
     // POSTGRESQL
-
-    // python version start
-    'postgres.db_stat_blks': {
-        info: 'Blocks reads from disk or cache.<ul>' +
-            '<li><strong>blks_read:</strong> number of disk blocks read in this database.</li>' +
-            '<li><strong>blks_hit:</strong> number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system&#39;s file system cache)</li>' +
-            '</ul>'
-    },
-    'postgres.db_stat_tuple_write': {
-        info: '<ul><li>Number of rows inserted/updated/deleted.</li>' +
-            '<li><strong>conflicts:</strong> number of queries canceled due to conflicts with recovery in this database. (Conflicts occur only on standby servers; see <a href="https://www.postgresql.org/docs/10/static/monitoring-stats.html#PG-STAT-DATABASE-CONFLICTS-VIEW" target="_blank">pg_stat_database_conflicts</a> for details.)</li>' +
-            '</ul>'
-    },
-    'postgres.db_stat_temp_bytes': {
-        info: 'Temporary files can be created on disk for sorts, hashes, and temporary query results.'
-    },
-    'postgres.db_stat_temp_files': {
-        info: '<ul>' +
-            '<li><strong>files:</strong> number of temporary files created by queries. All temporary files are counted, regardless of why the temporary file was created (e.g., sorting or hashing).</li>' +
-            '</ul>'
-    },
-    'postgres.archive_wal': {
-        info: 'WAL archiving.<ul>' +
-            '<li><strong>total:</strong> total files.</li>' +
-            '<li><strong>ready:</strong> WAL waiting to be archived.</li>' +
-            '<li><strong>done:</strong> WAL successfully archived. ' +
-            'Ready WAL can indicate archive_command is in error, see <a href="https://www.postgresql.org/docs/current/static/continuous-archiving.html" target="_blank">Continuous Archiving and Point-in-Time Recovery</a>.</li>' +
-            '</ul>'
-    },
-    'postgres.checkpointer': {
-        info: 'Number of checkpoints.<ul>' +
-            '<li><strong>scheduled:</strong> when checkpoint_timeout is reached.</li>' +
-            '<li><strong>requested:</strong> when max_wal_size is reached.</li>' +
-            '</ul>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/static/wal-configuration.html" target="_blank">WAL Configuration</a>.'
-    },
-    'postgres.autovacuum': {
-        info: 'PostgreSQL databases require periodic maintenance known as vacuuming. For many installations, it is sufficient to let vacuuming be performed by the autovacuum daemon. ' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/static/routine-vacuuming.html#AUTOVACUUM" target="_blank">The Autovacuum Daemon</a>.'
-    },
-    'postgres.standby_delta': {
-        info: 'Streaming replication delta.<ul>' +
-            '<li><strong>sent_delta:</strong> replication delta sent to standby.</li>' +
-            '<li><strong>write_delta:</strong> replication delta written to disk by this standby.</li>' +
-            '<li><strong>flush_delta:</strong> replication delta flushed to disk by this standby server.</li>' +
-            '<li><strong>replay_delta:</strong> replication delta replayed into the database on this standby server.</li>' +
-            '</ul>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/static/warm-standby.html#SYNCHRONOUS-REPLICATION" target="_blank">Synchronous Replication</a>.'
-    },
-    'postgres.replication_slot': {
-        info: 'Replication slot files.<ul>' +
-            '<li><strong>wal_keeped:</strong> WAL files retained by each replication slots.</li>' +
-            '<li><strong>pg_replslot_files:</strong> files present in pg_replslot.</li>' +
-            '</ul>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/static/warm-standby.html#STREAMING-REPLICATION-SLOTS" target="_blank">Replication Slots</a>.'
-    },
-    'postgres.backend_usage': {
-        info: 'Connections usage against maximum connections allowed, as defined in the <i>max_connections</i> setting.<ul>' +
-            '<li><strong>available:</strong> maximum new connections allowed.</li>' +
-            '<li><strong>used:</strong> connections currently in use.</li>' +
-            '</ul>' +
-            'Assuming non-superuser accounts are being used to connect to Postgres (so <i>superuser_reserved_connections</i> are subtracted from <i>max_connections</i>).<br/>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/runtime-config-connection.html" target="_blank">Connections and Authentication</a>.'
-    },
-    'postgres.forced_autovacuum': {
-        info: 'Percent towards forced autovacuum for one or more tables.<ul>' +
-            '<li><strong>percent_towards_forced_autovacuum:</strong> a forced autovacuum will run once this value reaches 100.</li>' +
-            '</ul>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
-    },
-    'postgres.tx_wraparound_oldest_current_xid': {
-        info: 'The oldest current transaction id (xid).<ul>' +
-            '<li><strong>oldest_current_xid:</strong> oldest current transaction id.</li>' +
-            '</ul>' +
-            'If for some reason autovacuum fails to clear old XIDs from a table, the system will begin to emit warning messages when the database\'s oldest XIDs reach eleven million transactions from the wraparound point.<br/>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
-    },
-    'postgres.percent_towards_wraparound': {
-        info: 'Percent towards transaction wraparound.<ul>' +
-            '<li><strong>percent_towards_wraparound:</strong> transaction wraparound may occur when this value reaches 100.</li>' +
-            '</ul>' +
-            'For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
-    },
-    // python version end
     'postgres.connections_utilization': {
-        info: 'Connections in use as percentage of <i>max_connections</i>. Connection "slots" that are reserved for superusers (<i>superuser_reserved_connections</i>) are subtracted from the limit. If the utilization is 100% new connections will be accepted only for superusers, and no new replication connections will be accepted.'
+        room: { 
+            mainheads: [
+                function (_, id) {
+                    cgroupMemLimitIsSet = 1;
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-append-options="percentage"'
+                        + ' data-gauge-max-value="100"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="Connections Utilization"'
+                        + ' data-units="%"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[1] + '"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },
+        info: '<p>A connection is an established line of communication between a client and the PostgreSQL server. Each connection adds to the load on the PostgreSQL server. To guard against running out of memory or overloading the database the <i>max_connections</i> parameter (default = 100) defines the maximum number of concurrent connections to the database server. A separate parameter, <i>superuser_reserved_connections</i> (default = 3), defines the quota for superuser connections (so that superusers can connect even if all other connection slots are blocked).</p><p><br></p><p><b>Total connection utilization</b> across all databases. Utilization is measured as a percentage of (<i>max_connections</i> - <i>superuser_reserved_connections</i>). If the utilization is 100% no more new connections will be accepted (superuser connections will still be accepted if superuser quota is available).</p>'
     },
     'postgres.connections_usage': {
-        info: '<p>Connections usage. The maximum number of concurrent connections to the database server is <i>max_connections</i> minus <i>superuser_reserved_connections</i>.</p><p><b>Available</b> - new connections allowed. <b>Used</b> - connections currently in use.</p>'
+        info: '<p><b>Connections usage</b> across all databases. The maximum number of concurrent connections to the database server is (<i>max_connections</i> - <i>superuser_reserved_connections</i>). As a general rule, if you need more than 200 connections it is advisable to use connection pooling.</p><p><b>Available</b> - new connections allowed. <b>Used</b> - connections currently in use.</p>'
     },
     'postgres.checkpoints': {
         info: '<p>Number of checkpoints that have been performed. Checkpoints are periodic maintenance operations the database performs to make sure that everything it’s been caching in memory has been synchronized with the disk. It’s desirable when checkpoints are scheduled rather than requested, as the latter can indicate that your databases are under heavy load.</p><p><b>Scheduled</b> - checkpoints triggered due that the time elapsed from the previous checkpoint is more than pg setting <i>checkpoint_timeout</i>. <b>Requested</b> - checkpoints ran due to uncheckpointed WAL size grew to more than <i>max_wal_size</i> setting.</p>'
@@ -3921,6 +3862,23 @@ netdataDashboard.context = {
         info: 'The oldest current transaction ID (XID). If for some reason autovacuum fails to clear old XIDs from a table, the system will begin to emit warning messages when the database\'s oldest XIDs reach eleven million transactions from the wraparound point. For more information see <a href="https://www.postgresql.org/docs/current/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND" target="_blank">Preventing Transaction ID Wraparound Failures</a>.'
     },
     'postgres.uptime': {
+        room: { 
+            mainheads: [
+                function (os, id) {
+                    void (os);
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-chart-library="easypiechart"'
+                        + ' data-title="Uptime"'
+                        + ' data-units="Seconds"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="10%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },
         info: 'The time elapsed since the Postgres process was started.'
     },
 
@@ -3941,18 +3899,62 @@ netdataDashboard.context = {
         info: '<p>Number of transactions that have been performed</p><p><b>Commited</b> - transactions that have been committed. All changes made by the committed transaction become visible to others and are guaranteed to be durable if a crash occurs. <b>Rollback</b> - transactions that have been rolled back. Rollback aborts the current transaction and causes all the updates made by the transaction to be discarded. Single queries that have failed outside the transactions are also accounted as rollbacks.</p>'
     },
     'postgres.db_connections_utilization': {
-        info: 'Connections in use as percentage of the database\'s <i>CONNECTION LIMIT</i> (if set) or <i>max_connections</i>.'
+        info: 'Connection utilization per database. Utilization is measured as a percentage of <i>CONNECTION LIMIT</i> per database (if set) or <i>max_connections</i> (if <i>CONNECTION LIMIT</i> is not set).'
     },
     'postgres.db_connections': {
-        info: 'Number of backends currently connected to this database.'
+        info: 'Number of current connections per database.'
     },    
     'postgres.db_buffer_cache_hit_ratio': {
+        /*
+        room: { 
+            mainheads: [
+                function (_, id) {
+                    cgroupMemLimitIsSet = 1;
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-append-options="percentage"'
+                        + ' data-gauge-max-value="100"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="Cache Hit Ratio"'
+                        + ' data-units="%"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[1] + '"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },
+        */        
         info: 'Buffer cache hit ratio. When clients request data, postgres checks shared memory and if there are no relevant data there it has to read it from disk, thus queries become slower.'
     },
     'postgres.db_blocks_read': {
         info: '<p>Number of blocks read from shared buffer cache or from disk.</p><p><b>disk</b> - number of disk blocks read. <b>memory</b> - number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system\'s file system cache).</p>'
     },
     'postgres.db_rows_read_ratio': {
+        /*
+        room: {
+            mainheads: [
+                function (_, id) {
+                    cgroupMemLimitIsSet = 1;
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-append-options="percentage"'
+                        + ' data-gauge-max-value="100"'
+                        + ' data-chart-library="gauge"'
+                        + ' data-title="Rows Fetched vs Returned"'
+                        + ' data-units="%"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="12%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' data-colors="' + NETDATA.colors[1] + '"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },
+        */        
         info: 'Percentage of returned/fetched rows.'
     },
     'postgres.db_rows_read': {
@@ -3983,9 +3985,67 @@ netdataDashboard.context = {
         info: 'Amount of data written temporarily to disk to execute queries.'
     },
     'postgres.db_size': {
+        room: {
+            mainheads: [
+                function (os, id) {
+                    void (os);
+                    return '<div data-netdata="' + id + '"'
+                        + ' data-chart-library="easypiechart"'
+                        + ' data-title="DB Size"'
+                        + ' data-units="MiB"'
+                        + ' data-gauge-adjust="width"'
+                        + ' data-width="10%"'
+                        + ' data-before="0"'
+                        + ' data-after="-CHART_DURATION"'
+                        + ' data-points="CHART_DURATION"'
+                        + ' role="application"></div>';
+                }
+            ],
+        },        
         info: 'Actual on-disk usage of the database\'s data directory and any associated tablespaces.'
     },
 
+    // ------------------------------------------------------------------------
+    // PgBouncer
+    'pgbouncer.client_connections_utilization': {
+        info: 'Client connections in use as percentage of <i>max_client_conn</i> (default 100).'
+    },
+    'pgbouncer.db_client_connections': {
+        info: '<p>Client connections in different states.</p><p><b>Active</b> - linked to server connection and can process queries. <b>Waiting</b> - have sent queries but have not yet got a server connection. <b>CancelReq</b> - have not forwarded query cancellations to the server yet.</p>'
+    },
+    'pgbouncer.db_server_connections': {
+        info: '<p>Server connections in different states.</p><p><b>Active</b> - linked to a client. <b>Idle</b> - unused and immediately usable for client queries. <b>Used</b> - have been idle for more than <i>server_check_delay</i>, so they need <i>server_check_query</i> to run on them before they can be used again. <b>Tested</b> - currently running either <i>server_reset_query</i> or <i>server_check_query</i>. <b>Login</b> - currently in the process of logging in.</p>'
+    },
+    'pgbouncer.db_server_connections_utilization': {
+        info: 'Server connections in use as percentage of <i>max_db_connections</i> (default 0 - unlimited). This considers the PgBouncer database that the client has connected to, not the PostgreSQL database of the outgoing connection.'
+    },
+    'pgbouncer.db_clients_wait_time': {
+        info: 'Time spent by clients waiting for a server connection. This shows if the decrease in database performance from the client\'s point of view was due to exhaustion of the corresponding PgBouncer pool.'
+    },
+    'pgbouncer.db_client_max_wait_time': {
+        info: 'Waiting time for the first (oldest) client in the queue. If this starts increasing, then the current pool of servers does not handle requests quickly enough.'
+    },
+    'pgbouncer.db_transactions': {
+        info: 'SQL transactions pooled (proxied) by pgbouncer.'
+    },
+    'pgbouncer.db_transactions_time': {
+        info: 'Time spent by pgbouncer when connected to PostgreSQL in a transaction, either idle in transaction or executing queries.'
+    },
+    'pgbouncer.db_transaction_avg_time': {
+        info: 'Average transaction duration.'
+    },
+    'pgbouncer.db_queries': {
+        info: 'SQL queries pooled (proxied) by pgbouncer.'
+    },
+    'pgbouncer.db_queries_time': {
+        info: 'Time spent by pgbouncer when actively connected to PostgreSQL, executing queries.'
+    },
+    'pgbouncer.db_query_avg_time': {
+        info: 'Average query duration.'
+    },
+    'pgbouncer.db_network_io': {
+        info: '<p>Network traffic received and sent by pgbouncer.</p><p><b>Received</b> - received from clients. <b>Sent</b> - sent to servers.</p>'
+    },
 
     // ------------------------------------------------------------------------
     // APACHE

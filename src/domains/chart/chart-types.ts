@@ -70,6 +70,7 @@ export interface ChartMetadata {
   dimensions: {
     [key: string]: Dimension
   }
+  domain?: string
   chartLabels?: {
     [key: string]: string[]
   }

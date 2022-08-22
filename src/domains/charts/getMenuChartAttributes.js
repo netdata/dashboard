@@ -7,7 +7,7 @@ export const getChartCommon = ({ family, context, units }, type) =>
     : `${family}/${context}/${units}`
 
 export default chart => {
-  const { context, id } = chart
+  const { context, domain, id } = chart
   const commonMin = getChartCommon(chart, "commonMin")
   const commonMax = getChartCommon(chart, "commonMax")
 
@@ -19,11 +19,17 @@ export default chart => {
     chartLibrary: "dygraph",
     width: "100%",
     forceTimeWindow: true,
-    info: netdataDashboard.contextInfo(context),
+    info: netdataDashboard.contextInfo(context, domain),
     height: netdataDashboard.contextHeight(context, options.chartsHeight),
     dygraphValueRange: netdataDashboard.contextValueRange(context),
     heightId: `${name2id(`${options.hostname}/${id}`)}`,
-    colors: `${netdataDashboard.anyAttribute(netdataDashboard.context, "colors", context, "")}`,
+    colors: `${netdataDashboard.anyAttribute(
+      netdataDashboard.context,
+      "colors",
+      context,
+      "",
+      domain
+    )}`,
     decimalDigits: netdataDashboard.contextDecimalDigits(context, -1),
     dygraphTitle: "",
     dygraphTitleHeight: 0,
