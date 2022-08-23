@@ -3,7 +3,6 @@ import styled from "styled-components"
 import { Flex, Box } from "@netdata/netdata-ui"
 import Node from "./node"
 import Options from "./options"
-import ProtoBuf from "./protoBuf"
 import Version from "./version"
 import GlobalControls from "./globalControls"
 import Alarms from "./alarms"
@@ -35,7 +34,6 @@ const Header = () => (
       <Version />
       <News />
       <Options />
-      <ProtoBuf />
       <Timezone />
       <GlobalControls />
       <Alarms />
