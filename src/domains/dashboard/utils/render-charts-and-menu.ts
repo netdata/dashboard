@@ -128,6 +128,16 @@ function enrichChartData(chartName: string, chart: ChartMetadata, hasKubernetes:
       }
       break
 
+    case "dnsmasq":
+      if (parts.length == 2 && parts[1] === "dhcp") {
+        chartEnriched.menu = `${tmp}_${parts[1]}`
+      } else if (parts.length > 2 && parts[1] === "dhcp") {
+        chartEnriched.menu_pattern = `${tmp}_${parts[1]}`
+      } else if (parts.length > 1) {
+        chartEnriched.menu_pattern = tmp
+      }
+      break
+
     case "anomaly":
       if (parts.length >= 2 && parts[1].startsWith('detection')) {
         chartEnriched.menu = `${tmp}_detection`
