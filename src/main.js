@@ -268,14 +268,10 @@ window.urlOptions = {
     },
 
     netdataPanAndZoomCallback: function (status, after, before) {
-        //console.log(1);
-        //console.log(new Error().stack);
-
         if (netdataSnapshotData === null) {
             urlOptions.pan_and_zoom = status;
             urlOptions.after = after;
             urlOptions.before = before;
-            urlOptions.hashUpdate();
         }
     },
 

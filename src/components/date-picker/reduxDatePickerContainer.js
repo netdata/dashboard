@@ -56,7 +56,12 @@ const ReduxDatePickerContainer = memo(({ tagging, isPlaying }) => {
 
   useEffect(() => {
     const { start, end } = pickedValues
-    setHashParams({ after: start.toString(), before: end.toString() })
+    const after = start.toString()
+    const before = end.toString()
+    if (window.urlOptions.after !== after || window.urlOptions.before !== before) {
+      window.urlOptions.netdataPanAndZoomCallback(true, after, before)
+    }
+    setHashParams({ after, before })
   }, [pickedValues])
   return (
     <DatePickerDrop
