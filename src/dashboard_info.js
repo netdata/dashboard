@@ -291,6 +291,12 @@ netdataDashboard.menu = {
         info: 'QEMU virtual machine resource utilization metrics. QEMU (short for Quick Emulator) is a free and open-source hosted hypervisor that performs hardware virtualization.'
     },
 
+    'docker': {
+        title: 'Docker',
+        icon: '<i class="fas fa-cube"></i>',
+        info: 'Docker containers state and disk usage.'
+    },
+
     'fping': {
         title: 'fping',
         icon: '<i class="fas fa-exchange-alt"></i>',
@@ -3767,21 +3773,11 @@ netdataDashboard.context = {
     },
 
     'mysql.galera_cluster_status': {
-        info:
-            '<code>-1</code>: unknown, ' +
-            '<code>0</code>: primary (primary group configuration, quorum present), ' +
-            '<code>1</code>: non-primary (non-primary group configuration, quorum lost), ' +
-            '<code>2</code>: disconnected(not connected to group, retrying).'
+        info: "<p>Status of this cluster component.</p><p><b>Primary</b> - primary group configuration, quorum present. <b>Non-Primary</b> - non-primary group configuration, quorum lost. <b>Disconnected</b> - not connected to group, retrying.</p>"
     },
 
     'mysql.galera_cluster_state': {
-        info:
-            '<code>0</code>: Undefined, ' +
-            '<code>1</code>: Joining, ' +
-            '<code>2</code>: Donor/Desynced, ' +
-            '<code>3</code>: Joined, ' +
-            '<code>4</code>: Synced, ' +
-            '<code>5</code>: Inconsistent.'
+        info: "<p>Membership state of this cluster component.</p><p><b>Undefined</b> - undefined state. <b>Joining</b> - the node is attempting to join the cluster. <b>Donor</b> - the node has blocked itself while it sends a State Snapshot Transfer (SST) to bring a new node up to date with the cluster. <b>Joined</b> - the node has successfully joined the cluster. <b>Synced</b> - the node has established a connection with the cluster and synchronized its local databases with those of the cluster. <b>Error</b> - the node is not part of the cluster and does not replicate transactions. This state is provider-specific, check <i>wsrep_local_state_comment</i> variable for a description.</p>"
     },
 
     'mysql.galera_cluster_weight': {
@@ -3927,7 +3923,7 @@ netdataDashboard.context = {
             ],
         },
         */        
-        info: 'Buffer cache hit ratio. When clients request data, postgres checks shared memory and if there are no relevant data there it has to read it from disk, thus queries become slower.'
+        info: 'PostgreSQL uses a <b>shared buffer cache</b> to store frequently accessed data in memory, and avoid slower disk reads. If you are seeing performance issues, consider increasing the <a href="https://www.postgresql.org/docs/current/runtime-config-resource.html#GUC-SHARED-BUFFERS" target="_blank"><i>shared_buffers</i></a> size or tuning <a href="https://www.postgresql.org/docs/current/runtime-config-query.html#GUC-EFFECTIVE-CACHE-SIZE" target="_blank"><i>effective_cache_size</i></a>.'
     },
     'postgres.db_blocks_read': {
         info: '<p>Number of blocks read from shared buffer cache or from disk.</p><p><b>disk</b> - number of disk blocks read. <b>memory</b> - number of times disk blocks were found already in the buffer cache, so that a read was not necessary (this only includes hits in the PostgreSQL buffer cache, not the operating system\'s file system cache).</p>'
@@ -3955,19 +3951,19 @@ netdataDashboard.context = {
             ],
         },
         */        
-        info: 'Percentage of returned/fetched rows.'
+        info: 'The percentage of rows that contain data needed to execute the query, out of the total number of rows scanned. A high value indicates that the database is executing queries efficiently, while a low value indicates that the database is performing extra work by scanning a large number of rows that aren\'t required to process the query. Low values may be caused by missing indexes or inefficient queries.'
     },
     'postgres.db_rows_read': {
-        info: '<p>Read queries throughput.</p><p><b>Returned</b> - number of rows returned by queries. The value keeps track of the number of rows read/scanned, not the rows actually returned to the client. <b>Fetched</b> - number of rows fetched that contained data necessary to execute the query successfully.</p>'
+        info: '<p>Read queries throughput.</p><p><b>Returned</b> - Total number of rows scanned by queries. This value indicates rows returned by the storage layer to be scanned, not rows returned to the client. <b>Fetched</b> - Subset of scanned rows (<b>Returned</b>) that contained data needed to execute the query.</p>'
     },
     'postgres.db_rows_written': {
         info: '<p>Write queries throughput.</p><p><b>Inserted</b> - number of rows inserted by queries. <b>Deleted</b> - number of rows deleted by queries. <b>Updated</b> - number of rows updated by queries.</p>'
     },
     'postgres.db_conflicts': {
-        info: 'Number of queries canceled due to conflicts with recovery. Conflicts occur only on standby servers.'
+        info: 'Number of queries canceled due to conflict with recovery on standby servers. To minimize query cancels caused by cleanup records consider configuring <a href="https://www.postgresql.org/docs/current/runtime-config-replication.html#GUC-HOT-STANDBY-FEEDBACK" target="_blank"><i>hot_standby_feedback</i></a>.'
     },
     'postgres.db_conflicts_stat': {
-        info: '<p>Number of queries canceled due to conflicts with recovery.</p><p><b>Tablespace</b> - queries that have been canceled due to dropped tablespaces. <b>Lock</b> - queries that have been canceled due to lock timeouts. <b>Snapshot</b> - queries that have been canceled due to old snapshots. <b>Bufferpin</b> - queries that have been canceled due to pinned buffers. <b>Deadlock</b> - queries that have been canceled due to deadlocks.</p>'
+        info: '<p>Statistics about queries canceled due to various types of conflicts on standby servers.</p><p><b>Tablespace</b> - queries that have been canceled due to dropped tablespaces. <b>Lock</b> - queries that have been canceled due to lock timeouts. <b>Snapshot</b> - queries that have been canceled due to old snapshots. <b>Bufferpin</b> - queries that have been canceled due to pinned buffers. <b>Deadlock</b> - queries that have been canceled due to deadlocks.</p>'
     },
     'postgres.db_deadlocks': {
         info: 'Number of detected deadlocks. When a transaction cannot acquire the requested lock within a certain amount of time (configured by <b>deadlock_timeout</b>), it begins deadlock detection.'
