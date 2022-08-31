@@ -28,7 +28,7 @@ export const makeHashFromObject = (params: { [paramKey: string]: string }) => {
     return ""
   }
   return entries
-    .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+    .map(([key, value]) => value !== undefined ? `${key}=${encodeURIComponent(value)}` : key)
     .join(fragmentParamsSeparator)
 }
 
