@@ -14,6 +14,9 @@ module.exports = {
     },
     {
       files: ["*.ts", "*.tsx"],
+      globals: {
+        JSX: true,
+      },
       parser: "@typescript-eslint/parser",
       plugins: ["@typescript-eslint"],
       parserOptions: {
@@ -21,7 +24,10 @@ module.exports = {
         ecmaVersion: 2020,
         sourceType: "module",
       },
-      rules: {},
+      rules: {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+      },
     },
   ],
   parser: "babel-eslint",
@@ -37,6 +43,5 @@ module.exports = {
     "react/prop-types": [0],
     "react-hooks/rules-of-hooks": "error",
     "react/display-name": 0,
-  },
-  types: ["node", "jest", "@testing-library/jest-dom"],
+  }
 }
