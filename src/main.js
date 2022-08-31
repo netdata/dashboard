@@ -247,7 +247,9 @@ window.urlOptions = {
                 if (urlOptions.pan_and_zoom === false) {
                     urlOptions.pan_and_zoom = true;
                     urlOptions.before = Date.now();
-                    urlOptions.after = urlOptions.before - 600000;
+                    const fallbackAfter = -600000
+                    const defaultAfter = urlOptions.after ? urlOptions.after * 1000 : fallbackAfter
+                    urlOptions.after = urlOptions.before + defaultAfter;
                 }
 
                 netdataShowAlarms = false;
@@ -2682,7 +2684,10 @@ window.printPreflight = () => {
 
 function printPage() {
     window.NETDATA.parseDom();
-    if (urlOptions.pan_and_zoom === true) {
+
+    if (urlOptions.after < 0) {
+        reduxStore.dispatch(setDefaultAfterAction({ after: urlOptions.after }))
+    } else if (urlOptions.pan_and_zoom === true) {
         reduxStore.dispatch(setGlobalPanAndZoomAction({
             after: urlOptions.after,
             before: urlOptions.before,
