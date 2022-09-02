@@ -1085,6 +1085,17 @@ function enrichChartData(chart) {
             }
             break;
 
+        case 'dnsmasq':
+            chart.menu = chart.type;
+            if (parts.length == 2 && parts[1] === 'dhcp') {
+                chart.menu = tmp + '_' + parts[1];
+            } else if (parts.length > 2 && parts[1] === 'dhcp') {
+                chart.menu_pattern = tmp + '_' + parts[1];
+            } else if (parts.length > 1) {
+                chart.menu_pattern = tmp;
+            }
+            break;
+
         case 'anomaly':
             if (parts.length >= 2 && parts[1].startsWith('detection')) {
                 chart.menu = tmp + '_detection';

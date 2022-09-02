@@ -103,6 +103,17 @@ export default (
       return emit({ menuPattern })
     }
 
+    case "dnsmasq": {
+      if (parts.length == 2 && parts[1] === "dhcp") {
+        return emit({ menu: `${part1}_${part2}` })
+      }
+      if (parts.length >= 2 && parts[1] === "dhcp") {
+        return emit({ menuPattern: `${part1}_${part2}` })
+      }
+      const menuPattern = parts.length > 1 ? part1 : undefined
+      return emit({ menuPattern })
+    }
+
     case "prometheus": {
       if (parts.length !== 1) {
         if (composite && typeC) return emit({ menuPattern: `${type} ${typeB.replace("-", " ")}` })
