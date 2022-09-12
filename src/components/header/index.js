@@ -11,6 +11,8 @@ import Timezone from "./timezone"
 import SignIn from "./signIn"
 import { CloudConnectionStatus } from "./ACLK"
 import { DiscoverCloud } from "@/src/components/discover-cloud"
+import { selectIsCloudEnabled } from "domains/global/selectors"
+import { useSelector } from "react-redux"
 
 const Wrapper = styled(Flex).attrs({
   as: "header",
@@ -24,25 +26,29 @@ const Wrapper = styled(Flex).attrs({
   pointer-events: all;
 `
 
-const Header = () => (
-  <Wrapper>
-    <Flex alignItems="center" gap={3}>
-      <Node />
-    </Flex>
-    <Flex justifyContent="end" alignItems="center" gap={3}>
-      <CloudConnectionStatus />
-      <Version />
-      <News />
-      <Options />
-      <Timezone />
-      <GlobalControls />
-      <Alarms />
-      <SignIn />
-    </Flex>
-    <Box sx={{ background: "#272B30" }} position="absolute" top="52px" left="0px" right="0px">
-      <DiscoverCloud />
-    </Box>
-  </Wrapper>
-)
+const Header = () => {
+const cloudEnabled = useSelector(selectIsCloudEnabled)
+
+ return <Wrapper>
+  <Flex alignItems="center" gap={3}>
+    <Node />
+  </Flex>
+  <Flex justifyContent="end" alignItems="center" gap={3}>
+    <CloudConnectionStatus />
+    <Version />
+    <News />
+    <Options />
+    <Timezone />
+    <GlobalControls />
+    <Alarms />
+    <SignIn />
+  </Flex>
+ {cloudEnabled&& <Box sx={{ background: "#272B30" }} position="absolute" top="52px" left="0px" right="0px">
+    <DiscoverCloud />
+  </Box>} 
+</Wrapper>
+}
+
+
 
 export default Header

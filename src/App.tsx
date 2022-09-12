@@ -49,6 +49,7 @@ import { netdataCallback, updateLocaleFunctions } from "./main"
 import { MigrationManager } from "@/src/domains/dashboard/components/migration-manager"
 import { isDemo } from "./utils/is-demo"
 import { Box } from "@netdata/netdata-ui"
+import { selectIsCloudEnabled } from "domains/global/selectors"
 
 const FakeMargin = Box
 
@@ -56,6 +57,8 @@ const FakeMargin = Box
 window.Ps = Ps
 
 const App: React.FC = () => {
+  const cloudEnabled = useSelector(selectIsCloudEnabled)
+
   const store = useStore()
   useEffect(() => {
     // todo
@@ -139,7 +142,7 @@ const App: React.FC = () => {
               </>
             )}
           </Layout>
-          <FakeMargin height={15} />
+          {cloudEnabled && <FakeMargin height={15} />}
         </>
       )}
     </ThemeProvider>
