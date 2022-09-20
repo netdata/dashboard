@@ -35,7 +35,7 @@ const getNodes = (hosts, hostname, hostsStatus) => {
     .map(({ hostname }, index) => ({
       hostname,
       url: getNodeUrl(baseUrl, hostname),
-      status: hostsStatus[index + 1].reachable,
+      status: hostsStatus.find(host => host.hostname === hostname)?.reachable || false,
     }))
     .sort((a, b) => naturalSortCompare(a.hostname, b.hostname))
 
