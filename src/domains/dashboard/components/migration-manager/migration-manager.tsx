@@ -80,7 +80,7 @@ const MigrationManager = () => {
   /**
    * There is seem to be a bug when we are using the useLocalStorage,
    * the value to be returned does not change when preferenceID is changing.
-   * For that reason we acces the localStorage directly
+   * For that reason we access the localStorage directly
    */
   const [, savePromoRemindMeSelection] = useLocalStorage(preferenceID)
   const hasPromoSelectionSaved = localStorage.getItem(preferenceID)

@@ -3834,7 +3834,7 @@ netdataDashboard.context = {
         info: 'Allocated and re-allocated buffers. If a backend process requests data it is either found in a block in shared buffer cache or the block has to be allocated (read from disk). The latter is counted as <b>Allocated</b>.'
     },
     'postgres.bgwriter_buffers_written': {
-        info: '<p>Amount of data flushed from memory to disk.</p><p><b>Checkpoint</b> - buffers written during checkpoints. <b>Backend</b> -  buffers written directly by a backend. It may happen that a dirty page is requested by a backend process. In this case the page is synched to disk before the page is returned to the client. <b>Clean</b> - buffers written by the background writer. PostgreSQL may clear pages with a low usage count in advance. The process scans for dirty pages with a low usage count so that they could be cleared if necessay. Buffers written by this process increment the counter.</p>'
+        info: '<p>Amount of data flushed from memory to disk.</p><p><b>Checkpoint</b> - buffers written during checkpoints. <b>Backend</b> -  buffers written directly by a backend. It may happen that a dirty page is requested by a backend process. In this case the page is synched to disk before the page is returned to the client. <b>Clean</b> - buffers written by the background writer. PostgreSQL may clear pages with a low usage count in advance. The process scans for dirty pages with a low usage count so that they could be cleared if necessary. Buffers written by this process increment the counter.</p>'
     },
     'postgres.bgwriter_maxwritten_clean': {
         info: 'Number of times the background writer stopped a cleaning scan because it had written too many buffers (exceeding the value of <i>bgwriter_lru_maxpages</i>).'
@@ -3889,10 +3889,10 @@ netdataDashboard.context = {
     },
 
     'postgres.db_transactions_ratio': {
-        info: 'Percentage of commited/rollback transactions.'
+        info: 'Percentage of committed/rollback transactions.'
     },
     'postgres.db_transactions': {
-        info: '<p>Number of transactions that have been performed</p><p><b>Commited</b> - transactions that have been committed. All changes made by the committed transaction become visible to others and are guaranteed to be durable if a crash occurs. <b>Rollback</b> - transactions that have been rolled back. Rollback aborts the current transaction and causes all the updates made by the transaction to be discarded. Single queries that have failed outside the transactions are also accounted as rollbacks.</p>'
+        info: '<p>Number of transactions that have been performed</p><p><b>Committed</b> - transactions that have been committed. All changes made by the committed transaction become visible to others and are guaranteed to be durable if a crash occurs. <b>Rollback</b> - transactions that have been rolled back. Rollback aborts the current transaction and causes all the updates made by the transaction to be discarded. Single queries that have failed outside the transactions are also accounted as rollbacks.</p>'
     },
     'postgres.db_connections_utilization': {
         info: 'Connection utilization per database. Utilization is measured as a percentage of <i>CONNECTION LIMIT</i> per database (if set) or <i>max_connections</i> (if <i>CONNECTION LIMIT</i> is not set).'
@@ -5909,7 +5909,7 @@ netdataDashboard.context = {
     },
 
     'boinc.sched': {
-        info: 'Counts of active tasks in each scheduling state.  <code>Scheduled</code> tasks are the ones which will run if the system is permitted to process tasks.  <code>Preempted</code> tasks are on standby, and will run if a <code>Scheduled</code> task stops running for some reason.  <code>Uninitialized</code> tasks should never be present, and indicate tha the scheduler has not tried to schedule them yet.'
+        info: 'Counts of active tasks in each scheduling state.  <code>Scheduled</code> tasks are the ones which will run if the system is permitted to process tasks.  <code>Preempted</code> tasks are on standby, and will run if a <code>Scheduled</code> task stops running for some reason.  <code>Uninitialized</code> tasks should never be present, and indicate that the scheduler has not tried to schedule them yet.'
     },
 
     'boinc.process': {

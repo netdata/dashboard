@@ -5,16 +5,16 @@ import CloudTab from "./cloudTab"
 import { TITLE } from "./discoverCloudModal"
 
 import { callAll } from "@/src/utils/utils"
-import { TabsContent } from "./contants"
+import { TabsContent } from "./contents"
 
 import DiscoverCloudDrop from "./discoverCloudDrop"
 
 const Wrapper = Flex
-const InnerPostioner = Flex
+const InnerPositioner = Flex
 
 const DiscoverCloud = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [seletedModalContent, setSelectedModalContent] = useState(null)
+  const [selectedModalContent, setSelectedModalContent] = useState(null)
   const dropDownParentRef = useRef()
 
   const handleOpenModal = () => {
@@ -38,7 +38,7 @@ const DiscoverCloud = () => {
 
   return (
     <Wrapper padding={[0, 0, 0, 4]} position="relative" height={15}>
-      <InnerPostioner
+      <InnerPositioner
         padding={[4, 2, 4, 2]}
         gap={4}
         height="100%"
@@ -50,12 +50,12 @@ const DiscoverCloud = () => {
           <NavigationTabs>
             {Object.keys(TabsContent).map((key, index) => {
               const { label, icon, id } = TabsContent[key]
-              const slectedContentId = seletedModalContent ? seletedModalContent.id : null
+              const selectedContentId = selectedModalContent ? selectedModalContent.id : null
               return (
                 <CloudTab
                   key={key}
                   icon={icon}
-                  active={id === slectedContentId}
+                  active={id === selectedContentId}
                   label={label}
                   showBorderLeft={index === 0}
                   onActivate={callAll(handleOpenModal, () =>
@@ -66,17 +66,17 @@ const DiscoverCloud = () => {
             })}
           </NavigationTabs>
         </Flex>
-      </InnerPostioner>
+      </InnerPositioner>
       <DiscoverCloudDrop
         parentRef={dropDownParentRef}
         isDropdownOpen={isModalOpen}
-        {...seletedModalContent}
+        {...selectedModalContent}
         closeDropdown={callAll(handleCloseModal, handleResetModalContent)}
         handleGoToCloud={handleGoToCloud}
       />
-      {/* {isModalOpen && seletedModalContent && (
+      {/* {isModalOpen && selectedModalContent && (
         <DiscoverCloudModal
-          {...seletedModalContent}
+          {...selectedModalContent}
           closeModal={callAll(handleCloseModal, handleResetModalContent)}
           handleGoToCloud={handleGoToCloud}
         />
