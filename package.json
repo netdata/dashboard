@@ -109,7 +109,7 @@
     "jest-environment-jsdom-fourteen": "^0.1.0",
     "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
-    "svg-sprite-loader": "^4.2.1",
+    "svg-sprite-loader": "^6.0.11",
     "svgo": "^1.3.2",
     "svgo-loader": "^2.2.1",
     "tscpaths": "0.0.9"
