@@ -2570,11 +2570,17 @@ function versionsMatch(v1, v2) {
     }
 }
 
-function getGithubLatestVersion(callback) {
+function getGithubLatestVersion(callback, channel) {
     versionLog('Downloading latest version id from github...');
 
+    if (channel === 'stable') {
+        url = 'https://api.github.com/repos/netdata/netdata/releases/latest'
+    } else {
+        url = 'https://api.github.com/repos/netdata/netdata-nightlies/releases/latest'
+    }
+
     $.ajax({
-        url: 'https://api.github.com/repos/netdata/netdata/releases/latest',
+        url: url,
         async: true,
         cache: false
     })
@@ -2589,46 +2595,10 @@ function getGithubLatestVersion(callback) {
     });
 }
 
-function getGCSLatestVersion(callback) {
-    versionLog('Downloading latest version id from GCS...');
-    $.ajax({
-        url: "https://www.googleapis.com/storage/v1/b/netdata-nightlies/o/latest-version.txt",
-        async: true,
-        cache: false
-    })
-    .done(function (response) {
-        $.ajax({
-            url: response.mediaLink,
-            async: true,
-            cache: false
-        })
-        .done(function (data) {
-            data = data.replace(/(\r\n|\n|\r| |\t)/gm, "");
-            versionLog('Latest nightly version from GCS is ' + data);
-            callback(data);
-        })
-        .fail(function (xhr, textStatus, errorThrown) {
-            versionLog('Failed to download the latest nightly version id from GCS!');
-            callback(null);
-        });
-    })
-    .fail(function (xhr, textStatus, errorThrown) {
-        versionLog('Failed to download the latest nightly version from GCS!');
-        callback(null);
-    });
-}
-
-
 function checkForUpdateByVersion(force, callback) {
-    if (options.release_channel === 'stable') {
-        getGithubLatestVersion(function (sha2) {
-            callback(options.version, sha2);
-        });
-    } else {
-        getGCSLatestVersion(function (sha2) {
-            callback(options.version, sha2);
-        });
-    }
+    getGithubLatestVersion(function (sha2) {
+        callback(options.version, sha2);
+    }, options.release_channel);
     return null;
 }
 
