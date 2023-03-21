@@ -2572,6 +2572,7 @@ function versionsMatch(v1, v2) {
 
 function getGithubLatestVersion(callback, channel) {
     versionLog('Downloading latest version id from github...');
+    let url
 
     if (channel === 'stable') {
         url = 'https://api.github.com/repos/netdata/netdata/releases/latest'
