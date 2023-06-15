@@ -601,6 +601,9 @@ function gotoServerValidateUrl(id, guid, url) {
                     document.getElementById('gotoServerResponse').innerHTML = '<b>Sorry! I cannot find any operational URL for this server</b>';
                 }
             }
+            if (data === null) {
+              document.getElementById('loadOverlay').innerHTML = '404<br/><div style="font-size: 3vh;">The path doesn\'t exist.</div>'
+            }
         });
     }, (id * 50) + penalty);
 }

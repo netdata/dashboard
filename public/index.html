@@ -704,7 +704,71 @@
     <iframe id="ssoifrm" width="0" height="0"></iframe>
     <div id="hiddenDownloadLinks" style="display: none;" hidden></div>
 
-    <script type="text/javascript" src="dashboard-react.js"></script>
+    <script>
+      var status = {
+        TIMEOUT: 'timeout',
+        SUCCESS: 'success',
+        SKIPPED: 'skipped'
+      };
+      function loadScript(
+        url,
+        { async = true, defer = false, insertAfter: aref, insertBefore: bref, timeout = 5000, attrs, skipIf, onError } = {}
+      ) {
+        return new Promise(function(resolve, reject) {
+          if (typeof skipIf === 'function' && skipIf()) {
+            resolve(status.SKIPPED);
+            return;
+          }
+
+          var rejectWithTimeout = setTimeout(function() { reject(status.TIMEOUT) }, timeout);
+
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = url;
+          script.async = async;
+          script.defer = defer;
+
+          if (attrs) {
+            for (var attr in attrs) {
+              script.setAttribute(attr, attrs[attr]);
+            }
+          }
+
+          script.onerror = function(err) {
+            reject(new URIError(`loadScript: the script ${err.target.src} is not accessible.`));
+            if (onError) {
+              onError(err)
+            }
+          };
+
+          script.onload = function() {
+            if (!window.NETDATA) {
+              onError()
+              return
+            }
+            clearTimeout(rejectWithTimeout);
+            resolve(status.SUCCESS);
+          };
+
+          if (aref) {
+            aref.parentNode.insertBefore(script, aref.nextSibling);
+            return;
+          }
+
+          if (bref) {
+            bref.parentNode.insertBefore(script, bref);
+            return;
+          }
+
+          document.body.appendChild(script);
+        });
+      }
+
+      loadScript("dashboard-react.js", {async: false, onError: function() {
+        const overlayEl = document.getElementById('loadOverlay');
+        overlayEl.innerHTML = '404 Page not found<br/><div style="font-size: 3vh;">We cannot load files from this path - No Netdata server detected</div>';
+      }})
+    </script>
 
 </body>
 </html>
