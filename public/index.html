@@ -709,6 +709,7 @@
       const show404 = function() {
         const overlayEl = document.getElementById('loadOverlay');
         overlayEl.innerHTML = '404 Page not found<br/><div style="font-size: 3vh;">We cannot load files from this path - No Netdata server detected</div>';
+        window.NETDATA = null
       }
 
       fetch(location.origin + location.pathname + "/version.txt").then(function(res) {
