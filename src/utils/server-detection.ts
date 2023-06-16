@@ -46,11 +46,11 @@ const getDefaultServer = () => {
       .replace("index.html", "")
       // todo consider .replace(/[^\/]*\.html/, "") (every .html file in the url)
       .replace("default.html", "") // for netdata demo servers
-    return window.location.origin + pathname
+    return window.location.origin + pathname.replace(/\/v1\/?$/, "")
   }
 
   const source = getScriptSource()
-  return getPathFromScriptSource(source)
+  return getPathFromScriptSource(source).replace(/\/v1\/?$/, "")
 }
 
 // append "/" at the end, if it's not already there

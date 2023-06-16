@@ -712,7 +712,8 @@
         window.NETDATA = null
       }
 
-      fetch(location.origin + location.pathname + "/version.txt").then(function(res) {
+      const pathname = location.pathname.replace("/v1", "")
+      fetch(location.origin + pathname + "/version.txt").then(function(res) {
         if (res.url && /index\.html/.test(res.url)) {
           show404()
           return
