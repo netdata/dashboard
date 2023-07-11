@@ -311,8 +311,8 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     machineGuid,
   }))
 
-  const name = isUsingGlobalRegistry ? MASKED_DATA : hostname
-  const url = isUsingGlobalRegistry ? MASKED_DATA : serverDefault
+  const name = hostname
+  const url = serverDefault
 
   // now make access call - max_redirects, callback, etc...
   const accessRegistryResponse: AccessRegistryResponse = yield call(accessRegistry, {
