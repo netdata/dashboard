@@ -66,7 +66,9 @@ export const GaugeChart = ({
   unitsCurrent,
 }: Props) => {
   const chartCanvasElement = useRef<HTMLCanvasElement>(null)
-  const [chartInstance, setChartInstance] = useState()
+
+  // @ts-ignore Gauge should be a class not namespace. See above.
+  const [chartInstance, setChartInstance] = useState<Gauge | undefined>()
 
   const valueIndex = hoveredRow === -1
     ? 0

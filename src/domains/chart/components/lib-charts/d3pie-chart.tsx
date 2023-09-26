@@ -87,7 +87,8 @@ export const D3pieChart = ({
   const legendFormatValueRef = useRef(legendFormatValue)
   legendFormatValueRef.current = legendFormatValue
 
-  const [d3pieInstance, setD3pieInstance] = useState()
+  // @ts-ignore d3pie should be a class not namespace. See above.
+  const [d3pieInstance, setD3pieInstance] = useState<d3pie | undefined>()
   const d3pieOptions = useRef<{[key: string]: any}>()
 
   const { localeDateString, localeTimeString } = useDateTime()

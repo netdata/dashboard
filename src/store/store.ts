@@ -10,6 +10,7 @@ const reduxDevTools = process.env.NODE_ENV === "development"
   // @ts-ignore
   && window.__REDUX_DEVTOOLS_EXTENSION__({ name: "Dashboard Charts" })
 
+// @ts-ignore
 const composeMiddlewaresWithDevTools = () => (reduxDevTools
   ? compose(applyMiddleware(sagaMiddleware), reduxDevTools)
   : compose(applyMiddleware(sagaMiddleware)))
