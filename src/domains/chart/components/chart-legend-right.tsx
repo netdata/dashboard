@@ -137,7 +137,6 @@ export const ChartLegendRight = ({
             return (
               <Fragment key={dimensionId}>
                 {i !== 0 && <br />}
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                 <span
                   title={dimensionName}
                   className={classNames(
@@ -166,7 +165,6 @@ export const ChartLegendRight = ({
                   {" "}
                   <LegendText id={chartUuid} index={i} />
                 </span>
-                {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
                 <span
                   title={dimensionName}
                   className={classNames(

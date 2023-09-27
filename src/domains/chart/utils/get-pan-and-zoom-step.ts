@@ -1,3 +1,5 @@
+import React from "react"
+
 type GetPanAndZoomStep = (event: React.MouseEvent) => number
 export const getPanAndZoomStep: GetPanAndZoomStep = (event) => {
   if (event.ctrlKey) {

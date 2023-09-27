@@ -1,4 +1,5 @@
 import { UserStatus, NodeLiveness } from "@/src/domains/dashboard/components/migration-modal"
+import React from "react"
 
 export type CloudConnectionProps = {
   userStatus: UserStatus

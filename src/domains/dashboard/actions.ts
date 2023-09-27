@@ -3,11 +3,11 @@ import { ChartsMetadata } from "domains/global/types"
 
 import { storeKey } from "./constants"
 
-export interface startSnapshotModeAction {
+interface IStartSnapshotModeAction {
   charts: ChartsMetadata
   dataPoints: number
 }
-export const startSnapshotModeAction = createAction<startSnapshotModeAction>(
+export const startSnapshotModeAction = createAction<IStartSnapshotModeAction>(
   `${storeKey}/isSnapshotModeAction`,
 )
 

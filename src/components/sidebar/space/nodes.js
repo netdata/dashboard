@@ -32,7 +32,7 @@ const getNodes = (hosts, hostname, hostsStatus) => {
 
   const replicatedNodes = hosts
     .slice(1)
-    .map(({ hostname }, index) => ({
+    .map(({ hostname }, /* index */) => ({
       hostname,
       url: getNodeUrl(baseUrl, hostname),
       status: hostsStatus.find(host => host.hostname === hostname)?.reachable || false,

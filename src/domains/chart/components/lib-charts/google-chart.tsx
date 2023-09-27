@@ -6,6 +6,8 @@ import { Attributes } from "domains/chart/utils/transformDataAttributes"
 import { ChartMetadata, EasyPieChartData } from "domains/chart/chart-types"
 import { loadGoogleVisualizationApi } from "domains/chart/utils/google-visualization-loader"
 
+/* global google */
+
 interface Props {
   attributes: Attributes
   chartData: EasyPieChartData

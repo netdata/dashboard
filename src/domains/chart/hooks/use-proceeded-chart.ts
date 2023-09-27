@@ -4,6 +4,8 @@
 import React, { useRef, useCallback } from "react"
 import { useToggle } from "react-use"
 
+/* global Dygraph */
+
 const useProceededChart = (
   chartRef: any,
   propsRef: any
