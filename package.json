@@ -71,6 +71,7 @@
     "uuid": "^3.4.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@craco/craco": "^7.1.0",
     "@testing-library/dom": "^7.1.1",
     "@testing-library/jest-dom": "^4.2.4",
