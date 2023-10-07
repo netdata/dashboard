@@ -9065,7 +9065,7 @@ NETDATA.registry = {
 
         NETDATA.registry.hello(NETDATA.serverDefault, function (data) {
             if (data) {
-                NETDATA.registry.server = data.registry;
+                NETDATA.registry.server = (data.registry || "").replace("https:", `${window.location.protocol}`);
                 if (data.cloud_base_url !== "") {
                     NETDATA.registry.isCloudEnabled = true;
                     NETDATA.registry.cloudBaseURL = data.cloud_base_url;
