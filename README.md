@@ -1,4 +1,4 @@
-# UI for Netdata Dashboard and Cloud Charts
+# Netdata Agent v1 Dashboard (deprecated)
 
 ## Available Scripts
 
