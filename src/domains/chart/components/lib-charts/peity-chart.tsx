@@ -29,7 +29,8 @@ export const PeityChart = ({
   const chartElement = useRef<HTMLDivElement>(null)
 
   // update width, height automatically each time
-  const [$chartElement, set$chartElement] = useState()
+  // FIXME: JQuery is not typed.
+  const [$chartElement, set$chartElement] = useState<any>()
   const peityOptions = useRef<{
     stroke: string,
     fill: string,

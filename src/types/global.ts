@@ -123,6 +123,7 @@ interface NETDATA {
 
 type jQuery = any
 
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 interface Window {
   NETDATA: NETDATA
   Ps: any // perfect scrollbar

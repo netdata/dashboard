@@ -8,6 +8,7 @@
 import React, { memo } from "react"
 import styled from "styled-components"
 import { Flex, Text } from "@netdata/netdata-ui"
+import { AppStateT } from "store/app-state"
 import { useSelector } from "store/redux-separate-context"
 import { useFormatters } from "domains/chart/utils/formatters"
 import { netdataDashboard } from "domains/dashboard/utils/netdata-dashboard"

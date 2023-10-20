@@ -1,4 +1,5 @@
 const path = require("path")
+const console = require("console")
 
 // eslint-disable-next-line import/no-extraneous-dependencies
 const HtmlWebpackPlugin = require("html-webpack-plugin")
@@ -14,15 +15,19 @@ module.exports = {
   webpack: {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars,no-unused-vars
     configure: (webpackConfig, { env, paths }) => {
-      const [parser, tsLoader, loadersObject, ...rules] = webpackConfig.module.rules
+      const [sourceMapLoaderOrFalse, loadersObject, ...rules] = webpackConfig.module.rules
+      console.assert(
+        sourceMapLoaderOrFalse == false || 
+          sourceMapLoaderOrFalse.loader === require.resolve('source-map-loader'),
+        "react-scripts' webpack config has changed, please update CRACO config.")
+
       const { oneOf } = loadersObject
       return {
         ...webpackConfig,
         module: {
           ...webpackConfig.module,
           rules: [
-            parser,
-            tsLoader,
+            sourceMapLoaderOrFalse,
             {
               oneOf: [
                 {

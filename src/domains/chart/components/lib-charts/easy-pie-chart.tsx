@@ -101,7 +101,8 @@ export const EasyPieChart = ({
   unitsCurrent,
 }: Props) => {
   const chartElement = useRef<HTMLDivElement>(null)
-  const [chartInstance, setChartInstance] = useState()
+  // @ts-ignore EasyPie should be a class not namespace. See above.
+  const [chartInstance, setChartInstance] = useState<EasyPie | undefined>()
 
   const valueIndex = hoveredRow === -1
     ? 0

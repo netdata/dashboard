@@ -55,12 +55,12 @@ export const TabsContent = {
           given War Room.
         </TabsContentText>
         <TabsContentText>
-          With Overview's composite charts, you can see your infrastructure from a single pane of
+          With Overview&apos;s composite charts, you can see your infrastructure from a single pane of
           glass, discover trends or anomalies, then drill down by grouping metrics by node and
           jumping to single-node dashboards for root cause analysis.
         </TabsContentText>
         <TabsContentText>
-          Here's an example of a composite chart visualizing Disk I/O bandwidth from 5 different
+          Here&apos;s an example of a composite chart visualizing Disk I/O bandwidth from 5 different
           nodes in one chart.
         </TabsContentText>
       </>
@@ -75,8 +75,8 @@ export const TabsContent = {
     text: () => (
       <TabsContentText>
         The Nodes view in Netdata Cloud lets you see and customize key metrics from any number of
-        Agent-monitored nodes and seamlessly navigate to any node's dashboard for troubleshooting
-        performance issues or anomalies using Netdata's highly-granular metrics.
+        Agent-monitored nodes and seamlessly navigate to any node&apos;s dashboard for troubleshooting
+        performance issues or anomalies using Netdata&apos;s highly-granular metrics.
       </TabsContentText>
     ),
     icon: "nodes_hollow",
@@ -88,8 +88,8 @@ export const TabsContent = {
     header: "Dashboards",
     text: () => (
       <TabsContentText>
-        With Netdata Cloud, you can build new dashboards that target your infrastructure's unique
-        needs. Put key metrics from any number of distributed systems in one place for a bird's eye
+        With Netdata Cloud, you can build new dashboards that target your infrastructure&apos;s unique
+        needs. Put key metrics from any number of distributed systems in one place for a bird&apos;s eye
         view of your infrastructure.
       </TabsContentText>
     ),
@@ -103,7 +103,7 @@ export const TabsContent = {
     text: () => (
       <TabsContentText>
         The Alerts view gives you a high level of availability and performance information for every
-        node you're monitoring with Netdata Cloud. It also offers an easy way to drill down into any
+        node you&apos;re monitoring with Netdata Cloud. It also offers an easy way to drill down into any
         particular alert by taking the user to the dedicated alert view from where the user can run
         metrics correlation or take further troubleshooting steps.
       </TabsContentText>
@@ -149,19 +149,19 @@ export const TabsContent = {
       <>
         <TabsContentText>
           Data privacy is very important to us. We firmly believe that your data belongs to you.
-          This is why we don't store any metric data in Netdata Cloud.
+          This is why we don&apos;t store any metric data in Netdata Cloud.
         </TabsContentText>
         <TabsContentText>
           Your local installations of the Netdata Agent form the basis for the Netdata Cloud. All
           the data that you see in the web browser when using Netdata Cloud, is actually streamed
           directly from the Netdata Agent to the Netdata Cloud dashboard. The data passes through
-          our systems, but it isn't stored. You can learn more about{" "}
+          our systems, but it isn&apos;t stored. You can learn more about{" "}
           <Anchor
             target="_blank"
             rel="noopener noreferrer"
             href="https://learn.netdata.cloud/docs/agent/netdata-security"
           >
-            the Agent's security design
+            the Agent&apos;s security design
           </Anchor>{" "}
           design in the Agent documentation.
         </TabsContentText>

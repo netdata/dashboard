@@ -62,8 +62,7 @@ const MigrationModal = ({
       setUserPrefrence(CTA2.userPreference)
       savePromoRemindMeSelection(isRememberChoiceChecked)
     }
-    if (CTA2.action === "NAVIGATE") {
-    } else if (CTA2.action === "REFRESH") {
+    if (CTA2.action === "REFRESH") {
       requestRefreshOfAccess()
     }
     closeModal()

@@ -80,6 +80,14 @@ function* getLog(lastNotificationIdArg: number, serverDefault: string) {
   }
 }
 
+interface NotificationOptions {
+  body: string
+  tag: string
+  requireInteraction: boolean,
+  icon: string
+  data: AlarmLog
+}
+
 interface NotificationConfig {
   notificationTitle: string
   notificationOptions: NotificationOptions

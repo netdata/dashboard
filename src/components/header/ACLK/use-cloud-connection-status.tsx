@@ -7,7 +7,7 @@ import { Text } from "@netdata/netdata-ui"
 export const makeCloudConnectionStatusInfo = ({
   nodeStatus,
   userStatus,
-  date,
+  /* date, */
 }: CloudConnectionProps): ConnectionModalStatusContent => ({
   title: "Netdata Cloud connection status",
   text: {

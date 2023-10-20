@@ -1826,6 +1826,10 @@ var tt = {
     // --------------------------------------------------------------------------------------------
 
     // our constructor
+    // Netdata: workaround TS9005 error. https://stackoverflow.com/a/70998955
+    /**
+     * @type d3pieClass
+     */
     var d3pie = function(element, options) {
 
         // element can be an ID or DOM element
