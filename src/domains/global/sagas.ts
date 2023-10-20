@@ -329,7 +329,7 @@ function* fetchHelloSaga({ payload }: Action<FetchHelloPayload>) {
     url,
   })
 
-  if (response.data.anonymous_statistics) {
+  if (response.data.anonymous_statistics === false) {
     yield spawn(injectPosthog, response.data.machine_guid, accessRegistryResponse?.personGuid)
   }
 
