@@ -1,0 +1,66 @@
+---
+name: tests
+
+on:
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12.x"
+          cache: "npm"
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Tests
+        if: github.event_name != 'pull_request'
+        continue-on-error: true
+        id: run-tests
+        run: npm test -- --coverage --watchAll=false > /tmp/coverage_report
+
+      - name: Post Test Coverage Report in PR
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        continue-on-error: true
+        if: github.event_name == 'pull_request'
+        with:
+          test-script: npm run test
+          annotations: all
+
+      - name: Gain access to test-reports bucket
+        if: (steps.run-tests.outcome == 'failure' || steps.run-tests.outcome == 'success') && github.ref == 'refs/heads/develop'
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: "netdata-cloud-testing"
+          service_account_key: ${{ secrets.TEST_AUTOMATION_SERVICE_ACCOUNT }}
+          export_default_credentials: true
+
+      - name: Upload report to test-reports bucket
+        if: (steps.run-tests.outcome == 'failure' || steps.run-tests.outcome == 'success') && github.ref == 'refs/heads/develop'
+        run: |
+          gsutil -h "Cache-Control: max-age=0, no-store" cp \
+          /tmp/coverage_report gs://${{ secrets.TEST_AUTOMATION_STORAGE_BUCKET }}/${{ github.event.repository.name }}/coverage_report
+          gsutil acl set project-private gs://${{ secrets.TEST_AUTOMATION_STORAGE_BUCKET }}/${{ github.event.repository.name }}/coverage_report
+
+      - name: Publish test coverage report
+        if: (steps.run-tests.outcome == 'failure' || steps.run-tests.outcome == 'success') && github.ref == 'refs/heads/develop'
+        uses: aurelien-baudet/workflow-dispatch@v2
+        with:
+          repo: netdata/cloud-workflows
+          ref: refs/heads/main
+          workflow: test_coverage_publisher.yml
+          token: ${{ secrets.TEST_AUTOMATION_TOKEN }}
+          inputs: '{ "service-name": "${{ github.event.repository.name }}"}'
